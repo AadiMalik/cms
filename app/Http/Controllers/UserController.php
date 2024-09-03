@@ -8,6 +8,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -23,6 +25,7 @@ class UserController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('users_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return view('users.index');
     }
@@ -30,18 +33,20 @@ class UserController extends Controller
 
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('users_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->user_service->getUserSource();
     }
 
     public function create()
     {
-
+        abort_if(Gate::denies('users_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $roles = $this->role_service->getAll();
         return view('users.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('users_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $validator = Validator::make($request->all(), [
                 'email' => ['required', 'email', 'max:100', 'string', 'unique:users,email,' . $request->id],
@@ -77,6 +82,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('users_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $user = $this->user_service->getById($id);
         $roles = $this->role_service->getAll();
         return view('users.create', compact('user', 'roles'));

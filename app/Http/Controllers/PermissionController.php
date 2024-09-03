@@ -6,6 +6,8 @@ use App\Services\Concrete\PermissionService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class PermissionController extends Controller
 {
@@ -18,22 +20,26 @@ class PermissionController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('permissions_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('permissions.index');
     }
 
 
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('permissions_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->permission_service->getPermissionSource();
     }
 
     public function create()
     {
+        abort_if(Gate::denies('permissions_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('permissions.create');
     }
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('permissions_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'max:50', 'string', 'unique:permissions,name,'.$request->id]
@@ -62,6 +68,7 @@ class PermissionController extends Controller
     }
 
     public function edit($id) {
+        abort_if(Gate::denies('permissions_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $permission = $this->permission_service->getById($id);
         return view('permissions.create',compact('permission'));
     }

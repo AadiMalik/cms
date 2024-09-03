@@ -7,6 +7,8 @@ use App\Services\Concrete\RoleService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
@@ -23,23 +25,27 @@ class RoleController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('roles_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('roles.index');
     }
 
 
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('roles_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->role_service->getRoleSource();
     }
 
     public function create()
     {
+        abort_if(Gate::denies('roles_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $permissions = $this->permission_service->getAll();
         return view('roles.create',compact('permissions'));
     }
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('roles_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'max:50', 'string', 'unique:roles,name,'.$request->id],
@@ -70,12 +76,14 @@ class RoleController extends Controller
     }
 
     public function edit($id) {
+        abort_if(Gate::denies('roles_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $role = $this->role_service->getById($id);
         $permissions = $this->permission_service->getAll();
         return view('roles.create',compact('role','permissions'));
     }
 
     public function view($id) {
+        abort_if(Gate::denies('roles_view'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $role = $this->role_service->getById($id);
         return view('roles.view',compact('role'));
     }
