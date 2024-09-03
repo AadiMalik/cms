@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,17 @@ Route::group(['prefix'=>'permissions'], function(){
     Route::post('store', [PermissionController::class,'store']);
     Route::get('edit/{id}', [PermissionController::class,'edit']);
     Route::post('update', [PermissionController::class,'update']);
+    // Route::get('destroy/{id}', [PermissionController::class,'destroy']);
+    // Route::get('status/{id}', [PermissionController::class,'status']);
+});
+
+Route::group(['prefix'=>'roles'], function(){
+    Route::get('/',[RoleController::class,'index']);
+    Route::post('data',[RoleController::class,'getData'])->name('role.data');
+    Route::get('create', [RoleController::class,'create']);
+    Route::post('store', [RoleController::class,'store']);
+    Route::get('edit/{id}', [RoleController::class,'edit']);
+    Route::post('update', [RoleController::class,'update']);
     // Route::get('destroy/{id}', [PermissionController::class,'destroy']);
     // Route::get('status/{id}', [PermissionController::class,'status']);
 });

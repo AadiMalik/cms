@@ -3,7 +3,7 @@
 
 <div class="main-content pt-4">
     <div class="breadcrumb">
-        <h1>User</h1>
+        <h1>Users</h1>
         <ul>
             <li>List</li>
             <li>All</li>
@@ -47,7 +47,7 @@
         'columns' => "
          {data: 'name' , name: 'name'},
          {data: 'email' , name: 'email'},
-         {data: 'role_id' , name: 'role_id'},
+         {data: 'role' , name: 'role'},
         {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
         'route' => 'users/data',
         'buttons' => false,

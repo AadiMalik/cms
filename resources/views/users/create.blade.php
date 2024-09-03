@@ -3,66 +3,96 @@
     <div class="main-content pt-4">
         <div class="breadcrumb">
             <h1>User</h1>
+            @if(isset($user))
+            <ul>
+                <li>Update</li>
+                <li>Edit</li>
+            </ul>
+            @else
             <ul>
                 <li>Create</li>
                 <li>Add</li>
             </ul>
+            @endif
         </div>
         <div class="separator-breadcrumb border-top"></div>
+        @if (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-4">
-                    <div class="card-body">
-                        <form>
+                    <form action="{{ url('users/store') }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card-body">
                             <div class="row">
+                                <input type="hidden" name="id" value="{{isset($user)?$user->id:''}}" />
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="firstName1">First name</label>
-                                    <input class="form-control" id="firstName1" type="text"
-                                        placeholder="Enter your first name" />
+                                    <label for="name">Full Name<span class="text-danger">*</span> </label>
+                                    <input class="form-control" type="text" name="name" value="{{isset($user)?$user->name:old('name')}}"
+                                       maxlength="50" placeholder="Enter User name" required />
+                                    @error('name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="lastName1">Last name</label>
-                                    <input class="form-control" id="lastName1" type="text"
-                                        placeholder="Enter your last name" />
+                                    <label for="name">User EMail<span class="text-danger">*</span> </label>
+                                    <input class="form-control" type="email" name="email" value="{{isset($user)?$user->email:old('email')}}"
+                                       maxlength="50" placeholder="Enter User EMail" required />
+                                    @error('name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="exampleInputEmail1">Email address</label>
-                                    <input class="form-control" id="exampleInputEmail1" type="email"
-                                        placeholder="Enter email" />
-                                    <!--  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                                    <label for="name">Password<span class="text-danger">*</span> </label>
+                                    <input class="form-control" type="password" name="password" value=""
+                                       maxlength="16" placeholder="Enter User Password" required />
+                                    @error('password')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="phone">Phone</label>
-                                    <input class="form-control" id="phone" placeholder="Enter phone" />
+                                    <label for="name">Confirm Password<span class="text-danger">*</span> </label>
+                                    <input class="form-control" type="password" name="password_confirmation" value=""
+                                       maxlength="16" placeholder="Renter Password" required />
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="credit1">Cradit card number</label>
-                                    <input class="form-control" id="credit1" placeholder="Card" />
-                                </div>
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="website">Website</label>
-                                    <input class="form-control" id="website" placeholder="Web address" />
-                                </div>
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="picker2">Birth date</label>
-                                    <input class="form-control" id="picker2" placeholder="yyyy-mm-dd" name="dp" />
-                                </div>
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="picker1">Select</label>
-                                    <select class="form-control">
-                                        <option>Option 1</option>
-                                        <option>Option 1</option>
-                                        <option>Option 1</option>
+                                    <label for="role">Role<span class="text-danger">*</span> </label>
+                                    <select class="form-control select2" name="role" id="role" required style="height: 100px;">
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role->name }}" {{ (isset($user) && $user->hasRole($role->name)) ? 'selected' : '' }}>{{ $role->name??'' }}</option>
+                                        @endforeach
                                     </select>
+                                    @error('permissions')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
+
+                            </div>
+
+                        </div>
+                        <div class="card-footer">
+
+                            <div class="row">
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary">Submit</button>
+                                    <a href="{{ url('users') }}" class="btn btn-danger">Cancel</a>
+                                    <button class="btn btn-primary">Save</button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div><!-- end of main-content -->
+        </div>
+    </div><!-- end of main-content -->
     </div>
+@endsection
+@section('js')
+<script>
+    $(document).ready(function() {
+            $('#role').select2();
+        });
+</script>
 @endsection

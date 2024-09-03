@@ -3,40 +3,47 @@
 namespace App\Http\Controllers;
 
 use App\Services\Concrete\PermissionService;
+use App\Services\Concrete\RoleService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PermissionController extends Controller
+class RoleController extends Controller
 {
+    protected $role_service;
     protected $permission_service;
+
     public function __construct(
-        PermissionService  $permission_service
+        RoleService  $role_service,
+        PermissionService $permission_service
     ) {
+        $this->role_service = $role_service;
         $this->permission_service = $permission_service;
     }
 
     public function index()
     {
-        return view('permissions.index');
+        return view('roles.index');
     }
 
 
     public function getData(Request $request)
     {
-        return $this->permission_service->getPermissionSource();
+        return $this->role_service->getRoleSource();
     }
 
     public function create()
     {
-        return view('permissions.create');
+        $permissions = $this->permission_service->getAll();
+        return view('roles.create',compact('permissions'));
     }
 
     public function store(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => ['required', 'max:50', 'string', 'unique:permissions,name,'.$request->id]
+                'name' => ['required', 'max:50', 'string', 'unique:roles,name,'.$request->id],
+                'permissions' => ['required', 'array'],
             ]);
 
             if ($validator->fails()) {
@@ -49,24 +56,30 @@ class PermissionController extends Controller
                 "name"  => $request->name
             ];
 
-            $permission = $this->permission_service->save($obj);
+            $role = $this->role_service->save($obj);
+            $role->syncPermissions($request->permissions);
 
-            if (!$permission)
+            if (!$role)
                 return redirect()->back()->with('error', config('enum.error'));
 
 
-            return redirect('permissions')->with('success', config('enum.saved'));
+            return redirect('roles')->with('success', config('enum.saved'));
         } catch (Exception $e) {
             return redirect()->back()->with('error',  $e->getMessage());
         }
     }
 
     public function edit($id) {
-        $permission = $this->permission_service->getById($id);
-        return view('permissions.create',compact('permission'));
+        $role = $this->role_service->getById($id);
+        $permissions = $this->permission_service->getAll();
+        return view('roles.create',compact('role','permissions'));
     }
 
-    public function update(Request $request, $id) {}
+    public function view($id) {
+        $role = $this->role_service->getById($id);
+        return view('roles.view',compact('role'));
+    }
+
 
     public function destroy($id) {}
 
