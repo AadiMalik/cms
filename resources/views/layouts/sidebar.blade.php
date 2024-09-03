@@ -245,9 +245,15 @@
                     </li>
                 </ul>
             </li>
-            <li class="Ul_li--hover"><a href="http://demos.ui-lib.com/gull-html-doc/"><i
-                        class="i-Safe-Box1 text-20 mr-2 text-muted"></i><span
-                        class="item-name text-15 text-muted">Doc</span></a></li>
+            <li class="Ul_li--hover"><a href="{{ route('logout') }}"
+                onclick="event.preventDefault();
+                              document.getElementById('logout-form').submit();"><i
+                        class="fa fa-sign-out text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Logout</span></a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </li>
         </ul>
     </div>
 </div>

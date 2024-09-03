@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +23,26 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::group(['prefix'=>'permissions'], function(){
+    Route::get('/',[PermissionController::class,'index']);
+    Route::post('data',[PermissionController::class,'getData'])->name('permission.data');
+    Route::get('create', [PermissionController::class,'create']);
+    Route::post('store', [PermissionController::class,'store']);
+    Route::get('edit/{id}', [PermissionController::class,'edit']);
+    Route::post('update', [PermissionController::class,'update']);
+    // Route::get('destroy/{id}', [PermissionController::class,'destroy']);
+    // Route::get('status/{id}', [PermissionController::class,'status']);
+});
+
+Route::group(['prefix'=>'users'], function(){
+    Route::get('/',[UserController::class,'index']);
+    Route::post('data',[UserController::class,'getData'])->name('user.data');
+    Route::get('create', [UserController::class,'create']);
+    Route::post('store', [UserController::class,'store']);
+    Route::get('edit/{id}', [UserController::class,'edit']);
+    Route::post('update', [UserController::class,'update']);
+    Route::get('destroy/{id}', [UserController::class,'destroy']);
+    Route::get('status/{id}', [UserController::class,'status']);
+});

@@ -11,6 +11,13 @@
     <link href="{{asset('assets/css/plugins/perfect-scrollbar.css')}}" rel="stylesheet" />
     <link rel="stylesheet" href="{{asset('assets/css/plugins/fontawesome-5.css')}}" />
     <link href="{{asset('assets/css/plugins/metisMenu.min.css')}}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/toastr.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/datatables.min.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.7.1/sweetalert2.min.css"
+        integrity="sha512-NvuRGlPf6cHpxQqBGnPe7fPoACpyrjhlSNeXVUY7BZAj1nNhuNpRBq3osC4yr2vswUEuHq2HtCsY2vfLNCndYA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     @yield('css')
 </head>
@@ -18,7 +25,8 @@
 <body class="text-left">
     <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
         <div class="sidebar-panel bg-white">
-            <div class="gull-brand pr-3 text-center mt-4 mb-2 d-flex justify-content-center align-items-center"><img class="pl-3" src="../../dist-assets/images/logo.png" alt="alt" />
+            <div class="gull-brand pr-3 text-center mt-3 mb-2 d-flex justify-content-center align-items-center">
+                <img class="pl-3" src="{{asset('assets/images/logo.jpg')}}" style="width:183px;" alt="alt" />
                 <!--  <span class=" item-name text-20 text-primary font-weight-700">GULL</span> -->
                 <div class="sidebar-compact-switch ml-auto"><span></span></div>
             </div>
@@ -217,6 +225,11 @@
     <script src="{{asset('assets/js/scripts/echart.options.min.js')}}"></script>
     <script src="{{asset('assets/js/scripts/dashboard.v1.script.min.js')}}"></script>
     <script src="{{asset('assets/js/scripts/customizer.script.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="{{ asset('assets/js/vendor/toastr.min.js') }}"></script>
+        <script src="{{ asset('assets/js/toastr.script.js') }}"></script>
+        <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
 
     @yield('js')
 </body>
