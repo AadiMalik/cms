@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Dashboard v1 | Gull admin template</title>
+    <title>ERP</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
     <link href="{{ asset('assets/css/themes/lite-purple.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/plugins/perfect-scrollbar.css') }}" rel="stylesheet" />
@@ -21,13 +22,7 @@
 
     <style>
         .sidebar_active{
-            background: #000;
-            color:#000;
-            height: 36px;
-            width: 200px;
-            border-top-right-radius: 25px;
-            border-bottom-right-radius: 25px;
-            opacity: 0.2;
+            background: #b8b8c5; border-radius: 20px;
         }
     </style>
     @yield('css')

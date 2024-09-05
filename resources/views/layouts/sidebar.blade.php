@@ -33,6 +33,36 @@
                 </ul>
             </li>
             @endcan
+            @can('inventory_access')
+            <li
+                class="Ul_li--hover {{ Request::is('warehouses*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Inventory</span></a>
+                <ul class="mm-collapse">
+                    @can('warehouses_access')
+                        <li class="item-name"><a class="{{ Request::is('warehouses*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('warehouses') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Warehouses</span></a></li>
+                    @endcan
+
+                </ul>
+            </li>
+            @endcan
+            @can('accounting_access')
+            <li
+                class="Ul_li--hover {{ Request::is('accounts*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-line-chart text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Accounting</span></a>
+                <ul class="mm-collapse">
+                    @can('accounts_access')
+                        <li class="item-name"><a class="{{ Request::is('accounts*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('accounts') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Accounts</span></a></li>
+                    @endcan
+
+                </ul>
+            </li>
+            @endcan
             @can('logout_access')
             <li class="Ul_li--hover"><a href="{{ route('logout') }}"
                     onclick="event.preventDefault();

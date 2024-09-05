@@ -3,6 +3,7 @@
 namespace App\Services\Concrete;
 
 use App\Repository\Repository;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
 
@@ -37,12 +38,12 @@ class RoleService
                 $action_column = '';
                 $edit_column    = "<a class='text-success mr-2' href='roles/edit/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
                 $view_column    = "<a class='text-warning mr-2' href='roles/view/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
-                // $print_column    = "<a class='text-info mr-2' href='roles/print/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
-                // $delete_column    = "<a class='text-danger mr-2' href='roles/destroy/" . $item->id . "'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
+                
+                if(Auth::user()->can('roles_edit'))
                 $action_column .= $edit_column;
+
+                if(Auth::user()->can('roles_view'))
                 $action_column .= $view_column;
-                // $action_column .= $print_column;
-                // $action_column .= $delete_column;
 
                 return $action_column;
             })

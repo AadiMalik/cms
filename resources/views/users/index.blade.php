@@ -15,7 +15,7 @@
             <div class="card text-left">
                 <div class="card-header text-right bg-transparent">
                         <a class="btn btn-primary btn-md m-1" href="{{url('users/create')}}" id="createNewProject"><i
-                                class="fa fa-pluss text-white mr-2"></i> Add User</a>
+                                class="fa fa-plus text-white mr-2"></i> Add User</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">

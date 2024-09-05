@@ -4,6 +4,7 @@ namespace App\Services\Concrete;
 
 use App\Repository\Repository;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
 class UserService
@@ -28,12 +29,13 @@ class UserService
                 $action_column = '';
                 $edit_column    = "<a class='text-success mr-2' href='users/edit/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
                 $view_column    = "<a class='text-warning mr-2' href='users/view/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
-                // $print_column    = "<a class='text-info mr-2' href='users/print/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
-                // $delete_column    = "<a class='text-danger mr-2' href='users/destroy/" . $item->id . "'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
+
+                if(Auth::user()->can('users_edit'))
                 $action_column .= $edit_column;
+
+                if(Auth::user()->can('users_view'))
                 $action_column .= $view_column;
-                // $action_column .= $print_column;
-                // $action_column .= $delete_column;
+                
 
                 return $action_column;
             })
