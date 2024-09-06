@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\JournalController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SupplierController;
@@ -101,5 +102,25 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [SupplierController::class, 'update']);
         Route::get('destroy/{id}', [SupplierController::class, 'destroy']);
         Route::get('status/{id}', [SupplierController::class, 'status']);
+    });
+
+    Route::group(['prefix' => 'journals'], function () {
+        Route::get('/', [JournalController::class, 'index']);
+        Route::post('data', [JournalController::class, 'getData'])->name('journal.data');
+        Route::get('create', [JournalController::class, 'create']);
+        Route::post('store', [JournalController::class, 'store']);
+        Route::get('edit/{id}', [JournalController::class, 'edit']);
+        Route::post('update', [JournalController::class, 'update']);
+        Route::get('destroy/{id}', [JournalController::class, 'destroy']);
+        Route::get('status/{id}', [JournalController::class, 'status']);
+        Route::get('/js/JournalForm.js', function () {
+            $path = resource_path('views/journal/js/JournalForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 });

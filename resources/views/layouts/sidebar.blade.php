@@ -64,6 +64,11 @@
                                 href="{{ url('accounts') }}"><i class="nav-icon fa fa-circle"></i><span
                                     class="item-name">Accounts</span></a></li>
                     @endcan
+                    @can('journals_access')
+                        <li class="item-name"><a class="{{ Request::is('journals*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('journals') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Journals</span></a></li>
+                    @endcan
 
                 </ul>
             </li>

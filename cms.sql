@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 06, 2024 at 02:39 AM
+-- Generation Time: Sep 06, 2024 at 11:51 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -100,6 +100,33 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `journals`
+--
+
+CREATE TABLE `journals` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `prefix` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `journals`
+--
+
+INSERT INTO `journals` (`id`, `name`, `prefix`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Journal Voucher', 'JV', 1, 1, 1, 1, 1, '2024-09-06 04:18:29', '2024-09-06 04:46:20'),
+(2, 'Journal Voucher', 'JV', 1, 0, 1, 1, NULL, '2024-09-06 04:46:33', '2024-09-06 04:48:52');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -122,7 +149,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (6, '2024_09_04_212533_create_warehouses_table', 2),
 (7, '2024_09_05_000951_create_accounts_table', 3),
 (8, '2024_09_05_001923_create_account_types_table', 3),
-(9, '2024_09_05_230824_create_suppliers_table', 4);
+(9, '2024_09_05_230824_create_suppliers_table', 4),
+(10, '2024_09_06_082046_create_journals_table', 5);
 
 -- --------------------------------------------------------
 
@@ -213,7 +241,12 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (25, 'suppliers_create', 'web', '2024-09-05 18:31:14', '2024-09-05 18:31:14'),
 (26, 'suppliers_edit', 'web', '2024-09-05 18:31:21', '2024-09-05 18:31:21'),
 (27, 'suppliers_delete', 'web', '2024-09-05 18:31:35', '2024-09-05 18:31:35'),
-(28, 'suppliers_status', 'web', '2024-09-05 18:31:45', '2024-09-05 18:31:45');
+(28, 'suppliers_status', 'web', '2024-09-05 18:31:45', '2024-09-05 18:31:45'),
+(29, 'journals_access', 'web', '2024-09-06 04:08:19', '2024-09-06 04:08:19'),
+(30, 'journals_create', 'web', '2024-09-06 04:08:30', '2024-09-06 04:08:30'),
+(31, 'journals_edit', 'web', '2024-09-06 04:08:44', '2024-09-06 04:08:44'),
+(32, 'journals_delete', 'web', '2024-09-06 04:08:54', '2024-09-06 04:08:54'),
+(33, 'journals_status', 'web', '2024-09-06 04:09:05', '2024-09-06 04:09:05');
 
 -- --------------------------------------------------------
 
@@ -298,7 +331,12 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (25, 1),
 (26, 1),
 (27, 1),
-(28, 1);
+(28, 1),
+(29, 1),
+(30, 1),
+(31, 1),
+(32, 1),
+(33, 1);
 
 -- --------------------------------------------------------
 
@@ -400,6 +438,12 @@ ALTER TABLE `failed_jobs`
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
 
 --
+-- Indexes for table `journals`
+--
+ALTER TABLE `journals`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -496,16 +540,22 @@ ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `journals`
+--
+ALTER TABLE `journals`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
