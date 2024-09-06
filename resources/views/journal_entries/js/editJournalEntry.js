@@ -1,11 +1,11 @@
 import {
     ajaxPostRequest,
     ajaxGetRequest,
-} from "../../../../../public/js/common-methods/http-requests.js";
+} from "../../../../../js/common-methods/http-requests.js";
 import {
     errorMessage,
     successMessage,
-} from "../../../../../public/js/common-methods/toasters.js";
+} from "../../../../../js/common-methods/toasters.js";
 $(document).ready(function () {
     if (journal_entry_id == null) {
         Clear();
@@ -32,12 +32,8 @@ $(document).ready(function () {
     });
     $("#jsGrid").show("2000");
 
-    var entry_id = "";
-    var journalId = "";
-    var vendorId = "";
-    var projectId = "";
-    var project = "";
-    var accountId = "";
+    var id = "";
+    var account_id = "";
     var accountInfo = "";
     var accounts = "";
     var accountCode = "";
@@ -65,12 +61,8 @@ $(document).ready(function () {
     var total_credit = 0;
 
     $("#add").click(function (item) {
-        journalId = $("#journal_id option:selected").val();
-        projectId = $("#project_id option:selected").val();
-        vendorId = $("#vendor_id option:selected").val();
-        project = $("#project_id  :selected").text();
         date = $("#pdate").val();
-        accountId = $("#account_id").val();
+        account_id = $("#account_id").val();
         accountInfo = $("#account_id :selected").text();
         accountInfo = accountInfo.replace(/^\s+|\s+$/g, "");
         accounts = accountInfo.split(" -- ");
@@ -95,23 +87,12 @@ $(document).ready(function () {
         tbl_id = $("#tbl_id").val();
         tbl_index = $("#tbl_index").val();
 
-        // if (journalId == "") {
-        //     errorMessage("Please Select Journal!");
-        //     $("#journal_id").focus();
-        //     return;
-        // }
-
         if (date == "") {
             errorMessage("Please Fill Date!");
             $("#pdate").focus();
             return;
         }
-        if (projectId == "") {
-            errorMessage("Please Select Project!");
-            $("#project_id").focus();
-            return;
-        }
-        if (accountId == "" || accountId == null) {
+        if (account_id == "" || account_id == null) {
             errorMessage("Please Select Account!");
             $("#account_id").focus();
             return;
@@ -130,17 +111,12 @@ $(document).ready(function () {
             $("#debit").focus();
             return;
         }
-        $("#projectId").focus();
         if (tbl_id) {
             obj = editedItem;
             editedItems.item = obj;
-            // obj.journal_id = journalId;
-            // obj.vendor_id = vendorId;
-            obj.project_id = projectId;
-            obj.project = project;
             obj.Date = date;
-            obj.acc_head_id = accountId;
-            obj.code = accountCode;
+            obj.acc_head_id = account_id;
+            obj.Code = accountCode;
             obj.Account = accountName;
             obj.Debit = debitAmt;
             obj.Credit = creditAmt;
@@ -158,17 +134,13 @@ $(document).ready(function () {
                 .done(function () {
                     $("#jsGrid").jsGrid("updateItem", obj);
                 });
-            
+
             Clear();
         } else {
             obj = {};
-            // obj.journal_id = journalId;
-            // obj.vendor_id = vendorId;
-            obj.project_id = projectId;
-            obj.project = project;
             obj.Date = date;
-            obj.acc_head_id = accountId;
-            obj.code = accountCode;
+            obj.acc_head_id = account_id;
+            obj.Code = accountCode;
             obj.Account = accountName;
             obj.Debit = debitAmt;
             obj.Credit = creditAmt;
@@ -201,6 +173,19 @@ $(document).ready(function () {
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             $("#total_debit").val(debitSort);
             $("#total_credit").val(creditSort);
+
+            var bal = total_debit * 1 - total_credit * 1;
+            $("#balance").empty();
+            var bal_value = "";
+            if (bal > 0) {
+                bal_value = bal + " Dr";
+                $("#balance").val(bal_value);
+            } else if (bal < 0) {
+                bal_value = bal * -1 + " Cr";
+                $("#balance").val(bal_value);
+            } else {
+                $("#balance").val(0);
+            }
         } else {
             var result = [];
             $(".jsgrid-table tr").each(function () {
@@ -222,13 +207,23 @@ $(document).ready(function () {
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             $("#total_debit").val(debitSort);
             $("#total_credit").val(creditSort);
+
+            var bal = total_debit * 1 - total_credit * 1;
+            $("#balance").empty();
+            var bal_value = "";
+            if (bal > 0) {
+                bal_value = bal + " Dr";
+                $("#balance").val(bal_value);
+            } else if (bal < 0) {
+                bal_value = bal * -1 + " Cr";
+                $("#balance").val(bal_value);
+            } else {
+                $("#balance").val(0);
+            }
             var worrds = parseInt(total_debit);
             obj.amount_in_words = toWords(worrds);
         }
     });
-    // $("#project_id").select2();
-    // $("#account_id").select2();
-    // $("#journal_id").select2();
     $(function () {
         $("#jsGrid").jsGrid({
             height: "300px",
@@ -262,16 +257,30 @@ $(document).ready(function () {
                 debit = parseInt(debit);
                 totalCredit = creditVal - credit;
                 totalDebit = debitVal - debit;
+
+                totalDebit = totalDebit != null ? totalDebit : 0;
+                totalCredit = totalCredit != null ? totalCredit : 0;
+                $("#total_debit").val(totalDebit);
+                $("#total_credit").val(totalCredit);
+                var bal = totalDebit * 1 - totalCredit * 1;
+                $("#balance").empty();
+                var bal_value = "";
+                if (bal > 0) {
+                    bal_value = bal + " Dr";
+                    $("#balance").val(bal_value);
+                } else if (bal < 0) {
+                    bal_value = bal * -1 + " Cr";
+                    $("#balance").val(bal_value);
+                } else {
+                    $("#balance").val(0);
+                }
+
                 totalCredit = parseFloat(totalCredit)
                     .toFixed(2)
                     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
                 totalDebit = parseFloat(totalDebit)
                     .toFixed(2)
                     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
-                totalDebit = totalDebit != null ? totalDebit : 0;
-                totalCredit = totalCredit != null ? totalCredit : 0;
-                $("#total_debit").val(totalDebit);
-                $("#total_credit").val(totalCredit);
             },
             controller: {
                 loadData: function (filter) {
@@ -279,7 +288,7 @@ $(document).ready(function () {
                         type: "GET",
                         url:
                             url_local +
-                            "/accounting/grid-journal-edit/" +
+                            "/journal-entries/grid-edit/" +
                             journal_entry_id,
                         data: filter,
                         dataType: "JSON",
@@ -306,20 +315,32 @@ $(document).ready(function () {
                                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
                             $("#total_debit").val(totalDebit);
                             $("#total_credit").val(totalCredit);
+
+                            var bal = total_debit * 1 - total_credit * 1;
+                            $("#balance").empty();
+                            var bal_value = "";
+                            if (bal > 0) {
+                                bal_value = bal + " Dr";
+                                $("#balance").val(bal_value);
+                            } else if (bal < 0) {
+                                bal_value = bal * -1 + " Cr";
+                                $("#balance").val(bal_value);
+                            } else {
+                                $("#balance").val(0);
+                            }
                         },
                     });
                 },
             },
             fields: [
                 {
-                    name: " ",
-                    title: " ",
+                    name: "Date",
                     type: "text",
-                    width: 0,
+                    width: 30,
                     editing: false,
                 },
                 {
-                    name: "Date",
+                    name: "Code",
                     type: "text",
                     width: 30,
                     editing: false,
@@ -413,7 +434,10 @@ $(document).ready(function () {
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             $("#total_debit").val(debitSort);
             $("#total_credit").val(creditSort);
-            if ($("#journal_id").val() == "" || $("#journal_id").val() == null) {
+            if (
+                $("#journal_id").val() == "" ||
+                $("#journal_id").val() == null
+            ) {
                 errorMessage("Please Select Journal!");
                 $("#journal_id").focus();
                 return;
@@ -431,9 +455,9 @@ $(document).ready(function () {
                 errorMessage("Unbalance Debit & Credit");
                 return;
             }
-            entry_id = $("#entry_id").val();
+            id = $("#id").val();
             var journal_id = $("#journal_id").val();
-            var vendor_id = $("#vendor_id").val();
+            var supplier_id = $("#supplier_id").val();
             var reference = $("#reference").val();
             if (obj.item.length > 0) {
                 var load_func = function () {
@@ -442,10 +466,10 @@ $(document).ready(function () {
                 obj = JSON.stringify(obj);
                 $.ajax({
                     data: {
-                        id: entry_id,
+                        id: id,
                         journal_id: journal_id,
-                        vendor_id: vendor_id,
-                        reference:reference,
+                        supplier_id: supplier_id,
+                        reference: reference,
                         items: obj,
                     },
                     headers: {
@@ -454,7 +478,7 @@ $(document).ready(function () {
                         ),
                     },
                     type: "post",
-                    url: url_local + "/accounting/store-journal-entry",
+                    url: url_local + "/journal-entries/store",
                     beforeSend: function () {
                         $("#preloader").show();
                     },
@@ -465,7 +489,7 @@ $(document).ready(function () {
                         if (data != null) {
                             successMessage("Journal Entry Save Successfully!");
                             window.location.href =
-                                url_local + "/accounting/list-journal-entry";
+                                url_local + "/journal-entries";
                             $("#preloader").hide();
                             setTimeout(function () {
                                 $("#deleted_div").hide("fade");
@@ -477,8 +501,6 @@ $(document).ready(function () {
         });
 
         var editDetails = function (item, index) {
-            projectId = $("#project_id").val(item.projectId);
-            $("#project_id").change();
             $("#explanation").val(item.Explanation);
             var debit = item.Debit.replace(/[\, ]/g, "");
             var credit = item.Credit.replace(/[\, ]/g, "");
@@ -501,13 +523,12 @@ $(document).ready(function () {
         };
     });
 
-    function Clear(){
-        $("#account_id").val('').trigger("change");
-        // $("#pdate").val('');
-        $("#accountCode").val('');
-        $("#checkno").val('');
-        $("#billno").val('');
-        $("#explanation").val('');
+    function Clear() {
+        $("#account_id").val("").trigger("change");
+        $("#accountCode").val("");
+        $("#checkno").val("");
+        $("#billno").val("");
+        $("#explanation").val("");
         $("#debit").val(0);
         $("#credit").val(0);
     }
@@ -518,8 +539,6 @@ $(document).ready(function () {
         obj = editedItem;
         editedItems.item = obj;
 
-        projectId = $("#project_id").val(item.projectId);
-        $("#project_id").change();
         $("#explanation").val(item.Explanation);
 
         var debit = item.Debit.replace(/[\, ]/g, "");
@@ -538,8 +557,8 @@ $(document).ready(function () {
         $("#billno").val(item.BillNo);
         $("#doc_date").val(item.bill_date);
         // $("#accountCode").val(item.code);
-        $("#accountId").val(item.accountId);
-        $("#accountId").change();
+        $("#account_id").val(item.account_id);
+        $("#account_id").change();
     }
 
     function calculate2() {

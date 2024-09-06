@@ -69,6 +69,14 @@ class SupplierService
         return $data;
     }
 
+    public function getAllActiveSupplier()
+    {
+        return $this->model_supplier->getModel()::with('account_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->get();
+    }
+
     public function save($obj)
     {
         if ($obj['id'] != null && $obj['id'] != '') {

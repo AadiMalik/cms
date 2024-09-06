@@ -1,11 +1,11 @@
 import {
     ajaxPostRequest,
     ajaxGetRequest,
-} from "../../../../../public/js/common-methods/http-requests.js";
+} from "../../../../../js/common-methods/http-requests.js";
 import {
     errorMessage,
     successMessage,
-} from "../../../../../public/js/common-methods/toasters.js";
+} from "../../../../../js/common-methods/toasters.js";
 
 $(function () {
     
@@ -23,7 +23,7 @@ $(function () {
             if (result.isConfirmed) {
                 ajaxGetRequest(
                     url_local +
-                        "/accounting/delete-journal-entry" +
+                        "/journal-entries/destroy" +
                         "/" +
                         journal_entry_id
                 )

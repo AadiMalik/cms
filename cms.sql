@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 06, 2024 at 11:51 AM
+-- Generation Time: Sep 06, 2024 at 10:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -127,6 +127,69 @@ INSERT INTO `journals` (`id`, `name`, `prefix`, `is_active`, `is_deleted`, `crea
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `journal_entries`
+--
+
+CREATE TABLE `journal_entries` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `entryNum` varchar(255) DEFAULT NULL,
+  `journal_id` int(11) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `date_post` date DEFAULT NULL,
+  `reference` varchar(255) DEFAULT NULL,
+  `amount_in_words` varchar(255) DEFAULT NULL,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `journal_entries`
+--
+
+INSERT INTO `journal_entries` (`id`, `entryNum`, `journal_id`, `supplier_id`, `customer_id`, `date_post`, `reference`, `amount_in_words`, `createdby_id`, `updatedby_id`, `is_deleted`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(5, 'JV-2024-09-0001', 2, 2, NULL, '2024-09-06', 'sss', NULL, 1, NULL, 1, 1, '2024-09-06 15:47:08', '2024-09-06 15:52:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `journal_entry_details`
+--
+
+CREATE TABLE `journal_entry_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `journal_entry_id` int(11) DEFAULT NULL,
+  `explanation` longtext DEFAULT NULL,
+  `bill_no` varchar(255) DEFAULT NULL,
+  `check_no` varchar(255) DEFAULT NULL,
+  `check_date` date DEFAULT NULL,
+  `credit` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `debit` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `doc_date` varchar(255) DEFAULT NULL,
+  `account_id` int(11) DEFAULT NULL,
+  `amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `amount_in_words` varchar(191) DEFAULT NULL,
+  `account_code` varchar(191) DEFAULT NULL,
+  `createdby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `journal_entry_details`
+--
+
+INSERT INTO `journal_entry_details` (`id`, `journal_entry_id`, `explanation`, `bill_no`, `check_no`, `check_date`, `credit`, `debit`, `doc_date`, `account_id`, `amount`, `amount_in_words`, `account_code`, `createdby_id`, `created_at`, `updated_at`) VALUES
+(1, 5, '', '', '', NULL, 0.00, 200.00, '2024-09-06', 6, 200.00, 'two hundred ', '12345', NULL, '2024-09-06 15:47:08', '2024-09-06 15:47:08'),
+(2, 5, '', '', '', NULL, 200.00, 0.00, '2024-09-06', 6, 200.00, 'two hundred ', '12345', NULL, '2024-09-06 15:47:08', '2024-09-06 15:47:08');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -150,7 +213,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (7, '2024_09_05_000951_create_accounts_table', 3),
 (8, '2024_09_05_001923_create_account_types_table', 3),
 (9, '2024_09_05_230824_create_suppliers_table', 4),
-(10, '2024_09_06_082046_create_journals_table', 5);
+(10, '2024_09_06_082046_create_journals_table', 5),
+(11, '2024_09_06_182838_create_journal_entries_table', 6),
+(12, '2024_09_06_183423_create_journal_entry_details_table', 6);
 
 -- --------------------------------------------------------
 
@@ -246,7 +311,12 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (30, 'journals_create', 'web', '2024-09-06 04:08:30', '2024-09-06 04:08:30'),
 (31, 'journals_edit', 'web', '2024-09-06 04:08:44', '2024-09-06 04:08:44'),
 (32, 'journals_delete', 'web', '2024-09-06 04:08:54', '2024-09-06 04:08:54'),
-(33, 'journals_status', 'web', '2024-09-06 04:09:05', '2024-09-06 04:09:05');
+(33, 'journals_status', 'web', '2024-09-06 04:09:05', '2024-09-06 04:09:05'),
+(34, 'journal_entries_access', 'web', '2024-09-06 15:22:33', '2024-09-06 15:22:33'),
+(35, 'journal_entries_create', 'web', '2024-09-06 15:22:44', '2024-09-06 15:22:44'),
+(36, 'journal_entries_edit', 'web', '2024-09-06 15:22:57', '2024-09-06 15:22:57'),
+(37, 'journal_entries_print', 'web', '2024-09-06 15:23:10', '2024-09-06 15:23:10'),
+(38, 'journal_entries_delete', 'web', '2024-09-06 15:23:22', '2024-09-06 15:23:22');
 
 -- --------------------------------------------------------
 
@@ -336,7 +406,12 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (30, 1),
 (31, 1),
 (32, 1),
-(33, 1);
+(33, 1),
+(34, 1),
+(35, 1),
+(36, 1),
+(37, 1),
+(38, 1);
 
 -- --------------------------------------------------------
 
@@ -444,6 +519,18 @@ ALTER TABLE `journals`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `journal_entries`
+--
+ALTER TABLE `journal_entries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `journal_entry_details`
+--
+ALTER TABLE `journal_entry_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -546,16 +633,28 @@ ALTER TABLE `journals`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `journal_entries`
+--
+ALTER TABLE `journal_entries`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `journal_entry_details`
+--
+ALTER TABLE `journal_entry_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`

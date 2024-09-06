@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\JournalController;
+use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SupplierController;
@@ -115,6 +116,35 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('status/{id}', [JournalController::class, 'status']);
         Route::get('/js/JournalForm.js', function () {
             $path = resource_path('views/journal/js/JournalForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    Route::group(['prefix' => 'journal-entries'], function () {
+        Route::get('/', [JournalEntryController::class, 'index']);
+        Route::post('data', [JournalEntryController::class, 'getData'])->name('journal-entry.data');
+        Route::get('create', [JournalEntryController::class, 'create']);
+        Route::post('store', [JournalEntryController::class, 'store']);
+        Route::get('edit/{id}', [JournalEntryController::class, 'edit']);
+        Route::get('destroy/{id}', [JournalEntryController::class, 'destroy']);
+        Route::get('print/{id}', [JournalEntryController::class, 'print']);
+        Route::get('grid-edit/{id}', [JournalEntryController::class, 'grid_journal_edit']);
+        Route::get('/js/JournalEntryForm.js', function () {
+            $path = resource_path('views/journal_entries/js/JournalEntryForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/editJournalEntry.js', function () {
+            $path = resource_path('views/journal_entries/js/editJournalEntry.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',
