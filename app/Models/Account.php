@@ -26,4 +26,9 @@ class Account extends Model
         'updatedby_id',
         'deletedby_id'
     ];
+
+    public function Account()
+    {
+        return $this->belongsToMany(Account::class);
+    }
 }

@@ -2,7 +2,7 @@
     <div class="main-menu">
         <ul class="metismenu" id="menu">
             @can('dashboard_access')
-            <li class="Ul_li--hover"><a href="{{ url('home') }}"><i class="fa fa-home mr-2 text-muted"
+            <li class="Ul_li--hover"><a class="{{ Request::is('home') ? 'sidebar_active' : '' }}" href="{{ url('home') }}"><i class="fa fa-home mr-2 text-muted"
                         style="font-size:20px;"></i><span class="item-name text-15 text-muted">Dashboard</span></a>
             </li>
             @endcan
@@ -43,6 +43,11 @@
                         <li class="item-name"><a class="{{ Request::is('warehouses*') ? 'sidebar_active' : '' }}"
                                 href="{{ url('warehouses') }}"><i class="nav-icon fa fa-circle"></i><span
                                     class="item-name">Warehouses</span></a></li>
+                    @endcan
+                    @can('suppliers_access')
+                        <li class="item-name"><a class="{{ Request::is('suppliers*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('suppliers') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Suppliers/Karigar</span></a></li>
                     @endcan
 
                 </ul>

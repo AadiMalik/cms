@@ -138,8 +138,8 @@ class AccountController extends Controller
         try {
             $response = $this->account_service->accountStatus($id);
             return $this->success(
-                config("global.status"),
-                $response
+                config('enum.status'),
+                []
             );
         } catch (Exception $e) {
             return $this->error(config('enum.error'));

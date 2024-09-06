@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Warehouse;
 use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
 use Exception;

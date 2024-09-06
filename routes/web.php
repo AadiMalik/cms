@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +70,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [WarehouseController::class, 'update']);
         Route::get('destroy/{id}', [WarehouseController::class, 'destroy']);
     });
+
+
     Route::group(['prefix' => 'accounts'], function () {
         Route::get('/', [AccountController::class, 'index']);
         Route::get('getMainAccounts', [AccountController::class, 'getMainAccounts'])->name('accounts.getMainAccounts');
@@ -87,5 +90,16 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    Route::group(['prefix' => 'suppliers'], function () {
+        Route::get('/', [SupplierController::class, 'index']);
+        Route::post('data', [SupplierController::class, 'getData'])->name('supplier.data');
+        Route::get('create', [SupplierController::class, 'create']);
+        Route::post('store', [SupplierController::class, 'store']);
+        Route::get('edit/{id}', [SupplierController::class, 'edit']);
+        Route::post('update', [SupplierController::class, 'update']);
+        Route::get('destroy/{id}', [SupplierController::class, 'destroy']);
+        Route::get('status/{id}', [SupplierController::class, 'status']);
     });
 });

@@ -60,12 +60,12 @@
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="role">Role<span class="text-danger">*</span> </label>
-                                    <select class="form-control select2" name="role" id="role" required style="height: 100px;">
+                                    <select class="form-control select2" name="role" id="role" required style="width: 100%;">
                                         @foreach($roles as $role)
                                             <option value="{{ $role->name }}" {{ (isset($user) && $user->hasRole($role->name)) ? 'selected' : '' }}>{{ $role->name??'' }}</option>
                                         @endforeach
                                     </select>
-                                    @error('permissions')
+                                    @error('role')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>

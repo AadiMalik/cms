@@ -65,7 +65,7 @@ class AccountService
     public function getAllChild()
     {
         $accounts = $this->model_account->getModel()::orderBy('code', 'ASC')
-            ->where('parentId', '!=', 0)
+            ->where('parent_id', '!=', 0)
             ->where('is_deleted', 0)
             ->orderBy('code', 'ASC')
             ->get();
@@ -75,6 +75,17 @@ class AccountService
     public function getAll()
     {
         $accounts = $this->model_account->getModel()::where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->orderBy('code', 'ASC')
+            ->get();
+
+        return $accounts;
+    }
+    public function getAllActiveChild()
+    {
+        $accounts = $this->model_account->getModel()::orderBy('code', 'ASC')
+            ->where('parent_id', '!=', 0)
+            ->where('is_deleted', 0)
             ->where('is_active', 1)
             ->orderBy('code', 'ASC')
             ->get();
