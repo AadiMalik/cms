@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -24,7 +26,7 @@ use Illuminate\Support\Facades\Response;
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+    return redirect('login');
 });
 
 Auth::routes();
@@ -145,6 +147,37 @@ Route::group(['middleware' => ['auth']], function () {
         });
         Route::get('/js/editJournalEntry.js', function () {
             $path = resource_path('views/journal_entries/js/editJournalEntry.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    Route::group(['prefix' => 'customers'], function () {
+        Route::get('/', [CustomerController::class, 'index']);
+        Route::post('data', [CustomerController::class, 'getData'])->name('customer.data');
+        Route::get('create', [CustomerController::class, 'create']);
+        Route::post('store', [CustomerController::class, 'store']);
+        Route::get('edit/{id}', [CustomerController::class, 'edit']);
+        Route::post('update', [CustomerController::class, 'update']);
+        Route::get('destroy/{id}', [CustomerController::class, 'destroy']);
+        Route::get('status/{id}', [CustomerController::class, 'status']);
+    });
+
+    Route::group(['prefix' => 'products'], function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::post('data', [ProductController::class, 'getData'])->name('product.data');
+        Route::get('create', [ProductController::class, 'create']);
+        Route::post('store', [ProductController::class, 'store']);
+        Route::get('edit/{id}', [ProductController::class, 'edit']);
+        Route::post('update', [ProductController::class, 'update']);
+        Route::get('destroy/{id}', [ProductController::class, 'destroy']);
+        Route::get('status/{id}', [ProductController::class, 'status']);
+        Route::get('/js/ProductForm.js', function () {
+            $path = resource_path('views/products/js/ProductForm.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

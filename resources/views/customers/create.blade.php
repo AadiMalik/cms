@@ -2,8 +2,8 @@
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
-            <h1>Supplier/Karigar</h1>
-            @if (isset($supplier))
+            <h1>Customer</h1>
+            @if (isset($customer))
                 <ul>
                     <li>Update</li>
                     <li>Edit</li>
@@ -24,15 +24,15 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-4">
-                    <form action="{{ url('suppliers/store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ url('customers/store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <div class="card-body">
                             <div class="row">
-                                <input type="hidden" name="id" value="{{ isset($supplier) ? $supplier->id : '' }}" />
+                                <input type="hidden" name="id" value="{{ isset($customer) ? $customer->id : '' }}" />
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="name">Name<span class="text-danger">*</span> </label>
                                     <input class="form-control" type="text" name="name"
-                                        value="{{ isset($supplier) ? $supplier->name : old('name') }}" maxlength="50"
+                                        value="{{ isset($customer) ? $customer->name : old('name') }}" maxlength="50"
                                         placeholder="Enter name" required />
                                     @error('name')
                                         <span class="text-danger">{{ $message }}</span>
@@ -41,7 +41,7 @@
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="cnic">CNIC<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="cnic"
-                                        value="{{ isset($supplier) ? $supplier->cnic : old('cnic') }}" maxlength="13"
+                                        value="{{ isset($customer) ? $customer->cnic : old('cnic') }}" maxlength="13"
                                         placeholder="Enter CNIC" />
                                     @error('cnic')
                                         <span class="text-danger">{{ $message }}</span>
@@ -50,36 +50,27 @@
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="contact">Contact<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="contact"
-                                        value="{{ isset($supplier) ? $supplier->contact : old('contact') }}" maxlength="11"
+                                        value="{{ isset($customer) ? $customer->contact : old('contact') }}" maxlength="11"
                                         placeholder="Enter contact" />
                                     @error('contact')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="company">Company<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="company"
-                                        value="{{ isset($supplier) ? $supplier->company : old('company') }}" maxlength="11"
-                                        placeholder="Enter company" />
-                                    @error('company')
+                                    <label for="email">Email<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="email" name="email"
+                                        value="{{ isset($customer) ? $customer->email : old('email') }}" maxlength="11"
+                                        placeholder="Enter email" />
+                                    @error('email')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="type">Type<span class="text-danger">*</span> </label>
-                                    <select class="form-control" name="type" id="type" required>
-                                        <option value="" selected disabled>--Select Type--</option>
-                                        <option value="0"
-                                            @if (isset($supplier)) {{ $supplier->type == 0 ? 'selected' : '' }} @endif>
-                                            Supplier</option>
-                                        <option value="1"
-                                            @if (isset($supplier)) {{ $supplier->type == 1 ? 'selected' : '' }} @endif>
-                                            Karigar</option>
-                                        <option value="2"
-                                            @if (isset($supplier)) {{ $supplier->type == 2 ? 'selected' : '' }} @endif>
-                                            Both</option>
-                                    </select>
-                                    @error('type')
+                                    <label for="address">Address<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="address"
+                                        value="{{ isset($customer) ? $customer->address : old('address') }}" maxlength="100"
+                                        placeholder="Enter address" />
+                                    @error('address')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -90,7 +81,7 @@
                                         <option value="" selected disabled>--Select Account--</option>
                                         @foreach ($accounts as $account)
                                             <option value="{{ $account->id }}"
-                                                {{ isset($supplier) && $supplier->account_id == $account->id ? 'selected' : '' }}>
+                                                {{ isset($customer) && $customer->account_id == $account->id ? 'selected' : '' }}>
                                                 {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
                                         @endforeach
                                     </select>
@@ -98,32 +89,27 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-4 form-group mb-3">
-                                    <label for="gold_waste">Waste/Tola<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="gold_waste" onkeypress="return isNumberKey(event)" maxlength="10"
-                                        value="{{ isset($supplier) ? $supplier->gold_waste : old('gold_waste') }}"
-                                        maxlength="11" placeholder="Enter waste/tola" />
-                                    @error('gold_waste')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                <div class="col-md-3 form-group mb-3">
+                                    <label for="date_of_birth">Date of Birth</label>
+                                    <input class="form-control" type="date" name="date_of_birth" maxlength="10"
+                                        value="{{ isset($customer) ? $customer->date_of_birth : old('date_of_birth') }}"/>
                                 </div>
-                                <div class="col-md-4 form-group mb-3">
-                                    <label for="stone_waste">Stone Waste<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="stone_waste" onkeypress="return isNumberKey(event)" maxlength="10"
-                                        value="{{ isset($supplier) ? $supplier->stone_waste : old('stone_waste') }}"
-                                        maxlength="11" placeholder="Enter stone waste" />
-                                    @error('stone_waste')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                <div class="col-md-3 form-group mb-3">
+                                    <label for="anniversary_date">Anniversary Date</label>
+                                    <input class="form-control" type="date" name="anniversary_date" maxlength="10"
+                                        value="{{ isset($customer) ? $customer->anniversary_date : old('anniversary_date') }}" />
                                 </div>
-                                <div class="col-md-4 form-group mb-3">
-                                    <label for="kaat">Kaat<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="kaat" onkeypress="return isNumberKey(event)" maxlength="10"
-                                        value="{{ isset($supplier) ? $supplier->kaat : old('kaat') }}" maxlength="11"
-                                        placeholder="Enter kaat" />
-                                    @error('kaat')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                <div class="col-md-3 form-group mb-3">
+                                    <label for="ring_size">Ring Size</label>
+                                    <input class="form-control" type="text" name="ring_size" onkeypress="return isNumberKey(event)" maxlength="10"
+                                        value="{{ isset($customer) ? $customer->ring_size : old('ring_size') }}" maxlength="11"
+                                        placeholder="Enter ring size" />
+                                </div>
+                                <div class="col-md-3 form-group mb-3">
+                                    <label for="bangle_size">Ring Size</label>
+                                    <input class="form-control" type="text" name="bangle_size" onkeypress="return isNumberKey(event)" maxlength="10"
+                                        value="{{ isset($customer) ? $customer->bangle_size : old('bangle_size') }}" maxlength="11"
+                                        placeholder="Enter bangle size" />
                                 </div>
                             </div>
 
@@ -131,7 +117,7 @@
                         <div class="card-footer">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <a href="{{ url('suppliers') }}" class="btn btn-danger">Cancel</a>
+                                    <a href="{{ url('customers') }}" class="btn btn-danger">Cancel</a>
                                     <button class="btn btn-primary">Save</button>
                                 </div>
                             </div>
@@ -146,7 +132,6 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('#type').select2();
             $('#account_id').select2();
         });
 

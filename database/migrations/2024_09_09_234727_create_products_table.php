@@ -13,17 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('suppliers', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('contact')->nullable();
-            $table->string('cnic')->nullable();
-            $table->string('company')->nullable();
-            $table->integer('type')->default(0)->comment('0 for supplier, 1 for karigar and 2 for both');
-            $table->integer('account_id')->nullable();
-            $table->decimal('gold_waste')->default(0.00)->comment('waste/tola');
-            $table->decimal('stone_waste')->default(0.00)->comment('Stone Studding Waste');
-            $table->decimal('kaat')->default(0.00)->comment('kaat/tola');
+            $table->string('prefix')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->integer('createdby_id')->nullable();
@@ -40,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('suppliers');
+        Schema::dropIfExists('products');
     }
 };

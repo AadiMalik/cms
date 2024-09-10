@@ -33,12 +33,32 @@
                 </ul>
             </li>
             @endcan
+            @can('customers_access')
+            <li
+                class="Ul_li--hover {{ Request::is('customers*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-user text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Customers</span></a>
+                <ul class="mm-collapse">
+                    @can('customers_access')
+                        <li class="item-name"><a class="{{ Request::is('customers*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('customers') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Customers</span></a></li>
+                    @endcan
+
+                </ul>
+            </li>
+            @endcan
             @can('inventory_access')
             <li
                 class="Ul_li--hover {{ Request::is('warehouses*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Inventory</span></a>
                 <ul class="mm-collapse">
+                    @can('products_access')
+                        <li class="item-name"><a class="{{ Request::is('products*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('products') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Products</span></a></li>
+                    @endcan
                     @can('warehouses_access')
                         <li class="item-name"><a class="{{ Request::is('warehouses*') ? 'sidebar_active' : '' }}"
                                 href="{{ url('warehouses') }}"><i class="nav-icon fa fa-circle"></i><span

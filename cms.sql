@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 06, 2024 at 10:54 PM
+-- Generation Time: Sep 10, 2024 at 02:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -80,6 +80,40 @@ CREATE TABLE `account_types` (
 INSERT INTO `account_types` (`id`, `type`, `created_at`, `updated_at`) VALUES
 (1, 'type 1', NULL, NULL),
 (2, 'Type 2', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `cnic` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `anniversary_date` date DEFAULT NULL,
+  `ring_size` varchar(255) DEFAULT NULL,
+  `bangle_size` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `account_id` int(12) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(12) DEFAULT NULL,
+  `updatedby_id` int(12) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deletedby_id` int(12) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`id`, `name`, `contact`, `email`, `cnic`, `address`, `date_of_birth`, `anniversary_date`, `ring_size`, `bangle_size`, `is_active`, `account_id`, `is_deleted`, `createdby_id`, `updatedby_id`, `created_at`, `updated_at`, `deletedby_id`) VALUES
+(1, 'Idola Russell', 'Provident', 'lexozozadu@mailinator.com', 'Quod praesent', 'Quia molestias neque architecto non ut non incidunt eum minim eius maxime cumque lorem sunt aut ut', '1985-08-14', '1977-01-03', 'Aute offic', 'Nostrum do', 1, 6, 1, 1, 1, '2024-09-09 18:40:22', '2024-09-09 18:41:08', 1);
 
 -- --------------------------------------------------------
 
@@ -215,7 +249,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (9, '2024_09_05_230824_create_suppliers_table', 4),
 (10, '2024_09_06_082046_create_journals_table', 5),
 (11, '2024_09_06_182838_create_journal_entries_table', 6),
-(12, '2024_09_06_183423_create_journal_entry_details_table', 6);
+(12, '2024_09_06_183423_create_journal_entry_details_table', 6),
+(13, '2024_09_09_230457_create_customers_table', 7),
+(14, '2024_09_09_234727_create_products_table', 8);
 
 -- --------------------------------------------------------
 
@@ -316,7 +352,17 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (35, 'journal_entries_create', 'web', '2024-09-06 15:22:44', '2024-09-06 15:22:44'),
 (36, 'journal_entries_edit', 'web', '2024-09-06 15:22:57', '2024-09-06 15:22:57'),
 (37, 'journal_entries_print', 'web', '2024-09-06 15:23:10', '2024-09-06 15:23:10'),
-(38, 'journal_entries_delete', 'web', '2024-09-06 15:23:22', '2024-09-06 15:23:22');
+(38, 'journal_entries_delete', 'web', '2024-09-06 15:23:22', '2024-09-06 15:23:22'),
+(39, 'customers_access', 'web', '2024-09-09 18:32:21', '2024-09-09 18:32:21'),
+(40, 'customers_create', 'web', '2024-09-09 18:32:33', '2024-09-09 18:32:33'),
+(41, 'customers_edit', 'web', '2024-09-09 18:32:42', '2024-09-09 18:32:42'),
+(42, 'customers_status', 'web', '2024-09-09 18:32:53', '2024-09-09 18:32:53'),
+(43, 'customers_delete', 'web', '2024-09-09 18:33:03', '2024-09-09 18:33:03'),
+(44, 'products_access', 'web', '2024-09-09 18:55:23', '2024-09-09 18:55:23'),
+(45, 'products_create', 'web', '2024-09-09 18:55:32', '2024-09-09 18:55:32'),
+(46, 'products_edit', 'web', '2024-09-09 18:55:40', '2024-09-09 18:55:40'),
+(47, 'products_status', 'web', '2024-09-09 18:55:50', '2024-09-09 18:55:50'),
+(48, 'products_delete', 'web', '2024-09-09 18:55:59', '2024-09-09 18:55:59');
 
 -- --------------------------------------------------------
 
@@ -336,6 +382,32 @@ CREATE TABLE `personal_access_tokens` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `prefix` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `products`
+--
+
+INSERT INTO `products` (`id`, `name`, `prefix`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Ladies Rings', 'LR', 1, 1, 1, 1, 1, '2024-09-09 19:13:26', '2024-09-09 19:13:38');
 
 -- --------------------------------------------------------
 
@@ -411,7 +483,17 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (35, 1),
 (36, 1),
 (37, 1),
-(38, 1);
+(38, 1),
+(39, 1),
+(40, 1),
+(41, 1),
+(42, 1),
+(43, 1),
+(44, 1),
+(45, 1),
+(46, 1),
+(47, 1),
+(48, 1);
 
 -- --------------------------------------------------------
 
@@ -427,6 +509,9 @@ CREATE TABLE `suppliers` (
   `company` varchar(255) DEFAULT NULL,
   `type` int(11) NOT NULL DEFAULT 0 COMMENT '0 for supplier, 1 for karigar and 2 for both',
   `account_id` int(11) DEFAULT NULL,
+  `gold_waste` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'waste/tola',
+  `stone_waste` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'Stone Studding Waste',
+  `kaat` decimal(18,2) NOT NULL DEFAULT 0.00 COMMENT 'kaat/tola',
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
   `createdby_id` int(11) DEFAULT NULL,
@@ -440,9 +525,9 @@ CREATE TABLE `suppliers` (
 -- Dumping data for table `suppliers`
 --
 
-INSERT INTO `suppliers` (`id`, `name`, `contact`, `cnic`, `company`, `type`, `account_id`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
-(1, 'Jamalia Russo', 'Soluta amet', 'Itaque incidu', 'Gallegos Workman Plc', 1, NULL, 1, 1, 1, 1, 1, '2024-09-05 18:40:36', '2024-09-05 18:54:54'),
-(2, 'Sopoline Palmer', 'Corporis to', 'Animi molest', 'Baker Baldwin Co', 0, 5, 1, 0, 1, 1, NULL, '2024-09-05 19:08:39', '2024-09-05 19:17:01');
+INSERT INTO `suppliers` (`id`, `name`, `contact`, `cnic`, `company`, `type`, `account_id`, `gold_waste`, `stone_waste`, `kaat`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Jamalia Russo', 'Soluta amet', 'Itaque incidu', 'Gallegos Workman Plc', 1, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 1, 1, '2024-09-05 18:40:36', '2024-09-05 18:54:54'),
+(2, 'Sopoline Palmer', 'Corporis to', 'Animi molest', 'Baker Baldwin Co', 0, 6, 6.50, 0.25, 4.00, 1, 0, 1, 1, NULL, '2024-09-05 19:08:39', '2024-09-09 18:02:55');
 
 -- --------------------------------------------------------
 
@@ -467,7 +552,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role_id`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Super Admin', 'admin@admin.com', NULL, '$2y$10$my0ITJsPEi//k75reS1dve8V8LlWQtP0hn/r2bsMbZYDCWwlYsU/i', 0, 'bLSo0WmfoyMjNBOgXuAgKnOb9k3ghi7aBg1YodxpiT7WNZFDQATt4KWSD3TD', NULL, '2024-09-03 18:50:18');
+(1, 'Super Admin', 'admin@admin.com', NULL, '$2y$10$my0ITJsPEi//k75reS1dve8V8LlWQtP0hn/r2bsMbZYDCWwlYsU/i', 0, '7r7PZArNpeJjMHwSw4AWkZJIgADKtiFFsp3rAwX3kmxtTeTzHccyqQKEQ7qk', NULL, '2024-09-03 18:50:18');
 
 -- --------------------------------------------------------
 
@@ -503,6 +588,12 @@ ALTER TABLE `accounts`
 -- Indexes for table `account_types`
 --
 ALTER TABLE `account_types`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -572,6 +663,12 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -621,6 +718,12 @@ ALTER TABLE `account_types`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -648,19 +751,25 @@ ALTER TABLE `journal_entry_details`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `roles`
