@@ -52,10 +52,9 @@ class SupplierController extends Controller
         abort_if(Gate::denies('suppliers_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $validator = Validator::make($request->all(), [
-                'name' => ['required', 'string', 'max:50'],
-                'cnic' => ['required', 'string', 'max:13'],
-                'contact' => ['required', 'string', 'max:11'],
-                'company' => ['required', 'string', 'max:50'],
+                'name' => ['required', 'string', 'max:191'],
+                'cnic' => ['required', 'string'],
+                'contact' => ['required', 'string'],
                 'type' => ['required'],
                 'account_id' => ['required'],
                 'gold_waste' => ['required'],
