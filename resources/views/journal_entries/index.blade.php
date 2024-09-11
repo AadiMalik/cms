@@ -64,7 +64,7 @@
                                         <label for="role">Customer</label>
                                         <select name="customer_id" id="customer_id" class="form-control">
                                             <option value="">All</option>
-                                            @foreach ($suppliers as $item)
+                                            @foreach ($customers as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
                                             @endforeach
                                         </select>

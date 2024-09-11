@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Concrete\AccountService;
+use App\Services\Concrete\CustomerService;
 use App\Services\Concrete\JournalEntryService;
 use App\Services\Concrete\JournalService;
 use App\Services\Concrete\SupplierService;
@@ -20,17 +21,20 @@ class JournalEntryController extends Controller
     protected $journal_service;
     protected $account_service;
     protected $supplier_service;
+    protected $customer_service;
     
     public function __construct(
         JournalEntryService $journal_entry_service,
         JournalService $journal_service,
         SupplierService $supplier_service,
-        AccountService $account_service
+        AccountService $account_service,
+        CustomerService $customer_service
     ) {
         $this->journal_entry_service = $journal_entry_service;
         $this->journal_service = $journal_service;
         $this->account_service = $account_service;
         $this->supplier_service = $supplier_service;
+        $this->customer_service = $customer_service;
     }
 
     public function index()
@@ -38,7 +42,8 @@ class JournalEntryController extends Controller
         $login_user = Auth::user()->id;
         $journals = $this->journal_service->getAllJournal();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
-        return view('journal_entries.index', compact('journals', 'suppliers'));
+        $customers = $this->customer_service->getAllActiveCustomer();
+        return view('journal_entries.index', compact('journals', 'suppliers','customers'));
     }
 
     public function getData(Request $request)
