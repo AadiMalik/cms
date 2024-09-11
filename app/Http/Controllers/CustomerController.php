@@ -44,21 +44,26 @@ class CustomerController extends Controller
     {
         abort_if(Gate::denies('customers_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $accounts = $this->account_service->getAllActiveChild();
-        return view('customers.create',compact('accounts'));
+        return view('customers.create', compact('accounts'));
     }
 
     public function store(Request $request)
     {
         abort_if(Gate::denies('customers_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => ['required', 'string', 'max:50'],
-                'cnic' => ['required', 'string', 'max:13'],
-                'contact' => ['required', 'string', 'max:11'],
-                'email' => ['required','email', 'string', 'max:50'],
-                'address' => ['required'],
-                'account_id' => ['required']
-            ]);
+            if ($request->id == null) {
+                $validator = Validator::make($request->all(), [
+                    'name' => ['required', 'string', 'max:191'],
+                    'cnic' => ['required', 'string'],
+                    'contact' => ['required', 'string'],
+                    'cnic_images' => ['required', 'array', 'min:3'],
+                    'cnic_images.*' => ['mimes:jpg,jpeg,png,bmp', 'max:2048']
+                ]);
+            } else {
+                $validator = Validator::make($request->all(), [
+                    'cnic_images.*' => ['mimes:jpg,jpeg,png,bmp','max:2048']
+                ]);
+            }
 
             if ($validator->fails()) {
 
@@ -66,6 +71,16 @@ class CustomerController extends Controller
             }
 
             $obj = $request->all();
+            $imagePaths = [];
+
+            if ($request->hasFile('cnic_images')) {
+                foreach ($request->file('cnic_images') as $image) {
+                    $fileName = time() . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('cnic_images'), $fileName);
+                    $imagePaths[] = 'cnic_images/' . $fileName;
+                }
+                $obj['cnic_images'] = json_encode($imagePaths);
+            }
             $customer = $this->customer_service->save($obj);
 
             if (!$customer)
@@ -83,7 +98,7 @@ class CustomerController extends Controller
         abort_if(Gate::denies('customers_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $customer = $this->customer_service->getById($id);
         $accounts = $this->account_service->getAllActiveChild();
-        return view('customers.create', compact('customer','accounts'));
+        return view('customers.create', compact('customer', 'accounts'));
     }
 
 

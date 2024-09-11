@@ -24,6 +24,9 @@ return new class extends Migration
             $table->date('anniversary_date')->nullable();
             $table->string('ring_size')->nullable();
             $table->string('bangle_size')->nullable();
+            $table->string('reference')->nullable();
+            $table->string('comment')->nullable();
+            $table->text('cnic_images')->nullable();
             $table->integer('account_id')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);

@@ -32,7 +32,7 @@
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="name">Name<span class="text-danger">*</span> </label>
                                     <input class="form-control" type="text" name="name"
-                                        value="{{ isset($supplier) ? $supplier->name : old('name') }}" maxlength="50"
+                                        value="{{ isset($supplier) ? $supplier->name : old('name') }}" maxlength="191"
                                         placeholder="Enter name" required />
                                     @error('name')
                                         <span class="text-danger">{{ $message }}</span>
@@ -41,8 +41,8 @@
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="cnic">CNIC<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="cnic"
-                                        value="{{ isset($supplier) ? $supplier->cnic : old('cnic') }}" maxlength="13"
-                                        placeholder="Enter CNIC" />
+                                        value="{{ isset($supplier) ? $supplier->cnic : old('cnic') }}" maxlength="191"
+                                        placeholder="Enter CNIC" required />
                                     @error('cnic')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -50,16 +50,16 @@
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="contact">Contact<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="contact"
-                                        value="{{ isset($supplier) ? $supplier->contact : old('contact') }}" maxlength="11"
-                                        placeholder="Enter contact" />
+                                        value="{{ isset($supplier) ? $supplier->contact : old('contact') }}" maxlength="191"
+                                        placeholder="Enter contact" required />
                                     @error('contact')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="company">Company<span class="text-danger">*</span></label>
+                                    <label for="company">Company</label>
                                     <input class="form-control" type="text" name="company"
-                                        value="{{ isset($supplier) ? $supplier->company : old('company') }}" maxlength="11"
+                                        value="{{ isset($supplier) ? $supplier->company : old('company') }}" maxlength="191"
                                         placeholder="Enter company" />
                                     @error('company')
                                         <span class="text-danger">{{ $message }}</span>
@@ -100,27 +100,27 @@
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="gold_waste">Waste/Tola<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="gold_waste" onkeypress="return isNumberKey(event)" maxlength="10"
+                                    <input class="form-control" type="text" name="gold_waste" onkeypress="return isNumberKey(event)"
                                         value="{{ isset($supplier) ? $supplier->gold_waste : old('gold_waste') }}"
-                                        maxlength="11" placeholder="Enter waste/tola" />
+                                        maxlength="50" placeholder="Enter waste/tola" required />
                                     @error('gold_waste')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="stone_waste">Stone Waste<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="stone_waste" onkeypress="return isNumberKey(event)" maxlength="10"
+                                    <input class="form-control" type="text" name="stone_waste" onkeypress="return isNumberKey(event)"
                                         value="{{ isset($supplier) ? $supplier->stone_waste : old('stone_waste') }}"
-                                        maxlength="11" placeholder="Enter stone waste" />
+                                        maxlength="50" placeholder="Enter stone waste" required/>
                                     @error('stone_waste')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="kaat">Kaat<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="kaat" onkeypress="return isNumberKey(event)" maxlength="10"
-                                        value="{{ isset($supplier) ? $supplier->kaat : old('kaat') }}" maxlength="11"
-                                        placeholder="Enter kaat" />
+                                    <input class="form-control" type="text" name="kaat" onkeypress="return isNumberKey(event)"
+                                        value="{{ isset($supplier) ? $supplier->kaat : old('kaat') }}" maxlength="50"
+                                        placeholder="Enter kaat" required/>
                                     @error('kaat')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
