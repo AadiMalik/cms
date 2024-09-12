@@ -39,13 +39,10 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="cnic">CNIC<span class="text-danger">*</span></label>
+                                    <label for="cnic">CNIC</label>
                                     <input class="form-control" type="text" name="cnic"
                                         value="{{ isset($supplier) ? $supplier->cnic : old('cnic') }}" maxlength="191"
-                                        placeholder="Enter CNIC" required />
-                                    @error('cnic')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
+                                        placeholder="Enter CNIC" />
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="contact">Contact<span class="text-danger">*</span></label>
@@ -124,6 +121,24 @@
                                     @error('kaat')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="bank_name">Bank Name</label>
+                                    <input class="form-control" type="text" name="bank_name"
+                                        value="{{ isset($supplier) ? $supplier->bank_name : old('bank_name') }}" maxlength="191"
+                                        placeholder="Enter bank name" />
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="account_title">Account Title</label>
+                                    <input class="form-control" type="text" name="account_title"
+                                        value="{{ isset($supplier) ? $supplier->account_title : old('account_title') }}" maxlength="191"
+                                        placeholder="Enter account title" />
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="account_no">Account No</label>
+                                    <input class="form-control" type="text" name="account_no"
+                                        value="{{ isset($supplier) ? $supplier->account_no : old('account_no') }}" maxlength="191"
+                                        placeholder="Enter account no" />
                                 </div>
                             </div>
 

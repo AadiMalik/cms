@@ -39,16 +39,13 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="cnic">CNIC<span class="text-danger">*</span></label>
+                                    <label for="cnic">CNIC</label>
                                     <input class="form-control" type="text" name="cnic"
                                         value="{{ isset($customer) ? $customer->cnic : old('cnic') }}" maxlength="191"
                                         placeholder="Enter CNIC" />
-                                    @error('cnic')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="contact">Contact<span class="text-danger">*</span></label>
+                                    <label for="contact">Contact<span class="text-danger">**</span></label>
                                     <input class="form-control" type="text" name="contact"
                                         value="{{ isset($customer) ? $customer->contact : old('contact') }}" maxlength="191"
                                         placeholder="Enter contact" />
@@ -90,40 +87,52 @@
                                     <input class="form-control" type="date" name="anniversary_date"
                                         value="{{ isset($customer) ? $customer->anniversary_date : old('anniversary_date') }}" />
                                 </div>
-                                <div class="col-md-3 form-group mb-3">
+                                <div class="col-md-4 form-group mb-3">
                                     <label for="ring_size">Ring Size</label>
-                                    <select name="ring_size" id="ring_size" class="form-control">
-                                        <option value="" selected>--Select Ring Size--</option>
-                                        @foreach (config('enum.ring_size') as $item)
-                                            <option value="{{$item}}" @if(isset($customer)) {{($customer->ring_size==$item)?'selected':''}} @endif>{{$item??''}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-3 form-group mb-3">
-                                    <label for="bangle_size">Bangle Size</label>
-                                    <select name="bangle_size" id="bangle_size" class="form-control">
-                                        <option value="" selected>--Select Bangle Size--</option>
-                                        @foreach (config('enum.bangle_size') as $item)
-                                            <option value="{{$item}}" @if(isset($customer)) {{($customer->bangle_size==$item)?'selected':''}} @endif>{{$item??''}}</option>
-                                        @endforeach
-                                    </select>
+                                    <input class="form-control" type="text" name="ring_size"
+                                        value="{{ isset($customer) ? $customer->ring_size : old('ring_size') }}" maxlength="191"
+                                        placeholder="Enter ring size" />
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
-                                    <label for="cnic_images">CNIC Images<span class="text-danger">*</span> </label>
+                                    <label for="bangle_size">Bangle Size</label>
+                                    <input class="form-control" type="text" name="bangle_size"
+                                        value="{{ isset($customer) ? $customer->bangle_size : old('bangle_size') }}" maxlength="191"
+                                        placeholder="Enter bangle size" />
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="cnic_images">CNIC Images </label>
                                     <input class="form-control" type="file" name="cnic_images[]" accept=".jpg, .jpeg, .png" multiple />
                                     @error('cnic_images')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
+                                    <label for="bank_name">Bank Name</label>
+                                    <input class="form-control" type="text" name="bank_name"
+                                        value="{{ isset($customer) ? $customer->bank_name : old('bank_name') }}" maxlength="191"
+                                        placeholder="Enter bank name" />
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="account_title">Account Title</label>
+                                    <input class="form-control" type="text" name="account_title"
+                                        value="{{ isset($customer) ? $customer->account_title : old('account_title') }}" maxlength="191"
+                                        placeholder="Enter account title" />
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="account_no">Account No</label>
+                                    <input class="form-control" type="text" name="account_no"
+                                        value="{{ isset($customer) ? $customer->account_no : old('account_no') }}" maxlength="191"
+                                        placeholder="Enter account no" />
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
                                     <label for="reference">Reference</label>
-                                    <input class="form-control" type="text" name="reference" maxlength="191"
+                                    <input class="form-control" type="text" name="reference"
                                         value="{{ isset($customer) ? $customer->reference : old('reference') }}" maxlength="191"
                                         placeholder="Enter reference" />
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="comment">Comment</label>
-                                    <input class="form-control" type="text" name="comment" maxlength="191"
+                                    <input class="form-control" type="text" name="comment"
                                         value="{{ isset($customer) ? $customer->comment : old('comment') }}" maxlength="191"
                                         placeholder="Enter comment" />
                                 </div>

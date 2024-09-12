@@ -51,19 +51,11 @@ class CustomerController extends Controller
     {
         abort_if(Gate::denies('customers_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
-            if ($request->id == null) {
-                $validator = Validator::make($request->all(), [
-                    'name' => ['required', 'string', 'max:191'],
-                    'cnic' => ['required', 'string'],
-                    'contact' => ['required', 'string'],
-                    'cnic_images' => ['required', 'array', 'min:3'],
-                    'cnic_images.*' => ['mimes:jpg,jpeg,png,bmp', 'max:2048']
-                ]);
-            } else {
-                $validator = Validator::make($request->all(), [
-                    'cnic_images.*' => ['mimes:jpg,jpeg,png,bmp','max:2048']
-                ]);
-            }
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:191',
+                'contact' => 'required|string|unique:customers,contact,' . $request->id,
+                'cnic_images.*' => 'mimes:jpg,jpeg,png,bmp|max:2048'
+            ]);
 
             if ($validator->fails()) {
 

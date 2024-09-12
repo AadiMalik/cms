@@ -24,6 +24,9 @@ return new class extends Migration
             $table->decimal('gold_waste')->default(0.00)->comment('waste/tola');
             $table->decimal('stone_waste')->default(0.00)->comment('Stone Studding Waste');
             $table->decimal('kaat')->default(0.00)->comment('kaat/tola');
+            $table->string('bank_name')->nullable();
+            $table->string('account_title')->nullable();
+            $table->string('account_no')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->integer('createdby_id')->nullable();

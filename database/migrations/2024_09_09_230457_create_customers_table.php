@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('bangle_size')->nullable();
             $table->string('reference')->nullable();
             $table->string('comment')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('account_title')->nullable();
+            $table->string('account_no')->nullable();
             $table->text('cnic_images')->nullable();
             $table->integer('account_id')->nullable();
             $table->boolean('is_active')->default(1);

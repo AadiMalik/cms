@@ -53,7 +53,6 @@ class SupplierController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name' => ['required', 'string', 'max:191'],
-                'cnic' => ['required', 'string'],
                 'contact' => ['required', 'string'],
                 'type' => ['required'],
                 'account_id' => ['required'],
