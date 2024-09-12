@@ -22,6 +22,10 @@ return [
 
       // Ring Size
       'ring_size' => [4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35],
-      'bangle_size'=>[2.1,2.12,2.14,2.2,2.4,2.6,2.8,3]
+      'bangle_size'=>[2.1,2.12,2.14,2.2,2.4,2.6,2.8,3],
+      'department'=>['Sales','Production','Inventory'],
+      'employee_type'=>['Full-time','Part-time','Contract'],
+      'shift'=>['09AM-05:30PM','06AM-02PM','02PM-10PM','10PM-06AM'],
+      'payment_method'=>['Bank Transfer','Cash']
 
 ];

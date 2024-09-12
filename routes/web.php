@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PermissionController;
@@ -185,5 +186,17 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // HRM
+    Route::group(['prefix' => 'employees'], function () {
+        Route::get('/', [EmployeeController::class, 'index']);
+        Route::post('data', [EmployeeController::class, 'getData'])->name('employee.data');
+        Route::get('create', [EmployeeController::class, 'create']);
+        Route::post('store', [EmployeeController::class, 'store']);
+        Route::get('edit/{id}', [EmployeeController::class, 'edit']);
+        Route::post('update', [EmployeeController::class, 'update']);
+        Route::get('destroy/{id}', [EmployeeController::class, 'destroy']);
+        Route::get('status/{id}', [EmployeeController::class, 'status']);
     });
 });

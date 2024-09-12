@@ -98,6 +98,20 @@
                 </ul>
             </li>
             @endcan
+            @can('hrm_access')
+            <li
+                class="Ul_li--hover {{ Request::is('employees*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">HRM</span></a>
+                <ul class="mm-collapse">
+                    @can('employees_access')
+                        <li class="item-name"><a class="{{ Request::is('employees*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('employees') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Employee</span></a></li>
+                    @endcan
+                </ul>
+            </li>
+            @endcan
             @can('logout_access')
             <li class="Ul_li--hover"><a href="{{ route('logout') }}"
                     onclick="event.preventDefault();
