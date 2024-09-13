@@ -87,25 +87,19 @@
                                     <input class="form-control" type="date" name="anniversary_date"
                                         value="{{ isset($customer) ? $customer->anniversary_date : old('anniversary_date') }}" />
                                 </div>
-                                <div class="col-md-4 form-group mb-3">
+                                <div class="col-md-3 form-group mb-3">
                                     <label for="ring_size">Ring Size</label>
                                     <input class="form-control" type="text" name="ring_size"
                                         value="{{ isset($customer) ? $customer->ring_size : old('ring_size') }}" maxlength="191"
                                         placeholder="Enter ring size" />
                                 </div>
-                                <div class="col-md-4 form-group mb-3">
+                                <div class="col-md-3 form-group mb-3">
                                     <label for="bangle_size">Bangle Size</label>
                                     <input class="form-control" type="text" name="bangle_size"
                                         value="{{ isset($customer) ? $customer->bangle_size : old('bangle_size') }}" maxlength="191"
                                         placeholder="Enter bangle size" />
                                 </div>
-                                <div class="col-md-4 form-group mb-3">
-                                    <label for="cnic_images">CNIC Images </label>
-                                    <input class="form-control" type="file" name="cnic_images[]" accept=".jpg, .jpeg, .png" multiple />
-                                    @error('cnic_images')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                                
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="bank_name">Bank Name</label>
                                     <input class="form-control" type="text" name="bank_name"
@@ -123,6 +117,13 @@
                                     <input class="form-control" type="text" name="account_no"
                                         value="{{ isset($customer) ? $customer->account_no : old('account_no') }}" maxlength="191"
                                         placeholder="Enter account no" />
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="cnic_images">CNIC Images </label>
+                                    <input class="form-control" type="file" name="cnic_images[]" accept=".jpg, .jpeg, .png" multiple />
+                                    @error('cnic_images')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="reference">Reference</label>
