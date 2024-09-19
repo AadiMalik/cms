@@ -53,6 +53,11 @@ class ProductService
     {
         return Product::where('is_deleted', 0)->get();
     }
+    // get all product
+    public function getAllActiveProduct()
+    {
+        return Product::where('is_deleted', 0)->where('is_active',1)->get();
+    }
     // save Product
     public function saveProduct($obj)
     {

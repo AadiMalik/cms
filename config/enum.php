@@ -26,6 +26,12 @@ return [
       'department'=>['Sales','Production','Inventory'],
       'employee_type'=>['Full-time','Part-time','Contract'],
       'shift'=>['09AM-05:30PM','06AM-02PM','02PM-10PM','10PM-06AM'],
-      'payment_method'=>['Bank Transfer','Cash']
+      'payment_method'=>['Bank Transfer','Cash'],
+
+      //Diamond 
+      'type'=>['Natural','Treated','Man-made','Natural coloured'],
+      'cut'=>['Round','Princess','Emerald','Marquise','Oval','Pear','Cushion'],
+      'clarity'=>['F','IF','VVS-1','VVS-2','VS-1','VS-2','SI-1','SI-2','I-1','I-2','I-3'],
+      'color'=>['D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 
 ];

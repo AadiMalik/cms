@@ -8,7 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'name', 'prefix','createdby_id','updatedby_id','is_active','is_deleted','deletedby_id'];
+    protected $fillable = [
+        'id',
+        'name',
+        'prefix',
+        'createdby_id',
+        'updatedby_id',
+        'is_active',
+        'is_deleted',
+        'deletedby_id'
+    ];
     protected $dates = [
         'updated_at',
         'created_at'

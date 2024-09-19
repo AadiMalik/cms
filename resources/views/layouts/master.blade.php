@@ -21,8 +21,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        .sidebar_active{
-            background: #b8b8c5; border-radius: 20px;
+        .sidebar_active {
+            background: #b8b8c5;
+            border-radius: 20px;
         }
     </style>
     @yield('css')
@@ -68,23 +69,23 @@
             <div class="app-footer">
                 <div class="row">
                     <div class="col-md-9">
-                        <p><strong>Gull - Laravel + Bootstrap 4 admin template</strong></p>
+                        {{-- <p><strong>Gull - Laravel + Bootstrap 4 admin template</strong></p>
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero quis beatae officia saepe
                             perferendis voluptatum minima eveniet voluptates dolorum, temporibus nisi maxime nesciunt
                             totam repudiandae commodi sequi dolor quibusdam
                             <sunt></sunt>
-                        </p>
+                        </p> --}}
                     </div>
                 </div>
                 <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
-                    <a class="btn btn-primary text-white btn-rounded"
+                    {{-- <a class="btn btn-primary text-white btn-rounded"
                         href="https://themeforest.net/item/gull-bootstrap-laravel-admin-dashboard-template/23101970"
-                        target="_blank">Buy Gull HTML</a>
+                        target="_blank">Buy Gull HTML</a> --}}
                     <span class="flex-grow-1"></span>
                     <div class="d-flex align-items-center">
-                        <img class="logo" src="{{asset('assets/images/logo.png')}}" alt="">
+                        <img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="">
                         <div>
-                            <p class="m-0">&copy; 2018 Gull HTML</p>
+                            <p class="m-0">&copy; <span id="year"></span></p>
                             <p class="m-0">All rights reserved</p>
                         </div>
                     </div>
@@ -95,7 +96,7 @@
     </div><!-- ============ Search UI Start ============= -->
     <div class="search-ui">
         <div class="search-header">
-            <img src="{{asset('assets/images/logo.png')}}" alt="" class="logo">
+            <img src="{{ asset('assets/images/logo.png') }}" alt="" class="logo">
             <button class="search-close btn btn-icon bg-transparent float-right mt-2">
                 <i class="i-Close-Window text-22 text-muted"></i>
             </button>
@@ -109,7 +110,7 @@
                 <div class="card o-hidden flex-row mb-4 d-flex">
                     <div class="list-thumb d-flex">
                         <!-- TUMBNAIL -->
-                        <img src="{{asset('assets/images/products/headphone-1.jpg')}}" alt="">
+                        <img src="{{ asset('assets/images/products/headphone-1.jpg') }}" alt="">
                     </div>
                     <div class="flex-grow-1 pl-2 d-flex">
                         <div
@@ -133,7 +134,7 @@
                 <div class="card o-hidden flex-row mb-4 d-flex">
                     <div class="list-thumb d-flex">
                         <!-- TUMBNAIL -->
-                        <img src="{{asset('assets/images/products/headphone-2.jpg')}}" alt="">
+                        <img src="{{ asset('assets/images/products/headphone-2.jpg') }}" alt="">
                     </div>
                     <div class="flex-grow-1 pl-2 d-flex">
                         <div
@@ -157,7 +158,7 @@
                 <div class="card o-hidden flex-row mb-4 d-flex">
                     <div class="list-thumb d-flex">
                         <!-- TUMBNAIL -->
-                        <img src="{{asset('assets/images/products/headphone-3.jpg')}}" alt="">
+                        <img src="{{ asset('assets/images/products/headphone-3.jpg') }}" alt="">
                     </div>
                     <div class="flex-grow-1 pl-2 d-flex">
                         <div
@@ -181,7 +182,7 @@
                 <div class="card o-hidden flex-row mb-4 d-flex">
                     <div class="list-thumb d-flex">
                         <!-- TUMBNAIL -->
-                        <img src="{{asset('assets/images/products/headphone-4.jpg')}}" alt="">
+                        <img src="{{ asset('assets/images/products/headphone-4.jpg') }}" alt="">
                     </div>
                     <div class="flex-grow-1 pl-2 d-flex">
                         <div
@@ -245,7 +246,13 @@
     <script src="{{ asset('assets/js/vendor/toastr.min.js') }}"></script>
     <script src="{{ asset('assets/js/toastr.script.js') }}"></script>
     <script src="{{ asset('assets/js/vendor/datatables.min.js') }}"></script>
+    <script>
+        function getCurrentYear() {
+            return new Date().getFullYear(); // returns the year via local timing
+        };
 
+        document.getElementById("year").innerHTML = getCurrentYear();
+    </script>
     @yield('js')
 </body>
 

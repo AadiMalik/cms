@@ -7,6 +7,7 @@ use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
@@ -106,6 +107,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [SupplierController::class, 'update']);
         Route::get('destroy/{id}', [SupplierController::class, 'destroy']);
         Route::get('status/{id}', [SupplierController::class, 'status']);
+        Route::get('get-by-id/{id}', [SupplierController::class, 'getSupplierById']);
     });
 
     Route::group(['prefix' => 'journals'], function () {
@@ -198,5 +200,72 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [EmployeeController::class, 'update']);
         Route::get('destroy/{id}', [EmployeeController::class, 'destroy']);
         Route::get('status/{id}', [EmployeeController::class, 'status']);
+    });
+
+    // HRM
+    Route::group(['prefix' => 'ratti-kaats'], function () {
+        Route::get('/', [RattiKaatController::class, 'index']);
+        Route::post('data', [RattiKaatController::class, 'getData'])->name('ratti-kaat.data');
+        Route::get('create', [RattiKaatController::class, 'create']);
+        Route::post('store', [RattiKaatController::class, 'store']);
+        Route::get('edit/{id}', [RattiKaatController::class, 'edit']);
+        Route::post('update', [RattiKaatController::class, 'update']);
+        Route::get('destroy/{id}', [RattiKaatController::class, 'destroy']);
+        Route::get('status/{id}', [RattiKaatController::class, 'status']);
+
+        Route::get('/js/rattiKaat.js', function () {
+            $path = resource_path('views/purchases/ratti_kaat/js/rattiKaat.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+
+        // Bead weight
+        Route::get('beads/{ratti_kaat_id}/{product_id}', [RattiKaatController::class, 'getBeadWeight']);
+        Route::post('bead-store', [RattiKaatController::class, 'storeBeadWeight']);
+        Route::get('bead-destroy/{id}', [RattiKaatController::class, 'destroyBeadWeight']);
+
+        Route::get('/js/beadWeight.js', function () {
+            $path = resource_path('views/purchases/ratti_kaat/js/beadWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+
+        // Stone weight
+        Route::get('stones/{ratti_kaat_id}/{product_id}', [RattiKaatController::class, 'getStoneWeight']);
+        Route::post('stone-store', [RattiKaatController::class, 'storeStoneWeight']);
+        Route::get('stone-destroy/{id}', [RattiKaatController::class, 'destroyStoneWeight']);
+
+        Route::get('/js/stoneWeight.js', function () {
+            $path = resource_path('views/purchases/ratti_kaat/js/stoneWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+
+        // diamond carat
+        Route::get('diamonds/{ratti_kaat_id}/{product_id}', [RattiKaatController::class, 'getDiamondCarat']);
+        Route::post('diamond-store', [RattiKaatController::class, 'storeDiamondCarat']);
+        Route::get('diamond-destroy/{id}', [RattiKaatController::class, 'destroyDiamondCarat']);
+
+        Route::get('/js/diamondCarat.js', function () {
+            $path = resource_path('views/purchases/ratti_kaat/js/diamondCarat.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 });

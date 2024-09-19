@@ -29,6 +29,7 @@
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
                         <button type="submit" id="saveBtn" class="btn btn-primary" value="create">Save</button>
                     </div>
+                </div>
             </form>
         </div>
     </div>

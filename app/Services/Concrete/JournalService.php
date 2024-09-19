@@ -36,7 +36,7 @@ class JournalService
             ->addColumn('action', function ($item) {
                 $action_column = '';
                 $edit_column    = "<a class='text-success mr-2' id='editJournal' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Edit'><i title='Add' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
-                $delete_column    = "<a class='text-danger mr-2'  id='deleteJournal' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
+                $delete_column    = "<a class='text-danger mr-2' id='deleteJournal' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
                 if (Auth::user()->can('journals_edit'))
                     $action_column .= $edit_column;
                 if (Auth::user()->can('journals_delete'))

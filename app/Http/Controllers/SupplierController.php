@@ -122,4 +122,17 @@ class SupplierController extends Controller
         }
     }
 
+    public function getSupplierById($id)
+    {
+        try {
+            return $this->success(
+                config('enum.success'),
+                $this->supplier_service->getById($id)
+
+            );
+        } catch (Exception $e) {
+            return $this->error($e->getMessage());
+        }
+    }
+
 }
