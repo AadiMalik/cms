@@ -8,30 +8,32 @@
             </div>
             <form id="changeKaatForm" name="changeKaatForm" class="form-horizontal">
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name" class="col-sm-2 control-label">Email:<span
-                                style="color:red;">*</span></label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="email" name="email"
-                                placeholder="Enter permission email" maxlength="50" required>
+                    <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="name" class="control-label">Email:<span
+                                    style="color:red;">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter permission email" maxlength="50" required>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="password" class="col-sm-2 control-label">Password:<span
-                                style="color:red;">*</span></label>
-                        <div class="col-sm-12">
-                            <input type="password" class="form-control" id="password" name="password"
-                                placeholder="Enter password" required>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="password" class="control-label">Password:<span
+                                    style="color:red;">*</span></label>
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Enter password" required>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="kaat" class="col-sm-2 control-label">Kaat:<span
-                                style="color:red;">*</span></label>
-                        <div class="col-sm-12">
-                            <input type="text" class="form-control" id="kaat" name="kaat"
-                                placeholder="Enter kaat" required onkeypress="return isNumberKey(event)" maxlength="10">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="kaat" class="control-label">Kaat:<span
+                                    style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="kaat" name="kaat"
+                                    placeholder="Enter kaat" required onkeypress="return isNumberKey(event)" maxlength="10">
                         </div>
                     </div>
+                </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
                         <button type="submit" id="saveBtn" class="btn btn-primary" value="create">Save Change</button>

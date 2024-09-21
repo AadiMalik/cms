@@ -17,12 +17,12 @@ return new class extends Migration
             $table->id();
             $table->integer('ratti_kaat_id')->nullable();
             $table->integer('product_id')->nullable();
-            $table->decimal('beads',8,3)->default(0.00);
-            $table->decimal('gram',8,3)->default(0.00);
-            $table->decimal('carat',8,3)->default(0.00);
-            $table->decimal('gram_rate',8,3)->default(0.00);
-            $table->decimal('carat_rate',8,3)->default(0.00);
-            $table->decimal('total_amount',8,3)->default(0.00);
+            $table->decimal('beads',18,3)->default(0.00);
+            $table->decimal('gram',18,3)->default(0.00);
+            $table->decimal('carat',18,3)->default(0.00);
+            $table->decimal('gram_rate',18,3)->default(0.00);
+            $table->decimal('carat_rate',18,3)->default(0.00);
+            $table->decimal('total_amount',18,3)->default(0.00);
             $table->boolean('is_deleted')->default(0);
             $table->integer('createdby_id')->nullable();
             $table->integer('updatedby_id')->nullable();

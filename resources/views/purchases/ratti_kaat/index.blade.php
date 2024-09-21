@@ -2,100 +2,106 @@
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
-            <h1>Journal Entries</h1>
+            <h1>Ratti Kaats</h1>
             <ul>
                 <li>List</li>
                 <li>All</li>
             </ul>
         </div>
         <div class="separator-breadcrumb border-top"></div>
+        @if (session()->has('error'))
+            <div class="alert alert-danger">
+                {{ session()->get('error') }}
+            </div>
+        @endif
         <!-- end of row -->
         <section class="contact-list">
             <div class="row">
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
-                            @can('journal_entries_create')
-                                <a class="btn btn-primary btn-md m-1" href="{{ url('journal-entries/create') }}"
-                                    id="createNewJournal"><i class="fa fa-plus text-white mr-2"></i> Add Journal Entry</a>
-                            @endcan
+                                <a class="btn btn-primary btn-md m-1" href="{{ url('ratti-kaats/create') }}"><i
+                                        class="fa fa-plus text-white mr-2"></i> Add Ratti Kaat</a>
                         </div>
                         <div class="card-body">
+
+                            <h4 class="card-inside-title mt-2">Filters</h4>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="">From:<span class="text-danger">*</span></label>
+                                        <input type="date" id="start_date" name="start_date" class="form-control date">
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_end_date">
+                                    <div class="form-group">
+                                        <label for="">To:<span class="text-danger">*</span></label>
+                                        <input type="date" id="end_date" name="end_date" class="form-control date">
+                                    </div>
+                                </div>
+                                <div class="col-md-3" id="div_vendor">
+                                    <div class="form-group">
+                                        <label for="">Supplier/Karigar</label>
+                                        <select id="supplier_id" name="supplier_id" class="form-control">
+                                            <option value="">--Select Supplier/Karigar--</option>
+                                            @foreach ($suppliers as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name??'' }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Status</label>
+                                        <select id="posted" name="posted" class="form-control">
+                                            <option value="">All</option>
+                                            <option value="0">Unposted</option>
+                                            <option value="1">Posted</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group mt-4">
+                                        <button class="btn btn-primary waves-effect" id="search_button"
+                                            type="submit">Search</button>
+                                    </div>
+                                </div>
+
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <b>Filter</b>
+                                    <hr class="mt-2 mb-2">
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="role">From Date</label>
-                                        <input type="date" name="from_date" class="form-control" id="from_date" required>
+                                    <div class="col-md-8" id="div_post_ratti_kaat">
+                                        <a class="btn btn-info" style="color:#fff;" type="button" id="selectAll">Check
+                                            All</a>
+                                        <a class="btn btn-danger" style="color:#fff;" type="button"
+                                            id="unselectAll">Uncheck All</a>
+                                        <a class="btn btn-primary" style="color:#fff;" type="button"
+                                            id="post_ratti_kaat">Post</a>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="role">To Date</label>
-                                        <input type="date" name="to_date" class="form-control" id="to_date" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="role">Journal</label>
-                                        <select name="journal_id" id="journal_id" class="form-control">
-                                            <option value="">All</option>
-                                            @foreach ($journals as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="role">Supplier</label>
-                                        <select name="supplier_id" id="supplier_id" class="form-control">
-                                            <option value="">All</option>
-                                            @foreach ($suppliers as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="role">Customer</label>
-                                        <select name="customer_id" id="customer_id" class="form-control">
-                                            <option value="">All</option>
-                                            @foreach ($customers as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <button class="mt-4 btn btn-primary" id="search">Search</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <hr style="margin-top:0px;">
-                                </div>
                             </div>
-                            <div class="table-responsive">
-                                <table id="journal_entry_table" class="table display" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Voucher</th>
-                                            <th>Journal</th>
-                                            <th>Reference</th>
-                                            <th>Debit</th>
-                                            <th>Credit</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="ratti_kaat_pagination_table" class="display table" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Sr#</th>
+                                                <th>Date</th>
+                                                <th>Ratti Kaat#</th>
+                                                <th>Supplier/Karigar</th>
+                                                <th>Purchase Account</th>
+                                                <th>Total</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <!-- end of col -->
@@ -107,43 +113,53 @@
     </div>
 @endsection
 @section('js')
-    <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
-    <script src="{{ asset('js/common-methods/http-requests.js') }}" type="module"></script>
-    <script src="{{ url('journal-entries/js/JournalEntryForm.js') }}" type="module"></script>
-    <script type="text/javascript">
-        var url_local = "{{ url('/') }}";
-        $(document).ready(function() {
-            $("#journal_id").select2();
-            $("#supplier_id").select2();
-            $("#customer_id").select2();
-        });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/momenttimezone/0.5.31/moment-timezone-with-data-2012-2022.min.js">
     </script>
+    <script src="{{ asset('asssts/js/common-methods/toaster.js') }}"></script>
     @include('includes.datatable', [
         'columns' => "
-    {data: 'date_post' , name: 'date_post'},
-    {data: 'entryNum' , name: 'entryNum'},
-    {data: 'journal' , name: 'journal','sortable': false , searchable: false},
-    {data: 'reference' , name: 'reference' , 'sortable': false},
-    {data: 'debit' , name: 'debit' , 'sortable': false},
-    {data: 'credit' , name: 'credit' , 'sortable': false},
-    {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
-        'route' => 'journal-entries/data',
+    {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
+    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+    {data: 'purchase_date', name: 'purchase_date', orderable: false, searchable: false},
+    {data: 'ratti_kaat_no', name: 'ratti_kaat_no', orderable: false, searchable: false},
+    {data: 'supplier',name: 'supplier', orderable: false, searchable: false},
+    {data: 'purchase_account',name: 'purchase_account', orderable: false, searchable: false},
+    {data: 'total',name: 'total', orderable: false, searchable: false},
+    {data: 'posted',name: 'posted', orderable: false, searchable: false},
+    {data: 'action',name: 'action','sortable': false,searchable: false}",
+        'route' => 'ratti-kaats/data',
         'buttons' => false,
-        'pageLength' => 10,
-        'class' => 'journal_entry_table',
-        'variable' => 'journal_entry_table',
+        'pageLength' => 50,
+        'class' => 'ratti_kaat_pagination_table',
+        'variable' => 'ratti_kaat_pagination_table',
         'datefilter' => true,
-        'params' =>"from_date:$('#from_date').val(),to_date:$('#to_date').val(),journal_id:$('#journal_id').val(),supplier_id:$('#supplier_id').val(),customer_id:$('#customer_id').val()",
-    ]);
-
+        'params' => "supplier_id:$('#supplier_id').val(),posted:$('#posted').val()",
+        'rowCallback' => ' rowCallback: function (row, data) {
+    if(data.posted.includes("Unposted"))
+    $(row).css("background-color", "Pink");
+    }',
+    ])
     <script>
         $(document).ready(function() {
-            const fromDate = document.getElementById("from_date");
-            const toDate = document.getElementById("to_date");
+            $('#supplier_id').select2();
+            $("#unselectAll").hide();
+            $("#selectAll").click(function() {
+                $("input[type=checkbox]").prop('checked', 'checked');
+                $("#selectAll").hide();
+                $("#unselectAll").show();
+            });
+            $("#unselectAll").click(function() {
+                $("input[type=checkbox]").prop('checked', '');
+                $("#selectAll").show();
+                $("#unselectAll").hide();
+            })
+            const startDate = document.getElementById("start_date");
+            const endDate = document.getElementById("end_date");
 
             // ✅ Using the visitor's timezone
-            fromDate.value = formatDate();
-            toDate.value = formatDate();
+            startDate.value = formatDate();
+            endDate.value = formatDate();
 
             console.log(formatDate());
 
@@ -158,14 +174,149 @@
                     date.getFullYear(),
                 ].join("/");
             }
-            fromDate.value = new Date().toISOString().split("T")[0];
-            toDate.value = new Date().toISOString().split("T")[0];
+            startDate.value = new Date().toISOString().split("T")[0];
+            endDate.value = new Date().toISOString().split("T")[0];
 
-            initDataTablejournal_entry_table();
+
         });
 
-        $(document).on('click', '#search', function() {
-            initDataTablejournal_entry_table();
+        function isNumberKey(evt) {
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+    </script>
+    <script type="text/javascript">
+        $('#search_button').click(function() {
+            initDataTableratti_kaat_pagination_table();
+            $("#div_post_ratti_kaat").show();
+        });
+
+        function error(message) {
+            toastr.error(message, "Error!", {
+                showMethod: "slideDown",
+                hideMethod: "slideUp",
+                timeOut: 2e3,
+            });
+        }
+
+        function success(message) {
+            toastr.success(message, "Success!", {
+                showMethod: "slideDown",
+                hideMethod: "slideUp",
+                timeOut: 2e3,
+            });
+        }
+        
+        $("body").on("keyup", "#search", function(event) {
+            var url = $('#form_search').attr('action');
+            var data = $('#form_search').serializeArray();
+            var get = $('#form_search').attr('method');
+            var search = $('#search').val();
+            var stdate = $('#start_date').val();
+            var eddate = $('#end_date').val();
+            if (stdate > eddate) {
+                error('wrong dates selected');
+                $("#preloader").hide();
+                return false;
+            }
+            $.ajax({
+                type: get,
+                url: url,
+                data: data,
+            }).done(function(data) {
+                $('.result').html(data);
+                $("#div_post_ratti_kaat").show();
+            });
+
+        });
+        $("#post_ratti_kaat").click(function() {
+            $("#preloader").show();
+            var ratti_kaats = [];
+            $(".sub_chk:checked").each(function() {
+
+                ratti_kaats.push($(this).val());
+            });
+            var data = {};
+            data.ratti_kaat = ratti_kaats;
+            if (ratti_kaats.length <= 0) {
+                $("#preloader").hide();
+                error("Please select Rows!");
+            } else {
+                $.ajax({
+                    url: "{{ url('accounting/post-ratti_kaat') }}",
+                    type: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                    data: data,
+                    dataType: "json",
+
+                    success: function(data) {
+                        if ((data.Success = true)) {
+                            $("#preloader").hide();
+                            success(data.Message)
+                            initDataTableratti_kaat_pagination_table();
+                        }
+                    },
+                });
+            }
+        });
+        $("body").on("click", "#unpost_ratti_kaat", function() {
+            $("#preloader").show();
+            var ratti_kaat_id = $(this).data("id");
+
+            $.ajax({
+                url: "{{ url('accounting/unpost-ratti_kaat') }}/" + ratti_kaat_id,
+                type: "GET",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                dataType: "json",
+
+                success: function(data) {
+                    if ((data.Success = true)) {
+                        $("#preloader").hide();
+                        success(data.Message)
+                        initDataTableratti_kaat_pagination_table();
+                    }
+                },
+            });
+        });
+        // Delete ratti_kaat Code
+
+        $("body").on("click", "#deleteratti_kaat", function() {
+            var ratti_kaat_id = $(this).data("id");
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                            type: "get",
+                            url: "{{ url('accounting/delete-ratti_kaat') }}/" + ratti_kaat_id,
+                        }).done(function(data) {
+                            if ((data.Success = true)) {
+                                $("#preloader").hide();
+                                success(data.Message)
+                                initDataTableratti_kaat_pagination_table();
+                            } else {
+                                error(data.Message);
+                            }
+
+                        })
+                        .catch(function(err) {
+                            error(err.Message);
+                        });
+                }
+            });
         });
     </script>
 @endsection

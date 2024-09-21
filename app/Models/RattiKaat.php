@@ -14,6 +14,7 @@ class RattiKaat extends Model
         'purchase_date',
         'supplier_id',
         'purchase_account',
+        'paid',
         'paid_account',
         'reference',
         'pictures',
@@ -21,6 +22,8 @@ class RattiKaat extends Model
         'tax_account',
         'sub_total',
         'total',
+        'jv_id',
+        'paid_jv_id',
         'is_active',
         'is_deleted',
         'createdby_id',
@@ -31,7 +34,10 @@ class RattiKaat extends Model
         'updated_at',
         'created_at'
     ];
-
+    public function RattiKaatDetail()
+    {
+        return $this->hasMany(RattiKaatDetail::class, 'ratti_kaat_id');
+    }
     public function purchase_account_name()
     {
         return $this->belongsTo(Account::class, 'purchase_account');

@@ -119,7 +119,7 @@
                                         placeholder="Enter account no" />
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
-                                    <label for="cnic_images">CNIC Images </label>
+                                    <label for="cnic_images">Images </label>
                                     <input class="form-control" type="file" name="cnic_images[]" accept=".jpg, .jpeg, .png" multiple />
                                     @error('cnic_images')
                                         <span class="text-danger">{{ $message }}</span>

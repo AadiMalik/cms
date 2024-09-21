@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\RattiKaat;
+use App\Models\User;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CommonService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\RattiKaatService;
 use App\Services\Concrete\SupplierService;
 use App\Traits\JsonResponse;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class RattiKaatController extends Controller
@@ -39,7 +42,26 @@ class RattiKaatController extends Controller
 
     public function index()
     {
-        //
+        $suppliers = $this->supplier_service->getAllActiveSupplier();
+        return view('purchases.ratti_kaat.index', compact('suppliers'));
+    }
+    public function getData(Request $request)
+    {
+        try {
+            $end = $request['end_date'] ?? Carbon::now()->addDay(1);
+            $start = $request['start_date'] ?? Carbon::now()->subDay(1);
+            $supplier_id = $request['supplier_id'] ?? '';
+            $posted = $request['posted'] ?? '';
+            $obj = [
+                "supplier_id" => $supplier_id,
+                "end" => $end,
+                "start" => $start,
+                "posted" => $posted,
+            ];
+            return $this->ratti_kaat_service->getRattiKaatSource($obj);
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
     public function create()
     {
@@ -95,11 +117,11 @@ class RattiKaatController extends Controller
                 'product_id'        => $request->bead_weight_product_id,
                 'ratti_kaat_id'     => $request->bead_weight_ratti_kaat_id,
                 'beads'             => $request->beads,
-                'gram'              =>$request->bead_gram,
-                'carat'             =>$request->bead_carat,
-                'gram_rate'         =>$request->bead_gram_rate,
-                'carat_rate'        =>$request->bead_carat_rate,
-                'total_amount'      =>$request->bead_total
+                'gram'              => $request->bead_gram,
+                'carat'             => $request->bead_carat,
+                'gram_rate'         => $request->bead_gram_rate,
+                'carat_rate'        => $request->bead_carat_rate,
+                'total_amount'      => $request->bead_total
             ];
             $response = $this->ratti_kaat_service->saveBeadWeight($obj);
             return  $this->success(
@@ -168,12 +190,12 @@ class RattiKaatController extends Controller
             $obj = [
                 'product_id'        => $request->stone_weight_product_id,
                 'ratti_kaat_id'     => $request->stone_weight_ratti_kaat_id,
-                'stones'             => $request->stones,
-                'gram'              =>$request->stone_gram,
-                'carat'             =>$request->stone_carat,
-                'gram_rate'         =>$request->stone_gram_rate,
-                'carat_rate'        =>$request->stone_carat_rate,
-                'total_amount'      =>$request->stone_total
+                'stones'            => $request->stones,
+                'gram'              => $request->stone_gram,
+                'carat'             => $request->stone_carat,
+                'gram_rate'         => $request->stone_gram_rate,
+                'carat_rate'        => $request->stone_carat_rate,
+                'total_amount'      => $request->stone_total
             ];
             $response = $this->ratti_kaat_service->saveStoneWeight($obj);
             return  $this->success(
@@ -197,134 +219,220 @@ class RattiKaatController extends Controller
             return $this->error(config('enum.error'));
         }
     }
-    
-// Diamond Carat
-public function getDiamondCarat($ratti_kaat_id, $product_id)
-{
-    try {
-        $ratti_kaat_diamonds = $this->ratti_kaat_service->getDiamondCarat($ratti_kaat_id, $product_id);
-        return $this->success(
-            config('enum.success'),
-            $ratti_kaat_diamonds,
-            false
-        );
-    } catch (Exception $e) {
-        return $this->error(config('global.error'));
-    }
-}
-public function storeDiamondCarat(Request $request)
-{
-    $validation = Validator::make(
-        $request->all(),
-        [
-            'diamond_carat_product_id'     => 'required',
-            'diamond_carat_ratti_kaat_id'  => 'required',
-            'diamonds'                      => 'required',
-            'type'                          => 'required',
-            'color'                         => 'required',
-            'clarity'                       => 'required',
-            'cut'                           => 'required',
-            'carat'                 => 'required',
-            'carat_rate'            => 'required',
-            'diamond_total'                 => 'required',
-            'diamond_total_dollar'          => 'required'
-        ],
-        $this->validationMessage()
-    );
 
-    if ($validation->fails()) {
-        $validation_error = "";
-        foreach ($validation->errors()->all() as $message) {
-            $validation_error .= $message;
+    // Diamond Carat
+    public function getDiamondCarat($ratti_kaat_id, $product_id)
+    {
+        try {
+            $ratti_kaat_diamonds = $this->ratti_kaat_service->getDiamondCarat($ratti_kaat_id, $product_id);
+            return $this->success(
+                config('enum.success'),
+                $ratti_kaat_diamonds,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('global.error'));
         }
-        return $this->validationResponse(
-            $validation_error
-        );
     }
-    // try {
-        $obj = [
-            'product_id'        => $request->diamond_carat_product_id,
-            'ratti_kaat_id'     => $request->diamond_carat_ratti_kaat_id,
-            'diamonds'          => $request->diamonds,
-            'type'          => $request->type,
-            'cut'          => $request->cut,
-            'color'          => $request->color,
-            'clarity'          => $request->clarity,
-            'carat'             =>$request->carat,
-            'carat_rate'        =>$request->carat_rate,
-            'total_amount'      =>$request->diamond_total,
-            'total_dollar'      =>$request->diamond_total_dollar,
-        ];
-        $response = $this->ratti_kaat_service->saveDiamondCarat($obj);
-        return  $this->success(
-            config("enum.saved"),
-            $response
+    public function storeDiamondCarat(Request $request)
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'diamond_carat_product_id'      => 'required',
+                'diamond_carat_ratti_kaat_id'   => 'required',
+                'diamonds'                      => 'required',
+                'type'                          => 'required',
+                'color'                         => 'required',
+                'clarity'                       => 'required',
+                'cut'                           => 'required',
+                'carat'                         => 'required',
+                'carat_rate'                    => 'required',
+                'diamond_total'                 => 'required',
+                'diamond_total_dollar'          => 'required'
+            ],
+            $this->validationMessage()
         );
-    // } catch (Exception $e) {
-    //     return $this->error(config('enum.error'));
-    // }
-}
-public function destroyDiamondCarat($id)
-{
-    try {
-        $diamond = $this->ratti_kaat_service->deleteDiamondCaratById($id);
-        return $this->success(
-            config("enum.delete"),
-            $diamond,
-            true
-        );
-    } catch (Exception $e) {
-        return $this->error(config('enum.error'));
-    }
-}
 
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->validationResponse(
+                $validation_error
+            );
+        }
+        try {
+            $obj = [
+                'product_id'        => $request->diamond_carat_product_id,
+                'ratti_kaat_id'     => $request->diamond_carat_ratti_kaat_id,
+                'diamonds'          => $request->diamonds,
+                'type'              => $request->type,
+                'cut'               => $request->cut,
+                'color'             => $request->color,
+                'clarity'           => $request->clarity,
+                'carat'             => $request->carat,
+                'carat_rate'        => $request->carat_rate,
+                'total_amount'      => $request->diamond_total,
+                'total_dollar'      => $request->diamond_total_dollar,
+            ];
+            $response = $this->ratti_kaat_service->saveDiamondCarat($obj);
+            return  $this->success(
+                config("enum.saved"),
+                $response
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+    public function destroyDiamondCarat($id)
+    {
+        try {
+            $diamond = $this->ratti_kaat_service->deleteDiamondCaratById($id);
+            return $this->success(
+                config("enum.delete"),
+                $diamond,
+                true
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+    // Ratti Kaat Purchase Store
     public function store(Request $request)
     {
-        //
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'id'                => 'required',
+                'purchase_date'     => 'required',
+                'supplier_id'       => 'required',
+                'purchase_account'  => 'required',
+                'reference'         => 'required',
+                'pictures.*'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'purchaseDetail'    => 'required',
+            ],
+            $this->validationMessage()
+        );
+
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->validationResponse(
+                $validation_error
+            );
+        }
+
+        // try {
+            $filenames = [];
+            if ($request->hasFile('pictures')) {
+                foreach ($request->file('pictures') as $file) {
+                    $filename = time() . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('pictures'), $filename);
+                    $filenames[] = 'pictures/'.$filename; 
+                }
+            }
+            $obj = [
+                "id" => $request->id,
+                "purchase_date" => $request->purchase_date ?? Null,
+                "supplier_id" => $request->supplier_id ?? Null,
+                "purchase_account" => $request->purchase_account ?? Null,
+                "paid" => $request->paid ?? Null,
+                "paid_account" => $request->paid_account ?? Null,
+                "reference" => $request->reference ?? Null,
+                "pictures" => $filenames ?? Null,
+                "purchaseDetail" => $request->purchaseDetail
+            ];
+
+            $ratti_kaat = $this->ratti_kaat_service->updateRattiKaat($obj, $request->id);
+
+            return $this->success(
+                config('enum.saved'),
+                []
+            );
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\RattiKaat  $rattiKaat
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RattiKaat $rattiKaat)
+
+    public function edit($id)
     {
-        //
+        $accounts = $this->account_service->getAllActiveChild();
+        $suppliers = $this->supplier_service->getAllActiveSupplier();
+        $products = $this->product_service->getAllActiveProduct();
+        $ratti_kaat = $this->ratti_kaat_service->getRattiKaatById($id);
+        return view('purchases.ratti_kaat.create', compact('accounts', 'suppliers', 'products', 'ratti_kaat'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\RattiKaat  $rattiKaat
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RattiKaat $rattiKaat)
+
+    public function rattiKaatDetail($raat_kaat_id)
     {
-        //
+        try {
+            $ratti_kaat_detail = $this->ratti_kaat_service->getRattiKaatDetail($raat_kaat_id);
+            return $this->success(
+                config('enum.success'),
+                $ratti_kaat_detail,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('global.error'));
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\RattiKaat  $rattiKaat
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, RattiKaat $rattiKaat)
+    public function ChangeKaat(Request $request)
     {
-        //
-    }
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'email'       => 'required',
+                'password'    => 'required',
+                'kaat'        => 'required',
+            ],
+            $this->validationMessage()
+        );
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\RattiKaat  $rattiKaat
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RattiKaat $rattiKaat)
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->validationResponse(
+                $validation_error
+            );
+        }
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+            return $this->success(
+                config('enum.success'),
+                [
+                    "approved_by" => $user->id,
+                    "kaat" => number_format($request->kaat,3)
+                ]
+            );
+        } else {
+            return $this->error(
+                'Invalid credentials'
+            );
+        }
+    }
+    
+    // Ratti Kaat Post
+    public function postRattiKaat(Request $request)
     {
-        //
+        try {
+            $this->ratti_kaat_service->postedPurchase($request->all());
+            return $this->success(
+                config('anum.posted'),
+                []
+            );
+        } catch (Exception $e) {
+            return $this->error(config('anum.error'));
+        }
     }
 }

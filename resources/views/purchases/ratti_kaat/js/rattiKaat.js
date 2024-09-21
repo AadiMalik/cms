@@ -28,9 +28,9 @@ $(document).ready(function () {
     $('#total_stones_amount').trigger('keyup');
     $('#total_diamond_amount').trigger('keyup');
     $('#scale_weight').trigger('keyup');
-    $('#beads_weight').trigger('keyup');
+    $('#bead_weight').trigger('keyup');
     $('#other_charge').trigger('keyup');
-    
+
 });
 
 
@@ -45,196 +45,82 @@ $("#diamondCartButton").click(function () {
 });
 
 $("#ChangeKaatButton").click(function () {
+    if ($("#supplier_id").find(":selected").val() == 0) {
+        error("Supplier is not selected!");
+        return false;
+    }
     $("#chnageKaatForm").trigger("reset");
     $("#changeKaatModel").modal("show");
 });
 
-$("body").on("keyup", "#scale_weight,#beads_weight, #stones_weight,#diamond_carat",
-    function (event) {
-        var scale_weight = $("#scale_weight").val();
-        var beads_weight = $("#beads_weight").val();
-        var stones_weight = $("#stones_weight").val();
-        var diamond_carat = $("#diamond_carat").val();
-        var net_weight = 0;
-        net_weight = scale_weight - (beads_weight + stones_weight + diamond_carat);
-        $("#net_weight").val(net_weight.toFixed(3));
-    }
-);
-
-function totalAmount(){
-   var total_bead_amount = $("#total_bead_amount").val();
-   var total_stones_amount = $("#total_stones_amount").val();
-   var total_diamond_amount = $("#total_diamond_amount").val();
-   var other_charge = $("#other_charge").val();
-   var total_amount = (total_bead_amount * 1) + (total_stones_amount * 1) + (total_diamond_amount * 1) + (other_charge * 1);
-   $("#total_amount").val(total_amount.toFixed(3));
+//Function
+function netWeight() {
+    var scale_weight = $("#scale_weight").val();
+    var bead_weight = $("#bead_weight").val();
+    var stones_weight = $("#stones_weight").val();
+    var diamond_carat = $("#diamond_carat").val();
+    var net_weight = 0;
+    net_weight = scale_weight * 1 - (bead_weight * 1 + stones_weight * 1 + diamond_carat * 1);
+    $("#net_weight").val(net_weight.toFixed(3)).trigger("keyup");
 }
-$("#total_bead_amount").on("change", function (event) {
-    totalAmount();
-});
-$("#total_stones_amount").on("change", function (event) {
-    totalAmount();
-});
-$("#total_diamond_amount").on("change", function (event) {
-    totalAmount();
-});
-$("#other_charge").on("change", function (event) {
-    totalAmount();
-});
 
-$("body").on("keyup", "#modal_total_qty", function (event) {
-    var quantity = $("#modal_total_qty").val();
-    var price = $("#modal_product_price").val();
-    var taxPrecent = $("#modal_product_tax").val();
-    var sub = 0;
-    var total = 0;
-    taxRate = 0;
-    tax = taxPrecent / 100;
-    if (tax > 0) {
-        taxRate = tax;
-        netPrice = quantity * price;
-        sub = netPrice * taxRate;
-        total = sub + netPrice;
-    } else {
-        netPrice = quantity * price;
-        total = netPrice;
-    }
+function totalAmount() {
+    var total_bead_amount = $("#total_bead_amount").val();
+    var total_stones_amount = $("#total_stones_amount").val();
+    var total_diamond_amount = $("#total_diamond_amount").val();
+    var other_charge = $("#other_charge").val();
+    var total_amount = (total_bead_amount * 1) + (total_stones_amount * 1) + (total_diamond_amount * 1) + (other_charge * 1);
+    $("#total_amount").val(total_amount.toFixed(3));
+}
 
-    $("#modal_product_tax_amount").val(sub.toFixed(2));
-    $("#modal_total_price").val(total.toFixed(2));
+//Total weight
 
-    var i = $("#example tbody tr").length;
-});
-$("body").on(
-    "keyup",
-    "#modal_product_quantity,#modal_product_price, #modal_product_tax",
+$("body").on("keyup", "#scale_weight",
     function (event) {
-        getTotalByPackage();
-        var rdata = $(this).attr("data-id");
-        var quantity = $("#modal_product_quantity").val();
-        var price = $("#modal_product_price").val();
-        var taxPrecent = $("#modal_product_tax").val();
-        var sub = 0;
-        var total = 0;
-        taxRate = 0;
-        tax = taxPrecent / 100;
-        if (tax > 0) {
-            taxRate = tax;
-            netPrice = quantity * price;
-            sub = netPrice * taxRate;
-            total = sub + netPrice;
-        } else {
-            netPrice = quantity * price;
-            total = netPrice;
-        }
-
-        $("#modal_product_tax_amount").val(sub.toFixed(2));
-        $("#modal_total_price").val(total.toFixed(2));
-
-        var i = $("#example tbody tr").length;
+        netWeight()
     }
 );
-$("body").on("keyup", "#modal_product_tax_amount", function (event) {
-    var quantity = $("#modal_product_quantity").val();
-    var price = $("#modal_product_price").val();
-    var tax_amount = $("#modal_product_tax_amount").val();
-    var total = 0;
-    netPrice = quantity * price;
-    total = (tax_amount * 1) + netPrice;
-    $("#modal_total_price").val(total);
+$("#bead_weight").on("keyup", function (event) {
+    netWeight();
 });
-$("body").on("click", "#submit", function (e) {
-    e.preventDefault();
-    if ($("#bill_no").val() == "") {
-        error("Please Fill Bill No!");
-        $("#bill_no").focus();
-        return false;
-    }
-
-    if ($("#order_date").val() == "") {
-        error("Please Enter the Order Date!");
-        $("#order_date").focus();
-        return false;
-    }
-    if ($("#required_date").val() == "") {
-        error("Please Enter Delivery Date !");
-        $("#required_date").focus();
-        return false;
-    }
-    if ($("#vendor").find(":selected").val() == 0) {
-        error("Please select Vendor!");
-        $("#vendor").focus();
-        return false;
-    }
-    if ($("#warehouse_id").find(":selected").val() == 0) {
-        error("Please select Warehouse!");
-        $("#warehouse_id").focus();
-        return false;
-    }
-    if ($("#purchase_account").find(":selected").val() == 0) {
-        error("Please select Purchase Account!");
-        $("#purchase_account").focus();
-        return false;
-    }
-    if ($("#paid").val() > 0 && $("#paid_account").find(":selected").val() == '') {
-        error("Please select Paid Account!");
-        $("#paid_account").focus();
-        return false;
-    }
-    if ($("#tax_total").val() > 0 && $("#tax_account").find(":selected").val() == '') {
-        error("Please select Tax Account!");
-        $("#tax_account").focus();
-        return false;
-    }
-    var rowCount = $("table tbody tr").length;
-    if (rowCount < 1) {
-        error("No item is added!");
-
-        return false;
-    }
-    var submitEntry = {};
-    submitEntry.id = $("#id").val();
-    submitEntry.poId = $("#poId").val();
-    submitEntry.bill_no = $("#bill_no").val();
-    submitEntry.vendor = $("#vendor").find(":selected").val();
-    submitEntry.warehouse_id = $("#warehouse_id").find(":selected").val();
-    submitEntry.datePost = $("#order_date").val();
-    submitEntry.required_date = $("#required_date").val();
-    submitEntry.vendor = $("#vendor").find(":selected").val();
-    submitEntry.reference = $("#reference").val();
-    submitEntry.purchase_account = $("#purchase_account").find(":selected").val();
-    submitEntry.fare = $("#fare").val();
-    submitEntry.fare_account = $("#fare_account").find(":selected").val();
-    submitEntry.paid = $("#paid").val();
-    submitEntry.paid_account = $("#paid_account").find(":selected").val();
-    submitEntry.tax_account = $("#tax_account").find(":selected").val();
-    submitEntry.purchaseDetail = productData;
-
-    $.ajax({
-        url: url_local + "/accounting/store-purchase",
-        type: "POST",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: submitEntry,
-        dataType: "json",
-
-        success: function (data) {
-            if (data.Success) {
-                success(data.Message);
-                $("#submit").prop("disabled", true);
-
-                setTimeout(function () {
-                    $("#submit").prop("disabled", false);
-
-                    window.location = url_local + "/accounting/list-purchase";
-                }, 1000); // Disable button for 1 seconds
-            } else {
-                error(data.Message);
-            }
-        },
-    });
+$("#stones_weight").on("keyup", function (event) {
+    netWeight();
 });
+$("#diamond_carat").on("keyup", function (event) {
+    netWeight();
+});
+
+//Kaat Calulation
+$("#net_weight").on("keyup", function (event) {
+    var net_weight = $("#net_weight").val();
+    var supplier_kaat = $("#supplier_kaat").val();
+    var kaat = (net_weight / 96) * supplier_kaat;
+    $("#kaat").val(kaat.toFixed(3)).trigger("keyup");
+});
+
+// pure payable cal
+$("#kaat").on("keyup", function (event) {
+    var kaat = $("#kaat").val();
+    var net_weight = $("#net_weight").val();
+    var pure_payable = (net_weight * 1) - (kaat * 1);
+    $("#pure_payable").val(pure_payable.toFixed(3));
+});
+//Total Amount
+
+$("#total_bead_amount").on("keyup", function (event) {
+    totalAmount();
+});
+$("#total_stones_amount").on("keyup", function (event) {
+    totalAmount();
+});
+$("#total_diamond_amount").on("keyup", function (event) {
+    totalAmount();
+});
+$("#other_charge").on("keyup", function (event) {
+    totalAmount();
+});
+
+
 
 $("#supplier_id").on("change", function () {
     var supplier_id = $("#supplier_id").find(":selected").val();
@@ -244,42 +130,127 @@ $("#supplier_id").on("change", function () {
         url: url_local + "/suppliers/get-by-id/" + supplier_id,
     }).done(function (data) {
         var data = data.Data;
-        $("#ratti_kaat").val(data.kaat);
+        $("#supplier_kaat").val(data.kaat);
+    });
+});
+// Change Kaat
+$("#changeKaatForm").submit(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: url_local + "/ratti-kaats/change-kaat",
+        type: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: $("#changeKaatForm").serialize(),
+        dataType: "json",
+
+        success: function (data) {
+            console.log(data);
+            if (data.Success==true) {
+                $("#supplier_kaat").val(data.Data.kaat);
+                $("#kaat").trigger("keyup");
+                $("#approved_by").val(data.Data.approved_by);
+                $("#changeKaatForm").trigger("reset");
+                $("#changeKaatModel").modal("show");
+            } else {
+                error(data.Message);
+            }
+        },
+    });
+});
+// Submit Purchase
+$("body").on("click", "#submit", function (e) {
+    e.preventDefault();
+
+    // Validation logic
+    if ($("#purchase_date").val() == "") {
+        error("Please Enter the Purchase Date!");
+        $("#purchase_date").focus();
+        return false;
+    }
+    if ($("#supplier_id").find(":selected").val() == "" || $("#supplier_id").find(":selected").val() == 0) {
+        error("Please Select Supplier/Karigar!");
+        $("#supplier_id").focus();
+        return false;
+    }
+    if ($("#purchase_account").find(":selected").val() == 0 || $("#purchase_account").find(":selected").val() == '') {
+        error("Please Select Purchase Account!");
+        $("#purchase_account").focus();
+        return false;
+    }
+    if ($("#reference").val() == '') {
+        error("Please Enter Reference!");
+        $("#reference").focus();
+        return false;
+    }
+    if ($("#pictures")[0].files.length === 0) {  // Check for file selection
+        error("Please add pictures!");
+        $("#pictures").focus();
+        return false;
+    }
+    if ($("#paid_account").val() === '' && $("#paid").val() > 0) {
+        error("Please select paid account!");
+        $("#paid_account").focus();
+        return false;
+    }
+
+    var rowCount = $("table tbody tr").length;
+    if (rowCount < 1) {
+        error("No item is added!");
+        return false;
+    }
+
+    // Create FormData object for Ajax
+    var formData = new FormData();
+    formData.append("id", $("#id").val());
+    formData.append("purchase_date", $("#purchase_date").val());
+    formData.append("supplier_id", $("#supplier_id").find(":selected").val());
+    formData.append("purchase_account", $("#purchase_account").find(":selected").val());
+    formData.append("paid", $("#paid").val());
+    formData.append("paid_account", $("#paid_account").find(":selected").val());
+    formData.append("reference", $("#reference").val());
+    formData.append("total", $("#total").val());
+
+    // Append files (multiple images)
+    var pictures = $("#pictures")[0].files;
+    for (var i = 0; i < pictures.length; i++) {
+        formData.append('pictures[]', pictures[i]); // Add files to the form data
+    }
+
+    // Append product data (assuming productData is already a JSON string)
+    formData.append("purchaseDetail", JSON.stringify(productData));
+
+    $.ajax({
+        url: url_local + "/ratti-kaats/store",  // Laravel route
+        type: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: formData,
+        processData: false,  // Important for file uploads
+        contentType: false,  // Important for file uploads
+        dataType: "json",
+        success: function (data) {
+            if (data.Success) {
+                success(data.Message);
+                $("#submit").prop("disabled", true);
+
+                setTimeout(function () {
+                    $("#submit").prop("disabled", false);
+                    window.location = url_local + "/ratti-kaats";
+                }, 1000); // Disable button for 1 second
+            } else {
+                error(data.Message);
+            }
+        },
+        error: function(xhr, status, error) {
+            error("An error occurred: " + error);
+        }
     });
 });
 
-$("#package").on("change", function () {
-    getTotalByPackage();
-});
-function getTotalByPackage() {
-    var package_id = $("#package").find(":selected").val();
-    var bundle_qty = $("#modal_product_quantity").val();
-    $.ajax({
-        type: "get",
-        url: url_local + "/edit-package/" + package_id,
-    }).done(function (data) {
-        var data = data.Data;
-        $("#modal_total_qty").val(data.qty * bundle_qty);
-        // var quantity = data.qty * bundle_qty;
-        // var price = $("#modal_product_price").val();
-        // var taxPrecent = $("#modal_product_tax").val();
-        // var sub = 0;
-        // var total = 0;
-        // taxRate = 0;
-        // tax = taxPrecent / 100;
-        // if (tax > 0) {
-        //   taxRate = tax;
-        //   netPrice = quantity * price;
-        //   sub = netPrice * taxRate;
-        //   total = sub + netPrice;
-        // } else {
-        //   netPrice = quantity * price;
-        //   total = netPrice;
-        // }
-        // $("#modal_product_tax_amount").val(sub.toFixed(2));
-        // $("#modal_total_price").val(total.toFixed(2));
-    });
-}
+// Short
 function Short() {
     var table, j, x, y;
     table = document.getElementById("example");
@@ -318,15 +289,19 @@ function addProductRequest(id = null) {
     var productId = $("#product_id option:selected").val();
     var scale_weight = $("#scale_weight").val();
     var description = $("#description").val();
-    var beads_weight = $("#beads_weight").val();
+    var bead_weight = $("#bead_weight").val();
     var stones_weight = $("#stones_weight").val();
     var diamond_carat = $("#diamond_carat").val();
     var net_weight = $("#net_weight").val();
-    var ratti_kaat = $("#ratti_kaat").val();
+    var supplier_kaat = $("#supplier_kaat").val();
     var kaat = $("#kaat").val();
     var pure_payable = $("#pure_payable").val();
     var other_charge = $("#other_charge").val();
+    var total_bead_amount = $("#total_bead_amount").val();
+    var total_stones_amount = $("#total_stones_amount").val();
+    var total_diamond_amount = $("#total_diamond_amount").val();
     var total_amount = $("#total_amount").val();
+    var approved_by = $("#approved_by").val();
     if ($("#product_id").find(":selected").val() == 0) {
         error("Product is not selected!");
         return false;
@@ -339,7 +314,7 @@ function addProductRequest(id = null) {
         error("Please Enter Description!");
         return false;
     }
-    if (ratti_kaat == 0 || ratti_kaat == "") {
+    if (supplier_kaat == 0 || supplier_kaat == "") {
         error("Select Supplier/Karigar or Enter Ratti Kaat!");
         return false;
     }
@@ -357,14 +332,15 @@ function addProductRequest(id = null) {
     i = i + 1;
     var rows = "";
 
-    rows += `<tr id=${productId}><td>${i}</td><td>${productName}</td><td>${description}</td><td style="text-align: right;">${scale_weight}</td><td style="text-align: right;" >${beads_weight}</td>
-          <td style="text-align: right;" >${stones_weight}</td><td style="text-align: right;" >${diamond_carat}</td><td style="text-align: right;" >${net_weight}</td><td style="text-align: right;" >${ratti_kaat}</td>
+    rows += `<tr id=${productId}><td>${i}</td><td>${productName}</td><td>${description}</td><td style="text-align: right;">${scale_weight}</td><td style="text-align: right;" >${bead_weight}</td>
+          <td style="text-align: right;" >${stones_weight}</td><td style="text-align: right;" >${diamond_carat}</td><td style="text-align: right;" >${net_weight}</td><td style="text-align: right;" >${supplier_kaat}</td>
           <td style="text-align: right;" >${kaat}</td><td style="text-align: right;" >${pure_payable}</td><td style="text-align: right;" >${other_charge}</td><td style="text-align: right;" >${total_amount}</td><td>
           <a class="text-danger text-white r${productId}" onclick="Remove(${productId})"><i class="fa fa-trash"></i></a></td></tr>`;
     total = $("#total").val() * 1 + total_amount * 1;
     $("#total").val(total.toFixed(3));
     var tbody = $("#example tbody");
     success("Product Added Successfully!");
+    $("#supplier_id").trigger("change");
     tbody.prepend(rows);
 
     productData.push({
@@ -373,15 +349,19 @@ function addProductRequest(id = null) {
         product_name: productName,
         description: description,
         scale_weight: scale_weight,
-        beads_weight: beads_weight,
+        bead_weight: bead_weight,
         stones_weight: stones_weight,
         diamond_carat: diamond_carat,
         net_weight: net_weight,
-        ratti_kaat: ratti_kaat,
+        supplier_kaat: supplier_kaat,
         kaat: kaat,
         pure_payable: pure_payable,
         other_charge: other_charge,
+        total_bead_amount: total_bead_amount,
+        total_stones_amount: total_stones_amount,
+        total_diamond_amount: total_diamond_amount,
         total_amount: total_amount,
+        approved_by: approved_by,
     });
     Short();
     Clear();
@@ -488,32 +468,32 @@ function purchaseRequestDelete(row_id) {
     $(check).closest("tr").remove();
     productData.splice(item_index, 1);
 }
-poId = $("#poId").val() != null ? $("#poId").val() : null;
+id = $("#id").val() != null ? $("#id").val() : null;
 $.ajax({
     type: "GET",
-    url: url_local + "/accounting/get-purchase-detail/" + poId,
+    url: url_local + "/ratti-kaats/get-ratti-kaats-detail/" + id,
     headers: {
         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
     },
 
     success: function (data) {
-        //   console.log(data);
+          console.log(data);
         i = 0;
         productData = data.Data;
 
         var rows = "";
+        var total=0;
         $.each(productData, function (e, val) {
             i = i + 1;
             productData.sr = i;
-            purchase_total = purchase_total * 1 + val.totalPrice * 1;
-            rows += `<tr id=${val.productId} ><td><input type="text" disabled style="border:none; background:none; width:100%;" value="${val.pName}"> <input type="hidden" value="${val.productId}"></td><td><input type="text" disabled style="border:none; background:none; width:100%;" value="${val.productPackage}"> <input type="hidden" value="${val.productPackage_id}"></td><td><input type="text" disabled style="border:none; background:none; width:100%;" value="${val.productUnit}"></td><td ><input type="text" disabled style="border:none; background:none; width:100%; text-align:center;" value="${val.productQuantity}"></td>
-                  <td><input type="text" disabled style="border:none; background:none; width:100%; text-align:center;" value="${val.productPrice}"></td><td><input type="text" disabled style="border:none; background:none; width:100%; text-align:center;" value="${val.productTax}"></td><td ><input type="text" disabled style="border:none; background:none; width:100%; text-align:center;" value="${val.TotalQTY}"></td><td ><input type="text" disabled style="border:none; background:none; width:100%; text-align:center;" value="${val.totalPrice}"></td><td>  
-                  <a class="btn btn-warning" onclick="editProduct(${val.productId})" id="EditProduct">Edit</a>
-                                      <a class="btn btn-danger text-white  r${val.productId}" onclick="Remove(${val.productId})">Delete</a></td></tr>`;
+            rows += `<tr id=${val.product_id}><td>${i}</td><td>${val.product_name.name}</td><td>${val.description}</td><td style="text-align: right;">${val.scale_weight}</td><td style="text-align: right;" >${val.bead_weight}</td>
+          <td style="text-align: right;" >${val.stones_weight}</td><td style="text-align: right;" >${val.diamond_carat}</td><td style="text-align: right;" >${val.net_weight}</td><td style="text-align: right;" >${val.supplier_kaat}</td>
+          <td style="text-align: right;" >${val.kaat}</td><td style="text-align: right;" >${val.pure_payable}</td><td style="text-align: right;" >${val.other_charge}</td><td style="text-align: right;" >${val.total_amount}</td><td>
+          <a class="text-danger text-white r${val.product_id}" onclick="Remove(${val.product_id})"><i class="fa fa-trash"></i></a></td></tr>`;
+            total += val.total_amount * 1;
         });
 
-        $("#purchase_total").val(purchase_total.toFixed(2));
-        // $("#paid").val(purchase_total);
+        $("#total").val(total.toFixed(2));
         var tbody = $("#example tbody");
         tbody.prepend(rows);
     },
@@ -613,12 +593,16 @@ function Clear() {
     );
     $("#scale_weight").val(0);
     $("#description").val('');
-    $("#beads_weight").val(0);
+    $("#bead_weight").val(0);
     $("#stones_weight").val(0);
     $("#diamond_carat").val(0);
     $("#net_weight").val(0);
     $("#kaat").val(0);
     $("#pure_payable").val(0);
+    $("#total_bead_amount").val(0);
+    $("#total_stones_amount").val(0);
+    $("#total_diamond_amount").val(0);
     $("#other_charge").val(0);
     $("#total_amount").val(0);
+    $("#approved_by").val('');
 }

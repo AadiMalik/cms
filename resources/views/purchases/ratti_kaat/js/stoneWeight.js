@@ -18,7 +18,6 @@ $("#StonesWeightButton").click(function () {
         error("Product is not selected!");
         return false;
     }
-    stoneWeightData(ratti_kaat_id, $("#product_id").find(":selected").val());
     $("#stoneWeightForm").trigger("reset");
     $("#stone_weight_product_id").val($("#product_id").find(":selected").val());
     $("#stoneWeightModel").modal("show");
@@ -77,8 +76,8 @@ function stoneWeightData(ratti_kaat_id, product_id) {
                         rows += `<tr id=${val.id} ><td>${i}</td><td>${val.stones}</td><td>${val.gram}</td><td>${val.carat}</td><td>${val.gram_rate}</td><td>${val.carat_rate}</td><td>${val.total_amount}</td><td><a class="text-danger text-white"  id="deleteStone" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.id}" data-original-title="delete"><i class="fa fa-trash" style="font-size:18px;"></i></a></td></tr>`;
                     });
 
-                    $("#stones_weight").val(total_weight.toFixed(3));
-                    $("#total_stones_amount").val(total_stones_amount.toFixed(3));
+                    $("#stones_weight").val(total_weight.toFixed(3)).trigger("keyup");
+                    $("#total_stones_amount").val(total_stones_amount.toFixed(3)).trigger("keyup");
                     var tbody = $("#stoneTable");
                     tbody.prepend(rows);
                     i = i + 1;

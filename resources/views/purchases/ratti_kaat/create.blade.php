@@ -32,9 +32,10 @@
                         <div class="card-header bg-transparent text-right">
 
                         </div>
-                        <div class="card-body" style="font-size: 14px;">
-                            {{-- Edit Form  --}}
-                            <form id="form_validation" action="#" method="POST">
+
+                        <form id="rattiKaatForm" action="#" method="POST" enctype="multipart/form-data">
+                            <div class="card-body" style="font-size: 14px;">
+                                {{-- Edit Form  --}}
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-4">
@@ -69,18 +70,18 @@
                                         <div class="form-group">
                                             <label for="">Purchase Account:<span style="color:red;">*</span></label>
                                             <select id="purchase_account" name="purchase_account"
-                                                class="form-control show-tick" data-live-search="true" required
-                                                tabindex="9">
+                                                class="form-control show-tick" data-live-search="true" required>
                                                 <option value="0" selected>--Select Account--</option>
                                                 @foreach ($accounts as $item)
-                                                    <option value="{{ $item->id }}">
+                                                    <option value="{{ $item->id }}"
+                                                        @if (isset($ratti_kaat)) {{ $ratti_kaat->purchase_account == $item->id ? 'selected' : '' }} @endif>
                                                         {{ $item->code }} {{ $item->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-8">
                                         <div class="form-group form-float">
                                             <div class="form-group">
                                                 <label class="form-label">Reference:<span
@@ -91,9 +92,33 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group form-float">
+                                            <div class="form-group">
+                                                <label class="form-label">Pictures:<span style="color:red;">*</span></label>
+                                                <input class="form-control" type="file" name="pictures[]" id="pictures"
+                                                    accept=".jpg, .jpeg, .png" multiple />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (isset($ratti_kaat) && $ratti_kaat->pictures!=null)
+                                        <div class="col-md-12 form-group mb-3">
+                                            <b>Old Pictures <small>(if add then change)</small></b><br>
+                                            @php
+                                                $images = json_decode($ratti_kaat->pictures, true);;
+                                            @endphp
+
+                                            @foreach ($images as $image)
+                                                <a href="{{ asset($image) }}" target="_blank"><img
+                                                        src="{{ asset($image) }}" style="width:100px; height: 100px;"
+                                                        alt="Pictures"></a>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                     <input type="hidden" class="form-control"
                                         value="{{ isset($ratti_kaat) ? $ratti_kaat->id : '' }}" id="id"
                                         name="id">
+                                    <input type="hidden" name="approved_by" id="approved_by" value="">
                                     <div class="col-md-12">
                                         <hr class="mb-2 mt-2">
                                         <b>Add Purchase Detail:</b>
@@ -118,25 +143,26 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="form-label">Scale Weight:<span style="color:red;">*</span></label>
+                                            <label class="form-label">Scale Weight:<span
+                                                    style="color:red;">*</span></label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="scale_weight"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->scale_weight : '0' }}"
-                                                        id="scale_weight" class="form-control" required
-                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                                    <input type="text" name="scale_weight" id="scale_weight"
+                                                        class="form-control" required
+                                                        onkeypress="return isNumberKey(event)" value="0"
+                                                        maxlength="10">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="form-label">Description:<span style="color:red;">*</span></label>
+                                            <label class="form-label">Description:<span
+                                                    style="color:red;">*</span></label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="description"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->description : old('description') }}"
-                                                        id="description" class="form-control" required>
+                                                    <input type="text" name="description" id="description"
+                                                        class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -150,9 +176,8 @@
                                             </label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="beads_weight"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->beads_weight : '25.69' }}"
-                                                        id="beads_weight" class="form-control" min="0">
+                                                    <input type="text" name="bead_weight" id="bead_weight"
+                                                        class="form-control" value="0" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -166,9 +191,8 @@
                                             </label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="stones_weight"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->stones_weight : '3.485' }}"
-                                                        id="stones_weight" class="form-control" min="0">
+                                                    <input type="text" name="stones_weight" id="stones_weight"
+                                                        class="form-control" value="0" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -182,9 +206,8 @@
                                             </label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="diamond_carat"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->diamond_carat : '0' }}"
-                                                        id="diamond_carat" class="form-control" min="0">
+                                                    <input type="text" name="diamond_carat" id="diamond_carat"
+                                                        class="form-control" value="0" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -194,9 +217,8 @@
                                             <label class="form-label">Net Weight:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="net_weight"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->net_weight : '71.181' }}"
-                                                        id="net_weight" class="form-control" min="0">
+                                                    <input type="text" name="net_weight" id="net_weight"
+                                                        class="form-control" value="0" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -210,9 +232,8 @@
                                             </label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="ratti_kaat"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->ratti_kaat : '4' }}"
-                                                        id="ratti_kaat" class="form-control" min="0">
+                                                    <input type="text" name="supplier_kaat" id="supplier_kaat"
+                                                        class="form-control" value="0" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -222,9 +243,8 @@
                                             <label class="form-label">Kaat:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="kaat"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->kaat : '5.19' }}"
-                                                        id="kaat" class="form-control" min="0">
+                                                    <input type="text" name="kaat" value="0" id="kaat"
+                                                        class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -234,9 +254,8 @@
                                             <label class="form-label">Pure Payable:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="pure_payable"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->pure_payable : '65.991' }}"
-                                                        id="pure_payable" class="form-control">
+                                                    <input type="text" name="pure_payable" value="0"
+                                                        id="pure_payable" class="form-control" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -246,8 +265,7 @@
                                             <label class="form-label">Other Charge:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="other_charge"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->other_charge : '0' }}"
+                                                    <input type="text" name="other_charge" value="0"
                                                         id="other_charge" class="form-control"
                                                         onkeypress="return isNumberKey(event)" maxlength="10">
                                                 </div>
@@ -260,7 +278,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_bead_amount" value="0"
-                                                        id="total_bead_amount" class="form-control">
+                                                        id="total_bead_amount" readonly class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -271,18 +289,18 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_stones_amount" value="0"
-                                                        id="total_stones_amount" class="form-control">
+                                                        id="total_stones_amount" readonly class="form-control">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Total diamond Amount:</label>
+                                            <label class="form-label">Total Diamond Amount:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_diamond_amount" value="0"
-                                                        id="total_diamond_amount" class="form-control">
+                                                        id="total_diamond_amount" readonly class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -292,9 +310,8 @@
                                             <label class="form-label">Total Amount:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="total_amount"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->total_amount : '0' }}"
-                                                        id="total_amount" class="form-control" value="0">
+                                                    <input type="text" name="total_amount" id="total_amount"
+                                                        class="form-control" readonly value="0">
                                                 </div>
                                             </div>
                                         </div>
@@ -309,22 +326,9 @@
                                             <i class="fa fa-plus"></i> Add
                                         </a>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Grand Total:</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="total"
-                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->total : '0' }}"
-                                                        id="total" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="row">
-                                    <input type="hidden" class="form-control" id="poId" name="poId"
-                                        value="">
                                     <div class="table-responsive">
                                         <table id="example"
                                             class="table table-striped table-hover dataTable js-exportable mb-3">
@@ -336,7 +340,7 @@
                                                     <th>Scale Wt</th>
                                                     <th>Beads Wt</th>
                                                     <th>Stones Wt</th>
-                                                    <th>diamond Carat</th>
+                                                    <th>Diamond Carat</th>
                                                     <th>Net Wt</th>
                                                     <th>Ratti Kaat</th>
                                                     <th>Kaat</th>
@@ -352,30 +356,72 @@
 
                                         </table>
                                     </div>
-                                    <div class="col-md-12 mb-5">
-                                        {{-- <a class="btn btn-primary waves-effect text-left" data-toggle="modal"
-                                        data-target="#New-Entry-Modal" tabindex="5" accesskey="+"
-                                        style="float: left;" id="NewProduct">
-                                        <i class="i-Add text-white"></i> Add
-                                    </a> --}}
-                                        {{-- <div class="text-right">
-                                            <b>Total Tax:</b><input type="text" id="tax_total"
-                                                style="font-weight: bold; border:none;" value="0">
-                                        </div> --}}
-                                        {{-- <div class="text-right">
-                                            <b>Total:</b><input type="text" id="purchase_total"
-                                                style="font-weight: bold; border:none;" value="0">
-                                        </div> --}}
-
-                                    </div>
                                     <div class="col-md-12">
-                                        <button class="btn btn-primary" id="submit" accesskey="s"
-                                            tabindex="10">SUBMIT</button>
+                                        <hr>
                                     </div>
                                 </div>
-
-                            </form>
-                        </div>
+                                <div class="row">
+                                    <div class="col-md-2 offset-md-7 text-right">
+                                        <label class="form-label font-weight-bold">Grand Total:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="total"
+                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->total : '0' }}"
+                                                        id="total" class="form-control font-weight-bold" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 offset-md-7 text-right">
+                                        <label class="form-label font-weight-bold">Paid:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="paid"
+                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->paid : '0' }}"
+                                                        id="paid" class="form-control font-weight-bold"
+                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 offset-md-7 text-right">
+                                        <label class="form-label font-weight-bold">Paid Account:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="form-group form-float">
+                                                <select id="paid_account" name="paid_account"
+                                                    class="form-control show-tick" data-live-search="true">
+                                                    <option value="" selected>--Select Account--</option>
+                                                    @foreach ($accounts as $item)
+                                                        <option value="{{ $item->id }}"
+                                                            @if (isset($ratti_kaat)) {{ $ratti_kaat->paid_account == $item->id ? 'selected' : '' }} @endif>
+                                                            {{ $item->code }} {{ $item->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="col-md-12">
+                                    <button class="btn btn-primary" id="submit" accesskey="s"
+                                        tabindex="10">SAVE</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                     <!-- end of col -->
                 </div>
@@ -412,6 +458,7 @@
             $('#purchase_account').select2();
             $('#product_id').select2();
             $('#supplier_id').select2();
+            $('#paid_account').select2();
             const purchase_date = document.getElementById("purchase_date");
 
             // ✅ Using the visitor's timezone

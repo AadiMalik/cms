@@ -209,6 +209,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('create', [RattiKaatController::class, 'create']);
         Route::post('store', [RattiKaatController::class, 'store']);
         Route::get('edit/{id}', [RattiKaatController::class, 'edit']);
+        Route::get('get-ratti-kaats-detail/{id}', [RattiKaatController::class, 'rattiKaatDetail']);
         Route::post('update', [RattiKaatController::class, 'update']);
         Route::get('destroy/{id}', [RattiKaatController::class, 'destroy']);
         Route::get('status/{id}', [RattiKaatController::class, 'status']);
@@ -267,5 +268,8 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+
+        // Change kaat
+        Route::post('change-kaat', [RattiKaatController::class, 'ChangeKaat']);
     });
 });

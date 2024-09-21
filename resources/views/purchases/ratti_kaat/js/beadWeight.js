@@ -18,7 +18,8 @@ $("#BeadWeightButton").click(function () {
         error("Product is not selected!");
         return false;
     }
-    beadWeightData(ratti_kaat_id, $("#product_id").find(":selected").val());
+    netWeight();
+    totalAmount();
     $("#beadWeightForm").trigger("reset");
     $("#bead_weight_product_id").val($("#product_id").find(":selected").val());
     $("#beadWeightModel").modal("show");
@@ -73,12 +74,12 @@ function beadWeightData(ratti_kaat_id, product_id) {
                 if (data.Data.length > 0) {
                     $.each(data.Data, function (e, val) {
                         total_weight = total_weight * 1 + val.gram * 1;
-                        total_bead_amount = total_bead_amount*1 + val.total_amount * 1;
+                        total_bead_amount = total_bead_amount * 1 + val.total_amount * 1;
                         rows += `<tr id=${val.id} ><td>${i}</td><td>${val.beads}</td><td>${val.gram}</td><td>${val.carat}</td><td>${val.gram_rate}</td><td>${val.carat_rate}</td><td>${val.total_amount}</td><td><a class="text-danger text-white"  id="deleteBead" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.id}" data-original-title="delete"><i class="fa fa-trash" style="font-size:18px;"></i></a></td></tr>`;
                     });
 
-                    $("#beads_weight").val(total_weight.toFixed(3));
-                    $("#total_bead_amount").val(total_bead_amount.toFixed(3));
+                    $("#bead_weight").val(total_weight.toFixed(3)).trigger("keyup");
+                    $("#total_bead_amount").val(total_bead_amount.toFixed(3)).trigger("keyup");
                     var tbody = $("#beadTable");
                     tbody.prepend(rows);
                     i = i + 1;
@@ -108,6 +109,8 @@ $("#beadWeightForm").submit(function (e) {
                 success(data.Message);
                 $("#beadWeightForm").trigger("reset");
                 beadWeightData(ratti_kaat_id, $("#product_id").find(":selected").val());
+                netWeight();
+                totalAmount();
             } else {
                 error(data.Message);
             }
@@ -138,6 +141,8 @@ $("body").on("click", "#deleteBead", function () {
                     if (data.Success) {
                         success(data.Message);
                         beadWeightData(ratti_kaat_id, $("#product_id").find(":selected").val());
+                        netWeight();
+                        totalAmount();
                     } else {
                         error(data.Message);
                     }

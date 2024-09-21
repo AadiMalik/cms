@@ -18,7 +18,6 @@ $("#DiamondCaratButton").click(function () {
         error("Product is not selected!");
         return false;
     }
-    diamondCaratData(ratti_kaat_id, $("#product_id").find(":selected").val());
     $("#diamondCaratForm").trigger("reset");
     $("#diamond_carat_product_id").val($("#product_id").find(":selected").val());
     $("#diamondCaratModel").modal("show");
@@ -56,11 +55,11 @@ function diamondCaratData(ratti_kaat_id, product_id) {
                     $.each(data.Data, function (e, val) {
                         total_carat = total_carat * 1 + val.carat * 1;
                         total_diamond_amount = total_diamond_amount*1 + val.total_amount * 1;
-                        rows += `<tr id=${val.id} ><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td><td>${val.cut}</td><td>${val.color}</td><td>${val.clarity}</td><td>${val.carat}</td><td>${val.carat_rate}</td><td>${val.total_amount}</td><td>${val.total_dollar}</td><td><a class="text-danger text-white"  id="deleteBead" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.id}" data-original-title="delete"><i class="fa fa-trash" style="font-size:18px;"></i></a></td></tr>`;
+                        rows += `<tr id=${val.id} ><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td><td>${val.cut}</td><td>${val.color}</td><td>${val.clarity}</td><td>${val.carat}</td><td>${val.carat_rate}</td><td>${val.total_amount}</td><td>${val.total_dollar}</td><td><a class="text-danger text-white"  id="deleteDiamond" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.id}" data-original-title="delete"><i class="fa fa-trash" style="font-size:18px;"></i></a></td></tr>`;
                     });
 
-                    $("#diamond_carat").val(total_carat.toFixed(3));
-                    $("#total_diamond_amount").val(total_diamond_amount.toFixed(3));
+                    $("#diamond_carat").val(total_carat.toFixed(3)).trigger("keyup");
+                    $("#total_diamond_amount").val(total_diamond_amount.toFixed(3)).trigger("keyup");
                     var tbody = $("#diamondTable");
                     tbody.prepend(rows);
                     i = i + 1;
