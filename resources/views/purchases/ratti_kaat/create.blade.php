@@ -430,7 +430,7 @@
         </section>
 
         @include('purchases/ratti_kaat/Modal/BeadModal')
-        @include('purchases/ratti_kaat/Modal/diamondModal')
+        @include('purchases/ratti_kaat/Modal/DiamondModal')
         @include('purchases/ratti_kaat/Modal/ChangeKaatModal')
         @include('purchases/ratti_kaat/Modal/StonesModal')
     </div>
