@@ -10,6 +10,8 @@ class RattiKaatStone extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'category',
+        'type',
         'ratti_kaat_id',
         'product_id',
         'stones',

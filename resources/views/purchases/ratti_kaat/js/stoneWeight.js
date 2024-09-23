@@ -93,6 +93,46 @@ function stoneWeightData(ratti_kaat_id, product_id) {
 }
 $("#stoneWeightForm").submit(function (e) {
     e.preventDefault();
+    if ($("#category").find(":selected").val() == "" || $("#category").find(":selected").val() == 0) {
+        error("Please select stone category!");
+        $("#category").focus();
+        return false;
+    }
+    if ($("#type").val() == "") {
+        error("Please select stone type!");
+        $("#type").focus();
+        return false;
+    }
+    if ($("#stones").val() == "" && $("#stones").val() == 0) {
+        error("Please enter stones qty!");
+        $("#stones").focus();
+        return false;
+    }
+    if ($("#stone_gram").val() == "" && $("#stone_gram").val() == 0) {
+        error("Please enter stone in gram!");
+        $("#stone_gram").focus();
+        return false;
+    }
+    if ($("#stone_carat").val() == "" && $("#stone_carat").val() == 0) {
+        error("Please enter stone in carat!");
+        $("#stone_carat").focus();
+        return false;
+    }
+    if ($("#stone_gram_rate").val() == "" && $("#stone_gram_rate").val() == 0) {
+        error("Please enter gram rate!");
+        $("#stone_gram_rate").focus();
+        return false;
+    }
+    if ($("#stone_carat_rate").val() == "" && $("#stone_carat_rate").val() == 0) {
+        error("Please enter carat rate!");
+        $("#stone_carat_rate").focus();
+        return false;
+    }
+    if ($("#stone_total").val() == "" && $("#stone_total").val() == 0) {
+        error("Please enter stone total!");
+        $("#stone_total").focus();
+        return false;
+    }
     $.ajax({
         url: url_local + "/ratti-kaats/stone-store",
         type: "POST",

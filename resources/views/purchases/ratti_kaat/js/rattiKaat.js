@@ -34,16 +34,6 @@ $(document).ready(function () {
 });
 
 
-$("#StonesWeightButton").click(function () {
-    $("#stonesWeightForm").trigger("reset");
-    $("#stonesWeightModel").modal("show");
-});
-
-$("#diamondCartButton").click(function () {
-    $("#diamondCartForm").trigger("reset");
-    $("#diamondCartModel").modal("show");
-});
-
 $("#ChangeKaatButton").click(function () {
     if ($("#supplier_id").find(":selected").val() == 0) {
         error("Supplier is not selected!");
@@ -92,11 +82,16 @@ $("#diamond_carat").on("keyup", function (event) {
 
 //Kaat Calulation
 $("#net_weight").on("keyup", function (event) {
+    KaatCal();
+});
+
+//Kaat function
+function KaatCal(){
     var net_weight = $("#net_weight").val();
     var supplier_kaat = $("#supplier_kaat").val();
     var kaat = (net_weight / 96) * supplier_kaat;
     $("#kaat").val(kaat.toFixed(3)).trigger("keyup");
-});
+}
 
 // pure payable cal
 $("#kaat").on("keyup", function (event) {
@@ -131,6 +126,7 @@ $("#supplier_id").on("change", function () {
     }).done(function (data) {
         var data = data.Data;
         $("#supplier_kaat").val(data.kaat);
+        KaatCal();
     });
 });
 // Change Kaat
@@ -149,7 +145,7 @@ $("#changeKaatForm").submit(function (e) {
             console.log(data);
             if (data.Success==true) {
                 $("#supplier_kaat").val(data.Data.kaat);
-                $("#kaat").trigger("keyup");
+                KaatCal();
                 $("#approved_by").val(data.Data.approved_by);
                 $("#changeKaatForm").trigger("reset");
                 $("#changeKaatModel").modal("show");
@@ -182,11 +178,6 @@ $("body").on("click", "#submit", function (e) {
     if ($("#reference").val() == '') {
         error("Please Enter Reference!");
         $("#reference").focus();
-        return false;
-    }
-    if ($("#pictures")[0].files.length === 0) {  // Check for file selection
-        error("Please add pictures!");
-        $("#pictures").focus();
         return false;
     }
     if ($("#paid_account").val() === '' && $("#paid").val() > 0) {
@@ -591,18 +582,18 @@ function Clear() {
     $("#product_id").append(
         '<option disabled selected value="0">--Select Product--</option>'
     );
-    $("#scale_weight").val(0);
+    $("#scale_weight").val('');
     $("#description").val('');
-    $("#bead_weight").val(0);
-    $("#stones_weight").val(0);
-    $("#diamond_carat").val(0);
-    $("#net_weight").val(0);
-    $("#kaat").val(0);
-    $("#pure_payable").val(0);
-    $("#total_bead_amount").val(0);
-    $("#total_stones_amount").val(0);
-    $("#total_diamond_amount").val(0);
-    $("#other_charge").val(0);
-    $("#total_amount").val(0);
+    $("#bead_weight").val('');
+    $("#stones_weight").val('');
+    $("#diamond_carat").val('');
+    $("#net_weight").val('');
+    $("#kaat").val('');
+    $("#pure_payable").val('');
+    $("#total_bead_amount").val('');
+    $("#total_stones_amount").val('');
+    $("#total_diamond_amount").val('');
+    $("#other_charge").val('');
+    $("#total_amount").val('');
     $("#approved_by").val('');
 }

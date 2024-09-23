@@ -54,7 +54,7 @@
                                             <label class="form-label">Supplier/Karigar:</label>
                                             <select id="supplier_id" name="supplier_id" class="form-control show-tick"
                                                 tabindex="3">
-                                                <option value="" selected="selected" disabled>--Select
+                                                <option value="0" selected="selected" disabled>--Select
                                                     Supplier/Karigar--
                                                 </option>
                                                 @foreach ($suppliers as $item)
@@ -95,7 +95,7 @@
                                     <div class="col-md-4">
                                         <div class="form-group form-float">
                                             <div class="form-group">
-                                                <label class="form-label">Pictures:<span style="color:red;">*</span></label>
+                                                <label class="form-label">Pictures:</label>
                                                 <input class="form-control" type="file" name="pictures[]" id="pictures"
                                                     accept=".jpg, .jpeg, .png" multiple />
                                             </div>
@@ -149,7 +149,7 @@
                                                 <div class="form-line">
                                                     <input type="text" name="scale_weight" id="scale_weight"
                                                         class="form-control" required
-                                                        onkeypress="return isNumberKey(event)" value="0"
+                                                        onkeypress="return isNumberKey(event)"
                                                         maxlength="10">
                                                 </div>
                                             </div>
@@ -177,7 +177,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="bead_weight" id="bead_weight"
-                                                        class="form-control" value="0" min="0" readonly>
+                                                        class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -192,7 +192,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="stones_weight" id="stones_weight"
-                                                        class="form-control" value="0" min="0" readonly>
+                                                        class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -207,7 +207,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="diamond_carat" id="diamond_carat"
-                                                        class="form-control" value="0" min="0" readonly>
+                                                        class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -218,7 +218,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="net_weight" id="net_weight"
-                                                        class="form-control" value="0" min="0" readonly>
+                                                        class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -233,7 +233,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="supplier_kaat" id="supplier_kaat"
-                                                        class="form-control" value="0" min="0" readonly>
+                                                        class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -243,7 +243,7 @@
                                             <label class="form-label">Kaat:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="kaat" value="0" id="kaat"
+                                                    <input type="text" name="kaat" id="kaat"
                                                         class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
@@ -254,7 +254,7 @@
                                             <label class="form-label">Pure Payable:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="pure_payable" value="0"
+                                                    <input type="text" name="pure_payable"
                                                         id="pure_payable" class="form-control" readonly>
                                                 </div>
                                             </div>
@@ -265,7 +265,7 @@
                                             <label class="form-label">Other Charge:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="other_charge" value="0"
+                                                    <input type="text" name="other_charge"
                                                         id="other_charge" class="form-control"
                                                         onkeypress="return isNumberKey(event)" maxlength="10">
                                                 </div>
@@ -277,7 +277,7 @@
                                             <label class="form-label">Total Bead Amount:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="total_bead_amount" value="0"
+                                                    <input type="text" name="total_bead_amount"
                                                         id="total_bead_amount" readonly class="form-control">
                                                 </div>
                                             </div>
@@ -288,7 +288,7 @@
                                             <label class="form-label">Total Stones Amount:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="total_stones_amount" value="0"
+                                                    <input type="text" name="total_stones_amount"
                                                         id="total_stones_amount" readonly class="form-control">
                                                 </div>
                                             </div>
@@ -299,7 +299,7 @@
                                             <label class="form-label">Total Diamond Amount:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="total_diamond_amount" value="0"
+                                                    <input type="text" name="total_diamond_amount"
                                                         id="total_diamond_amount" readonly class="form-control">
                                                 </div>
                                             </div>
@@ -311,7 +311,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_amount" id="total_amount"
-                                                        class="form-control" readonly value="0">
+                                                        class="form-control" readonly>
                                                 </div>
                                             </div>
                                         </div>

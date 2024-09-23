@@ -32,6 +32,12 @@ return [
       'type'=>['Natural','Treated','Man-made','Natural coloured'],
       'cut'=>['Round','Princess','Emerald','Marquise','Oval','Pear','Cushion'],
       'clarity'=>['F','IF','VVS-1','VVS-2','VS-1','VS-2','SI-1','SI-2','I-1','I-2','I-3'],
-      'color'=>['D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+      'color'=>['D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'],
+
+      //Beads
+      'bead_type'=>['Glass Bead','Seed Bead','Metal Bead','Acylic Bead','Gemstone Bead','Lampwork Bead','Ceramic Bead'],
+
+      //Stone
+      'stone_category'=>['Sedimentary', 'Metamorphic', 'Igneous', 'Man-made'],
 
 ];

@@ -91,6 +91,7 @@ class RattiKaatController extends Controller
         $validation = Validator::make(
             $request->all(),
             [
+                'type'                      =>'required',
                 'bead_weight_product_id'    => 'required',
                 'bead_weight_ratti_kaat_id' => 'required',
                 'beads'                     => 'required',
@@ -112,10 +113,11 @@ class RattiKaatController extends Controller
                 $validation_error
             );
         }
-        try {
+        // try {
             $obj = [
                 'product_id'        => $request->bead_weight_product_id,
                 'ratti_kaat_id'     => $request->bead_weight_ratti_kaat_id,
+                'type'              => $request->type,
                 'beads'             => $request->beads,
                 'gram'              => $request->bead_gram,
                 'carat'             => $request->bead_carat,
@@ -128,9 +130,9 @@ class RattiKaatController extends Controller
                 config("enum.saved"),
                 $response
             );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
     public function destroyBeadWeight($id)
     {
@@ -167,6 +169,8 @@ class RattiKaatController extends Controller
             [
                 'stone_weight_product_id'    => 'required',
                 'stone_weight_ratti_kaat_id' => 'required',
+                'category'                   => 'required',
+                'type'                       => 'required',
                 'stones'                     => 'required',
                 'stone_gram'                 => 'required',
                 'stone_carat'                => 'required',
@@ -190,6 +194,8 @@ class RattiKaatController extends Controller
             $obj = [
                 'product_id'        => $request->stone_weight_product_id,
                 'ratti_kaat_id'     => $request->stone_weight_ratti_kaat_id,
+                'category'          => $request->category,
+                'type'              => $request->type,
                 'stones'            => $request->stones,
                 'gram'              => $request->stone_gram,
                 'carat'             => $request->stone_carat,
@@ -311,7 +317,7 @@ class RattiKaatController extends Controller
                 'supplier_id'       => 'required',
                 'purchase_account'  => 'required',
                 'reference'         => 'required',
-                'pictures.*'        => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'pictures.*'        => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'purchaseDetail'    => 'required',
             ],
             $this->validationMessage()

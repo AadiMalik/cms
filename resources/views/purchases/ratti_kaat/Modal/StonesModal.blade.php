@@ -11,78 +11,104 @@
                     <input type="hidden" name="stone_weight_product_id" id="stone_weight_product_id">
                     <input type="hidden" name="stone_weight_ratti_kaat_id" id="stone_weight_ratti_kaat_id"
                         value="{{ isset($ratti_kaat) ? $ratti_kaat->id : '' }}">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="name">Stones:<span style="color:red;">*</span></label>
-    
-                                    <input type="text" class="form-control" id="stones" name="stones"
-                                        placeholder="Enter stones" value="0" onkeypress="return isNumberKey(event)" maxlength="10" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="name">Gram:<span style="color:red;">*</span></label>
-                                    <input type="text" class="form-control" id="stone_gram" name="stone_gram"
-                                        placeholder="Enter stone gram" value="0" onkeypress="return isNumberKey(event)" maxlength="10" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="name">Carat:<span style="color:red;">*</span></label>
-                                    <input type="text" class="form-control" id="stone_carat" name="stone_carat"
-                                        placeholder="Enter stone carat" value="0" onkeypress="return isNumberKey(event)" maxlength="10" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="name">Rate/Gram:<span style="color:red;">*</span></label>
-                                    <input type="text" class="form-control" id="stone_gram_rate" name="stone_gram_rate"
-                                        placeholder="Enter stone gram rate" value="0" onkeypress="return isNumberKey(event)" maxlength="10" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="name">Rate/Carat:<span style="color:red;">*</span></label>
-                                    <input type="text" class="form-control" id="stone_carat_rate" name="stone_carat_rate"
-                                        placeholder="Enter stone carat rate" value="0" onkeypress="return isNumberKey(event)" maxlength="10" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="name">Total PKR:<span style="color:red;">*</span></label>
-                                    <input type="text" class="form-control" id="stone_total" name="stone_total"
-                                        placeholder="Enter stone total" value="0" onkeypress="return isNumberKey(event)" maxlength="10" required>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group mt-4">
-                                    <button id="stoneSave" style="width: 100%;" class="btn btn-primary"
-                                        value="create">Add</button>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Category:<span style="color:red;">*</span></label>
+                                <select name="category" class="form-control" name="category" id="category" required>
+                                    <option value="" selected disabled>--Select Category--</option>
+                                    @foreach (config('enum.stone_category') as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Sr.</th>
-                                            <th>Stones</th>
-                                            <th>Gram</th>
-                                            <th>Carat</th>
-                                            <th>Rate/Gram</th>
-                                            <th>Rate/Carat</th>
-                                            <th>Total</th>
-                                            <th>Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="stoneTable">
-    
-                                    </tbody>
-                                </table>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Type:<span style="color:red;">*</span></label>
+
+                                <input type="text" class="form-control" id="type" name="type"
+                                    placeholder="Enter type"
+                                    maxlength="255" required>
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Stone QTY:<span style="color:red;">*</span></label>
+
+                                <input type="text" class="form-control" id="stones" name="stones"
+                                    placeholder="Enter stones" onkeypress="return isNumberKey(event)"
+                                    maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Gram:<span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="stone_gram" name="stone_gram"
+                                    placeholder="Enter stone gram" onkeypress="return isNumberKey(event)"
+                                    maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Carat:<span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="stone_carat" name="stone_carat"
+                                    placeholder="Enter stone carat"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Rate/Gram:<span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="stone_gram_rate" name="stone_gram_rate"
+                                    placeholder="Enter stone gram rate"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Rate/Carat:<span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="stone_carat_rate" name="stone_carat_rate"
+                                    placeholder="Enter stone carat rate"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Total PKR:<span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="stone_total" name="stone_total"
+                                    placeholder="Enter stone total"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group mt-4">
+                                <button id="stoneSave" style="width: 100%;" class="btn btn-primary"
+                                    value="create">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Sr.</th>
+                                        <th>Stones</th>
+                                        <th>Gram</th>
+                                        <th>Carat</th>
+                                        <th>Rate/Gram</th>
+                                        <th>Rate/Carat</th>
+                                        <th>Total</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stoneTable">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
                     </div>
