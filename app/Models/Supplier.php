@@ -16,6 +16,8 @@ class Supplier extends Model
         'company',
         'type',
         'account_id',
+        'account_au_id',
+        'account_dollar_id',
         'is_active',
         'gold_waste',
         'stone_waste',
@@ -32,5 +34,13 @@ class Supplier extends Model
     public function account_name()
     {
         return $this->belongsTo(Account::class, 'account_id');
+    }
+    public function account_au_name()
+    {
+        return $this->belongsTo(Account::class, 'account_au_id');
+    }
+    public function account_dollar_name()
+    {
+        return $this->belongsTo(Account::class, 'account_dollar_id');
     }
 }

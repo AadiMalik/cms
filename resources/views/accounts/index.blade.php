@@ -5,7 +5,7 @@
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
-            <h1>Accounts</h1>
+            <h1>Chart of Accounts</h1>
             <ul>
                 <li>List</li>
                 <li>All</li>

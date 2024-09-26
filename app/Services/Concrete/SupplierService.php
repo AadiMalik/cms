@@ -40,6 +40,16 @@ class SupplierService
                 $code = $item->account_name->code ?? '';
                 return $code . ' ' . $name;
             })
+            ->addColumn('account_au', function ($item) {
+                $name = $item->account_au_name->name ?? '';
+                $code = $item->account_au_name->code ?? '';
+                return $code . ' ' . $name;
+            })
+            ->addColumn('account_dollar', function ($item) {
+                $name = $item->account_dollar_name->name ?? '';
+                $code = $item->account_dollar_name->code ?? '';
+                return $code . ' ' . $name;
+            })
             ->addColumn('status', function ($item) {
                 if ($item->is_active == 1) {
                     $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';

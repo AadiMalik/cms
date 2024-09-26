@@ -94,6 +94,8 @@
                                 <thead>
                                     <tr>
                                         <th>Sr.</th>
+                                        <th>Category</th>
+                                        <th>Type</th>
                                         <th>Stones</th>
                                         <th>Gram</th>
                                         <th>Carat</th>

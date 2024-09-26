@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('ratti_kaat_beads', function (Blueprint $table) {
             $table->id();
+            $table->string('type')->nullable();
             $table->integer('ratti_kaat_id')->nullable();
             $table->integer('product_id')->nullable();
             $table->decimal('beads',18,3)->default(0.00);

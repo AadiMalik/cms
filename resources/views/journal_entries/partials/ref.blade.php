@@ -16,7 +16,7 @@
             </div>
             <div style="float: right;">
                   <b>Journal: </b>{{ $journal_entry['journal_name'] }} <br>
-                  <b>Vendor: </b>{{ $journal_entry['vendor_name'] }} <br>
+                  <b>Supplier/Karigar: </b>{{ $journal_entry['supplier_name'] }} <br>
             </div>
       </div>
       <br><br>
@@ -49,14 +49,14 @@
                         <td style="text-align:center; font-size:12px;">{{ $item->check_no??'' }}</td>
                         <td style="text-align:left; font-size:12px;">{{$item->account_code??''}} {{ $item->account_name->name??'' }}</td>
                         <td style="text-align:left; font-size:12px;">{{ $item->explanation??'' }}</td>
-                        <td style="text-align:right; font-size:12px;">{{ number_format($item->debit??0.00,2) }}</td>
-                        <td style="text-align:right; font-size:12px;">{{ number_format($item->credit??0.00,2) }}</td>
+                        <td style="text-align:right; font-size:12px;">{{ number_format($item->debit??0.000,3) }}</td>
+                        <td style="text-align:right; font-size:12px;">{{ number_format($item->credit??0.000,3) }}</td>
                   </tr>
                   @endforeach
                   <tr>
                         <td colspan="5" style="text-align:left; font-weight: bold; font-size:12px;">Total</td>
-                        <td style="text-align:right; font-weight: bold; font-size:12px;">{{ number_format($total_debit??0.00,2) }}</td>
-                        <td style="text-align:right; font-weight: bold; font-size:12px;">{{ number_format($total_credit??0.00,2) }}</td>
+                        <td style="text-align:right; font-weight: bold; font-size:12px;">{{ number_format($total_debit??0.000,3) }}</td>
+                        <td style="text-align:right; font-weight: bold; font-size:12px;">{{ number_format($total_credit??0.000,3) }}</td>
                         <td></td>
                   </tr>
 

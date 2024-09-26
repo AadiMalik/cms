@@ -122,6 +122,47 @@ class JournalEntryService
             return $saved_obj;
       }
 
+      public function saveJVDetail(
+            $currency,
+            $journal_entry_id,
+            $explanation,
+            $bill_no,
+            $check_no = null,
+            $check_date = null,
+            $is_credit = 0,
+            $amount = 0,
+            $acc_head_id,
+            $account_code,
+            $createdBy
+      ) {
+            $credit = 0;
+            $debit = 0;
+            if ($is_credit == 0) {
+                  $credit = $amount;
+            } else {
+                  $debit = $amount;
+            }
+            $entry_detail = [
+                  'currency' => $currency,
+                  'credit' => $credit,
+                  'journal_entry_id' => $journal_entry_id,
+                  'explanation' => $explanation ?? '',
+                  'bill_no' => $bill_no ?? '',
+                  'check_no' => $check_no ?? '',
+                  'check_date' => $check_date,
+                  'debit' => $debit,
+                  'account_id' => $acc_head_id,
+                  'createdby_id' =>  $createdBy,
+                  'amount' => $amount,
+                  'account_code' => $account_code,
+                  'amount_in_words' => $this->numberToWord($amount)
+            ];
+            $save_entry = DB::table('journal_entry_details')->insert($entry_detail);
+            if ($save_entry)
+                  return true;
+
+            return false;
+      }
 
       public function getJournalEntryDetailByJournalEntryId($id)
       {
@@ -205,6 +246,27 @@ class JournalEntryService
             return true;
       }
 
+      public function getJournalEntryByIds($journal_entries)
+      {
+            $journal_entry = $this->model_journal_entry->getModel()::with(['journal_name', 'supplier_name'])
+                  ->whereIn('id', $journal_entries)->get();
+            $data = [];
+            foreach ($journal_entry as $item) {
+                  $data[] = [
+                        "entryNum"                    => $item->entryNum ?? '',
+                        "date_post"                   => date('d-M-Y', strtotime($item->date_post ?? '')),
+                        "journal_name"                => $item->journal_name->name ?? '',
+                        "supplier_name"                 => $item->supplier_name->name ?? '',
+                        "reference"                   => $item->reference ?? '',
+                        "journal_entry_detail"        => $this->model_journal_entry_detail->getModel()::with('account_name')->where('journal_entry_id', $item->id)->get()
+                  ];
+            }
+
+            if (!$data)
+                  return false;
+
+            return $data;
+      }
       public function numberToWord($num = '')
       {
             $num    = (string) ((int) $num);

@@ -27,6 +27,7 @@ class RattiKaatDetail extends Model
         'total_stones_amount',
         'total_diamond_amount',
         'total_amount',
+        'total_dollar',
         'is_active',
         'is_deleted',
         'createdby_id',

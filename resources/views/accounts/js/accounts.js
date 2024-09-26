@@ -106,18 +106,6 @@ $("#appendMainAccounts").on(
     ajaxGetRequest($(this).attr("href"))
       .then(function (data) {
         console.log(data);
-        var form = "";
-        if (data.parent_id == 0) {
-          form = document.getElementById("accountForm");
-        } else {
-          form = document.getElementById("accountChildForm");
-        }
-        // for (let index = 0; index < form.length; index++) {
-        //   const element = form[index];
-        //   if (element && element.value != "Save" && element.name != "id")
-        //     element.value = data[element.name];
-        //   if (element.name == "id") element.value = data.id;
-        // }
 
         $("#id").val(data.id);
         $("#parent_id").val(data.parent_id);

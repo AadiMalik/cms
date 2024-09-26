@@ -147,7 +147,8 @@ class JournalEntryController extends Controller
                         'createdby_id' => Auth::user()->id,
                         'amount' => str_replace(',', '', $amount),
                         'amount_in_words' => $data['item'][$i]['amount_in_words'],
-                        'account_code' => $data['item'][$i]['Code']
+                        'account_code' => $data['item'][$i]['Code'],
+                        'currency' => $request->currency??0
                     ];
                     $response = $this->journal_entry_service->saveJournalEntryDetail($dataSet);
                 }
@@ -226,5 +227,12 @@ class JournalEntryController extends Controller
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }
+    }
+
+    public function allJvs(Request $request)
+    {
+        $journal_entries = $this->journal_entry_service->getJournalEntryByIds($request->filter);
+        $view = view('journal_entries/partials.ref', compact('journal_entries'));
+        return response($view);
     }
 }

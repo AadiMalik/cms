@@ -75,7 +75,19 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="form-label">Currency:<span
+                                                style="color:red;">*</span></label>
+                                            <select @if (isset($journal_entry)) disabled @endif id="currency"
+                                                name="currency" class="form-control show-tick" required>
+                                                <option value="0" @if (isset($journal_entry)) {{ $journal_entry->currency == 0 ? 'selected' : '' }} @endif>PKR</option>
+                                                <option value="1" @if (isset($journal_entry)) {{ $journal_entry->currency == 1 ? 'selected' : '' }} @endif>Gold (AU)</option>
+                                                <option value="2" @if (isset($journal_entry)) {{ $journal_entry->currency == 2 ? 'selected' : '' }} @endif>Dollar ($)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
                                         <div class="form-group form-float">
                                             <div class="form-group">
                                                 <label class="form-label">Reference:<span
@@ -230,6 +242,7 @@
             $('#account_id').select2();
             $('#journal_id').select2();
             $('#supplier_id').select2();
+            $('#currency').select2();
             const pdate = document.getElementById("pdate");
 
             // ✅ Using the visitor's timezone

@@ -44,7 +44,7 @@
                                         value="{{ isset($supplier) ? $supplier->cnic : old('cnic') }}" maxlength="191"
                                         placeholder="Enter CNIC" />
                                 </div>
-                                <div class="col-md-6 form-group mb-3">
+                                <div class="col-md-4 form-group mb-3">
                                     <label for="contact">Contact<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="contact"
                                         value="{{ isset($supplier) ? $supplier->contact : old('contact') }}" maxlength="191"
@@ -53,7 +53,7 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-6 form-group mb-3">
+                                <div class="col-md-4 form-group mb-3">
                                     <label for="company">Company</label>
                                     <input class="form-control" type="text" name="company"
                                         value="{{ isset($supplier) ? $supplier->company : old('company') }}" maxlength="191"
@@ -62,7 +62,7 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-6 form-group mb-3">
+                                <div class="col-md-4 form-group mb-3">
                                     <label for="type">Type<span class="text-danger">*</span> </label>
                                     <select class="form-control" name="type" id="type" required>
                                         <option value="" selected disabled>--Select Type--</option>
@@ -80,8 +80,8 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-6 form-group mb-3">
-                                    <label for="account_id">Account<span class="text-danger">*</span> </label>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="account_id">Account(PKR)<span class="text-danger">*</span> </label>
                                     <select class="form-control select2" name="account_id" id="account_id" required
                                         style="width: 100%;">
                                         <option value="" selected disabled>--Select Account--</option>
@@ -92,6 +92,33 @@
                                         @endforeach
                                     </select>
                                     @error('account_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="account_au_id">Account(AU)</label>
+                                    <select class="form-control select2" name="account_au_id" id="account_au_id"
+                                        style="width: 100%;">
+                                        <option value="" selected disabled>--Select Account--</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}"
+                                                {{ isset($supplier) && $supplier->account_au_id == $account->id ? 'selected' : '' }}>
+                                                {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-4 form-group mb-3">
+                                    <label for="account_dollar_id">Account($)</label>
+                                    <select class="form-control select2" name="account_dollar_id" id="account_dollar_id"
+                                        style="width: 100%;">
+                                        <option value="" selected disabled>--Select Account--</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}"
+                                                {{ isset($supplier) && $supplier->account_dollar_id == $account->id ? 'selected' : '' }}>
+                                                {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('account_dollar_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -163,6 +190,8 @@
         $(document).ready(function() {
             $('#type').select2();
             $('#account_id').select2();
+            $('#account_au_id').select2();
+            $('#account_dollar_id').select2();
         });
 
         function isNumberKey(evt) {

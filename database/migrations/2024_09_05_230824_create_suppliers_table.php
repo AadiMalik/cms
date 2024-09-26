@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('company')->nullable();
             $table->integer('type')->default(0)->comment('0 for supplier, 1 for karigar and 2 for both');
             $table->integer('account_id')->nullable();
+            $table->integer('account_au_id')->nullable();
+            $table->integer('account_dollar_id')->nullable();
             $table->decimal('gold_waste')->default(0.00)->comment('waste/tola');
             $table->decimal('stone_waste')->default(0.00)->comment('Stone Studding Waste');
             $table->decimal('kaat')->default(0.00)->comment('kaat/tola');

@@ -86,6 +86,7 @@
                             <thead>
                                 <tr>
                                     <th>Sr.</th>
+                                    <th>Type</th>
                                     <th>Beads</th>
                                     <th>Gram</th>
                                     <th>Carat</th>

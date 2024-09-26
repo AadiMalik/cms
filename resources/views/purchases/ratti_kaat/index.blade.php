@@ -111,12 +111,13 @@
             </div>
         </section>
     </div>
+    @include('journal_entries/Modal/JVs')
 @endsection
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/momenttimezone/0.5.31/moment-timezone-with-data-2012-2022.min.js">
     </script>
-    <script src="{{ asset('asssts/js/common-methods/toaster.js') }}"></script>
+    <script src="{{ asset('js/common-methods/toasters.js') }}"  type="module"></script>
     @include('includes.datatable', [
         'columns' => "
     {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
@@ -246,7 +247,7 @@
                 error("Please select Rows!");
             } else {
                 $.ajax({
-                    url: "{{ url('accounting/post-ratti_kaat') }}",
+                    url: "{{ url('ratti-kaats/post-ratti_kaat') }}",
                     type: "POST",
                     headers: {
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -287,7 +288,7 @@
         });
         // Delete ratti_kaat Code
 
-        $("body").on("click", "#deleteratti_kaat", function() {
+        $("body").on("click", "#deleteRattiKaat", function() {
             var ratti_kaat_id = $(this).data("id");
             Swal.fire({
                 title: "Are you sure?",
@@ -301,7 +302,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                             type: "get",
-                            url: "{{ url('accounting/delete-ratti_kaat') }}/" + ratti_kaat_id,
+                            url: "{{ url('ratti-kaats/destroy') }}/" + ratti_kaat_id,
                         }).done(function(data) {
                             if ((data.Success = true)) {
                                 $("#preloader").hide();
@@ -316,6 +317,24 @@
                             error(err.Message);
                         });
                 }
+            });
+        });
+
+        $("body").on("click", "#Ref", function(event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            var jvs = $(this).data("filter");
+            $("#preloader").show();
+
+            $.ajax({
+                type: "get",
+                url: "{{ url('journal-entries/all-jvs') }}?" + jvs,
+            }).done(function(response) {
+                $('#result').html('');
+                $('#result').html(response);
+                $("#jvs_modalHeading").html("Journal Entry");
+                $("#jvs_modal").modal("show");
+                $("#preloader").hide();
             });
         });
     </script>

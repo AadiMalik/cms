@@ -2,12 +2,16 @@
 
 namespace App\Services\Concrete;
 
+use App\Models\Account;
+use App\Models\Journal;
 use App\Models\JournalEntry;
 use App\Models\RattiKaat;
 use App\Models\RattiKaatBead;
 use App\Models\RattiKaatDetail;
 use App\Models\RattiKaatDiamond;
 use App\Models\RattiKaatStone;
+use App\Models\Supplier;
+use App\Models\SupplierPayment;
 use App\Repository\Repository;
 use Carbon\Carbon;
 use Exception;
@@ -25,6 +29,7 @@ class RattiKaatService
 
     protected $common_service;
     protected $journal_entry_service;
+    protected $supplier_payment_service;
     public function __construct()
     {
         // set the model
@@ -36,6 +41,7 @@ class RattiKaatService
 
         $this->common_service = new CommonService();
         $this->journal_entry_service = new JournalEntryService();
+        $this->supplier_payment_service = new SupplierPaymentService();
     }
     //Ratti Kaat
     public function getRattiKaatSource($obj)
@@ -72,13 +78,32 @@ class RattiKaatService
                 return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
             })
             ->addColumn('action', function ($item) {
+
+                $jvs = '';
+                if ($item->jv_id != null)
+                    $jvs .= "filter[]=" . $item->jv_id . "";
+
+                if ($item->paid_jv_id != null)
+                    $jvs .= "&filter[]=" . $item->paid_jv_id . "";
+
+
+                if ($item->paid_au_jv_id != null)
+                    $jvs .= "&filter[]=" . $item->paid_au_jv_id . "";
+
+                if ($item->paid_dollar_jv_id != null)
+                    $jvs .= "&filter[]=" . $item->paid_dollar_jv_id . "";
+
                 $action_column = '';
                 $edit_column    = "<a class='text-success mr-2' href='ratti-kaats/edit/" . $item->id . "' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Edit'><i title='Edit' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
-                $delete_column    = "<a class='text-danger mr-2' id='deletePurchase' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
-                if (Auth::user()->can('ratti_kaat_edit'))
+                $all_print_column    = "<a class='text-info mr-2' id='Ref' href='javascript:void(0)' data-toggle='tooltip'  data-filter='" . $jvs . "' data-original-title='Accounting'><i title='Accounting' class='nav-icon mr-2 fa fa-eye'></i>Accounting</a>";
+                $delete_column    = "<a class='text-danger mr-2' id='deleteRattiKaat' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
+                if (Auth::user()->can('ratti_kaat_edit') && $item->is_posted == 0)
                     $action_column .= $edit_column;
+                if (Auth::user()->can('ratti_kaat_access') && $item->is_posted == 1)
+                    $action_column .= $all_print_column;
                 if (Auth::user()->can('ratti_kaat_delete'))
                     $action_column .= $delete_column;
+
 
                 return $action_column;
             })
@@ -120,36 +145,40 @@ class RattiKaatService
                 ->update(['is_deleted' => 1, 'deletedby_id' => Auth::User()->id]);
 
             $total = 0;
-            $purchaseDetail = json_decode($obj['purchaseDetail'],true);
-            $detail=[];
+            $total_au = 0;
+            $total_dollar = 0;
+            $purchaseDetail = json_decode($obj['purchaseDetail'], true);
+            $detail = [];
             foreach ($purchaseDetail as $key => $item) {
+                $total_au += $item['pure_payable'];
+                $total_dollar += $item['total_dollar'];
                 $total += $item['total_amount'];
-                $detail[]=[
-                    "ratti_kaat_id"=>$obj['id'],
-                    "product_id"=>$item['product_id'],
-                    "description"=>$item['description'],
-                    "scale_weight"=>$item['scale_weight'],
-                    "bead_weight"=>$item['bead_weight'],
-                    "stones_weight"=>$item['stones_weight'],
-                    "diamond_carat"=>$item['diamond_carat'],
-                    "net_weight"=>$item['net_weight'],
-                    "supplier_kaat"=>$item['supplier_kaat'],
-                    "kaat"=>$item['kaat'],
-                    "approved_by"=>$item['approved_by'],
-                    "pure_payable"=>$item['pure_payable'],
-                    "other_charge"=>$item['other_charge'],
-                    "total_bead_amount"=>$item['total_bead_amount'],
-                    "total_stones_amount"=>$item['total_stones_amount'],
-                    "total_diamond_amount"=>$item['total_diamond_amount'],
-                    "total_amount"=>$item['total_amount'],
-                    "createdby_id"=>Auth::User()->id,
-                    "created_at"=>Carbon::now()
+                $detail[] = [
+                    "ratti_kaat_id" => $obj['id'],
+                    "product_id" => $item['product_id'],
+                    "description" => $item['description'],
+                    "scale_weight" => $item['scale_weight'],
+                    "bead_weight" => $item['bead_weight'],
+                    "stones_weight" => $item['stones_weight'],
+                    "diamond_carat" => $item['diamond_carat'],
+                    "net_weight" => $item['net_weight'],
+                    "supplier_kaat" => $item['supplier_kaat'],
+                    "kaat" => $item['kaat'],
+                    "approved_by" => ($item['approved_by'] != '') ? $item['approved_by'] : null,
+                    "pure_payable" => $item['pure_payable'],
+                    "other_charge" => ($item['other_charge'] != '') ? $item['other_charge'] : 0,
+                    "total_bead_amount" => $item['total_bead_amount'],
+                    "total_stones_amount" => $item['total_stones_amount'],
+                    "total_diamond_amount" => $item['total_diamond_amount'],
+                    "total_dollar" => ($item['total_dollar'] != '') ? $item['total_dollar'] : 0,
+                    "total_amount" => ($item['total_amount'] != '') ? $item['total_amount'] : 0,
+                    "createdby_id" => Auth::User()->id,
+                    "created_at" => Carbon::now()
                 ];
-
             }
             $this->model_ratti_kaat_detail->getModel()::insert($detail);
 
-            $this->model_ratti_kaat->update(['total' => $total], $obj['id']);
+            $this->model_ratti_kaat->update(['total_au' => $total_au, 'total_dollar' => $total_dollar, 'total' => $total], $obj['id']);
             if (!$saved_obj)
                 return false;
             DB::commit();
@@ -162,391 +191,397 @@ class RattiKaatService
     }
 
     // post Ratti Kaat
-    // public function postedRattiKaat($obj)
-    //   {
-    //         try {
-    //               DB::beginTransaction();
+    public function postRattiKaat($obj)
+    {
+        try {
+            DB::beginTransaction();
 
-    //               $journal_entry_id = null;
-    //               $fare_jv_id = null;
-    //               $paid_jv_id = Null;
-    //               $vendor_payment_id = null;
-    //               foreach ($obj['purchase'] as $item) {
-    //                     $data2 = [];
-    //                     $purchase = Purchase::with('vendor')->find($item);
-    //                     $vendor = Users::find($purchase->vendorId);
+            $journal_entry_id = null;
+            $paid_jv = null;
+            $paid_au_jv = Null;
+            $paid_dollar_jv = Null;
+            $supplier_payment = null;
+            $supplier_au_payment = null;
+            $supplier_dollar_payment = null;
+            foreach ($obj['ratti_kaat'] as $item) {
+                $ratti_kaat = RattiKaat::with('supplier_name')->find($item);
+                $supplier = Supplier::find($ratti_kaat->supplier_id);
 
-    //                     if ($restaurant->account == 1 && $purchase->purchase_account > 0) {
-    //                           $journal = Journal::find(config('global.PV'));
-    //                           // Add journal entry
-    //                           $data = [
-    //                                 "date" => $purchase->poDate,
-    //                                 "prefix" => $journal->prefix,
-    //                                 "journalId" => $journal->id
-    //                           ];
-    //                           $entryNum = $this->journal_entry_service->generateJournalEntryNum($data);
+                $journal = Journal::find(config('enum.PV'));
+                $purchase_date = date("Y-m-d", strtotime(str_replace('/', '-', $ratti_kaat->purchase_date)));
+                // Add journal entry
+                $data = [
+                    "date" => $purchase_date,
+                    "prefix" => $journal->prefix,
+                    "journal_id" => $journal->id
+                ];
+                $entryNum = $this->journal_entry_service->generateJournalEntryNum($data);
 
-    //                           $journal_entry = new JournalEntry;
-    //                           $journal_entry->journal_id = $journal->id;
-    //                           $journal_entry->vendor_id = $purchase->vendorId;
-    //                           $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $purchase->poDate)));
-    //                           $journal_entry->reference = 'Date :' . $purchase->poDate . ' Against P.O. ' . $purchase->poNum . '. From ' . $purchase->vendor->first_name;
-    //                           $journal_entry->entryNum = $entryNum;
-    //                           $journal_entry->restaurant_id =  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id;
-    //                           $journal_entry->createdby_id = Auth::guard('admin_user')->User()->id;
-    //                           $journal_entry->save();
+                $journal_entry = new JournalEntry;
+                $journal_entry->journal_id = $journal->id;
+                $journal_entry->supplier_id = $ratti_kaat->supplier_id;
+                $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $ratti_kaat->purchase_date)));
+                $journal_entry->reference = 'Date :' . $ratti_kaat->purchase_date . ' Against ' . $ratti_kaat->ratti_kaat_no . '. From ' . $ratti_kaat->supplier_name->name;
+                $journal_entry->entryNum = $entryNum;
+                $journal_entry->createdby_id = Auth::User()->id;
+                $journal_entry->save();
 
-    //                           $journal_entry_id = $journal_entry->id ?? null;
-    //                     }
-    //                     $total = 0;
-    //                     $purchase_detail = PurchaseDetail::with('package_name')->where('poId', $purchase->id)->get();
-    //                     $data1 = [];
-    //                     foreach ($purchase_detail as $index => $item2) {
-    //                           $total += $item2->subTotal;
-    //                           // if ($purchase->status != 0) {
-    //                           $transaction = [
-    //                                 "purchase_id" => $item2->poId,
-    //                                 "transaction_date" => $purchase->poDate ?? Carbon::now(),
-    //                                 "bill_no" => $purchase->bill_no,
-    //                                 "restaurant_id" => Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                                 "warehouse_id" => $purchase->warehouse_id,
-    //                                 "product_id" => $item2->productId,
-    //                                 "package_id" => $item2->package,
-    //                                 "bundle_qty" => $item2->package_name->qty,
-    //                                 "recieved_qty" => $item2->productQty,
-    //                                 "unit_price" => ($item2->subTotal - $item2->tax_amount)/$item2->productQty??1,
-    //                                 "created_by" => Auth::guard('admin_user')->User()->id,
-    //                                 "type" => 0,
-    //                                 "created_at" => Carbon::now(),
-    //                                 "updated_at" => Carbon::now()
-    //                           ];
-    //                           $transation_id = Transaction::create($transaction);
-    //                           $transation_id->Purchases()->attach($item2->poId);
+                $journal_entry_id = $journal_entry->id ?? null;
+            }
 
-    //                           // End
-    //                     }
-    //                     if ($restaurant->account == 1 && $purchase->purchase_account > 0) {
-    //                           $account = AccountHead::find($purchase->purchase_account);
+            if ($supplier->account_id == null || $supplier->account_au_id == null || $supplier->account_dollar_id == null) {
+                $message = "This Supplier/Karigar have  not 3 accounts. please update then post again.!";
+                return $message;
+            }
 
-    //                           // Journal Entry Detail
-    //                           $Debit = str_replace(',', '', $purchase->sub_total);
-    //                           // $data1[] = [
-    //                           //       'credit' => 0.00,
-    //                           //       'journal_entry_id' => $journal_entry_id,
-    //                           //       'explanation' => 'Purchase Entry Debit',
-    //                           //       'bill_no' => $purchase->bill_no,
-    //                           //       'check_no' => 0,
-    //                           //       'check_date' => $purchase->poDate,
-    //                           //       'debit' => $Debit,
-    //                           //       'acc_head_id' => $account->id ?? '',
-    //                           //       'createdBy' =>  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                           //       'amount' => $Debit,
-    //                           //       'account_code' => $account->code,
-    //                           //       'amount_in_words' => $this->numberToWord($Debit)
-    //                           // ];
+            $purchase_account = Account::find($ratti_kaat->purchase_account);
+            $supplir_account = Account::find($supplier->account_id);
+            $supplir_au_account = Account::find($supplier->account_au_id);
+            $supplir_dollar_account = Account::find($supplier->account_dollar_id);
 
-    //                           // Journal entry detail (Debit)
-    //                           $journal_entry_detail->saveJVDetail(
-    //                                 $journal_entry_id, // journal entry id
-    //                                 'Purchase Entry Debit', //explaination
-    //                                 $purchase->bill_no, //bill no
-    //                                 0, // check no or 0
-    //                                 $purchase->poDate, //check date
-    //                                 1, // is credit flag 0 for credit, 1 for debit
-    //                                 $Debit, //amount
-    //                                 $account->id, // account id
-    //                                 $account->code, // account code
-    //                                 Auth::guard('admin_user')->User()->id //created by id
-    //                           );
-    //                     }
-    //                     if ($restaurant->account == 1 && $purchase->tax_account > 0) {
-    //                           $tax_account = AccountHead::find($purchase->tax_account);
+            // Journal Entry Detail
 
-    //                           // Journal Entry Detail
-    //                           $Tax_Amount = str_replace(',', '', $purchase->total_tax);
-    //                           // $data1[] = [
-    //                           //       'credit' => 0.00,
-    //                           //       'journal_entry_id' => $journal_entry_id,
-    //                           //       'explanation' => 'Purchase Entry Tax Amount Debit',
-    //                           //       'bill_no' => $purchase->bill_no,
-    //                           //       'check_no' => 0,
-    //                           //       'check_date' => $purchase->poDate,
-    //                           //       'debit' => $Tax_Amount,
-    //                           //       'acc_head_id' => $tax_account->id ?? '',
-    //                           //       'createdBy' =>  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                           //       'amount' => $Tax_Amount,
-    //                           //       'account_code' => $tax_account->code,
-    //                           //       'amount_in_words' => $this->numberToWord($Tax_Amount)
-    //                           // ];
+            //PKR Ratti Kaat
+            if ($ratti_kaat->total > 0) {
+                $PKR_Amount = str_replace(',', '', $ratti_kaat->total ?? 0);
+                // PKR (Debit)
+                $this->journal_entry_service->saveJVDetail(
+                    0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                    $journal_entry_id, // journal entry id
+                    'Ratti Kaat PKR Debit Entry', //explaination
+                    $ratti_kaat->id, //bill no
+                    0, // check no or 0
+                    $ratti_kaat->purchase_date, //check date
+                    1, // is credit flag 0 for credit, 1 for debit
+                    $PKR_Amount, //amount
+                    $purchase_account->id, // account id
+                    $purchase_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+                // PKR (Credit)
+                $this->journal_entry_service->saveJVDetail(
+                    0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                    $journal_entry_id, // journal entry id
+                    'Ratti Kaat PKR Supplier/Karigar Credit Entry', //explaination
+                    $ratti_kaat->id, //bill no
+                    0, // check no or 0
+                    $ratti_kaat->purchase_date, //check date
+                    0, // is credit flag 0 for credit, 1 for debit
+                    $PKR_Amount, //amount
+                    $supplir_account->id, // account id
+                    $supplir_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+            }
 
-    //                           // Journal entry detail (Debit)
-    //                           $journal_entry_detail->saveJVDetail(
-    //                                 $journal_entry_id, // journal entry id
-    //                                 'Purchase Entry Tax Amount Debit', //explaination
-    //                                 $purchase->bill_no, //bill no
-    //                                 0, // check no or 0
-    //                                 $purchase->poDate, //check date
-    //                                 1, // is credit flag 0 for credit, 1 for debit
-    //                                 $Tax_Amount, //amount
-    //                                 $tax_account->id, // account id
-    //                                 $tax_account->code, // account code
-    //                                 Auth::guard('admin_user')->User()->id //created by id
-    //                           );
-    //                     }
-    //                     if ($restaurant->account == 1 && $vendor->account_id > 0) {
-    //                           $vendor_account = AccountHead::find($vendor->account_id);
-    //                           // DB::table('journal_entry_details')->insert($data1);
-    //                           // Journal Entry Detail
-    //                           $Credit = str_replace(',', '', $purchase->total);
-    //                           // $data2[] = [
-    //                           //       'credit' => $Credit,
-    //                           //       'journal_entry_id' => $journal_entry_id,
-    //                           //       'explanation' => 'Purchase Entry Vendor Credit PO NO ' . $purchase->poNum,
-    //                           //       'bill_no' => $purchase->bill_no,
-    //                           //       'check_no' => 0,
-    //                           //       'check_date' => $purchase->poDate,
-    //                           //       'debit' => 0.00,
-    //                           //       'acc_head_id' => $vendor_account->id ?? '',
-    //                           //       'createdBy' =>  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                           //       'amount' => $Credit,
-    //                           //       'account_code' => $vendor_account->code ?? '',
-    //                           //       'amount_in_words' => $this->numberToWord($Credit)
-    //                           // ];
-    //                           // // End
-    //                           // DB::table('journal_entry_details')->insert($data2);
+            //AU Ratti Kaat
+            if ($ratti_kaat->total_au > 0) {
+                $AU_Amount = str_replace(',', '', $ratti_kaat->total_au ?? 0);
 
-    //                           // Journal entry detail (Credit)
-    //                           $journal_entry_detail->saveJVDetail(
-    //                                 $journal_entry_id, // journal entry id
-    //                                 'Purchase Entry Vendor Credit PO NO ' . $purchase->poNum, //explaination
-    //                                 $purchase->bill_no, //bill no
-    //                                 0, // check no or 0
-    //                                 $purchase->poDate, //check date
-    //                                 0, // is credit flag 0 for credit, 1 for debit
-    //                                 $Credit, //amount
-    //                                 $vendor_account->id, // account id
-    //                                 $vendor_account->code, // account code
-    //                                 Auth::guard('admin_user')->User()->id //created by id
-    //                           );
-    //                     }
+                // AU (Debit)
+                $this->journal_entry_service->saveJVDetail(
+                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                    $journal_entry_id, // journal entry id
+                    'Ratti Kaat Gold(AU) Debit Entry', //explaination
+                    $ratti_kaat->id, //bill no
+                    0, // check no or 0
+                    $ratti_kaat->purchase_date, //check date
+                    1, // is credit flag 0 for credit, 1 for debit
+                    $AU_Amount, //amount
+                    $purchase_account->id, // account id
+                    $purchase_account->code, // account code
+                    Auth::User()->id //created by id
+                );
 
-    //                     // Vendor amount update
-    //                     $vendor->opening_balance = $vendor->opening_balance + $purchase->total;
-    //                     $vendor->update();
-    //                     if ($restaurant->account == 1 && $vendor->account_id > 0) {
+                // AU (Credit)
+                $this->journal_entry_service->saveJVDetail(
+                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                    $journal_entry_id, // journal entry id
+                    'Ratti Kaat Gold(AU) Supplier/Karigar Credit Entry', //explaination
+                    $ratti_kaat->id, //bill no
+                    0, // check no or 0
+                    $ratti_kaat->purchase_date, //check date
+                    0, // is credit flag 0 for credit, 1 for debit
+                    $AU_Amount, //amount
+                    $supplir_au_account->id, // account id
+                    $supplir_au_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+            }
 
-    //                           // Vendor Fare Payment Add
-    //                           if ($purchase->fare > 0 && $purchase->fare_account != null) {
+            //Dollar Ratti Kaat
+            if ($ratti_kaat->total_au > 0) {
+                $Dollar_Amount = str_replace(',', '', $ratti_kaat->total_dollar ?? 0);
 
-    //                                 $fare_account = AccountHead::find($purchase->fare_account);
-    //                                 $journal_type = ($fare_account->is_cash_account == 1) ? config('global.CPV') : config('global.BPV');
-    //                                 $journal_fare = Journal::find($journal_type);
-    //                                 // Add journal entry
-    //                                 $data = [
-    //                                       "date" => $purchase->poDate,
-    //                                       "prefix" => $journal_fare->prefix,
-    //                                       "journalId" => $journal_fare->id
-    //                                 ];
-    //                                 $entryNum_fare = $this->generateJournalEntryNum($data);
-    //                                 $journal_entry_fare = new JournalEntry;
-    //                                 $journal_entry_fare->journal_id = $journal_fare->id;
-    //                                 $journal_entry_fare->vendor_id = $purchase->vendorId;
-    //                                 $journal_entry_fare->date_post = date(
-    //                                       "Y-m-d",
-    //                                       strtotime(str_replace('/', '-', $purchase->poDate))
-    //                                 );
-    //                                 $journal_entry_fare->reference = 'Date :' . $purchase->poDate . ' Purchase Fare Against PO. ' . $purchase->poNum;
-    //                                 $journal_entry_fare->entryNum = $entryNum_fare;
-    //                                 $journal_entry_fare->restaurant_id =  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id;
-    //                                 $journal_entry_fare->createdby_id = Auth::guard('admin_user')->User()->id;
-    //                                 $journal_entry_fare->save();
-    //                                 $restaurant = Restaurant::find(Auth::guard('admin_user')->User()->userRestaurant->restaurant_id);
-    //                                 $cash_account = AccountHead::find($purchase->purchase_account);
-    //                                 $fare_jv_id = $journal_entry_fare->id;
-    //                                 // Journal Entry Detail
-    //                                 $Amount = str_replace(',', '', $purchase->fare);
-    //                                 // $fare1 = [
-    //                                 //       'credit' => 0.00,
-    //                                 //       'journal_entry_id' => $journal_entry_fare->id,
-    //                                 //       'explanation' => 'Fare Payment Against Purchase Credit',
-    //                                 //       'bill_no' => $purchase->bill_no,
-    //                                 //       'check_no' => 0,
-    //                                 //       'check_date' => $purchase->poDate,
-    //                                 //       'debit' => $Amount,
-    //                                 //       'acc_head_id' => $fare_account->id ?? '',
-    //                                 //       'createdBy' =>  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                                 //       'amount' => $Amount,
-    //                                 //       'account_code' => $fare_account->code ?? '',
-    //                                 //       'amount_in_words' => $this->numberToWord($Amount)
-    //                                 // ];
-                                    
-    //                                 // Journal entry detail (Debit)
-    //                                 $journal_entry_detail->saveJVDetail(
-    //                                       $fare_jv_id, // journal entry id
-    //                                       'Fare Payment Against Purchase Credit', //explaination
-    //                                       $purchase->bill_no, //bill no
-    //                                       0, // check no or 0
-    //                                       $purchase->poDate, //check date
-    //                                       1, // is credit flag 0 for credit, 1 for debit
-    //                                       $Amount, //amount
-    //                                       $fare_account->id, // account id
-    //                                       $fare_account->code, // account code
-    //                                       Auth::guard('admin_user')->User()->id //created by id
-    //                                 );
-    //                                 // $fare2 = [
-    //                                 //       'credit' => $Amount,
-    //                                 //       'journal_entry_id' => $journal_entry_fare->id,
-    //                                 //       'explanation' => 'Fare Payment Against Purchase Credit',
-    //                                 //       'bill_no' => $purchase->bill_no,
-    //                                 //       'check_no' => 0,
-    //                                 //       'check_date' => $purchase->poDate,
-    //                                 //       'debit' => 0.00,
-    //                                 //       'acc_head_id' => $cash_account->id,
-    //                                 //       'createdBy' =>  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                                 //       'amount' => $Amount,
-    //                                 //       'account_code' => $cash_account->code,
-    //                                 //       'amount_in_words' => $this->numberToWord($Amount)
-    //                                 // ];
-    //                                 // DB::table('journal_entry_details')->insert($fare1);
-    //                                 // DB::table('journal_entry_details')->insert($fare2);
+                // AU (Debit)
+                $this->journal_entry_service->saveJVDetail(
+                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                    $journal_entry_id, // journal entry id
+                    'Ratti Kaat Dollar($) Debit Entry', //explaination
+                    $ratti_kaat->id, //bill no
+                    0, // check no or 0
+                    $ratti_kaat->purchase_date, //check date
+                    1, // is credit flag 0 for credit, 1 for debit
+                    $Dollar_Amount, //amount
+                    $purchase_account->id, // account id
+                    $purchase_account->code, // account code
+                    Auth::User()->id //created by id
+                );
 
-    //                                 // Journal entry detail (Credit)
-    //                                 $journal_entry_detail->saveJVDetail(
-    //                                       $fare_jv_id, // journal entry id
-    //                                       'Fare Payment Against Purchase Credit', //explaination
-    //                                       $purchase->bill_no, //bill no
-    //                                       0, // check no or 0
-    //                                       $purchase->poDate, //check date
-    //                                       0, // is credit flag 0 for credit, 1 for debit
-    //                                       $Amount, //amount
-    //                                       $cash_account->id, // account id
-    //                                       $cash_account->code, // account code
-    //                                       Auth::guard('admin_user')->User()->id //created by id
-    //                                 );
-    //                           }
-    //                           // Vendor Payment Add
-    //                           if ($purchase->paid > 0 && $purchase->paid_account != null) {
-    //                                 $paid_account = AccountHead::find($purchase->paid_account);
-    //                                 $journal_type = ($paid_account->is_cash_account == 1) ? config('global.CPV') : config('global.BPV');
-    //                                 $journal_vendor = Journal::find($journal_type);
-    //                                 // Add journal entry
-    //                                 $data = [
-    //                                       "date" => $purchase->poDate,
-    //                                       "prefix" => $journal_vendor->prefix,
-    //                                       "journalId" => $journal_vendor->id
-    //                                 ];
-    //                                 $entryNum_vendor = $this->generateJournalEntryNum($data);
-    //                                 $journal_entry_vendor = new JournalEntry;
-    //                                 $journal_entry_vendor->journal_id = $journal_vendor->id;
-    //                                 $journal_entry_vendor->vendor_id = $purchase->vendorId;
-    //                                 $journal_entry_vendor->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $purchase->poDate)));
-    //                                 $journal_entry_vendor->reference = 'Date :' . $purchase->poDate . ' Against PO. ' . $purchase->poNum;
-    //                                 $journal_entry_vendor->entryNum = $entryNum_vendor;
-    //                                 $journal_entry_vendor->restaurant_id =  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id;
-    //                                 $journal_entry_vendor->createdby_id = Auth::guard('admin_user')->User()->id;
-    //                                 $journal_entry_vendor->save();
-    //                                 $vendor_account = AccountHead::find($vendor->account_id);
-    //                                 $paid_jv_id = $journal_entry_vendor->id;
-    //                                 // Journal Entry Detail
-    //                                 $Amount = str_replace(',', '', $purchase->paid);
-    //                                 // $paid1 = [
-    //                                 //       'credit' => $Amount,
-    //                                 //       'journal_entry_id' => $journal_entry_vendor->id,
-    //                                 //       'explanation' => 'Vendor Paid Payment Against Purchase Credit',
-    //                                 //       'bill_no' => $purchase->bill_no,
-    //                                 //       'check_no' => 0,
-    //                                 //       'check_date' => $purchase->poDate,
-    //                                 //       'debit' => 0.00,
-    //                                 //       'acc_head_id' => $paid_account->id,
-    //                                 //       'createdBy' =>  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                                 //       'amount' => $Amount,
-    //                                 //       'account_code' => $paid_account->code,
-    //                                 //       'amount_in_words' => $this->numberToWord($Amount)
-    //                                 // ];
+                // Dollar (Credit)
+                $this->journal_entry_service->saveJVDetail(
+                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                    $journal_entry_id, // journal entry id
+                    'Ratti Kaat Dollar($) Supplier/Karigar Credit Entry', //explaination
+                    $ratti_kaat->id, //bill no
+                    0, // check no or 0
+                    $ratti_kaat->purchase_date, //check date
+                    0, // is credit flag 0 for credit, 1 for debit
+                    $Dollar_Amount, //amount
+                    $supplir_dollar_account->id, // account id
+                    $supplir_dollar_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+            }
 
-    //                                 // Journal entry detail (Credit)
-    //                                 $journal_entry_detail->saveJVDetail(
-    //                                       $paid_jv_id, // journal entry id
-    //                                       'Vendor Paid Payment Against Purchase Credit', //explaination
-    //                                       $purchase->bill_no, //bill no
-    //                                       0, // check no or 0
-    //                                       $purchase->poDate, //check date
-    //                                       0, // is credit flag 0 for credit, 1 for debit
-    //                                       $Amount, //amount
-    //                                       $paid_account->id, // account id
-    //                                       $paid_account->code, // account code
-    //                                       Auth::guard('admin_user')->User()->id //created by id
-    //                                 );
 
-    //                                 // $paid2 = [
-    //                                 //       'credit' => 0.00,
-    //                                 //       'journal_entry_id' => $journal_entry_vendor->id,
-    //                                 //       'explanation' => 'Vendor Paid Payment Against Purchase Debit',
-    //                                 //       'bill_no' => $purchase->bill_no,
-    //                                 //       'check_no' => 0,
-    //                                 //       'check_date' => $purchase->poDate,
-    //                                 //       'debit' => $Amount,
-    //                                 //       'acc_head_id' => $vendor_account->id,
-    //                                 //       'createdBy' =>  Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                                 //       'amount' => $Amount,
-    //                                 //       'account_code' => $vendor_account->code,
-    //                                 //       'amount_in_words' => $this->numberToWord($Amount)
-    //                                 // ];
-    //                                 // DB::table('journal_entry_details')->insert($paid1);
-    //                                 // DB::table('journal_entry_details')->insert($paid2);
+            if ($ratti_kaat->paid > 0 && $ratti_kaat->paid_account != null) {
+                $Paid_Amount = str_replace(',', '', $ratti_kaat->paid ?? 0);
 
-    //                                 // Journal entry detail (Debit)
-    //                                 $journal_entry_detail->saveJVDetail(
-    //                                       $paid_jv_id, // journal entry id
-    //                                       'Vendor Paid Payment Against Purchase Debit', //explaination
-    //                                       $purchase->bill_no, //bill no
-    //                                       0, // check no or 0
-    //                                       $purchase->poDate, //check date
-    //                                       1, // is credit flag 0 for credit, 1 for debit
-    //                                       $Amount, //amount
-    //                                       $vendor_account->id, // account id
-    //                                       $vendor_account->code, // account code
-    //                                       Auth::guard('admin_user')->User()->id //created by id
-    //                                 );
+                $paid_account = Account::find($ratti_kaat->paid_account);
+                $paid_jv = $this->PaidtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_account, $supplir_account, $Paid_Amount);
+                // Supplier PKR payment
+                $supplier_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                    $supplier->id,
+                    0,
+                    $ratti_kaat->paid_account,
+                    $$ratti_kaat->purchase_date,
+                    null,
+                    $Paid_Amount,
+                    $paid_jv
+                );
+            }
 
-    //                                 // Vendor Payment Add
-    //                                 $vendor_payment_data = [
-    //                                       'vendor_id' => $purchase->vendorId,
-    //                                       'account_id' => $purchase->paid_account,
-    //                                       'payment_date' => date('Y-m-d'),
-    //                                       'cheque_ref' => 'Date :' . $purchase->poDate . ' Against PO. ' . $purchase->poNum,
-    //                                       'sub_total' => $purchase->paid,
-    //                                       'total' => $purchase->paid,
-    //                                       'tax' => 0,
-    //                                       'tax_amount' => $purchase->tax_amount ?? 0,
-    //                                       'tax_account_id' => Null,
-    //                                       'jv_id' => $journal_entry_vendor->id,
-    //                                       'restaurant_id' => Auth::guard('admin_user')->User()->userRestaurant->restaurant_id,
-    //                                       'createdby_id'=>Auth::guard('admin_user')->User()->id
-    //                                 ];
-    //                                 $vendor_payment =  VendorPayment::create($vendor_payment_data);
-    //                                 $vendor_payment_id = $vendor_payment->id;
-    //                                 // Vendor amount update
-    //                                 $vendor->opening_balance = $vendor->opening_balance - $purchase->paid;
-    //                                 $vendor->update();
-    //                           }
-    //                     }
-    //                     // Purchase Update
-    //                     $purchase->posted = 1;
-    //                     $purchase->jv_id = $journal_entry_id;
-    //                     $purchase->paid_jv_id = $paid_jv_id;
-    //                     $purchase->fare_jv_id = $fare_jv_id;
-    //                     $purchase->vendor_payment_id = $vendor_payment_id;
-    //                     $purchase->update();
-    //               }
-    //               DB::commit();
-    //         } catch (Exception $e) {
+            // AU Payment JV
+            if ($ratti_kaat->paid_au > 0  && $ratti_kaat->paid_au_account != null) {
+                $Paid_au_Amount = str_replace(',', '', $ratti_kaat->paid_au ?? 0);
 
-    //               DB::rollback();
-    //               throw $e;
-    //         }
-    //         return true;
-    //   }
+                $paid_au_account = Account::find($ratti_kaat->paid_au_account);
+                $paid_au_jv = $this->PaidAUtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount);
+
+                // Supplier AU payment
+                $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                    $supplier->id,
+                    0,
+                    $ratti_kaat->paid_au_account,
+                    $$ratti_kaat->purchase_date,
+                    null,
+                    $Paid_au_Amount,
+                    $paid_au_jv
+                );
+            }
+
+            // Dollar Payment JV
+            if ($ratti_kaat->paid_dollar > 0  && $ratti_kaat->paid_dollar_account != null) {
+                $Paid_dollar_Amount = str_replace(',', '', $ratti_kaat->paid_dollar ?? 0);
+
+                $paid_dollar_account = Account::find($ratti_kaat->paid_dollar_account);
+                $paid_dollar_jv = $this->PaidDollartoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_dollar_account, $supplir_dollar_account, $Paid_dollar_Amount);
+                // Supplier Dollar payment
+                $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                    $supplier->id,
+                    0,
+                    $ratti_kaat->paid_dollar_account,
+                    $$ratti_kaat->purchase_date,
+                    null,
+                    $Paid_dollar_Amount,
+                    $paid_dollar_jv
+                );
+            }
+
+            // Purchase Update
+            $ratti_kaat->is_posted = 1;
+            $ratti_kaat->jv_id = $journal_entry_id;
+            $ratti_kaat->paid_jv_id = ($paid_jv != null) ? $paid_jv->id : null;
+            $ratti_kaat->paid_au_jv_id = ($paid_au_jv != null) ? $paid_au_jv->id : null;
+            $ratti_kaat->paid_dollar_jv_id = ($paid_dollar_jv != null) ? $paid_dollar_jv->id : null;
+            $ratti_kaat->supplier_payment_id = ($supplier_payment != null) ? $supplier_payment->id : null;
+            $ratti_kaat->supplier_au_payment_id = ($supplier_au_payment != null) ? $supplier_au_payment->id : null;
+            $ratti_kaat->supplier_dollar_payment_id = ($supplier_dollar_payment != null) ? $supplier_dollar_payment->id : null;
+            $ratti_kaat->update();
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return true;
+    }
+
+    // PKR paid to supplier
+    public function PaidtoSupplier($ratti_kaat_no, $purchase_date, $bill_no, $supplier, $paid_account, $supplir_account, $Paid_Amount)
+    {
+        $journal_type = ($paid_account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
+        $journal = Journal::find($journal_type);
+        $data = ["date" => $purchase_date, "prefix" => $journal->prefix, "journal_id" => $journal->id];
+        $entryNum = $this->journal_entry_service->generateJournalEntryNum($data);
+
+        $journal_entry = new JournalEntry;
+        $journal_entry->journal_id = $journal->id;
+        $journal_entry->supplier_id = $supplier->id;
+        $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $purchase_date)));
+        $journal_entry->reference = 'Date :' . $purchase_date . ' PKR Payment Against RK. ' . $ratti_kaat_no;
+        $journal_entry->entryNum = $entryNum;
+        $journal_entry->createdby_id = Auth::User()->id;
+        $journal_entry->save();
+
+        $paid_jv_id = $journal_entry->id;
+
+        // Journal Entry Detail
+        $Paid_Amount = str_replace(',', '', $Paid_Amount);
+
+        // Journal entry detail (Debit)
+        $this->journal_entry_service->saveJVDetail(
+            0,
+            $paid_jv_id, // journal entry id
+            'Paid PKR Payment Debit Against Ratti Kaat. ' . $ratti_kaat_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $purchase_date, //check date
+            1, // is credit flag 0 for credit, 1 for debit
+            $Paid_Amount, //amount
+            $supplir_account->id, // account id
+            $supplir_account->code, // account code
+            Auth::User()->id //created by id
+        );
+
+        // Journal entry detail (Credit)
+        $this->journal_entry_service->saveJVDetail(
+            0, // 0 for PKR, 1 for AU, 2 for Dollar
+            $paid_jv_id, // journal entry id
+            'Paid PKR Payment Credit Against Ratti Kaat. ' . $ratti_kaat_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $purchase_date, //check date
+            0, // is credit flag 0 for credit, 1 for debit
+            $Paid_Amount, //amount
+            $paid_account->id, // account id
+            $paid_account->code, // account code
+            Auth::User()->id //created by id
+        );
+
+        return $journal_entry;
+    }
+
+    // AU paid to supplier
+    public function PaidAUtoSupplier($ratti_kaat_no, $purchase_date, $bill_no, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount)
+    {
+        $journal_type = ($paid_au_account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
+        $journal = Journal::find($journal_type);
+        $data = ["date" => $purchase_date, "prefix" => $journal->prefix, "journal_id" => $journal->id];
+        $entryNum = $this->journal_entry_service->generateJournalEntryNum($data);
+
+        $journal_entry = new JournalEntry;
+        $journal_entry->journal_id = $journal->id;
+        $journal_entry->supplier_id = $supplier->id;
+        $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $purchase_date)));
+        $journal_entry->reference = 'Date :' . $purchase_date . ' AU payment Against RK. ' . $ratti_kaat_no;
+        $journal_entry->entryNum = $entryNum;
+        $journal_entry->createdby_id = Auth::User()->id;
+        $journal_entry->save();
+
+        $au_jv_id = $journal_entry->id;
+
+        // Journal Entry Detail
+        $Paid_au_Amount = str_replace(',', '', $Paid_au_Amount);
+
+        // Journal entry detail (Debit)
+        $this->journal_entry_service->saveJVDetail(
+            1,
+            $au_jv_id, // journal entry id
+            'Paid AU Payment Debit Against Ratti Kaat. ' . $ratti_kaat_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $purchase_date, //check date
+            1, // is credit flag 0 for credit, 1 for debit
+            $Paid_au_Amount, //amount
+            $supplir_au_account->id, // account id
+            $supplir_au_account->code, // account code
+            Auth::User()->id //created by id
+        );
+
+        // Journal entry detail (Credit)
+        $this->journal_entry_service->saveJVDetail(
+            1, // 0 for PKR, 1 for AU, 2 for Dollar
+            $au_jv_id, // journal entry id
+            'Paid AU Payment Credit Against Ratti Kaat. ' . $ratti_kaat_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $purchase_date, //check date
+            0, // is credit flag 0 for credit, 1 for debit
+            $Paid_au_Amount, //amount
+            $paid_au_account->id, // account id
+            $paid_au_account->code, // account code
+            Auth::User()->id //created by id
+        );
+
+        return $journal_entry;
+    }
+
+    // Dollar paid to supplier
+    public function PaidDollartoSupplier($ratti_kaat_no, $purchase_date, $bill_no, $supplier, $paid_dollar_account, $supplir_dollar_account, $Paid_dollar_Amount)
+    {
+        $journal_type = ($paid_dollar_account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
+        $journal = Journal::find($journal_type);
+        $data = ["date" => $purchase_date, "prefix" => $journal->prefix, "journal_id" => $journal->id];
+        $entryNum = $this->journal_entry_service->generateJournalEntryNum($data);
+
+        $journal_entry = new JournalEntry;
+        $journal_entry->journal_id = $journal->id;
+        $journal_entry->supplier_id = $supplier->id;
+        $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $purchase_date)));
+        $journal_entry->reference = 'Date :' . $purchase_date . ' Dollar payment Against RK. ' . $ratti_kaat_no;
+        $journal_entry->entryNum = $entryNum;
+        $journal_entry->createdby_id = Auth::User()->id;
+        $journal_entry->save();
+
+        $dollar_jv_id = $journal_entry->id;
+
+        // Journal Entry Detail
+        $Paid_dollar_Amount = str_replace(',', '', $Paid_dollar_Amount);
+
+        // Journal entry detail (Debit)
+        $this->journal_entry_service->saveJVDetail(
+            2,
+            $dollar_jv_id, // journal entry id
+            'Paid Dollar Payment Debit Against Ratti Kaat. ' . $ratti_kaat_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $purchase_date, //check date
+            1, // is credit flag 0 for credit, 1 for debit
+            $Paid_dollar_Amount, //amount
+            $supplir_dollar_account->id, // account id
+            $supplir_dollar_account->code, // account code
+            Auth::User()->id //created by id
+        );
+
+        // Journal entry detail (Credit)
+        $this->journal_entry_service->saveJVDetail(
+            2, // 0 for PKR, 1 for dollar, 2 for Dollar
+            $dollar_jv_id, // journal entry id
+            'Paid Dollar Payment Credit Against Ratti Kaat. ' . $ratti_kaat_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $purchase_date, //check date
+            0, // is credit flag 0 for credit, 1 for debit
+            $Paid_dollar_Amount, //amount
+            $paid_dollar_account->id, // account id
+            $paid_dollar_account->code, // account code
+            Auth::User()->id //created by id
+        );
+
+        return $journal_entry;
+    }
 
     // get by id
     public function getRattiKaatById($id)
@@ -585,15 +620,66 @@ class RattiKaatService
     // delete by id
     public function deleteRattiKaatById($id)
     {
-        $ratti_kaat = $this->model_ratti_kaat->getModel()::find($id);
-        $ratti_kaat->is_deleted = 1;
-        $ratti_kaat->deletedby_id = Auth::user()->id;
-        $ratti_kaat->update();
+        try {
+            DB::beginTransaction();
+            $ratti_kaat = $this->model_ratti_kaat->find($id);
+            $ratti_kaat->is_deleted = 1;
+            $ratti_kaat->deletedby_id = Auth::User()->id;
+            $ratti_kaat->update();
 
-        if (!$ratti_kaat)
-            return false;
+            if ($ratti_kaat->jv_id != null) {
+                $journal_entry = JournalEntry::find($ratti_kaat->jv_id);
+                $journal_entry->is_deleted = 1;
+                $journal_entry->deletedby_id = Auth::User()->id;
+                $journal_entry->update();
+            }
 
-        return $ratti_kaat;
+            if ($ratti_kaat->paid_jv_id != null) {
+                $paid_jv = JournalEntry::find($ratti_kaat->paid_jv_id);
+                $paid_jv->is_deleted = 1;
+                $paid_jv->deletedby_id = Auth::User()->id;
+                $paid_jv->update();
+            }
+            if ($ratti_kaat->paid_au_jv_id != null) {
+                $paid_au_jv = JournalEntry::find($ratti_kaat->paid_au_jv_id);
+                $paid_au_jv->is_deleted = 1;
+                $paid_au_jv->deletedby_id = Auth::User()->id;
+                $paid_au_jv->update();
+            }
+            if ($ratti_kaat->paid_dollar_jv_id != null) {
+                $paid_dollar_jv = JournalEntry::find($ratti_kaat->paid_dollar_jv_id);
+                $paid_dollar_jv->is_deleted = 1;
+                $paid_dollar_jv->deletedby_id = Auth::User()->id;
+                $paid_dollar_jv->update();
+            }
+
+            //payment delete
+            if ($ratti_kaat->supplier_payment_id != null) {
+                $supplier_payment = SupplierPayment::find($ratti_kaat->supplier_payment_id);
+                $supplier_payment->is_deleted = 1;
+                $supplier_payment->deletedby_id = Auth::User()->id;
+                $supplier_payment->update();
+            }
+            if ($ratti_kaat->supplier_au_payment_id != null) {
+                $supplier_au_payment = SupplierPayment::find($ratti_kaat->supplier_au_payment_id);
+                $supplier_au_payment->is_deleted = 1;
+                $supplier_au_payment->deletedby_id = Auth::User()->id;
+                $supplier_au_payment->update();
+            }
+            if ($ratti_kaat->supplier_dollar_payment_id != null) {
+                $supplier_dollar_payment = SupplierPayment::find($ratti_kaat->supplier_dollar_payment_id);
+                $supplier_dollar_payment->is_deleted = 1;
+                $supplier_dollar_payment->deletedby_id = Auth::User()->id;
+                $supplier_dollar_payment->update();
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return true;
     }
 
     // get beads weight

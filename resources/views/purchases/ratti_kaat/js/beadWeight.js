@@ -82,7 +82,7 @@ function beadWeightData(ratti_kaat_id, product_id) {
                         total_weight = total_weight * 1 + val.gram * 1;
                         total_bead_amount =
                             total_bead_amount * 1 + val.total_amount * 1;
-                        rows += `<tr id=${val.id} ><td>${i}</td><td>${val.beads}</td><td>${val.gram}</td><td>${val.carat}</td><td>${val.gram_rate}</td><td>${val.carat_rate}</td><td>${val.total_amount}</td><td><a class="text-danger text-white"  id="deleteBead" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.id}" data-original-title="delete"><i class="fa fa-trash" style="font-size:18px;"></i></a></td></tr>`;
+                        rows += `<tr id=${val.id} ><td>${i}</td><td>${val.type}</td><td>${val.beads}</td><td>${val.gram}</td><td>${val.carat}</td><td>${val.gram_rate}</td><td>${val.carat_rate}</td><td>${val.total_amount}</td><td><a class="text-danger text-white"  id="deleteBead" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.id}" data-original-title="delete"><i class="fa fa-trash" style="font-size:18px;"></i></a></td></tr>`;
                     });
 
                     $("#bead_weight")
@@ -97,7 +97,7 @@ function beadWeightData(ratti_kaat_id, product_id) {
                 } else {
                     $("#total_bead_amount").val(0);
                     $("#beadTable").html(
-                        '<tr><td colspan="8" style="text-align:center;">Record Not Found!</td></tr>'
+                        '<tr><td colspan="9" style="text-align:center;">Record Not Found!</td></tr>'
                     );
                 }
             } else {

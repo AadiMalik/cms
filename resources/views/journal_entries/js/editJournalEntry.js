@@ -11,10 +11,10 @@ $(document).ready(function () {
         Clear();
     }
     $("#debit").on("change", function () {
-        $("#credit").val("0.00"); //Credit will be 0 keypress on Debit;
+        $("#credit").val("0.000"); //Credit will be 0 keypress on Debit;
     });
     $("#credit").on("change", function () {
-        $("#debit").val("0.00"); //Debit will be 0 keypress on Credit;
+        $("#debit").val("0.000"); //Debit will be 0 keypress on Credit;
     });
     $("#checkno").on("keypress", function () {
         $(".billdate").css("display", "block");
@@ -38,9 +38,9 @@ $(document).ready(function () {
     var accounts = "";
     var accountCode = "";
     var accountName = "";
-    var debit = 0;
+    var debit = 0.000;
     var debitAmt = "";
-    var credit = 0;
+    var credit = 0.000;
     var creditAmt = "";
     var explanation = "";
     var description = "";
@@ -52,13 +52,13 @@ $(document).ready(function () {
     var reference = "";
     var date = "";
     var obj = "";
-    var debitSort = 0;
-    var creditSort = 0;
+    var debitSort = 0.000;
+    var creditSort = 0.000;
     var items = [];
-    var totalCredit = 0;
-    var totalDebit = 0;
-    var total_debit = 0;
-    var total_credit = 0;
+    var totalCredit = 0.000;
+    var totalDebit = 0.000;
+    var total_debit = 0.000;
+    var total_credit = 0.000;
 
     $("#add").click(function (item) {
         date = $("#pdate").val();
@@ -71,12 +71,12 @@ $(document).ready(function () {
         debit = $("#debit").val();
         debit = debit.replace(/[\, ]/g, "");
         debitAmt = parseFloat(debit)
-            .toFixed(2)
+            .toFixed(3)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,");
         credit = $("#credit").val();
         credit = credit.replace(/[\, ]/g, "");
         creditAmt = parseFloat(credit)
-            .toFixed(2)
+            .toFixed(3)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,");
         description = $("#description").val();
         explanation = $("#explanation").val();
@@ -99,11 +99,11 @@ $(document).ready(function () {
         }
 
         if (debit == "") {
-            $("#debit").val("0.00");
+            $("#debit").val("0.000");
         }
 
         if (credit == "") {
-            $("#credit").val("0.00");
+            $("#credit").val("0.000");
         }
 
         if (debit == null || credit == null || debit == "" || credit == "") {
@@ -166,10 +166,10 @@ $(document).ready(function () {
             obj.amount_in_words = toWords(worrds);
 
             debitSort = parseFloat(total_debit)
-                .toFixed(2)
+                .toFixed(3)
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             creditSort = parseFloat(total_credit)
-                .toFixed(2)
+                .toFixed(3)
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             $("#total_debit").val(debitSort);
             $("#total_credit").val(creditSort);
@@ -200,10 +200,10 @@ $(document).ready(function () {
             total_debit = result[3];
             total_credit = result[4];
             debitSort = parseFloat(result[3])
-                .toFixed(2)
+                .toFixed(3)
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             creditSort = parseFloat(result[4])
-                .toFixed(2)
+                .toFixed(3)
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             $("#total_debit").val(debitSort);
             $("#total_credit").val(creditSort);
@@ -276,10 +276,10 @@ $(document).ready(function () {
                 }
 
                 totalCredit = parseFloat(totalCredit)
-                    .toFixed(2)
+                    .toFixed(3)
                     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
                 totalDebit = parseFloat(totalDebit)
-                    .toFixed(2)
+                    .toFixed(3)
                     .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             },
             controller: {
@@ -308,10 +308,10 @@ $(document).ready(function () {
                                 }
                             }
                             totalCredit = parseFloat(total_credit)
-                                .toFixed(2)
+                                .toFixed(3)
                                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
                             totalDebit = parseFloat(total_debit)
-                                .toFixed(2)
+                                .toFixed(3)
                                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
                             $("#total_debit").val(totalDebit);
                             $("#total_credit").val(totalCredit);
@@ -427,10 +427,10 @@ $(document).ready(function () {
             total_debit = parseInt(result[3]);
             total_credit = parseInt(result[4]);
             debitSort = parseFloat(result[3])
-                .toFixed(2)
+                .toFixed(3)
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             creditSort = parseFloat(result[4])
-                .toFixed(2)
+                .toFixed(3)
                 .replace(/\d(?=(\d{3})+\.)/g, "$&,");
             $("#total_debit").val(debitSort);
             $("#total_credit").val(creditSort);
@@ -446,6 +446,11 @@ $(document).ready(function () {
                 errorMessage("Please Add a Journal Entries!");
                 return;
             }
+            if ($("#currency").val() == "" || $("#currency").val() == 0) {
+                errorMessage("Currency filed required!");
+                $("#currency").focus();
+                return;
+            }
             if ($("#reference").val() == "") {
                 errorMessage("Reference filed required!");
                 $("#reference").focus();
@@ -459,6 +464,7 @@ $(document).ready(function () {
             var journal_id = $("#journal_id").val();
             var supplier_id = $("#supplier_id").val();
             var reference = $("#reference").val();
+            var currency = $("#currency").val();
             if (obj.item.length > 0) {
                 var load_func = function () {
                     $("#preloader").show();
@@ -470,6 +476,7 @@ $(document).ready(function () {
                         journal_id: journal_id,
                         supplier_id: supplier_id,
                         reference: reference,
+                        currency: currency,
                         items: obj,
                     },
                     headers: {
@@ -529,8 +536,8 @@ $(document).ready(function () {
         $("#checkno").val("");
         $("#billno").val("");
         $("#explanation").val("");
-        $("#debit").val(0);
-        $("#credit").val(0);
+        $("#debit").val(0.000);
+        $("#credit").val(0.000);
     }
 
     function editDetails(item, index) {
@@ -604,14 +611,14 @@ $("#credit").inputmask({
     alias: "decimal",
     groupSeparator: ",",
     autoGroup: true,
-    digits: 2,
+    digits: 3,
     digitsOptional: false,
 });
 $("#debit").inputmask({
     alias: "decimal",
     groupSeparator: ",",
     autoGroup: true,
-    digits: 2,
+    digits: 3,
     digitsOptional: false,
 });
 

@@ -3,7 +3,7 @@
             <div class="modal-content">
                   <div class="modal-header">
                         <h4 class="modal-title" id="jvs_modalHeading"></h4>
-                        <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close"><span
+                        <button class="close text-black" type="button" data-dismiss="modal" aria-label="Close"><span
                                     aria-hidden="true">×</span></button>
                   </div>
                   <div class="modal-body" id="result">

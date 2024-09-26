@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierPaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Auth;
@@ -138,6 +139,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('edit/{id}', [JournalEntryController::class, 'edit']);
         Route::get('destroy/{id}', [JournalEntryController::class, 'destroy']);
         Route::get('print/{id}', [JournalEntryController::class, 'print']);
+        Route::get('all-jvs', [JournalEntryController::class, 'allJvs']);
         Route::get('grid-edit/{id}', [JournalEntryController::class, 'grid_journal_edit']);
         Route::get('/js/JournalEntryForm.js', function () {
             $path = resource_path('views/journal_entries/js/JournalEntryForm.js');
@@ -212,7 +214,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-ratti-kaats-detail/{id}', [RattiKaatController::class, 'rattiKaatDetail']);
         Route::post('update', [RattiKaatController::class, 'update']);
         Route::get('destroy/{id}', [RattiKaatController::class, 'destroy']);
-        Route::get('status/{id}', [RattiKaatController::class, 'status']);
+        Route::post('post-ratti_kaat', [RattiKaatController::class, 'postRattiKaat']);
 
         Route::get('/js/rattiKaat.js', function () {
             $path = resource_path('views/purchases/ratti_kaat/js/rattiKaat.js');
@@ -271,5 +273,26 @@ Route::group(['middleware' => ['auth']], function () {
 
         // Change kaat
         Route::post('change-kaat', [RattiKaatController::class, 'ChangeKaat']);
+    });
+
+    // Supplier Payment
+    Route::group(['prefix' => 'supplier-payment'], function () {
+        Route::get('/', [SupplierPaymentController::class, 'index']);
+        Route::post('data', [SupplierPaymentController::class, 'getData'])->name('supplier-payment.data');
+        Route::get('create', [SupplierPaymentController::class, 'create']);
+        Route::post('store', [SupplierPaymentController::class, 'store']);
+        Route::get('edit/{id}', [SupplierPaymentController::class, 'edit']);
+        Route::post('update', [SupplierPaymentController::class, 'update']);
+        Route::get('destroy/{id}', [SupplierPaymentController::class, 'destroy']);
+        Route::get('status/{id}', [SupplierPaymentController::class, 'status']);
+        Route::get('/js/SupplierPaymentForm.js', function () {
+            $path = resource_path('views/supplier_payment/js/SupplierPaymentForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 });

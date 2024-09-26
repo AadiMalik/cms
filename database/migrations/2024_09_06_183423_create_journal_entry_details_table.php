@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('check_date')->nullable();
             $table->decimal('credit', 10, 2)->default(0);
             $table->decimal('debit', 10, 2)->default(0);
+            $table->integer('currency')->default(0)->comment('0 for PKR, 1 for AU and 2 for Dollar');
             $table->string('doc_date')->nullable();
             $table->integer('account_id')->nullable();
             $table->decimal('amount', 10, 2)->default(0);

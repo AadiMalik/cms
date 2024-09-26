@@ -17,6 +17,7 @@ class JournalEntryDetail extends Model
         'check_date',
         'credit',
         'debit',
+        'currency',
         'doc_date',
         'account_id',
         'amount',

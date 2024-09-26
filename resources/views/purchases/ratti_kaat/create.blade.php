@@ -124,7 +124,7 @@
                                         <b>Add Purchase Detail:</b>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group form-float">
                                             <label class="form-label">Purduct:<span style="color:red;">*</span></label>
                                             <div class="form-line">
@@ -141,7 +141,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Scale Weight:<span
                                                     style="color:red;">*</span></label>
@@ -155,14 +156,39 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Description:<span
-                                                    style="color:red;">*</span></label>
+                                            <label class="form-label">Net Weight:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="description" id="description"
-                                                        class="form-control">
+                                                    <input type="text" name="net_weight" id="net_weight"
+                                                        class="form-control" min="0" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Pure Payable:</label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="pure_payable"
+                                                        id="pure_payable" class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Ratti Kaat:
+                                                <a href="javascript:void(0)" id="ChangeKaatButton"
+                                                    style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                    class="btn-primary"><i class="fa fa-refresh text-white"></i></a>
+                                            </label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="supplier_kaat" id="supplier_kaat"
+                                                        class="form-control" min="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -212,32 +238,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Net Weight:</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="net_weight" id="net_weight"
-                                                        class="form-control" min="0" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Ratti Kaat:
-                                                <a href="javascript:void(0)" id="ChangeKaatButton"
-                                                    style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
-                                                    class="btn-primary"><i class="fa fa-refresh text-white"></i></a>
-                                            </label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="supplier_kaat" id="supplier_kaat"
-                                                        class="form-control" min="0" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
+                                    
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Kaat:</label>
@@ -245,29 +247,6 @@
                                                 <div class="form-line">
                                                     <input type="text" name="kaat" id="kaat"
                                                         class="form-control" min="0" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Pure Payable:</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="pure_payable"
-                                                        id="pure_payable" class="form-control" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Other Charge:</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="other_charge"
-                                                        id="other_charge" class="form-control"
-                                                        onkeypress="return isNumberKey(event)" maxlength="10">
                                                 </div>
                                             </div>
                                         </div>
@@ -305,13 +284,49 @@
                                             </div>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Total Amount:</label>
+                                            <label class="form-label">Other Charge:</label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="other_charge"
+                                                        id="other_charge" class="form-control"
+                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Total($):</label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="total_dollar" id="total_dollar"
+                                                        class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Total(PKR):</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_amount" id="total_amount"
                                                         class="form-control" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Description:<span
+                                                    style="color:red;">*</span></label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="description" id="description"
+                                                        class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -346,7 +361,8 @@
                                                     <th>Kaat</th>
                                                     <th>Pure Payable</th>
                                                     <th>Other Charge</th>
-                                                    <th>Total</th>
+                                                    <th>Total($)</th>
+                                                    <th>Total(PKR)</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -361,11 +377,35 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-2 offset-md-7 text-right">
-                                        <label class="form-label font-weight-bold">Grand Total:</label>
+                                    <div class="col-md-2 offset-md-1 text-right">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label class="form-label font-weight-bold">Grand Total($):</label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="grand_total_dollar"
+                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->total_dollar : '0' }}"
+                                                        id="grand_total_dollar" class="form-control font-weight-bold" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Grand Total(AU):</label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="total_au"
+                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->total_au : '0' }}"
+                                                        id="total_au" class="form-control font-weight-bold" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Grand Total(PKR):</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total"
@@ -377,11 +417,37 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-2 offset-md-7 text-right">
-                                        <label class="form-label font-weight-bold">Paid:</label>
+                                    <div class="col-md-2 offset-md-1 text-right">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label class="form-label font-weight-bold">Paid($):</label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="paid_dollar"
+                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->paid_dollar : '0' }}"
+                                                        id="paid_dollar" class="form-control font-weight-bold"
+                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Paid(AU):</label>
+                                            <div class="form-group form-float">
+                                                <div class="form-line">
+                                                    <input type="text" name="paid_au"
+                                                        value="{{ isset($ratti_kaat) ? $ratti_kaat->paid_au : '0' }}"
+                                                        id="paid_au" class="form-control font-weight-bold"
+                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Paid(PKR):</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="paid"
@@ -394,11 +460,45 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-2 offset-md-7 text-right">
-                                        <label class="form-label font-weight-bold">Paid Account:</label>
+                                    <div class="col-md-2 offset-md-1 text-right">
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label class="form-label font-weight-bold">Paid Account($):</label>
+                                            <div class="form-group form-float">
+                                                <select id="paid_account_dollar" name="paid_account_dollar"
+                                                    class="form-control show-tick" data-live-search="true">
+                                                    <option value="" selected>--Select Account--</option>
+                                                    @foreach ($accounts as $item)
+                                                        <option value="{{ $item->id }}"
+                                                            @if (isset($ratti_kaat)) {{ $ratti_kaat->paid_account_dollar == $item->id ? 'selected' : '' }} @endif>
+                                                            {{ $item->code }} {{ $item->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Paid Account(AU):</label>
+                                            <div class="form-group form-float">
+                                                <select id="paid_account_au" name="paid_account_au"
+                                                    class="form-control show-tick" data-live-search="true">
+                                                    <option value="" selected>--Select Account--</option>
+                                                    @foreach ($accounts as $item)
+                                                        <option value="{{ $item->id }}"
+                                                            @if (isset($ratti_kaat)) {{ $ratti_kaat->paid_account_au == $item->id ? 'selected' : '' }} @endif>
+                                                            {{ $item->code }} {{ $item->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label font-weight-bold">Paid Account(PKR):</label>
                                             <div class="form-group form-float">
                                                 <select id="paid_account" name="paid_account"
                                                     class="form-control show-tick" data-live-search="true">
@@ -459,6 +559,8 @@
             $('#product_id').select2();
             $('#supplier_id').select2();
             $('#paid_account').select2();
+            $('#paid_account_dollar').select2();
+            $('#paid_account_au').select2();
             const purchase_date = document.getElementById("purchase_date");
 
             // ✅ Using the visitor's timezone
