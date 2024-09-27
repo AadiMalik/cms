@@ -333,7 +333,7 @@ class RattiKaatController extends Controller
             );
         }
 
-        try {
+        // try {
             $filenames = [];
             if ($request->hasFile('pictures')) {
                 foreach ($request->file('pictures') as $file) {
@@ -347,11 +347,11 @@ class RattiKaatController extends Controller
                 "purchase_date" => $request->purchase_date ?? Null,
                 "supplier_id" => $request->supplier_id ?? Null,
                 "purchase_account" => $request->purchase_account ?? Null,
-                "paid" => $request->paid ?? Null,
+                "paid" => ($request->paid!='')?$request->paid:0,
                 "paid_account" => $request->paid_account ?? Null,
-                "paid_au" => $request->paid_au ?? 0,
+                "paid_au" => ($request->paid_au!='')?$request->paid_au:0,
                 "paid_account_au" => $request->paid_account_au ?? Null,
-                "paid_dollar" => $request->paid_dollar ?? 0,
+                "paid_dollar" => ($request->paid_dollar!='')?$request->paid_dollar:0,
                 "paid_account_dollar" => $request->paid_account_dollar ?? Null,
                 "reference" => $request->reference ?? Null,
                 "pictures" => $filenames ?? Null,
@@ -364,9 +364,9 @@ class RattiKaatController extends Controller
                 config('enum.saved'),
                 []
             );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 
 

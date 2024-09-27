@@ -167,9 +167,9 @@ class RattiKaatService
                     "approved_by" => ($item['approved_by'] != '') ? $item['approved_by'] : null,
                     "pure_payable" => $item['pure_payable'],
                     "other_charge" => ($item['other_charge'] != '') ? $item['other_charge'] : 0,
-                    "total_bead_amount" => $item['total_bead_amount'],
-                    "total_stones_amount" => $item['total_stones_amount'],
-                    "total_diamond_amount" => $item['total_diamond_amount'],
+                    "total_bead_amount" => ($item['total_bead_amount']!='')?$item['total_bead_amount']:0,
+                    "total_stones_amount" => ($item['total_stones_amount']!='')?$item['total_stones_amount']:0,
+                    "total_diamond_amount" => ($item['total_diamond_amount']!='')?$item['total_diamond_amount']:0,
                     "total_dollar" => ($item['total_dollar'] != '') ? $item['total_dollar'] : 0,
                     "total_amount" => ($item['total_amount'] != '') ? $item['total_amount'] : 0,
                     "createdby_id" => Auth::User()->id,
@@ -310,7 +310,7 @@ class RattiKaatService
             }
 
             //Dollar Ratti Kaat
-            if ($ratti_kaat->total_au > 0) {
+            if ($ratti_kaat->total_dollar > 0) {
                 $Dollar_Amount = str_replace(',', '', $ratti_kaat->total_dollar ?? 0);
 
                 // AU (Debit)

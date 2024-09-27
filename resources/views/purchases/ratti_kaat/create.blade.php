@@ -162,7 +162,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="net_weight" id="net_weight"
-                                                        class="form-control" min="0" readonly>
+                                                        class="form-control" min="0" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -173,7 +173,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="pure_payable"
-                                                        id="pure_payable" class="form-control" readonly>
+                                                        id="pure_payable" class="form-control" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -188,7 +188,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="supplier_kaat" id="supplier_kaat"
-                                                        class="form-control" min="0" readonly>
+                                                        class="form-control" min="0" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -203,7 +203,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="bead_weight" id="bead_weight"
-                                                        class="form-control" min="0" readonly>
+                                                        class="form-control" min="0" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -218,7 +218,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="stones_weight" id="stones_weight"
-                                                        class="form-control" min="0" readonly>
+                                                        class="form-control" min="0" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -233,7 +233,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="diamond_carat" id="diamond_carat"
-                                                        class="form-control" min="0" readonly>
+                                                        class="form-control" min="0" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -246,7 +246,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="kaat" id="kaat"
-                                                        class="form-control" min="0" readonly>
+                                                        class="form-control" min="0" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -268,7 +268,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_stones_amount"
-                                                        id="total_stones_amount" readonly class="form-control">
+                                                        id="total_stones_amount" value="0" readonly class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -279,7 +279,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_diamond_amount"
-                                                        id="total_diamond_amount" readonly class="form-control">
+                                                        id="total_diamond_amount" value="0" readonly class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -292,7 +292,7 @@
                                                 <div class="form-line">
                                                     <input type="text" name="other_charge"
                                                         id="other_charge" class="form-control"
-                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                                        onkeypress="return isNumberKey(event)" value="0" maxlength="10">
                                                 </div>
                                             </div>
                                         </div>
@@ -303,7 +303,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_dollar" id="total_dollar"
-                                                        class="form-control" readonly>
+                                                        class="form-control" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -314,7 +314,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="total_amount" id="total_amount"
-                                                        class="form-control" readonly>
+                                                        class="form-control" value="0" readonly>
                                                 </div>
                                             </div>
                                         </div>
