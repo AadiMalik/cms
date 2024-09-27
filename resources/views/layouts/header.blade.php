@@ -1,18 +1,24 @@
+@php
+    $gold_rate = GoldRate();
+    $dollar_rate = DollarRate();
+@endphp
 <header class="main-header bg-white d-flex justify-content-between p-2">
     <div class="header-toggle">
         <div class="menu-toggle mobile-menu-icon">
             <div></div>
             <div></div>
             <div></div>
-        </div><i class="i-Add-UserStar mr-3 text-20 cursor-pointer" data-toggle="tooltip" data-placement="top"
-            title="" data-original-title="Todo"></i><i class="i-Speach-Bubble-3 mr-3 text-20 cursor-pointer"
-            data-toggle="tooltip" data-placement="top" title="" data-original-title="Chat"></i><i
-            class="i-Email mr-3 text-20 mobile-hide cursor-pointer" data-toggle="tooltip" data-placement="top"
-            title="" data-original-title="Inbox"></i><i
-            class="i-Calendar-4 mr-3 mobile-hide text-20 cursor-pointer" data-toggle="tooltip" data-placement="top"
-            title="" data-original-title="Calendar"></i><i
-            class="i-Checkout-Basket mobile-hide mr-3 text-20 cursor-pointer" data-toggle="tooltip" data-placement="top"
-            title="" data-original-title="Calendar"></i>
+        </div>
+        <div style="display: ruby;border: 2px solid peru;padding: 5px;border-radius: 30%;">
+            <h3 class="mr-1 tool_tip font-weight-bold" title="{{isset($dollar_rate)?$gold_rate->created_at->format('d-m-Y g:i A'):''}}">AU: {{number_format($gold_rate->rate_tola??0,2)}}</h3>
+            <a href="javascript:void(0)" id="ChangeGoldRate" style="padding: 3px 5px 3px 5px;" class="btn-primary mr-2"><i
+                    class="fa fa-refresh text-white"></i></a>
+        </div>
+        <div style="display: ruby;border: 2px solid peru;padding: 5px;border-radius: 30%;">
+            <h3 class="mr-1 tool_tip font-weight-bold"  data-toggle="tooltip" data-placement="top" title="{{isset($dollar_rate)?$dollar_rate->created_at->format('d-m-Y g:i A'):''}}">$: {{number_format($dollar_rate->rate??0,2)}}</h3>
+            <a href="javascript:void(0)" id="ChangeDollarRate" style="padding: 3px 5px 3px 5px;" class="btn-primary mr-2"><i
+                    class="fa fa-refresh text-white"></i></a>
+        </div>
     </div>
     <div class="header-part-right">
         <!-- Full screen toggle--><i class="i-Full-Screen header-icon d-none d-sm-inline-block" data-fullscreen=""></i>

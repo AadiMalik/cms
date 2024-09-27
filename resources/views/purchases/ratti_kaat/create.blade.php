@@ -540,13 +540,7 @@
         var url_local = "{{ url('/') }}";
         var ratti_kaat_id = "{{ isset($ratti_kaat) ? $ratti_kaat->id : '' }}";
 
-        function isNumberKey(evt) {
-            var charCode = evt.which ? evt.which : evt.keyCode;
-            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
-                return false;
-
-            return true;
-        }
+        
     </script>
     <script src="{{ url('ratti-kaats/js/rattiKaat.js') }}"></script>
     <script src="{{ url('ratti-kaats/js/beadWeight.js') }}"></script>

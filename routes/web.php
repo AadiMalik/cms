@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PermissionController;
@@ -294,5 +295,19 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // Gold Rate
+    Route::group(['prefix' => 'gold-rate'], function () {
+        Route::get('/', [GoldRateController::class, 'index']);
+        Route::post('store', [GoldRateController::class, 'store']);
+        
+    });
+
+    // Dollar Rate
+    Route::group(['prefix' => 'dollar-rate'], function () {
+        Route::get('/', [GoldRateController::class, 'dollarLog']);
+        Route::post('store', [GoldRateController::class, 'storeDollar']);
+        
     });
 });

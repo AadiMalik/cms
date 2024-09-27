@@ -226,6 +226,9 @@
             </nav>
         </div>
     </div>
+
+    @include('includes/change_gold_rate')
+    @include('includes/change_dollar_rate')
     <!-- ============ Search UI End ============= -->
     <script src="{{ asset('assets/js/plugins/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/bootstrap.bundle.min.js') }}"></script>
@@ -252,6 +255,33 @@
         };
 
         document.getElementById("year").innerHTML = getCurrentYear();
+
+        
+        $("#ChangeGoldRate").click(function() {
+            $("#changeGoldRateForm").trigger("reset");
+            $("#changeGoldRateModel").modal("show");
+        });
+
+        $("#ChangeDollarRate").click(function() {
+            $("#changeDollarRateForm").trigger("reset");
+            $("#changeDollarRateModel").modal("show");
+        });
+
+        $('.tool_tip')
+            .attr('data-toggle', 'tooltip')
+            .attr('data-placement', 'top')
+            .tooltip({
+                trigger: 'manual'
+            })
+            .tooltip('show');
+
+        function isNumberKey(evt) {
+            var charCode = evt.which ? evt.which : evt.keyCode;
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
     </script>
     @yield('js')
 </body>
