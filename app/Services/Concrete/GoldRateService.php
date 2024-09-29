@@ -27,8 +27,16 @@ class GoldRateService
 
     public function getGoldRateSource()
     {
-        $model = $this->model_gold_rate->getModel()::orderBy('created_at','DESC');
-        $data = DataTables::of($model)->make(true);
+        $model = $this->model_gold_rate->getModel()::with('created_by')->orderBy('created_at','DESC');
+        $data = DataTables::of($model)
+        ->addColumn('created_at', function ($item) {
+            return $item->created_at->format('d-m-Y g:i A');
+        })
+        ->addColumn('created_by', function ($item) {
+            return $item->created_by->name??'';
+        })
+        ->rawColumns(['created_at', 'created_by'])
+        ->make(true);
         return $data;
     }
 
@@ -47,6 +55,20 @@ class GoldRateService
         return $this->model_dollar_rate->getModel()::orderBy('created_at','DESC')->first();
     }
 
+    public function getDollarRateSource()
+    {
+        $model = $this->model_dollar_rate->getModel()::with('created_by')->orderBy('created_at','DESC');
+        $data = DataTables::of($model)
+        ->addColumn('created_at', function ($item) {
+            return $item->created_at->format('d-m-Y g:i A');
+        })
+        ->addColumn('created_by', function ($item) {
+            return $item->created_by->name??'';
+        })
+        ->rawColumns(['created_at', 'created_by'])
+        ->make(true);
+        return $data;
+    }
     public function saveDollarRate($obj)
     {
         $saved_obj = $this->model_dollar_rate->create($obj);

@@ -17,4 +17,9 @@ class DollarRate extends Model
         'updated_at',
         'created_at'
     ];
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'createdby_id');
+    }
 }

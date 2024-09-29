@@ -28,34 +28,54 @@ class GoldRateController extends Controller
         $impurity = 0;
         $ratti = 96;
         $ratti_impurity = 0;
-        $rate = $gold_rate->rate;
-        $rate_gram = $gold_rate->rate / 11.664;
+        $rate = $gold_rate->rate_tola;
+        $rate_gram = $gold_rate->rate_tola / 11.664;
 
         $gold_array = [];
         $impurity_array = [];
         $ratti_array = [];
+        $ratti_impurity_array = [];
         $rate_array = [];
         $rate_gram_array = [];
         for ($i = 24; $i > 0; $i--) {
             if ($i == 24) {
-                $gold_array[] = $gold;
-                $impurity_array[] = $impurity;
-                $ratti_array[] = $ratti;
-                $rate_array[] = $rate;
-                $rate_gram_array[] = $rate_gram;
+                $gold_array[$i] = $gold;
+                $impurity_array[$i] = $impurity;
+                $ratti_array[$i] = $ratti;
+                $ratti_impurity_array[$i] = $ratti_impurity;
+                $rate_array[$i] = (float)$rate;
+                $rate_gram_array[$i] = (float)round($rate_gram,3);
             } else {
-                $gold = ($gold / $i) * ($i - 1);
-                $gold = ($gold / $i) * ($i - 1);
+                $gold = ($gold / ($i+1)) * $i;
+                $impurity = 100 - $gold;
+                $ratti = ($ratti_array[($i+1)] / ($i+1))*$i;
+                $ratti_impurity = 100-$ratti_array[($i+1)];
+                $rate = $rate_array[24] / 24*$i;
+                $rate_gram = $rate/11.664;
+
+
+                $gold_array[$i] = (float)round($gold,3);
+                $impurity_array[$i] = (float)round($impurity,3);
+                $ratti_array[$i] = $ratti;
+                $ratti_impurity_array[$i] = $ratti_impurity;
+                $rate_array[$i] = (float)round($rate,3);
+                $rate_gram_array[$i] = (float)round($rate_gram,3);
             }
 
-            $gold_array[] = $gold;
-            $impurity_array[] = $impurity;
-            $ratti_array[] = $ratti;
-            $rate_array[] = $rate;
-            $rate_gram_array[] = $rate_gram;
         }
+
+        return view('gold_rate.chart',compact('gold_array','impurity_array','ratti_array','ratti_impurity_array','rate_array','rate_gram_array'));
     }
 
+
+    public function logs()
+    {
+        return view('gold_rate.logs');
+    }
+    public function getData(Request $request)
+    {
+        return $this->gold_rate_service->getGoldRateSource();
+    }
 
     public function store(Request $request)
     {
@@ -75,7 +95,7 @@ class GoldRateController extends Controller
 
             $obj = [
                 'rate_tola' => $request->gold_rate,
-                'rate_gram' => $request->gold_rate/11.664,
+                'rate_gram' => $request->gold_rate / 11.664,
                 'createdby_id' => Auth::user()->id
             ];
             $response = $this->gold_rate_service->save($obj);
@@ -90,9 +110,15 @@ class GoldRateController extends Controller
     }
 
     // Dollar Rate
-    public function dollarLog(){
-
+    public function dollarLog() {
+        return view('dollar_rate.logs');
     }
+
+    public function getDollarData(Request $request)
+    {
+        return $this->gold_rate_service->getDollarRateSource();
+    }
+
     public function storeDollar(Request $request)
     {
         $validator = Validator::make(

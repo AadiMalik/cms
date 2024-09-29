@@ -118,6 +118,41 @@
                 </ul>
             </li>
             @endcan
+            @can('purchase_access')
+            <li
+                class="Ul_li--hover {{ Request::is('gold-rate*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Gold Rate</span></a>
+                <ul class="mm-collapse">
+                    @can('ratti_kaat_access')
+                        <li class="item-name"><a class="{{ Request::is('gold-rate') ? 'sidebar_active' : '' }}"
+                                href="{{ url('gold-rate') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Chart</span></a></li>
+                    @endcan
+                    @can('supplier_payment_access')
+                        <li class="item-name"><a class="{{ Request::is('gold-rate/logs') ? 'sidebar_active' : '' }}"
+                                href="{{ url('gold-rate/logs') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Logs</span></a></li>
+                    @endcan
+
+                </ul>
+            </li>
+            @endcan
+            @can('purchase_access')
+            <li
+                class="Ul_li--hover {{ Request::is('dollar-rate*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Dollar Rate</span></a>
+                <ul class="mm-collapse">
+                    @can('ratti_kaat_access')
+                        <li class="item-name"><a class="{{ Request::is('dollar-rate/logs') ? 'sidebar_active' : '' }}"
+                                href="{{ url('dollar-rate/logs') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Logs</span></a></li>
+                    @endcan
+
+                </ul>
+            </li>
+            @endcan
             @can('hrm_access')
             <li
                 class="Ul_li--hover {{ Request::is('employees*') ? 'mm-active' : '' }}">

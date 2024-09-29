@@ -300,13 +300,16 @@ Route::group(['middleware' => ['auth']], function () {
     // Gold Rate
     Route::group(['prefix' => 'gold-rate'], function () {
         Route::get('/', [GoldRateController::class, 'index']);
+        Route::get('logs', [GoldRateController::class, 'logs']);
+        Route::post('data', [GoldRateController::class, 'getData'])->name('gold-rate.data');
         Route::post('store', [GoldRateController::class, 'store']);
         
     });
 
     // Dollar Rate
     Route::group(['prefix' => 'dollar-rate'], function () {
-        Route::get('/', [GoldRateController::class, 'dollarLog']);
+        Route::get('logs', [GoldRateController::class, 'dollarLog']);
+        Route::post('data', [GoldRateController::class, 'getDollarData'])->name('dollar-rate.data');
         Route::post('store', [GoldRateController::class, 'storeDollar']);
         
     });
