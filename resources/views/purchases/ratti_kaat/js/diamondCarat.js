@@ -27,14 +27,18 @@ $("#carat").on("keyup", function (event) {
     var carat = $("#carat").val();
     var carat_rate = $("#carat_rate").val();
     var cal = carat * carat_rate;
+    var dollars= cal/dollar_rate;
     $("#diamond_total").val(cal.toFixed(3));
+    $("#diamond_total_dollar").val(dollars.toFixed(3));
 });
 
 $("#carat_rate").on("keyup", function (event) {
     var carat = $("#carat").val();
     var carat_rate = $("#carat_rate").val();
     var cal = carat * carat_rate;
+    var dollars= cal/dollar_rate;
     $("#diamond_total").val(cal.toFixed(3));
+    $("#diamond_total_dollar").val(dollars.toFixed(3));
 });
 function diamondCaratData(ratti_kaat_id, product_id) {
     $.ajax({

@@ -1,3 +1,6 @@
+@php
+    $dollar_rate = DollarRate();
+@endphp
 @extends('layouts.master')
 @section('content')
     <div class="main-content pt-4">
@@ -539,6 +542,7 @@
     <script type="text/javascript">
         var url_local = "{{ url('/') }}";
         var ratti_kaat_id = "{{ isset($ratti_kaat) ? $ratti_kaat->id : '' }}";
+        var dollar_rate = "{{$dollar_rate->rate}}";
 
         
     </script>
