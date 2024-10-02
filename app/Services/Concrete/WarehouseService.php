@@ -20,7 +20,7 @@ class WarehouseService
 
     public function getWarehouseSource()
     {
-        $model = $this->model_warehouse->getModel()::where('is_deleted',0);
+        $model = $this->model_warehouse->getModel()::where('is_deleted', 0);
         $data = DataTables::of($model)
             ->addColumn('action', function ($item) {
                 $action_column = '';
@@ -28,18 +28,18 @@ class WarehouseService
                 $view_column    = "<a class='text-warning mr-2' href='warehouses/view/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
                 $delete_column    = "<a class='text-danger mr-2' id='deleteWarehouse' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
-                if(Auth::user()->can('warehouses_edit'))
-                $action_column .= $edit_column;
-            
-                if(Auth::user()->can('warehouses_view'))
-                $action_column .= $view_column;
-            
-                if(Auth::user()->can('warehouses_delete'))
-                $action_column .= $delete_column;
+                if (Auth::user()->can('warehouses_edit'))
+                    $action_column .= $edit_column;
+
+                if (Auth::user()->can('warehouses_view'))
+                    $action_column .= $view_column;
+
+                if (Auth::user()->can('warehouses_delete'))
+                    $action_column .= $delete_column;
 
                 return $action_column;
             })
-            ->rawColumns(['role','action'])
+            ->rawColumns(['role', 'action'])
             ->make(true);
         return $data;
     }
@@ -47,11 +47,11 @@ class WarehouseService
     public function save($obj)
     {
         if ($obj['id'] != null && $obj['id'] != '') {
-            $obj['updatedby_id']=Auth::user()->id;
+            $obj['updatedby_id'] = Auth::user()->id;
             $this->model_warehouse->update($obj, $obj['id']);
             $saved_obj = $this->model_warehouse->find($obj['id']);
         } else {
-            $obj['createdby_id']=Auth::user()->id;
+            $obj['createdby_id'] = Auth::user()->id;
             $saved_obj = $this->model_warehouse->create($obj);
         }
 
@@ -65,7 +65,11 @@ class WarehouseService
     {
         return $this->model_warehouse->getModel()::find($id);
     }
-
+    // get all warehouse
+    public function getAll()
+    {
+        return  $this->model_warehouse->getModel()::where('is_deleted', 0)->get();
+    }
     public function deleteById($id)
     {
         $warehouse = $this->model_warehouse->getModel()::find($id);
@@ -73,8 +77,8 @@ class WarehouseService
         $warehouse->deletedby_id = Auth::user()->id;
         $warehouse->update();
 
-        if($warehouse)
-        return true;
+        if ($warehouse)
+            return true;
 
         return false;
     }

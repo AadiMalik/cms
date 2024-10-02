@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\FinishProductController;
 use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
@@ -216,6 +217,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [RattiKaatController::class, 'update']);
         Route::get('destroy/{id}', [RattiKaatController::class, 'destroy']);
         Route::post('post-ratti_kaat', [RattiKaatController::class, 'postRattiKaat']);
+        Route::get('ratti-kaat-by-product-id/{product_id}', [RattiKaatController::class, 'getRattiKaatByProductId']);
+        Route::get('get-detail-by-id/{id}', [RattiKaatController::class, 'getRattiKaatDetailById']);
 
         Route::get('/js/rattiKaat.js', function () {
             $path = resource_path('views/purchases/ratti_kaat/js/rattiKaat.js');
@@ -311,6 +314,25 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('logs', [GoldRateController::class, 'dollarLog']);
         Route::post('data', [GoldRateController::class, 'getDollarData'])->name('dollar-rate.data');
         Route::post('store', [GoldRateController::class, 'storeDollar']);
+        
+    });
+
+    // Finish Product
+    Route::group(['prefix' => 'finish-product'], function () {
+        Route::get('/', [FinishProductController::class, 'index']);
+        Route::get('create', [FinishProductController::class, 'create']);
+        Route::post('data', [FinishProductController::class, 'getData'])->name('finish-product.data');
+        Route::post('store', [FinishProductController::class, 'store']);
+
+        Route::get('/js/finishProduct.js', function () {
+            $path = resource_path('views/finish_product/js/finishProduct.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
         
     });
 });

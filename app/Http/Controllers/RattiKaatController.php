@@ -464,4 +464,30 @@ class RattiKaatController extends Controller
             return $this->error(config('enum.noDelete'),);
         }
     }
+
+    public function getRattiKaatByProductId($product_id){
+        try {
+            $response = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
+            return $this->success(
+                config('enum.success'),
+                $response,
+                true
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'),);
+        }
+    }
+
+    public function getRattiKaatDetailById($detail_id){
+        try {
+            $response = $this->ratti_kaat_service->getRattiKaatDetailById($detail_id);
+            return $this->success(
+                config('enum.success'),
+                $response,
+                true
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'),);
+        }
+    }
 }

@@ -167,9 +167,9 @@ class RattiKaatService
                     "approved_by" => ($item['approved_by'] != '') ? $item['approved_by'] : null,
                     "pure_payable" => $item['pure_payable'],
                     "other_charge" => ($item['other_charge'] != '') ? $item['other_charge'] : 0,
-                    "total_bead_amount" => ($item['total_bead_amount']!='')?$item['total_bead_amount']:0,
-                    "total_stones_amount" => ($item['total_stones_amount']!='')?$item['total_stones_amount']:0,
-                    "total_diamond_amount" => ($item['total_diamond_amount']!='')?$item['total_diamond_amount']:0,
+                    "total_bead_amount" => ($item['total_bead_amount'] != '') ? $item['total_bead_amount'] : 0,
+                    "total_stones_amount" => ($item['total_stones_amount'] != '') ? $item['total_stones_amount'] : 0,
+                    "total_diamond_amount" => ($item['total_diamond_amount'] != '') ? $item['total_diamond_amount'] : 0,
                     "total_dollar" => ($item['total_dollar'] != '') ? $item['total_dollar'] : 0,
                     "total_amount" => ($item['total_amount'] != '') ? $item['total_amount'] : 0,
                     "createdby_id" => Auth::User()->id,
@@ -673,6 +673,50 @@ class RattiKaatService
                 $supplier_dollar_payment->update();
             }
 
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return true;
+    }
+
+    // get by product id
+    public function getRattiKaatByProductId($product_id)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $ratti_kaat = $this->model_ratti_kaat->getModel()::join('ratti_kaat_details', 'ratti_kaat_details.ratti_kaat_id', 'ratti_kaats.id')
+                ->select(
+                    'ratti_kaats.id as ratti_kaat_id',
+                    'ratti_kaats.ratti_kaat_no',
+                    'ratti_kaat_details.id as ratti_kaat_detail_id'
+                )
+                ->where('ratti_kaat_details.product_id', $product_id)
+                ->where('ratti_kaat_details.is_finish_product', 0)
+                ->get();
+
+            return $ratti_kaat;
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return true;
+    }
+
+    // get ratti kaat detail by id
+    public function getRattiKaatDetailById($detail_id)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $ratti_kaat_detail = $this->model_ratti_kaat_detail->find($detail_id);
+            return $ratti_kaat_detail;
+            
             DB::commit();
         } catch (Exception $e) {
 
