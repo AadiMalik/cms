@@ -333,7 +333,7 @@ class RattiKaatController extends Controller
             );
         }
 
-        // try {
+        try {
             $filenames = [];
             if ($request->hasFile('pictures')) {
                 foreach ($request->file('pictures') as $file) {
@@ -364,9 +364,9 @@ class RattiKaatController extends Controller
                 config('enum.saved'),
                 []
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
 
@@ -467,10 +467,15 @@ class RattiKaatController extends Controller
 
     public function getRattiKaatByProductId($product_id){
         try {
-            $response = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
+            $ratti_kaats = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
+            $tag_no = $this->common_service->generateFinishProductTagNo($ratti_kaats[0]->prefix);
+            $data=[
+                "ratti_kaat"=>$ratti_kaats,
+                "tag_no"=>$tag_no
+            ];
             return $this->success(
                 config('enum.success'),
-                $response,
+                $data,
                 true
             );
         } catch (Exception $e) {

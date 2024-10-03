@@ -323,6 +323,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('create', [FinishProductController::class, 'create']);
         Route::post('data', [FinishProductController::class, 'getData'])->name('finish-product.data');
         Route::post('store', [FinishProductController::class, 'store']);
+        Route::get('destroy/{id}', [FinishProductController::class, 'destroy']);
+        Route::get('status/{id}', [FinishProductController::class, 'status']);
 
         Route::get('/js/finishProduct.js', function () {
             $path = resource_path('views/finish_product/js/finishProduct.js');

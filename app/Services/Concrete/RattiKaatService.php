@@ -687,15 +687,18 @@ class RattiKaatService
     {
         try {
             DB::beginTransaction();
-            
+
             $ratti_kaat = $this->model_ratti_kaat->getModel()::join('ratti_kaat_details', 'ratti_kaat_details.ratti_kaat_id', 'ratti_kaats.id')
+                ->join('products', 'ratti_kaat_details.product_id', 'products.id')
                 ->select(
                     'ratti_kaats.id as ratti_kaat_id',
                     'ratti_kaats.ratti_kaat_no',
-                    'ratti_kaat_details.id as ratti_kaat_detail_id'
+                    'ratti_kaat_details.id as ratti_kaat_detail_id',
+                    'products.prefix'
                 )
                 ->where('ratti_kaat_details.product_id', $product_id)
                 ->where('ratti_kaat_details.is_finish_product', 0)
+                ->where('ratti_kaats.is_posted', 1)
                 ->get();
 
             return $ratti_kaat;
@@ -713,10 +716,10 @@ class RattiKaatService
     {
         try {
             DB::beginTransaction();
-            
+
             $ratti_kaat_detail = $this->model_ratti_kaat_detail->find($detail_id);
             return $ratti_kaat_detail;
-            
+
             DB::commit();
         } catch (Exception $e) {
 

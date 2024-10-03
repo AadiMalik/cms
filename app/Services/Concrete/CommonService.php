@@ -2,26 +2,30 @@
 
 namespace App\Services\Concrete;
 
+use App\Models\FinishProduct;
 use App\Models\RattiKaat;
 use App\Repository\Repository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class CommonService
 {
-    protected $model_ratti_kaat;
-    public function __construct()
-    {
-        // set the model
-        $this->model_ratti_kaat = new Repository(new RattiKaat);
-    }
+      protected $model_ratti_kaat;
+      protected $model_finish_product;
+      public function __construct()
+      {
+            // set the model
+            $this->model_ratti_kaat = new Repository(new RattiKaat);
+            $this->model_finish_product = new Repository(new FinishProduct);
+      }
 
-    public function generateRattiKaatNo()
+      public function generateRattiKaatNo()
       {
             $ratti_kaat = RattiKaat::orderby('id', 'desc')->first();
 
             if (!$ratti_kaat) {
-                  return "RK-". date('dmY') . "-0001";
+                  return "RK-" . date('dmY') . "-0001";
             }
 
             $mystring = $ratti_kaat->ratti_kaat_no;
@@ -39,5 +43,16 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "RK-" . date('dmY') . "-" . $mystring;
+      }
+
+      public function generateFinishProductTagNo($prefix)
+      {
+            do {
+                  $randomNumber = $prefix . mt_rand(10000, 99999);
+
+                  $exists = DB::table('finish_products')->where('tag_no', $randomNumber)->exists();
+            } while ($exists);
+
+            return $randomNumber;
       }
 }
