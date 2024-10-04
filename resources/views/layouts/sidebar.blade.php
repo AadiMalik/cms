@@ -55,6 +55,11 @@
                         class="item-name text-15 text-muted">Inventory</span></a>
                 <ul class="mm-collapse">
                     @can('products_access')
+                        <li class="item-name"><a class="{{ Request::is('finish-product*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('finish-product') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Finish Products</span></a></li>
+                    @endcan
+                    @can('products_access')
                         <li class="item-name"><a class="{{ Request::is('products*') ? 'sidebar_active' : '' }}"
                                 href="{{ url('products') }}"><i class="nav-icon fa fa-circle"></i><span
                                     class="item-name">Products</span></a></li>
