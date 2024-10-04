@@ -85,7 +85,12 @@ class FinishProductService
 
     public function getById($id)
     {
-        return $this->model_finish_product->getModel()::find($id);
+        return $this->model_finish_product->getModel()::with([
+            'ratti_kaat',
+            'ratti_kaat_detail',
+            'product',
+            'warehouse'
+        ])->find($id);
     }
 
     public function statusById($id)
@@ -108,6 +113,11 @@ class FinishProductService
     public function deleteById($id)
     {
         $finish_product = $this->model_finish_product->getModel()::find($id);
+
+        $ratti_kaat_detail = RattiKaatDetail::find($finish_product->ratti_kaat_detail_id);
+        $ratti_kaat_detail->is_finish_product = 0;
+        $ratti_kaat_detail->update();
+
         $finish_product->is_deleted = 1;
         $finish_product->deletedby_id = Auth::user()->id;
         $finish_product->update();

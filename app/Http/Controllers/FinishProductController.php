@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FinishProduct;
 use App\Services\Concrete\FinishProductService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class FinishProductController extends Controller
 {
@@ -80,7 +80,8 @@ class FinishProductController extends Controller
         );
 
         try {
-            $obj=$request->all();
+            DB::beginTransaction();
+            $obj = $request->all();
             $filenames = null;
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
@@ -90,49 +91,30 @@ class FinishProductController extends Controller
                 $obj['picture'] = $filenames;
             }
 
-            $finish_product = $this->finish_product_service->save($obj);
-            if($finish_product)
-            return redirect('finish-product')->with('message',config('enum.saved'));
+            $generator = new BarcodeGeneratorPNG();
+            $barcodeImage = $generator->getBarcode($obj['tag_no'], $generator::TYPE_CODE_39);
+            $filePath = 'barcodes/' . $obj['tag_no'] . '.png';
 
-            return back()->with('error',config('enum.error'));
+            file_put_contents($filePath, $barcodeImage);
+
+
+            $obj['barcode'] = $filePath;
+            $finish_product = $this->finish_product_service->save($obj);
+
+            DB::commit();
+            if ($finish_product)
+                return redirect('finish-product')->with('message', config('enum.saved'));
         } catch (Exception $e) {
-            return back()->with('error',config('enum.error'));
+            return back()->with('error', config('enum.error'));
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\FinishProduct  $finishProduct
-     * @return \Illuminate\Http\Response
-     */
-    public function show(FinishProduct $finishProduct)
+    public function show($id)
     {
-        //
+        $finish_product = $this->finish_product_service->getById($id);
+        return view('finish_product.view', compact('finish_product'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\FinishProduct  $finishProduct
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(FinishProduct $finishProduct)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\FinishProduct  $finishProduct
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, FinishProduct $finishProduct)
-    {
-        //
-    }
 
     public function status($id)
     {

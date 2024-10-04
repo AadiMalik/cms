@@ -323,6 +323,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('create', [FinishProductController::class, 'create']);
         Route::post('data', [FinishProductController::class, 'getData'])->name('finish-product.data');
         Route::post('store', [FinishProductController::class, 'store']);
+        Route::get('view/{id}', [FinishProductController::class, 'show']);
         Route::get('destroy/{id}', [FinishProductController::class, 'destroy']);
         Route::get('status/{id}', [FinishProductController::class, 'status']);
 
