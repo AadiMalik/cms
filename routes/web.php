@@ -11,6 +11,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierPaymentController;
 use App\Http\Controllers\UserController;
@@ -329,6 +330,59 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/finishProduct.js', function () {
             $path = resource_path('views/finish_product/js/finishProduct.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/beadWeight.js', function () {
+            $path = resource_path('views/finish_product/js/beadWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/stoneWeight.js', function () {
+            $path = resource_path('views/finish_product/js/stoneWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/diamondCarat.js', function () {
+            $path = resource_path('views/finish_product/js/diamondCarat.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        
+    });
+
+    // Sale
+    Route::group(['prefix' => 'sale'], function () {
+        Route::get('/', [SaleController::class, 'index']);
+        Route::get('create', [SaleController::class, 'create']);
+        Route::post('data', [SaleController::class, 'getData'])->name('sale.data');
+        Route::post('store', [SaleController::class, 'store']);
+        Route::get('view/{id}', [SaleController::class, 'show']);
+        Route::get('destroy/{id}', [SaleController::class, 'destroy']);
+        Route::get('status/{id}', [SaleController::class, 'status']);
+        Route::get('get-sale-detail/{id}', [SaleController::class, 'saleDetail']);
+        Route::post('post-sale', [SaleController::class, 'postSale']);
+        Route::get('sale-by-product-id/{product_id}', [SaleController::class, 'getSaleByProductId']);
+        Route::get('get-sale-detail-by-id/{id}', [SaleController::class, 'getSaleDetailById']);
+
+        Route::get('/js/sale.js', function () {
+            $path = resource_path('views/sale/js/sale.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

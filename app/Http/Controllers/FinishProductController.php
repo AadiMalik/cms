@@ -9,6 +9,7 @@ use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class FinishProductController extends Controller
@@ -46,14 +47,15 @@ class FinishProductController extends Controller
 
     public function store(Request $request)
     {
-        $validation = $request->validate(
+        $validation = Validator::make(
+            $request->all(),
             [
                 'ratti_kaat_id'             => 'required',
                 'ratti_kaat_detail_id'      => 'required',
                 'tag_no'                    => 'required',
                 'product_id'                => 'required',
                 'warehouse_id'              => 'required',
-                'picture'                   => 'image|mimes:jpeg,png,jpg,gif',
+                'picture'                   => 'required|image|mimes:jpeg,png,jpg,gif',
                 'gold_carat'                => 'required',
                 'scale_weight'              => 'required',
                 'bead_weight'               => 'required',
@@ -66,18 +68,29 @@ class FinishProductController extends Controller
                 'making_gram'               => 'required',
                 'making'                    => 'required',
                 'laker'                     => 'required',
-                'bead_price'                => 'required',
-                'stones_price'              => 'required',
-                'diamond_price'             => 'required',
                 'total_bead_price'          => 'required',
                 'total_stones_price'        => 'required',
                 'total_diamond_price'       => 'required',
                 'other_amount'              => 'required',
                 'gold_rate'                 => 'required',
                 'total_gold_price'          => 'required',
-                'total_amount'              => 'required'
-            ]
+                'total_amount'              => 'required',
+                'beadDetail'                => 'required',
+                'stonesDetail'               => 'required',
+                'diamondDetail'             => 'required'
+            ],
+            $this->validationMessage()
         );
+
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->validationResponse(
+                $validation_error
+            );
+        }
 
         try {
             DB::beginTransaction();
@@ -103,16 +116,27 @@ class FinishProductController extends Controller
 
             DB::commit();
             if ($finish_product)
-                return redirect('finish-product')->with('message', config('enum.saved'));
+                return  $this->success(
+                    config("enum.saved"),
+                    $finish_product
+                );
         } catch (Exception $e) {
-            return back()->with('error', config('enum.error'));
+            return $this->error(config('enum.error'));
         }
     }
 
     public function show($id)
     {
         $finish_product = $this->finish_product_service->getById($id);
-        return view('finish_product.view', compact('finish_product'));
+        $finish_product_bead = $this->finish_product_service->getBeadByFinishProductId($id);
+        $finish_product_stone = $this->finish_product_service->getStoneByFinishProductId($id);
+        $finish_product_diamond = $this->finish_product_service->getDiamondByFinishProductId($id);
+        return view('finish_product.view', compact(
+            'finish_product',
+            'finish_product_bead',
+            'finish_product_stone',
+            'finish_product_diamond'
+        ));
     }
 
 

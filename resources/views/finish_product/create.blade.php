@@ -52,9 +52,7 @@
 
                         </div>
 
-                        <form id="finish_productForm" action="{{ url('finish-product/store') }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
+                        <form id="finish_productForm" action="#" method="POST" enctype="multipart/form-data">
                             <div class="card-body" style="font-size: 14px;">
                                 @csrf
                                 <input type="hidden" name="tag_no" id="tag_no" value="">
@@ -127,7 +125,7 @@
                                                 <div class="form-group">
                                                     <label class="form-label">Gold Karat:<span
                                                             class="text-danger">*</span></label>
-                                                    <input type="text" id="gold_carat" name="gold_carat" value="24"
+                                                    <input type="text" id="gold_carat" name="gold_carat"
                                                         class="form-control" onkeypress="return isNumberKey(event)"
                                                         required />
                                                 </div>
@@ -159,42 +157,35 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Bead Weight:<span
-                                                    class="text-danger">*</span></label>
+                                            <label class="form-label">Bead Weight:<span class="text-danger">*</span>
+                                                <a href="javascript:void(0)" id="BeadWeightButton"
+                                                    style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                    class="btn-primary"><i class="fa fa-eye text-white"></i></a>
+                                            </label>
                                             <input type="text" id="bead_weight" name="bead_weight"
                                                 class="form-control" onkeypress="return isNumberKey(event)"
-                                                value="0" readonly required />
+                                                value="0" readonly required min="0" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Bead Price:<span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" id="bead_price" name="bead_price" class="form-control"
-                                                onkeypress="return isNumberKey(event)" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Stone Weight:<span
-                                                    class="text-danger">*</span></label>
+                                            <label class="form-label">Stone Weight:<span class="text-danger">*</span>
+                                                <a href="javascript:void(0)" id="StonesWeightButton"
+                                                    style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                    class="btn-primary"><i class="fa fa-eye text-white"></i></a>
+                                            </label>
                                             <input type="text" id="stones_weight" name="stones_weight"
                                                 class="form-control" value="0" readonly
-                                                onkeypress="return isNumberKey(event)" required />
+                                                onkeypress="return isNumberKey(event)" required min="0" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Stone Price:<span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" id="stones_price" name="stones_price"
-                                                class="form-control" onkeypress="return isNumberKey(event)" required />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Diamond Weight:<span
-                                                    class="text-danger">*</span></label>
+                                            <label class="form-label">Diamond Weight:<span class="text-danger">*</span>
+                                                <a href="javascript:void(0)" id="DiamondCaratButton"
+                                                style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                class="btn-primary"><i class="fa fa-eye text-white"></i></a>
+                                            </label>
                                             <input type="text" id="diamond_weight" name="diamond_weight"
                                                 class="form-control" readonly value="0"
                                                 onkeypress="return isNumberKey(event)" required />
@@ -202,10 +193,11 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Diamond Price:<span
+                                            <label class="form-label">Gross Weight:<span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" id="diamond_price" name="diamond_price"
-                                                class="form-control" onkeypress="return isNumberKey(event)" required />
+                                            <input type="text" id="gross_weight" name="gross_weight"
+                                                class="form-control" readonly value="0"
+                                                onkeypress="return isNumberKey(event)" required />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -222,15 +214,7 @@
                                                 onkeypress="return isNumberKey(event)" required />
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Gross Weight:<span
-                                                    class="text-danger">*</span></label>
-                                            <input type="text" id="gross_weight" name="gross_weight"
-                                                class="form-control" readonly value="0"
-                                                onkeypress="return isNumberKey(event)" required />
-                                        </div>
-                                    </div>
+                                    
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Laker:<span class="text-danger">*</span></label>
@@ -259,7 +243,7 @@
                                                     class="text-danger">*</span></label>
                                             <input type="text" id="total_bead_price" name="total_bead_price"
                                                 class="form-control" readonly value="0"
-                                                onkeypress="return isNumberKey(event)" required />
+                                                onkeypress="return isNumberKey(event)" required min="0" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -268,7 +252,7 @@
                                                     class="text-danger">*</span></label>
                                             <input type="text" id="total_stones_price" name="total_stones_price"
                                                 class="form-control" readonly value="0"
-                                                onkeypress="return isNumberKey(event)" required />
+                                                onkeypress="return isNumberKey(event)" required min="0" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -286,7 +270,7 @@
                                                     class="text-danger">*</span></label>
                                             <input type="text" id="other_amount" name="other_amount"
                                                 class="form-control" value="0"
-                                                onkeypress="return isNumberKey(event)" required />
+                                                onkeypress="return isNumberKey(event)" required min="0" />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -320,8 +304,7 @@
                             </div>
                             <div class="card-footer">
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary" id="submit" accesskey="s"
-                                        tabindex="10">SAVE</button>
+                                    <button class="btn btn-primary" id="submit" accesskey="s">SAVE</button>
                                 </div>
                             </div>
                         </form>
@@ -332,9 +315,16 @@
             </div>
         </section>
     </div>
+
+    @include('finish_product/Modal/BeadModal')
+    @include('finish_product/Modal/DiamondModal')
+    @include('finish_product/Modal/StonesModal')
 @endsection
 @section('js')
     <script src="{{ url('finish-product/js/finishProduct.js') }}"></script>
+    <script src="{{ url('finish-product/js/beadWeight.js') }}"></script>
+    <script src="{{ url('finish-product/js/stoneWeight.js') }}"></script>
+    <script src="{{ url('finish-product/js/diamondCarat.js') }}"></script>
     <script type="text/javascript">
         var url_local = "{{ url('/') }}";
         var gold_rate = "{{ $gold_rate->rate_tola ?? 0 }}";

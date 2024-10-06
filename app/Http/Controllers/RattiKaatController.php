@@ -113,7 +113,7 @@ class RattiKaatController extends Controller
                 $validation_error
             );
         }
-        // try {
+        try {
             $obj = [
                 'product_id'        => $request->bead_weight_product_id,
                 'ratti_kaat_id'     => $request->bead_weight_ratti_kaat_id,
@@ -130,9 +130,9 @@ class RattiKaatController extends Controller
                 config("enum.saved"),
                 $response
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
     public function destroyBeadWeight($id)
     {
