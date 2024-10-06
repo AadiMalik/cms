@@ -14,8 +14,8 @@ function success(message) {
 }
 
 $("#DiamondCaratButton").click(function () {
-    if ($("#ratti_kaat_detail_id").find(":selected").val() == 0) {
-        error("purchase is not selected!");
+    if ($("#ratti_kaat_detail_id").val() == '') {
+        error("Purchase is not selected!");
         return false;
     }
     $("#diamondCaratForm").trigger("reset");
