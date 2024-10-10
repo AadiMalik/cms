@@ -138,6 +138,53 @@ class FinishProductController extends Controller
             'finish_product_diamond'
         ));
     }
+    public function beadByFinishProductId($finish_product)
+    {
+        $finish_product_bead = $this->finish_product_service->getBeadByFinishProductId($finish_product);
+        if ($finish_product_bead)
+            return $this->success(
+                config('enum.success'),
+                $finish_product_bead,
+                false
+            );
+    }
+
+    public function stoneByFinishProductId($finish_product)
+    {
+        $finish_product_stone = $this->finish_product_service->getStoneByFinishProductId($finish_product);
+        if ($finish_product_stone)
+            return $this->success(
+                config('enum.success'),
+                $finish_product_stone,
+                false
+            );
+    }
+
+    public function diamondByFinishProductId($finish_product)
+    {
+        $finish_product_diamond = $this->finish_product_service->getDiamondByFinishProductId($finish_product);
+        if ($finish_product_diamond)
+            return $this->success(
+                config('enum.success'),
+                $finish_product_diamond,
+                false
+            );
+    }
+    public function getByTagNoJson($tag_no)
+    {
+        $finish_product = $this->finish_product_service->getByTagNo($tag_no);
+        if ($finish_product)
+            return $this->success(
+                config('enum.success'),
+                $finish_product,
+                false
+            );
+
+        return $this->error(
+            'Product Not Find!',
+
+        );
+    }
 
 
     public function status($id)

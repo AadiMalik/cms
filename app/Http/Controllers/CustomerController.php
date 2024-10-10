@@ -39,7 +39,15 @@ class CustomerController extends Controller
         abort_if(Gate::denies('customers_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->customer_service->getCustomerSource();
     }
-
+    public function allJson()
+    {
+        $customer = $this->customer_service->getAllActiveCustomer();
+        return  $this->success(
+            config("enum.success"),
+            $customer,
+            false
+        );
+    }
     public function create()
     {
         abort_if(Gate::denies('customers_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -85,6 +93,41 @@ class CustomerController extends Controller
         }
     }
 
+    public function storeJson(Request $request)
+    {
+        abort_if(Gate::denies('customers_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|string|max:191',
+                'contact' => 'required|string|unique:customers,contact'
+            ],
+            $this->validationMessage()
+        );
+
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->validationResponse(
+                $validation_error
+            );
+        }
+        try {
+            $obj = $request->all();
+            $obj['id']='';
+            $customer = $this->customer_service->save($obj);
+
+            return  $this->success(
+                config("enum.saved"),
+                $customer
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
     public function edit($id)
     {
         abort_if(Gate::denies('customers_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -93,6 +136,15 @@ class CustomerController extends Controller
         return view('customers.create', compact('customer', 'accounts'));
     }
 
+    public function detailJson($id)
+    {
+        $customer = $this->customer_service->getById($id);
+        return  $this->success(
+            config("enum.success"),
+            $customer,
+            false
+        );
+    }
 
     public function status($id)
     {

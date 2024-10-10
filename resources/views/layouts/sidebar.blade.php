@@ -123,6 +123,20 @@
                 </ul>
             </li>
             @endcan
+            @can('hrm_access')
+            <li
+                class="Ul_li--hover {{ Request::is('sale*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Sales</span></a>
+                <ul class="mm-collapse">
+                    @can('employees_access')
+                        <li class="item-name"><a class="{{ Request::is('sale*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('sale') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Sale</span></a></li>
+                    @endcan
+                </ul>
+            </li>
+            @endcan
             @can('purchase_access')
             <li
                 class="Ul_li--hover {{ Request::is('gold-rate*') ? 'mm-active' : '' }}">

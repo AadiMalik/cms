@@ -185,6 +185,16 @@ class FinishProductService
         ])->find($id);
     }
 
+    public function getByTagNo($tag_no)
+    {
+        return $this->model_finish_product->getModel()::with([
+            'ratti_kaat',
+            'ratti_kaat_detail',
+            'product',
+            'warehouse'
+        ])->where('tag_no',$tag_no)->first();
+    }
+
     public function getBeadByFinishProductId($finish_product_id)
     {
         return $this->model_finish_product_bead->getModel()::with('finish_product')

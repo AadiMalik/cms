@@ -170,6 +170,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('create', [CustomerController::class, 'create']);
         Route::post('store', [CustomerController::class, 'store']);
         Route::get('edit/{id}', [CustomerController::class, 'edit']);
+        Route::get('detail/{id}', [CustomerController::class, 'detailJson']);
+        Route::get('json', [CustomerController::class, 'allJson']);
+        Route::post('json-store', [CustomerController::class, 'storeJson']);
         Route::post('update', [CustomerController::class, 'update']);
         Route::get('destroy/{id}', [CustomerController::class, 'destroy']);
         Route::get('status/{id}', [CustomerController::class, 'status']);
@@ -325,8 +328,14 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('data', [FinishProductController::class, 'getData'])->name('finish-product.data');
         Route::post('store', [FinishProductController::class, 'store']);
         Route::get('view/{id}', [FinishProductController::class, 'show']);
+        Route::get('get-by-tag-no/{tag}', [FinishProductController::class, 'getByTagNoJson']);
         Route::get('destroy/{id}', [FinishProductController::class, 'destroy']);
         Route::get('status/{id}', [FinishProductController::class, 'status']);
+
+        
+        Route::get('get-bead-by-id/{id}', [FinishProductController::class, 'beadByFinishProductId']);
+        Route::get('get-stone-by-id/{id}', [FinishProductController::class, 'stoneByFinishProductId']);
+        Route::get('get-diamond-by-id/{id}', [FinishProductController::class, 'diamondByFinishProductId']);
 
         Route::get('/js/finishProduct.js', function () {
             $path = resource_path('views/finish_product/js/finishProduct.js');
@@ -383,6 +392,33 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/sale.js', function () {
             $path = resource_path('views/sale/js/sale.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/beadWeight.js', function () {
+            $path = resource_path('views/sale/js/beadWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/stoneWeight.js', function () {
+            $path = resource_path('views/sale/js/stoneWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/diamondCarat.js', function () {
+            $path = resource_path('views/sale/js/diamondCarat.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

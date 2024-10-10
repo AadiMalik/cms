@@ -14,8 +14,8 @@ function success(message) {
 }
 
 $("#DiamondCaratButton").click(function () {
-    if ($("#ratti_kaat_detail_id").val() == '') {
-        error("Purchase is not selected!");
+    if ($("#finish_product_id").val() == '') {
+        error("Tag is not selected!");
         return false;
     }
     $("#diamondCaratForm").trigger("reset");
@@ -43,12 +43,14 @@ var diamondsData = [];
 var diamond_sr = 0;
 
 function addDiamond() {
+    
+    var finish_product_id = $("#finish_product_id").val();
     var type = $("#diamond_type option:selected").val();
     var diamonds = $("#diamonds").val();
+    var carat = $("#carat").val();
     var cut = $("#cut").val();
     var color = $("#color").val();
     var clarity = $("#clarity").val();
-    var carat = $("#carat").val();
     var carat_rate = $("#carat_rate").val();
     var diamond_total = $("#diamond_total").val();
     if (type == 0 || type == '') {
@@ -59,20 +61,20 @@ function addDiamond() {
         error("Please enter diamonds!");
         return false;
     }
+    if (carat == 0 || carat == "") {
+        error("Please enter diamond carat");
+        return false;
+    }
     if (cut == 0 || cut == "") {
-        error("Please enter diamonds cut");
+        error("Please enter diamond cut");
         return false;
     }
     if (color == 0 || color == "") {
-        error("Please enter diamonds color");
+        error("Please enter diamond color");
         return false;
     }
     if (clarity == 0 || clarity == "") {
         error("Please enter diamond clarity");
-        return false;
-    }
-    if (carat == 0 || carat == "") {
-        error("Please enter diamond carat");
         return false;
     }
     if (carat_rate == 0 || carat_rate == "") {
@@ -104,12 +106,13 @@ function addDiamond() {
 
     diamondsData.push({
         // sr: i,
+        finish_product_id:finish_product_id,
         type: type,
         diamonds: diamonds,
         cut: cut,
         color: color,
-        carat: carat,
         clarity: clarity,
+        carat: carat,
         carat_rate: carat_rate,
         total_amount: diamond_total,
     });
@@ -118,10 +121,10 @@ function addDiamond() {
         diamondsData.sr = diamond_sr;
         var type = val.type;
         
-        rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
+        rows += `<tr id=${type.replace(/\s+/g, '')+ finish_product_id + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
-          <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
+          <td><a class="text-danger text-white diamondr${type.replace(/\s+/g, '') + finish_product_id + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + finish_product_id + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
         total += val.total_amount * 1;
         total_weight += val.carat * 1;
     });
@@ -131,15 +134,15 @@ function addDiamond() {
     
     TotalAmount();
     netWeight();
-    success("diamonds Added Successfully!");
+    success("Diamond Added Successfully!");
     tbody.prepend(rows);
     diamondshort();
-    $("#stoneWeightForm").trigger("reset");
+    $("#diamondCaratForm").trigger("reset");
 }
-function DiamondsByPurchaseDetail(ratti_kaat_id, product_id) {
+function DiamondsByFinishDetail(finish_product_id) {
     $.ajax({
         type: "GET",
-        url: url_local + "/ratti-kaats/diamonds" + "/" + ratti_kaat_id + "/" + product_id,
+        url: url_local + "/finish-product/get-diamond-by-id" + "/" + finish_product_id,
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
@@ -161,7 +164,7 @@ function DiamondsByPurchaseDetail(ratti_kaat_id, product_id) {
                 rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
-          <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
+          <td><a class="text-danger text-white diamondr${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;
                 total_weight += val.carat * 1;
             });
@@ -204,9 +207,9 @@ function DiamondRemove(id) {
         });
 
         diamondsData.splice(item_index, 1);
-        var check = ".stoner" + id;
+        var check = ".diamondr" + id;
         $(check).closest("tr").remove();
-        success("diamonds Deleted Successfully!");
+        success("Diamond Deleted Successfully!");
         TotalAmount();
         netWeight();
         diamondshort();

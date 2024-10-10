@@ -73,6 +73,7 @@ class CustomerService
             $saved_obj = $this->model_customer->find($obj['id']);
         } else {
             $obj['createdby_id'] = Auth::user()->id;
+            unset($obj['id']);
             $saved_obj = $this->model_customer->create($obj);
         }
 
