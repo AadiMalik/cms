@@ -33,7 +33,7 @@
     <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
         <div class="sidebar-panel bg-white">
             <div class="gull-brand pr-3 text-center mt-3 mb-2 d-flex justify-content-center align-items-center">
-                <img class="pl-3" src="{{ asset('assets/images/logo.png') }}" style="width:183px;" alt="alt" />
+                {{-- <img class="pl-3" src="{{ asset('assets/images/logo.png') }}" style="width:183px;" alt="alt" /> --}}
                 <!--  <span class=" item-name text-20 text-primary font-weight-700">GULL</span> -->
                 <div class="sidebar-compact-switch ml-auto"><span></span></div>
             </div>

@@ -63,7 +63,7 @@
                                                     </label>
                                                     <select id="customer_id" name="customer_id"
                                                         class="form-control show-tick" tabindex="3">
-                                                        
+
                                                     </select>
                                                 </div>
                                             </div>
@@ -97,7 +97,8 @@
                                                 style="border-radius:0px; padding: 6px;">
                                                 <b>Customer Detail</b>
                                             </div>
-                                            <div class="card-body" style="min-height: 60px; overflow: auto; padding: 8px;" id="customer">
+                                            <div class="card-body" style="min-height: 60px; overflow: auto; padding: 8px;"
+                                                id="customer">
 
                                             </div>
                                         </div>
@@ -116,8 +117,8 @@
                                             <label class="form-label">Tag No:<span style="color:red;">*</span></label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
-                                                    <input type="text" name="tag_no" id="tag_no"
-                                                        class="form-control" required maxlength="10"  readonly>
+                                                    <input type="text" name="tag_no" id="tag_no" class="form-control"
+                                                        required maxlength="10" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -200,9 +201,8 @@
                                         <div class="form-group">
                                             <label class="form-label">Net Weight:<span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" id="net_weight" name="net_weight"
-                                                class="form-control" readonly value="0"
-                                                onkeypress="return isNumberKey(event)" required />
+                                            <input type="text" id="net_weight" name="net_weight" class="form-control"
+                                                readonly value="0" onkeypress="return isNumberKey(event)" required />
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -217,8 +217,8 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Waste:<span class="text-danger">*</span></label>
-                                            <input type="text" id="waste" name="waste" min="10" class="form-control"
-                                                onkeypress="return isNumberKey(event)" required />
+                                            <input type="text" id="waste" name="waste" min="10"
+                                                class="form-control" onkeypress="return isNumberKey(event)" required />
                                         </div>
                                     </div>
 
@@ -340,119 +340,81 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-2 offset-md-1 text-right">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Grand Total($):</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="grand_total_dollar"
-                                                        value="{{ isset($sale) ? $sale->total_dollar : '0' }}"
-                                                        id="grand_total_dollar" class="form-control font-weight-bold"
-                                                        readonly>
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label font-weight-bold">Grand Total(PKR):<span class="text-danger">*</span> </label>
+                                                    <div class="form-group form-float">
+                                                        <div class="form-line">
+                                                            <input type="text" name="grand_total"
+                                                                value="{{ isset($sale) ? $sale->total : '0' }}"
+                                                                id="grand_total" class="form-control font-weight-bold"
+                                                                readonly required>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Grand Total(AU):</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="total_au"
-                                                        value="{{ isset($sale) ? $sale->total_au : '0' }}" id="total_au"
-                                                        class="form-control font-weight-bold" readonly>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label font-weight-bold">Cash Payment:</label>
+                                                    <div class="form-group form-float">
+                                                        <div class="form-line">
+                                                            <input type="text" name="cash_amount"
+                                                                value="{{ isset($sale) ? $sale->cash_amount : '0' }}"
+                                                                id="cash_amount" class="form-control font-weight-bold">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Grand Total(PKR):</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="grand_total"
-                                                        value="{{ isset($sale) ? $sale->total : '0' }}" id="grand_total"
-                                                        class="form-control font-weight-bold" readonly>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label font-weight-bold">Bank Transafer:</label>
+                                                    <div class="form-group form-float">
+                                                        <div class="form-line">
+                                                            <input type="text" name="bank_transfer_amount"
+                                                                value="{{ isset($sale) ? $sale->bank_transfer_amount : '0' }}"
+                                                                id="bank_transfer_amount" class="form-control font-weight-bold">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-2 offset-md-1 text-right">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid($):</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="paid_dollar"
-                                                        value="{{ isset($sale) ? $sale->paid_dollar : '0' }}"
-                                                        id="paid_dollar" class="form-control font-weight-bold"
-                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label font-weight-bold">Card Payment:</label>
+                                                    <div class="form-group form-float">
+                                                        <div class="form-line">
+                                                            <input type="text" name="card_amount"
+                                                                value="{{ isset($sale) ? $sale->card_amount : '0' }}"
+                                                                id="card_amount" class="form-control font-weight-bold">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid(AU):</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="paid_au"
-                                                        value="{{ isset($sale) ? $sale->paid_au : '0' }}" id="paid_au"
-                                                        class="form-control font-weight-bold"
-                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label font-weight-bold">Advance Payment:</label>
+                                                    <div class="form-group form-float">
+                                                        <div class="form-line">
+                                                            <input type="text" name="advance_amount"
+                                                                value="{{ isset($sale) ? $sale->advance_amount : '0' }}"
+                                                                id="advance_amount" class="form-control font-weight-bold">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid(PKR):</label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="paid"
-                                                        value="{{ isset($sale) ? $sale->paid : '0' }}" id="paid"
-                                                        class="form-control font-weight-bold"
-                                                        onkeypress="return isNumberKey(event)" maxlength="10">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label font-weight-bold">Gold Impurity:</label>
+                                                    <div class="form-group form-float">
+                                                        <div class="form-line">
+                                                            <input type="text" name="gold_impure_amount"
+                                                                value="{{ isset($sale) ? $sale->gold_impure_amount : '0' }}"
+                                                                id="gold_impure_amount" class="form-control font-weight-bold">
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-2 offset-md-1 text-right">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid Account($):</label>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid Account(AU):</label>
-                                            <div class="form-group form-float">
-                                                <select id="paid_account_au" name="paid_account_au"
-                                                    class="form-control show-tick" data-live-search="true">
-                                                    <option value="" selected>--Select Account--</option>
-                                                    
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid Account(PKR):</label>
-                                            <div class="form-group form-float">
-                                                <select id="paid_account" name="paid_account"
-                                                    class="form-control show-tick" data-live-search="true">
-                                                    <option value="" selected>--Select Account--</option>
-                                                    
-                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -494,10 +456,6 @@
         $(document).ready(function() {
             $('#customer_id').select2();
             $('#select_tag_no').select2();
-            $('#supplier_id').select2();
-            $('#paid_account').select2();
-            $('#paid_account_dollar').select2();
-            $('#paid_account_au').select2();
             getCustomer();
             const sale_date = document.getElementById("sale_date");
 

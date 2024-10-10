@@ -132,7 +132,7 @@ function addStones() {
         stonesData.sr = stone_sr;
         var type = val.type;
         
-        rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${i}</td><td>${val.type}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+        rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${i}</td><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
             <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
             <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}" onclick="StoneRemove('${type.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
         total += val.total_amount * 1;

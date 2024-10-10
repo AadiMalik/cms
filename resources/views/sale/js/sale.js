@@ -392,166 +392,42 @@ $("body").on("click", "#submit", function (e) {
     e.preventDefault();
 
     // Validation logic
-    if ($("#tag_no").val() == "") {
-        error("Please generat tag no!");
-        $("#tag_no").focus();
+    if ($("#sale_date").val() == "") {
+        error("Please select sale date!");
+        $("#sale_date").focus();
         return false;
     }
-    if ($("#ratti_kaat_id").val() == "" || $("#ratti_kaat_detail_id").val() == "") {
-        error("Please select purchase!");
+    
+    if ($("#customer_id").find(":selected").val() == "" || $("#customer_id").find(":selected").val() == 0) {
+        error("Please Select customer!");
+        $("#customer_id").focus();
         return false;
     }
-    if ($("#product_id").find(":selected").val() == "" || $("#product_id").find(":selected").val() == 0) {
-        error("Please Select product!");
-        $("#product_id").focus();
+
+    if ($("#grand_total").val() == "" || $("#grand_total").val() == 0) {
+        error("Grand total is zero!");
+        $("#grand_total").focus();
         return false;
     }
-    if ($("#warehouse_id").find(":selected").val() == 0 || $("#warehouse_id").find(":selected").val() == '') {
-        error("Please Select warehouse!");
-        $("#warehouse_id").focus();
-        return false;
-    }
-    if ($("#picture").val() == '') {
-        error("Please add picture!");
-        $("#picture").focus();
-        return false;
-    }
-    if ($("#gold_carat").val() == '' || $("#gold_carat").val() == 0) {
-        error("Please enter gold carat!");
-        $("#gold_carat").focus();
-        return false;
-    }
-    if ($("#scale_weight").val() == '' || $("#scale_weight").val() == 0) {
-        error("Please enter scale weight!");
-        $("#scale_weight").focus();
-        return false;
-    }
-    if ($("#net_weight").val() == '' || $("#net_weight").val() == 0) {
-        error("Please enter net weight!");
-        $("#net_weight").focus();
-        return false;
-    }
-    if ($("#bead_weight").val() == '') {
-        error("Please enter bead weight minimum 0!");
-        $("#bead_weight").focus();
-        return false;
-    }
-    if ($("#stones_weight").val() == '') {
-        error("Please enter stone weight minimum 0!");
-        $("#stones_weight").focus();
-        return false;
-    }
-    if ($("#diamond_weight").val() == '') {
-        error("Please enter diamond weight minimum 0!");
-        $("#diamond_weight").focus();
-        return false;
-    }
-    if ($("#waste_per").val() == '' || $("#waste_per").val() < 10) {
-        error("Please enter waste (%) minimum 10!");
-        $("#waste_per").focus();
-        return false;
-    }
-    if ($("#waste").val() == '' || $("#waste").val() == 0) {
-        error("Please enter waste!");
-        $("#waste").focus();
-        return false;
-    }
-    if ($("#gross_weight").val() == '' || $("#gross_weight").val() == 0) {
-        error("Please enter gross weight!");
-        $("#gross_weight").focus();
-        return false;
-    }
-    if ($("#laker").val() == '' || $("#laker").val() < 0) {
-        error("Please enter laker!");
-        $("#laker").focus();
-        return false;
-    }
-    if ($("#making_gram").val() == '' || $("#making_gram").val() == 0) {
-        error("Please enter making/gram!");
-        $("#making_gram").focus();
-        return false;
-    }
-    if ($("#making").val() == '' || $("#making").val() == 0) {
-        error("Please enter making!");
-        $("#making").focus();
-        return false;
-    }
-    if ($("#total_bead_price").val() == '') {
-        error("Please enter total bead amount, minimum 0!");
-        $("#total_bead_price").focus();
-        return false;
-    }
-    if ($("#total_stones_price").val() == '') {
-        error("Please enter total stones amount, minimum 0!");
-        $("#total_stones_price").focus();
-        return false;
-    }
-    if ($("#total_diamond_price").val() == '') {
-        error("Please enter total diamond amount, minimum 0!");
-        $("#total_diamond_price").focus();
-        return false;
-    }
-    if ($("#other_amount").val() == '') {
-        error("Please enter other amount, minimum 0!");
-        $("#other_amount").focus();
-        return false;
-    }
-    if ($("#gold_rate").val() == '' || $("#gold_rate").val() == 0) {
-        error("Please enter gold rate!");
-        $("#gold_rate").focus();
-        return false;
-    }
-    if ($("#total_gold_price").val() == '' || $("#total_gold_price").val() == 0) {
-        error("Please enter total gold amount!");
-        $("#total_gold_price").focus();
-        return false;
-    }
-    if ($("#total_amount").val() == '' || $("#total_amount").val() == 0) {
-        error("Please enter total amount!");
-        $("#total_amount").focus();
-        return false;
-    }
+
 
 
     // Create FormData object for Ajax
     var formData = new FormData();
-    formData.append("tag_no", $("#tag_no").val());
-    formData.append("ratti_kaat_id", $("#ratti_kaat_id").val());
-    formData.append("ratti_kaat_detail_id", $("#ratti_kaat_detail_id").val());
-    formData.append("product_id", $("#product_id").find(":selected").val());
-    formData.append("warehouse_id", $("#warehouse_id").find(":selected").val());
-    formData.append("gold_carat", $("#gold_carat").val());
-    formData.append("scale_weight", $("#scale_weight").val());
-    formData.append("net_weight", $("#net_weight").val());
-    formData.append("bead_weight", $("#bead_weight").val());
-    formData.append("stones_weight", $("#stones_weight").val());
-    formData.append("diamond_weight", $("#diamond_weight").val());
-    formData.append("waste_per", $("#waste_per").val());
-    formData.append("waste", $("#waste").val());
-    formData.append("gross_weight", $("#gross_weight").val());
-    formData.append("laker", $("#laker").val());
-    formData.append("making_gram", $("#making_gram").val());
-    formData.append("making", $("#making").val());
-    formData.append("total_bead_price", $("#total_bead_price").val());
-    formData.append("total_stones_price", $("#total_stones_price").val());
-    formData.append("total_diamond_price", $("#total_diamond_price").val());
-    formData.append("other_amount", $("#other_amount").val());
-    formData.append("gold_rate", $("#gold_rate").val());
-    formData.append("total_gold_price", $("#total_gold_price").val());
-    formData.append("total_amount", $("#total_amount").val());
-    // Append files (multiple images)
-    var picture = $("#picture")[0].files;
-    for (var i = 0; i < picture.length; i++) {
-        formData.append('picture', picture[i]); // Add files to the form data
-    }
+    formData.append("id", $("#id").val());
+    formData.append("sale_date", $("#sale_date").val());
+    formData.append("customer_id", $("#customer_id").find(":selected").val());
+    formData.append("total", $("#grand_total").val());
+    formData.append("cash_amount", $("#cash_amount").val());
+    formData.append("bank_transfer_amount", $("#bank_transfer_amount").val());
+    formData.append("card_amount", $("#card_amount").val());
+    formData.append("advance_amount", $("#advance_amount").val());
+    formData.append("gold_impure_amount", $("#gold_impure_amount").val());
 
-    // Append product data (assuming productData is already a JSON string)
-    formData.append("beadDetail", JSON.stringify(beadData));
-    formData.append("stonesDetail", JSON.stringify(stonesData));
-    formData.append("diamondDetail", JSON.stringify(diamondsData));
+    formData.append("productDetail", JSON.stringify(productData));
 
     $.ajax({
-        url: url_local + "/finish-product/store",  // Laravel route
+        url: url_local + "/sale/store",  // Laravel route
         type: "POST",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -567,7 +443,7 @@ $("body").on("click", "#submit", function (e) {
 
                 setTimeout(function () {
                     $("#submit").prop("disabled", false);
-                    window.location = url_local + "/finish-product";
+                    window.location = url_local + "/sale";
                 }, 1000); // Disable button for 1 second
             } else {
                 error(data.Message);
