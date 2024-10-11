@@ -36,8 +36,8 @@ return new class extends Migration
             $table->decimal('gold_impure_amount',18,3)->nullable();
             $table->decimal('total_received',18,3)->nullable();
             $table->integer('jv_id')->nullable();
-            $table->boolean('posted')->nullable();
-            $table->boolean('is_deleted')->nullable();
+            $table->boolean('posted')->default(0);
+            $table->boolean('is_deleted')->default(0);
             $table->integer('createdby_id')->nullable();
             $table->integer('updatedby_id')->nullable();
             $table->integer('deletedby_id')->nullable();

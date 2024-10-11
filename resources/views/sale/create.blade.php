@@ -62,7 +62,7 @@
                                                             class="btn-primary"><i class="fa fa-plus text-white"></i></a>
                                                     </label>
                                                     <select id="customer_id" name="customer_id"
-                                                        class="form-control show-tick" tabindex="3">
+                                                        class="form-control show-tick">
 
                                                     </select>
                                                 </div>

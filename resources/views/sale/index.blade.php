@@ -80,6 +80,85 @@
                                     <a class="btn btn-primary" style="color:#fff;" type="button" id="post_sale">Post</a>
                                 </div>
                             </div>
+                            <div class="row mt-2" id="sale_account" style="display: none;">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Sale Account<span style="color: red;">*</span> </label>
+                                        <select id="sale_account_id" name="sale_account_id" class="form-control">
+                                            <option value="0" disabled selected="selected">--Select Sale
+                                                Account--</option>
+                                            @foreach ($accounts as $item)
+                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                    {{ $item->name ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Revenue Account<span style="color: red;">*</span> </label>
+                                        <select id="revenue_account_id" name="revenue_account_id" class="form-control">
+                                            <option value="0" disabled selected="selected">--Select Revenue
+                                                Account--</option>
+                                            @foreach ($accounts as $item)
+                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                    {{ $item->name ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Bank Transfer Account<span style="color: red;">*</span> </label>
+                                        <select id="bank_transfer_account_id" name="bank_transfer_account_id" class="form-control">
+                                            <option value="0" disabled selected="selected">--Select
+                                                Bank Transfer
+                                                Account--</option>
+                                            @foreach ($accounts as $item)
+                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                    {{ $item->name ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Card Account<span style="color: red;">*</span>
+                                        </label>
+                                        <select id="card_account_id" name="card_account_id"
+                                            class="form-control" style="width:100%;">
+                                            <option value="0" disabled selected="selected">--Select
+                                                Card
+                                                Account--</option>
+                                            @foreach ($accounts as $item)
+                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                    {{ $item->name ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Gold Impurity Account<span style="color: red;">*</span>
+                                        </label>
+                                        <select id="gold_impurity_account_id" name="gold_impurity_account_id"
+                                            class="form-control">
+                                            <option value="0" disabled selected="selected">--Select
+                                                Gold Impurity
+                                                Account--</option>
+                                            @foreach ($accounts as $item)
+                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                    {{ $item->name ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="sale_table" class="display table" style="width:100%">
@@ -119,15 +198,15 @@
     <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-        {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
-        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-        {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
-        {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
-        {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
-        {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
-        {data: 'total',name: 'total', orderable: false, searchable: false},
-        {data: 'posted',name: 'posted', orderable: false, searchable: false},
-        {data: 'action',name: 'action','sortable': false,searchable: false}",
+            {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
+            {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
+            {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
+            {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
+            {data: 'total',name: 'total', orderable: false, searchable: false},
+            {data: 'posted',name: 'posted', orderable: false, searchable: false},
+            {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'sale/data',
         'buttons' => false,
         'pageLength' => 50,
@@ -136,23 +215,31 @@
         'datefilter' => true,
         'params' => "customer_id:$('#customer_id').val(),posted:$('#posted').val()",
         'rowCallback' => ' rowCallback: function (row, data) {
-        if(data.posted.includes("Unposted"))
-        $(row).css("background-color", "Pink");
-        }',
+            if(data.posted.includes("Unposted"))
+            $(row).css("background-color", "Pink");
+            }',
     ])
     <script>
         $(document).ready(function() {
             $('#customer_id').select2();
+            $("#sale_account_id").select2();
+            $("#revenue_account_id").select2();
+            $("#bank_transfer_account_id").select2();
+            $("#card_account_id").select2();
+            $("#gold_impurity_account_id").select2();
+
             $("#unselectAll").hide();
             $("#selectAll").click(function() {
                 $("input[type=checkbox]").prop('checked', 'checked');
                 $("#selectAll").hide();
                 $("#unselectAll").show();
+                $("#sale_account").show();
             });
             $("#unselectAll").click(function() {
                 $("input[type=checkbox]").prop('checked', '');
                 $("#selectAll").show();
                 $("#unselectAll").hide();
+                $("#sale_account").hide();
             })
             const startDate = document.getElementById("start_date");
             const endDate = document.getElementById("end_date");
@@ -190,8 +277,10 @@
     </script>
     <script type="text/javascript">
         $('#search_button').click(function() {
+        $("#preloader").show();
             initDataTablesale_table();
             $("#div_post_sale").show();
+        $("#preloader").hide();
         });
 
         function error(message) {
@@ -210,28 +299,6 @@
             });
         }
 
-        $("body").on("keyup", "#search", function(event) {
-            var url = $('#form_search').attr('action');
-            var data = $('#form_search').serializeArray();
-            var get = $('#form_search').attr('method');
-            var search = $('#search').val();
-            var stdate = $('#start_date').val();
-            var eddate = $('#end_date').val();
-            if (stdate > eddate) {
-                error('wrong dates selected');
-                $("#preloader").hide();
-                return false;
-            }
-            $.ajax({
-                type: get,
-                url: url,
-                data: data,
-            }).done(function(data) {
-                $('.result').html(data);
-                $("#div_post_sale").show();
-            });
-
-        });
         $("#post_sale").click(function() {
             $("#preloader").show();
             var sales = [];
@@ -336,5 +403,12 @@
                 $("#preloader").hide();
             });
         });
+        $("body").on("click", ".sub_chk", function() {
+        if ($("input[type=checkbox]").is(':checked')) {
+            $("#sale_account").show();
+        } else {
+            $("#sale_account").hide();
+        }
+    });
     </script>
 @endsection

@@ -1,4 +1,3 @@
-
 function error(message) {
     toastr.error(message, "Error!", {
         showMethod: "slideDown",
@@ -28,8 +27,9 @@ $("#CustomerButton").click(function () {
     $("#customerModel").modal("show");
 });
 function getCustomer() {
+    $("#preloader").show();
     $.ajax({
-        url: url_local + '/customers/json',
+        url: url_local + "/customers/json",
         type: "GET",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -39,19 +39,26 @@ function getCustomer() {
             var data = data.Data;
             $("#customer_id").empty();
             $("#customer").empty();
-            var customer = '<option value="0" selected disabled>--Select Customer--</option>';
+            var customer =
+                '<option value="0" selected disabled>--Select Customer--</option>';
             $.each(data, function (key, value) {
-                customer += '<option value="' + value.id + '">' + value
-                    .name + ' </option>';
+                customer +=
+                    '<option value="' +
+                    value.id +
+                    '">' +
+                    value.name +
+                    " </option>";
             });
             $("#customer_id").append(customer);
+            $("#preloader").hide();
         },
     });
 }
 $("#customer_id").on("change", function () {
     var customer_id = $("#customer_id").val();
+    $("#preloader").show();
     $.ajax({
-        url: url_local + '/customers/detail/' + customer_id,
+        url: url_local + "/customers/detail/" + customer_id,
         type: "GET",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -61,43 +68,49 @@ $("#customer_id").on("change", function () {
             if (data.Success) {
                 var data = data.Data;
                 $("#customer").empty();
-                var row = '<table class="table table-bordered" style="margin-bottom: 0px;">';
-                row += '<tbody>';
-                row += '<tr>';
+                var row =
+                    '<table class="table table-bordered" style="margin-bottom: 0px;">';
+                row += "<tbody>";
+                row += "<tr>";
                 row += '<td style="padding: 3px; width:75px;">Name:</td>';
-                row += '<td style="padding: 3px;">' + data.name + '</td>';
-                row += '</tr>';
-                row += '<tr>';
+                row += '<td style="padding: 3px;">' + data.name + "</td>";
+                row += "</tr>";
+                row += "<tr>";
                 row += '<td style="padding: 3px; width:75px;">CNIC:</td>';
-                row += '<td style="padding: 3px;">' + data.cnic + '</td>';
-                row += '</tr>';
-                row += '<tr>';
+                row += '<td style="padding: 3px;">' + data.cnic + "</td>";
+                row += "</tr>";
+                row += "<tr>";
                 row += '<td style="padding: 3px; width:75px;">Contact #:</td>';
-                row += '<td style="padding: 3px;">' + data.contact + '</td>';
-                row += '</tr>';
-                row += '<tr>';
+                row += '<td style="padding: 3px;">' + data.contact + "</td>";
+                row += "</tr>";
+                row += "<tr>";
                 row += '<td style="padding: 3px; width:75px;">Address:</td>';
-                row += '<td style="padding: 3px;">' + data.address + '</td>';
-                row += '</tr>';
-                row += '</tbody>';
-                row += '</table>';
+                row += '<td style="padding: 3px;">' + data.address + "</td>";
+                row += "</tr>";
+                row += "</tbody>";
+                row += "</table>";
                 $("#customer").html(row);
+                $("#preloader").hide();
             } else {
                 error(data.Message);
+                $("#preloader").hide();
             }
         },
     });
 });
 $("#customerForm").submit(function (e) {
     e.preventDefault();
+    $("#preloader").show();
     if ($("#name").val() == "" && $("#name").val() == 0) {
         error("Please enter name!");
         $("#name").focus();
+        $("#preloader").hide();
         return false;
     }
     if ($("#contact").val() == "" && $("#contact").val() == 0) {
         error("Please enter contact and unique!");
         $("#contact").focus();
+        $("#preloader").hide();
         return false;
     }
 
@@ -116,8 +129,10 @@ $("#customerForm").submit(function (e) {
                 $("#customerForm").trigger("reset");
                 $("#customerModel").modal("hide");
                 getCustomer();
+                $("#preloader").hide();
             } else {
                 error(data.Message);
+                $("#preloader").hide();
             }
         },
     });
@@ -127,8 +142,14 @@ $("#select_tag_no").on("change", function () {
     var select_tag_no = $("#select_tag_no").val();
     getFinishProduct(select_tag_no);
 });
-
+$("#search_tag_no").on("input", function () {
+    var inputVal = $(this).val();
+    if (inputVal.length > 6) {
+        getFinishProduct(select_tag_no);
+    }
+});
 function getFinishProduct(tag_no) {
+    $("#preloader").show();
     $.ajax({
         url: url_local + "/finish-product/get-by-tag-no/" + tag_no,
         type: "GET",
@@ -136,38 +157,54 @@ function getFinishProduct(tag_no) {
         console.log(data);
         if (data.Success) {
             var data = data.Data;
-            $("#finish_product_id").val((data.id > 0) ? data.id : '');
-            $("#ratti_kaat_id").val((data.ratti_kaat_id > 0) ? data.ratti_kaat_id : '');
-            $("#ratti_kaat_detail_id").val((data.ratti_kaat_detail_id > 0) ? data.ratti_kaat_detail_id : '');
-            $("#product").val((data.product.name != '') ? data.product.name : '');
-            $("#product_id").val((data.product_id > 0) ? data.product_id : 0);
-            $("#tag_no").val((data.tag_no != '') ? data.tag_no : 0);
-            $("#gold_carat").val((data.gold_carat > 0) ? data.gold_carat : 0);
-            $("#scale_weight").val((data.scale_weight > 0) ? data.scale_weight : 0);
-            $("#net_weight").val((data.net_weight > 0) ? data.net_weight : 0);
-            $("#net_weight").val((data.net_weight > 0) ? data.net_weight : 0);
-            $("#gross_weight").val((data.gross_weight > 0) ? data.gross_weight : 0);
-            $("#bead_weight").val((data.bead_weight > 0) ? data.bead_weight : 0);
-            $("#stones_weight").val((data.stones_weight > 0) ? data.stones_weight : 0);
-            $("#diamond_weight").val((data.diamond_weight > 0) ? data.diamond_weight : 0);
-            $("#making").val((data.making > 0) ? data.making : 0);
-            $("#other_amount").val((data.other_amount > 0) ? data.other_amount : 0);
-            $("#waste").val((data.waste > 0) ? data.waste : 0);
+            $("#finish_product_id").val(data.id > 0 ? data.id : "");
+            $("#ratti_kaat_id").val(
+                data.ratti_kaat_id > 0 ? data.ratti_kaat_id : ""
+            );
+            $("#ratti_kaat_detail_id").val(
+                data.ratti_kaat_detail_id > 0 ? data.ratti_kaat_detail_id : ""
+            );
+            $("#product").val(data.product.name != "" ? data.product.name : "");
+            $("#product_id").val(data.product_id > 0 ? data.product_id : 0);
+            $("#tag_no").val(data.tag_no != "" ? data.tag_no : 0);
+            $("#gold_carat").val(data.gold_carat > 0 ? data.gold_carat : 0);
+            $("#scale_weight").val(
+                data.scale_weight > 0 ? data.scale_weight : 0
+            );
+            $("#net_weight").val(data.net_weight > 0 ? data.net_weight : 0);
+            $("#net_weight").val(data.net_weight > 0 ? data.net_weight : 0);
+            $("#gross_weight").val(
+                data.gross_weight > 0 ? data.gross_weight : 0
+            );
+            $("#bead_weight").val(data.bead_weight > 0 ? data.bead_weight : 0);
+            $("#stones_weight").val(
+                data.stones_weight > 0 ? data.stones_weight : 0
+            );
+            $("#diamond_weight").val(
+                data.diamond_weight > 0 ? data.diamond_weight : 0
+            );
+            $("#making").val(data.making > 0 ? data.making : 0);
+            $("#other_amount").val(
+                data.other_amount > 0 ? data.other_amount : 0
+            );
+            $("#waste").val(data.waste > 0 ? data.waste : 0);
 
             BeadByFinishDetail(data.id);
             StonesByFinishDetail(data.id);
             DiamondsByFinishDetail(data.id);
             TotalGoldAmount();
             TotalAmount();
+            $("#preloader").hide();
         } else {
             error(data.Message);
+            $("#preloader").hide();
         }
     });
 }
 
 $("#gold_carat").on("keyup", function (event) {
     var gold_carat = $("#gold_carat").val();
-    var gold_carat_rate = gold_rate / 24 * (gold_carat * 1);
+    var gold_carat_rate = (gold_rate / 24) * (gold_carat * 1);
     var gold_rate_gram = gold_carat_rate / 11.664;
     $("#gold_rate").val(gold_rate_gram.toFixed(3));
     TotalGoldAmount();
@@ -204,16 +241,17 @@ function netWeight() {
     var stones_weight = $("#stones_weight").val();
     var diamond_weight = $("#diamond_weight").val();
     var net_weight = 0;
-    net_weight = scale_weight * 1 - (bead_weight * 1 + stones_weight * 1 + diamond_weight * 1);
+    net_weight =
+        scale_weight * 1 -
+        (bead_weight * 1 + stones_weight * 1 + diamond_weight * 1);
     $("#net_weight").val(net_weight.toFixed(3));
 }
-
 
 $("#waste").on("keyup", function (event) {
     var waste = $("#waste").val();
     var net_weight = $("#net_weight").val();
-    var cal = waste / net_weight * 100;
-    var gross_wt = (net_weight * 1) + (waste * 1);
+    var cal = (waste / net_weight) * 100;
+    var gross_wt = net_weight * 1 + waste * 1;
     $("#waste_per").val(cal.toFixed(3));
     $("#gross_weight").val(gross_wt.toFixed(3));
     TotalGoldAmount();
@@ -238,7 +276,7 @@ $("#gold_rate").on("keyup", function (event) {
 function TotalGoldAmount() {
     var gross_wt = $("#gross_weight").val();
     var gold_rate = $("#gold_rate").val();
-    var total_gold_price = (gold_rate * 1) + (gross_wt * 1);
+    var total_gold_price = gold_rate * 1 + gross_wt * 1;
     $("#total_gold_price").val(total_gold_price.toFixed(3));
 }
 function TotalAmount() {
@@ -248,12 +286,19 @@ function TotalAmount() {
     var other_amount = $("#other_amount").val();
     var making = $("#making").val();
     var total_gold_price = $("#total_gold_price").val();
-    var cal = (total_bead_price * 1) + (total_stones_price * 1) + (total_diamond_price * 1) + (other_amount * 1) + (making * 1) + (total_gold_price * 1);
+    var cal =
+        total_bead_price * 1 +
+        total_stones_price * 1 +
+        total_diamond_price * 1 +
+        other_amount * 1 +
+        making * 1 +
+        total_gold_price * 1;
 
     $("#total_amount").val(cal.toFixed(3));
 }
 
 function addProduct() {
+    $("#preloader").show();
     var tag_no = $("#tag_no").val();
     var finish_product_id = $("#finish_product_id").val();
     var ratti_kaat_id = $("#ratti_kaat_id").val();
@@ -277,42 +322,56 @@ function addProduct() {
     var other_amount = $("#other_amount").val();
     var total_amount = $("#total_amount").val();
 
-    if (tag_no == '' || finish_product_id == '' || ratti_kaat_id == '' || ratti_kaat_detail_id == '') {
+    if (
+        tag_no == "" ||
+        finish_product_id == "" ||
+        ratti_kaat_id == "" ||
+        ratti_kaat_detail_id == ""
+    ) {
         error("tag is not selected!");
+        $("#preloader").hide();
         return false;
     }
     if (product == 0 || product == "") {
         error("Please Enter product!");
+        $("#preloader").hide();
         return false;
     }
     if (gold_carat == 0 || gold_carat == "") {
         error("Please Enter karat!");
+        $("#preloader").hide();
         return false;
     }
     if (scale_weight == 0 || scale_weight == "") {
         error("Please Enter scale weight!");
+        $("#preloader").hide();
         return false;
     }
     if (net_weight == 0 || net_weight == "") {
         error("Please Enter net weight!");
+        $("#preloader").hide();
         return false;
     }
     if (gross_weight == 0 || gross_weight == "") {
         error("Please Enter gross weight!");
+        $("#preloader").hide();
         return false;
     }
     if (waste < 10 || waste == "") {
         error("Please Enter waste or minimum 10!");
+        $("#preloader").hide();
         return false;
     }
     if (gold_rate == 0 || gold_rate == "") {
         error("Please Enter gold rate!");
+        $("#preloader").hide();
         return false;
     }
     var check = true;
     $.each(productData, function (e, val) {
         if (val.finish_product_id == $("#finish_product_id").val()) {
             error("Product is already added !");
+            $("#preloader").hide();
             check = false;
             return false;
         }
@@ -350,7 +409,7 @@ function addProduct() {
         total_amount: total_amount,
         beadDetail: beadData,
         stonesDetail: stonesData,
-        diamondDetail: diamondsData
+        diamondDetail: diamondsData,
     });
 
     $("#total").val(total);
@@ -379,20 +438,23 @@ function addProduct() {
     $("#products").html(rows);
     Clear();
     ProductShort();
+    $("#preloader").hide();
 }
 
 $("body").on("click", "#Detail", function (event) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    let data = productData.filter(product => product.finish_product_id === String($(this).data("id")));
+    let data = productData.filter(
+        (product) => product.finish_product_id === String($(this).data("id"))
+    );
     var bead_sr = 0;
-    var bead_row = '';
+    var bead_row = "";
     var stone_sr = 0;
-    var stone_row = '';
+    var stone_row = "";
     var diamond_sr = 0;
-    var diamond_row = '';
+    var diamond_row = "";
+    $("#preloader").show();
     $.each(data, function (e, val) {
-
         console.log(val.beadDetail);
 
         $.each(val.beadDetail, function (e, val) {
@@ -425,31 +487,37 @@ $("body").on("click", "#Detail", function (event) {
     });
 
     $("#detailModel").modal("show");
+    $("#preloader").hide();
 });
 
 $("body").on("click", "#submit", function (e) {
     e.preventDefault();
 
+    $("#preloader").show();
     // Validation logic
     if ($("#sale_date").val() == "") {
         error("Please select sale date!");
         $("#sale_date").focus();
+        $("#preloader").hide();
         return false;
     }
 
-    if ($("#customer_id").find(":selected").val() == "" || $("#customer_id").find(":selected").val() == 0) {
+    if (
+        $("#customer_id").find(":selected").val() == "" ||
+        $("#customer_id").find(":selected").val() == 0
+    ) {
         error("Please Select customer!");
         $("#customer_id").focus();
+        $("#preloader").hide();
         return false;
     }
 
     if ($("#grand_total").val() == "" || $("#grand_total").val() == 0) {
         error("Grand total is zero!");
         $("#grand_total").focus();
+        $("#preloader").hide();
         return false;
     }
-
-
 
     // Create FormData object for Ajax
     var formData = new FormData();
@@ -466,18 +534,19 @@ $("body").on("click", "#submit", function (e) {
     formData.append("productDetail", JSON.stringify(productData));
 
     $.ajax({
-        url: url_local + "/sale/store",  // Laravel route
+        url: url_local + "/sale/store", // Laravel route
         type: "POST",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         data: formData,
-        processData: false,  // Important for file uploads
-        contentType: false,  // Important for file uploads
+        processData: false, // Important for file uploads
+        contentType: false, // Important for file uploads
         dataType: "json",
         success: function (data) {
             if (data.Success) {
                 success(data.Message);
+                $("#preloader").hide();
                 $("#submit").prop("disabled", true);
 
                 setTimeout(function () {
@@ -486,16 +555,17 @@ $("body").on("click", "#submit", function (e) {
                 }, 1000); // Disable button for 1 second
             } else {
                 error(data.Message);
+                $("#preloader").hide();
             }
         },
         error: function (xhr, status, e) {
             error("An error occurred:");
-        }
+            $("#preloader").hide();
+        },
     });
 });
 
 function ProductRemove(id) {
-
     console.log(id);
     Swal.fire({
         title: "Are you sure?",
@@ -508,6 +578,7 @@ function ProductRemove(id) {
     }).then((result) => {
         var item_index = "";
         var total = 0;
+        $("#preloader").show();
         $.each(productData, function (i, val) {
             if (val.finish_product_id == id) {
                 total = $("#grand_total").val() * 1 - val.total_amount * 1;
@@ -524,6 +595,7 @@ function ProductRemove(id) {
         success("Product Deleted Successfully!");
         // GrandTotalAmount();
         ProductShort();
+        $("#preloader").hide();
     });
 }
 
@@ -532,15 +604,15 @@ function Clear() {
     $("#select_tag_no").append(
         '<option disabled selected value="0">--Select Tag No--</option>'
     );
-    $("#search_tag_no").val('');
-    $("#finish_product_id").val('');
-    $("#ratti_kaat_id").val('');
-    $("#ratti_kaat_detail_id").val('');
-    $("#tag_no").val('');
-    $("#product").val('');
-    $("#product_id").val('');
-    $("#gold_carat").val('');
-    $("#scale_weight").val('');
+    $("#search_tag_no").val("");
+    $("#finish_product_id").val("");
+    $("#ratti_kaat_id").val("");
+    $("#ratti_kaat_detail_id").val("");
+    $("#tag_no").val("");
+    $("#product").val("");
+    $("#product_id").val("");
+    $("#gold_carat").val("");
+    $("#scale_weight").val("");
     $("#bead_weight").val(0);
     $("#stones_weight").val(0);
     $("#diamond_weight").val(0);

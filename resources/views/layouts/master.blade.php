@@ -30,6 +30,14 @@
 </head>
 
 <body class="text-left">
+    <!-- Pre Loader Strat  -->
+    <div class='loadscreen' id="preloader">
+
+        <div class="loader spinner spinner-primary">
+        </div>
+    </div>
+
+    <!-- Pre Loader end  -->
     <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
         <div class="sidebar-panel bg-white">
             <div class="gull-brand pr-3 text-center mt-3 mb-2 d-flex justify-content-center align-items-center">
@@ -256,7 +264,7 @@
 
         document.getElementById("year").innerHTML = getCurrentYear();
 
-        
+
         $("#ChangeGoldRate").click(function() {
             $("#changeGoldRateForm").trigger("reset");
             $("#changeGoldRateModel").modal("show");

@@ -44,7 +44,8 @@ class SaleController extends Controller
     public function index()
     {
         $customers = $this->customer_service->getAllActiveCustomer();
-        return view('sale.index', compact('customers'));
+        $accounts = $this->account_service->getAllActiveChild();
+        return view('sale.index', compact('customers', 'accounts'));
     }
     public function getData(Request $request)
     {
