@@ -24,7 +24,6 @@
                                         class="fa fa-plus text-white mr-2"></i> Add Ratti Kaat</a>
                         </div>
                         <div class="card-body">
-
                             <h4 class="card-inside-title mt-2">Filters</h4>
                             <div class="row">
                                 <div class="col-md-2">

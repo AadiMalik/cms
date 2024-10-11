@@ -74,6 +74,7 @@ class FinishProductService
         return $this->model_finish_product->getModel()::with(['product', 'warehouse'])
             ->where('is_deleted', 0)
             ->where('is_active', 1)
+            ->where('is_saled',0)
             ->get();
     }
 
@@ -192,7 +193,8 @@ class FinishProductService
             'ratti_kaat_detail',
             'product',
             'warehouse'
-        ])->where('tag_no',$tag_no)->first();
+        ])->where('tag_no',$tag_no)
+        ->first();
     }
 
     public function getBeadByFinishProductId($finish_product_id)

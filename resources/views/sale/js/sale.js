@@ -27,7 +27,7 @@ $("#CustomerButton").click(function () {
     $("#customerForm").trigger("reset");
     $("#customerModel").modal("show");
 });
-function getCustomer(){
+function getCustomer() {
     $.ajax({
         url: url_local + '/customers/json',
         type: "GET",
@@ -40,7 +40,7 @@ function getCustomer(){
             $("#customer_id").empty();
             $("#customer").empty();
             var customer = '<option value="0" selected disabled>--Select Customer--</option>';
-            $.each(data, function(key, value) {
+            $.each(data, function (key, value) {
                 customer += '<option value="' + value.id + '">' + value
                     .name + ' </option>';
             });
@@ -61,26 +61,26 @@ $("#customer_id").on("change", function () {
             if (data.Success) {
                 var data = data.Data;
                 $("#customer").empty();
-                var row='<table class="table table-bordered" style="margin-bottom: 0px;">';
-                    row+='<tbody>';
-                    row+='<tr>';
-                    row+='<td style="padding: 3px; width:75px;">Name:</td>';
-                    row+='<td style="padding: 3px;">'+data.name+'</td>';
-                    row+='</tr>';
-                    row+='<tr>';
-                    row+='<td style="padding: 3px; width:75px;">CNIC:</td>';
-                    row+='<td style="padding: 3px;">'+data.cnic+'</td>';
-                    row+='</tr>';
-                    row+='<tr>';
-                    row+='<td style="padding: 3px; width:75px;">Contact #:</td>';
-                    row+='<td style="padding: 3px;">'+data.contact+'</td>';
-                    row+='</tr>';
-                    row+='<tr>';
-                    row+='<td style="padding: 3px; width:75px;">Address:</td>';
-                    row+='<td style="padding: 3px;">'+data.address+'</td>';
-                    row+='</tr>';
-                    row+='</tbody>';
-                    row+='</table>';
+                var row = '<table class="table table-bordered" style="margin-bottom: 0px;">';
+                row += '<tbody>';
+                row += '<tr>';
+                row += '<td style="padding: 3px; width:75px;">Name:</td>';
+                row += '<td style="padding: 3px;">' + data.name + '</td>';
+                row += '</tr>';
+                row += '<tr>';
+                row += '<td style="padding: 3px; width:75px;">CNIC:</td>';
+                row += '<td style="padding: 3px;">' + data.cnic + '</td>';
+                row += '</tr>';
+                row += '<tr>';
+                row += '<td style="padding: 3px; width:75px;">Contact #:</td>';
+                row += '<td style="padding: 3px;">' + data.contact + '</td>';
+                row += '</tr>';
+                row += '<tr>';
+                row += '<td style="padding: 3px; width:75px;">Address:</td>';
+                row += '<td style="padding: 3px;">' + data.address + '</td>';
+                row += '</tr>';
+                row += '</tbody>';
+                row += '</table>';
                 $("#customer").html(row);
             } else {
                 error(data.Message);
@@ -100,7 +100,7 @@ $("#customerForm").submit(function (e) {
         $("#contact").focus();
         return false;
     }
-    
+
     $.ajax({
         url: url_local + "/customers/json-store",
         type: "POST",
@@ -128,7 +128,7 @@ $("#select_tag_no").on("change", function () {
     getFinishProduct(select_tag_no);
 });
 
-function getFinishProduct(tag_no){
+function getFinishProduct(tag_no) {
     $.ajax({
         url: url_local + "/finish-product/get-by-tag-no/" + tag_no,
         type: "GET",
@@ -136,10 +136,12 @@ function getFinishProduct(tag_no){
         console.log(data);
         if (data.Success) {
             var data = data.Data;
-            $("#finish_product_id").val((data.id > 0) ? data.id : 0);
+            $("#finish_product_id").val((data.id > 0) ? data.id : '');
+            $("#ratti_kaat_id").val((data.ratti_kaat_id > 0) ? data.ratti_kaat_id : '');
+            $("#ratti_kaat_detail_id").val((data.ratti_kaat_detail_id > 0) ? data.ratti_kaat_detail_id : '');
             $("#product").val((data.product.name != '') ? data.product.name : '');
             $("#product_id").val((data.product_id > 0) ? data.product_id : 0);
-            $("#tag_no").val((data.tag_no !='') ? data.tag_no : 0);
+            $("#tag_no").val((data.tag_no != '') ? data.tag_no : 0);
             $("#gold_carat").val((data.gold_carat > 0) ? data.gold_carat : 0);
             $("#scale_weight").val((data.scale_weight > 0) ? data.scale_weight : 0);
             $("#net_weight").val((data.net_weight > 0) ? data.net_weight : 0);
@@ -254,6 +256,8 @@ function TotalAmount() {
 function addProduct() {
     var tag_no = $("#tag_no").val();
     var finish_product_id = $("#finish_product_id").val();
+    var ratti_kaat_id = $("#ratti_kaat_id").val();
+    var ratti_kaat_detail_id = $("#ratti_kaat_detail_id").val();
     var product = $("#product").val();
     var product_id = $("#product_id").val();
     var gold_carat = $("#gold_carat").val();
@@ -273,7 +277,7 @@ function addProduct() {
     var other_amount = $("#other_amount").val();
     var total_amount = $("#total_amount").val();
 
-    if (tag_no == '' || finish_product_id=='') {
+    if (tag_no == '' || finish_product_id == '' || ratti_kaat_id == '' || ratti_kaat_detail_id == '') {
         error("tag is not selected!");
         return false;
     }
@@ -316,7 +320,7 @@ function addProduct() {
     if (check == false) {
         return;
     }
-    
+
     var rows = "";
     var total = 0;
 
@@ -324,9 +328,11 @@ function addProduct() {
         // sr: i,
         tag_no: tag_no,
         finish_product_id: finish_product_id,
+        ratti_kaat_id: ratti_kaat_id,
+        ratti_kaat_detail_id: ratti_kaat_detail_id,
         product: product,
         product_id: product_id,
-        gold_carat:gold_carat,
+        gold_carat: gold_carat,
         scale_weight: scale_weight,
         bead_weight: bead_weight,
         stones_weight: stones_weight,
@@ -335,16 +341,16 @@ function addProduct() {
         gross_weight: gross_weight,
         waste: waste,
         making: making,
-        gold_rate:gold_rate,
-        total_gold_price:total_gold_price,
+        gold_rate: gold_rate,
+        total_gold_price: total_gold_price,
         other_amount: other_amount,
         total_bead_price: total_bead_price,
         total_stones_price: total_stones_price,
         total_diamond_price: total_diamond_price,
         total_amount: total_amount,
-        beadDetail:beadData,
-        stonesDetail:stonesData,
-        diamondDetail:diamondsData
+        beadDetail: beadData,
+        stonesDetail: stonesData,
+        diamondDetail: diamondsData
     });
 
     $("#total").val(total);
@@ -352,16 +358,16 @@ function addProduct() {
     $.each(productData, function (e, val) {
         product_sr = product_sr + 1;
         productData.sr = product_sr;
-        
-        rows += `<tr id="${finish_product_id}"><td>${product_sr}</td><td>${val.tag_no}</td><td>${val.product}</td>
+
+        rows += `<tr id="${val.finish_product_id}"><td>${product_sr}</td><td>${val.tag_no}</td><td>${val.product}</td>
                 <td>${val.gold_carat}</td><td style="text-align: right;">${val.scale_weight}</td><td style="text-align: right;">${val.bead_weight}</td>
                 <td style="text-align: right;">${val.stones_weight}</td><td style="text-align: right;">${val.diamond_weight}
                 <td style="text-align: right;">${val.net_weight}</td><td style="text-align: right;">${val.waste}</td>
                 </td><td style="text-align: right;">${val.gross_weight}</td><td style="text-align: right;" >${val.gold_rate}</td>
           <td style="text-align: right;" >${val.total_gold_price}</td><td style="text-align: right;" >${val.making}</td>
           <td style="text-align: right;" >${val.other_amount}</td><td style="text-align: right;" >${val.total_amount}</td>
-          <td><a class="text-warning text-white" id="Detail" href="javascript:void(0)" data-toggle="tooltip"  data-id="${finish_product_id}" data-original-title="Detail"><i title="Detail" class="mr-2 fa fa-eye"></i></a>
-          <a class="text-danger text-white productr${finish_product_id}" onclick="ProductRemove(${finish_product_id})"><i class="fa fa-trash"></i></a></td></tr>`;
+          <td><a class="text-warning text-white" id="Detail" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.finish_product_id}" data-original-title="Detail"><i title="Detail" class="mr-2 fa fa-eye"></i></a>
+          <a class="text-danger text-white productr${val.finish_product_id}" onclick="ProductRemove(${val.finish_product_id})"><i class="fa fa-trash"></i></a></td></tr>`;
 
         total += val.total_amount * 1;
     });
@@ -378,15 +384,48 @@ function addProduct() {
 $("body").on("click", "#Detail", function (event) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    var finish_product_id = $(this).data("id");
-    $.each(productData, function (e, val) {
-        if(val.finish_product_id==finish_product_id){
-            console.log(val.beadDetail);
-        }
+    let data = productData.filter(product => product.finish_product_id === String($(this).data("id")));
+    var bead_sr = 0;
+    var bead_row = '';
+    var stone_sr = 0;
+    var stone_row = '';
+    var diamond_sr = 0;
+    var diamond_row = '';
+    $.each(data, function (e, val) {
+
+        console.log(val.beadDetail);
+
+        $.each(val.beadDetail, function (e, val) {
+            bead_sr = bead_sr + 1;
+            beadData.sr = bead_sr;
+            bead_row += `<tr><td>${bead_sr}</td><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+                    <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+                    </tr>`;
+        });
+        $("#beadDetail").html(bead_row);
+
+        $.each(val.stonesDetail, function (e, val) {
+            stone_sr = stone_sr + 1;
+            stonesData.sr = stone_sr;
+            stone_row += `<tr><td>${stone_sr}</td><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+                <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+                </tr>`;
+        });
+        $("#stoneDetail").html(stone_row);
+
+        $.each(val.diamondDetail, function (e, val) {
+            diamond_sr = diamond_sr + 1;
+            diamondsData.sr = diamond_sr;
+            diamond_row += `<tr><td>${diamond_sr}</td><td>${val.diamonds}</td><td>${val.type}</td>
+                <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
+                <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+                </tr>`;
+        });
+        $("#diamondDetail").html(diamond_row);
     });
-    
+
     $("#detailModel").modal("show");
-  });
+});
 
 $("body").on("click", "#submit", function (e) {
     e.preventDefault();
@@ -397,7 +436,7 @@ $("body").on("click", "#submit", function (e) {
         $("#sale_date").focus();
         return false;
     }
-    
+
     if ($("#customer_id").find(":selected").val() == "" || $("#customer_id").find(":selected").val() == 0) {
         error("Please Select customer!");
         $("#customer_id").focus();
@@ -456,7 +495,7 @@ $("body").on("click", "#submit", function (e) {
 });
 
 function ProductRemove(id) {
-    
+
     console.log(id);
     Swal.fire({
         title: "Are you sure?",
@@ -495,6 +534,8 @@ function Clear() {
     );
     $("#search_tag_no").val('');
     $("#finish_product_id").val('');
+    $("#ratti_kaat_id").val('');
+    $("#ratti_kaat_detail_id").val('');
     $("#tag_no").val('');
     $("#product").val('');
     $("#product_id").val('');

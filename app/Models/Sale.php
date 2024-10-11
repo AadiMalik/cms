@@ -41,6 +41,10 @@ class Sale extends Model
         'updated_at',
         'created_at'
     ];
+    public function SaleDetail()
+    {
+        return $this->hasMany(SaleDetail::class, 'sale_id');
+    }
     public function jv()
     {
         return $this->belongsTo(JournalEntry::class, 'jv_id');

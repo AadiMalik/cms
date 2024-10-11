@@ -152,7 +152,7 @@ function addStones() {
 function StonesByFinishDetail(finish_product_id) {
     $.ajax({
         type: "GET",
-        url: url_local + "/finish-product/get-bead-by-id" + "/" + finish_product_id,
+        url: url_local + "/finish-product/get-stone-by-id" + "/" + finish_product_id,
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },

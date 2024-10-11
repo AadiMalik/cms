@@ -21,7 +21,6 @@
                                     <th>Rate/Gram</th>
                                     <th>Rate/Carat</th>
                                     <th>Total</th>
-                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody id="beadDetail">
@@ -35,14 +34,14 @@
                             <thead>
                                 <tr>
                                     <th>Sr.</th>
+                                    <th>Category</th>
                                     <th>Type</th>
-                                    <th>Beads</th>
+                                    <th>Stones</th>
                                     <th>Gram</th>
                                     <th>Carat</th>
                                     <th>Rate/Gram</th>
                                     <th>Rate/Carat</th>
                                     <th>Total</th>
-                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody id="stoneDetail">
@@ -56,14 +55,14 @@
                             <thead>
                                 <tr>
                                     <th>Sr.</th>
+                                    <th>Diamonds</th>
                                     <th>Type</th>
-                                    <th>Beads</th>
-                                    <th>Gram</th>
+                                    <th>Cut</th>
+                                    <th>Color</th>
+                                    <th>Clarity</th>
                                     <th>Carat</th>
-                                    <th>Rate/Gram</th>
                                     <th>Rate/Carat</th>
                                     <th>Total</th>
-                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody id="diamondDetail">

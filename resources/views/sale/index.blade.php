@@ -20,8 +20,8 @@
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
-                                <a class="btn btn-primary btn-md m-1" href="{{ url('sale/create') }}"><i
-                                        class="fa fa-plus text-white mr-2"></i> Add Sale</a>
+                            <a class="btn btn-primary btn-md m-1" href="{{ url('sale/create') }}"><i
+                                    class="fa fa-plus text-white mr-2"></i> Add Sale</a>
                         </div>
                         <div class="card-body">
 
@@ -45,7 +45,7 @@
                                         <select id="customer_id" name="customer_id" class="form-control">
                                             <option value="">--Select Customer--</option>
                                             @foreach ($customers as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name??'' }}</option>
+                                                <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -72,14 +72,13 @@
                                 <div class="col-md-12">
                                     <hr class="mt-2 mb-2">
                                 </div>
-                                    <div class="col-md-8" id="div_post_sale">
-                                        <a class="btn btn-info" style="color:#fff;" type="button" id="selectAll">Check
-                                            All</a>
-                                        <a class="btn btn-danger" style="color:#fff;" type="button"
-                                            id="unselectAll">Uncheck All</a>
-                                        <a class="btn btn-primary" style="color:#fff;" type="button"
-                                            id="post_sale">Post</a>
-                                    </div>
+                                <div class="col-md-8" id="div_post_sale">
+                                    <a class="btn btn-info" style="color:#fff;" type="button" id="selectAll">Check
+                                        All</a>
+                                    <a class="btn btn-danger" style="color:#fff;" type="button" id="unselectAll">Uncheck
+                                        All</a>
+                                    <a class="btn btn-primary" style="color:#fff;" type="button" id="post_sale">Post</a>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -117,18 +116,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/momenttimezone/0.5.31/moment-timezone-with-data-2012-2022.min.js">
     </script>
-    <script src="{{ asset('js/common-methods/toasters.js') }}"  type="module"></script>
+    <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-    {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
-    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-    {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
-    {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
-    {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
-    {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
-    {data: 'total',name: 'total', orderable: false, searchable: false},
-    {data: 'posted',name: 'posted', orderable: false, searchable: false},
-    {data: 'action',name: 'action','sortable': false,searchable: false}",
+        {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
+        { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+        {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
+        {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
+        {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
+        {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
+        {data: 'total',name: 'total', orderable: false, searchable: false},
+        {data: 'posted',name: 'posted', orderable: false, searchable: false},
+        {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'sale/data',
         'buttons' => false,
         'pageLength' => 50,
@@ -137,9 +136,9 @@
         'datefilter' => true,
         'params' => "customer_id:$('#customer_id').val(),posted:$('#posted').val()",
         'rowCallback' => ' rowCallback: function (row, data) {
-    if(data.posted.includes("Unposted"))
-    $(row).css("background-color", "Pink");
-    }',
+        if(data.posted.includes("Unposted"))
+        $(row).css("background-color", "Pink");
+        }',
     ])
     <script>
         $(document).ready(function() {
@@ -210,7 +209,7 @@
                 timeOut: 2e3,
             });
         }
-        
+
         $("body").on("keyup", "#search", function(event) {
             var url = $('#form_search').attr('action');
             var data = $('#form_search').serializeArray();

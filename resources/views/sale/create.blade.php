@@ -111,7 +111,9 @@
                                         <hr class="mb-2 mt-2">
                                         <b>Add Sale Detail:</b>
                                     </div>
-                                    <input type="hidden" name="finish_product_id" id="finish_product_id">
+                                    <input type="hidden" name="finish_product_id" id="finish_product_id" value="">
+                                    <input type="hidden" name="ratti_kaat_id" id="ratti_kaat_id" value="">
+                                    <input type="hidden" name="ratti_kaat_detail_id" id="ratti_kaat_detail_id" value="">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Tag No:<span style="color:red;">*</span></label>

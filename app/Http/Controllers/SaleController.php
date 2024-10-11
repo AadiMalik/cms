@@ -13,6 +13,8 @@ use App\Traits\JsonResponse;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class SaleController extends Controller
 {
@@ -46,7 +48,7 @@ class SaleController extends Controller
     }
     public function getData(Request $request)
     {
-        try {
+        // try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $customer_id = $request['customer_id'] ?? '';
@@ -58,30 +60,56 @@ class SaleController extends Controller
                 "posted" => $posted,
             ];
             return $this->sale_service->getSaleSource($obj);
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
+    }
+    public function create()
+    {
+        $sale = $this->sale_service->saveSale();
+        $finish_product = $this->finish_product_service->getAllActiveFinishProduct();
+        return view('sale.create', compact('sale', 'finish_product'));
+    }
+    public function store(Request $request)
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'id'             => 'required',
+                'sale_date'      => 'required',
+                'customer_id'    => 'required',
+                'total'          => 'required',
+                'productDetail'  => 'required'
+            ],
+            $this->validationMessage()
+        );
+
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->validationResponse(
+                $validation_error
+            );
+        }
+
+        try {
+            $obj = $request->all();
+            $sale = $this->sale_service->save($obj);
+            return  $this->success(
+                config("enum.saved"),
+                $sale
+            );
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }
     }
-    public function create()
-    {
-        $sale = null;
-        $finish_product = $this->finish_product_service->getAllActiveFinishProduct();
-        return view('sale.create', compact('sale','finish_product'));
-    }
-    public function store(Request $request)
-    {
-        dd($request->all());
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Sale $sale)
+    
+    public function show($id)
     {
-        //
+        
     }
 
     /**

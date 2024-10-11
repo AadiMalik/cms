@@ -54,6 +54,7 @@ class RattiKaatService
             $wh[] = ['supplier_id', $obj['supplier_id']];
         }
         $model = RattiKaat::has('RattiKaatDetail')->with(['supplier_name', 'purchase_account_name', 'paid_account_name'])
+        ->whereBetween('purchase_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
             ->where('is_deleted', 0)
             ->where($wh);
         $data = DataTables::of($model)
