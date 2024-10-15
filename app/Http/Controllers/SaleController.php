@@ -13,7 +13,7 @@ use App\Traits\JsonResponse;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use PDF;
 use Illuminate\Support\Facades\Validator;
 
 class SaleController extends Controller
@@ -108,42 +108,62 @@ class SaleController extends Controller
     }
 
     
-    public function show($id)
+    public function print($id)
     {
-        
+        try {
+
+            $sale =  $this->sale_service->getById($id);
+            $sale_detail = $this->sale_service->saleDetail($id);
+
+
+            return view('sale/partials.print', compact('sale', 'sale_detail'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Sale $sale)
+    
+    public function unpostSale($id)
     {
-        //
+        try {
+            $this->sale_service->unpostSale($id);
+            return $this->success(
+                config('enum.unposted'),
+                []
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+    public function postSale(Request $request)
+    {
+        try {
+            $sale = $this->sale_service->postSale($request->all());
+            if ($sale != 'true') {
+                return $this->error(
+                    $sale
+                );
+            }
+            return $this->success(
+                config('enum.posted'),
+                []
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Sale $sale)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Sale $sale)
-    {
-        //
+        try {
+            $sale = $this->sale_service->deleteSaleById($id);
+            return $this->success(
+                config("enum.delete"),
+                [],
+                true
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.noDelete'),);
+        }
     }
 }

@@ -382,11 +382,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('create', [SaleController::class, 'create']);
         Route::post('data', [SaleController::class, 'getData'])->name('sale.data');
         Route::post('store', [SaleController::class, 'store']);
-        Route::get('view/{id}', [SaleController::class, 'show']);
+        Route::get('print/{id}', [SaleController::class, 'print']);
         Route::get('destroy/{id}', [SaleController::class, 'destroy']);
         Route::get('status/{id}', [SaleController::class, 'status']);
         Route::get('get-sale-detail/{id}', [SaleController::class, 'saleDetail']);
         Route::post('post-sale', [SaleController::class, 'postSale']);
+        Route::get('unpost-sale/{id}', [SaleController::class, 'unpostSale']);
         Route::get('sale-by-product-id/{product_id}', [SaleController::class, 'getSaleByProductId']);
         Route::get('get-sale-detail-by-id/{id}', [SaleController::class, 'getSaleDetailById']);
 

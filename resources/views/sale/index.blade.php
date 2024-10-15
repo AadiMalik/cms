@@ -83,9 +83,9 @@
                             <div class="row mt-2" id="sale_account" style="display: none;">
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Sale Account<span style="color: red;">*</span> </label>
-                                        <select id="sale_account_id" name="sale_account_id" class="form-control">
-                                            <option value="0" disabled selected="selected">--Select Sale
+                                        <label for="">Cash Account<span style="color: red;">*</span> </label>
+                                        <select id="cash_account_id" name="cash_account_id" class="form-control" style="width:100%;">
+                                            <option value="0" disabled selected="selected">--Select Cash
                                                 Account--</option>
                                             @foreach ($accounts as $item)
                                                 <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
@@ -98,7 +98,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Revenue Account<span style="color: red;">*</span> </label>
-                                        <select id="revenue_account_id" name="revenue_account_id" class="form-control">
+                                        <select id="revenue_account_id" name="revenue_account_id" class="form-control" style="width:100%;">
                                             <option value="0" disabled selected="selected">--Select Revenue
                                                 Account--</option>
                                             @foreach ($accounts as $item)
@@ -111,8 +111,10 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="">Bank Transfer Account<span style="color: red;">*</span> </label>
-                                        <select id="bank_transfer_account_id" name="bank_transfer_account_id" class="form-control">
+                                        <label for="">Bank Transfer Account<span style="color: red;">*</span>
+                                        </label>
+                                        <select id="bank_transfer_account_id" name="bank_transfer_account_id"
+                                            class="form-control" style="width:100%;">
                                             <option value="0" disabled selected="selected">--Select
                                                 Bank Transfer
                                                 Account--</option>
@@ -128,10 +130,27 @@
                                     <div class="form-group">
                                         <label for="">Card Account<span style="color: red;">*</span>
                                         </label>
-                                        <select id="card_account_id" name="card_account_id"
-                                            class="form-control" style="width:100%;">
+                                        <select id="card_account_id" name="card_account_id" class="form-control"
+                                            style="width:100%;">
                                             <option value="0" disabled selected="selected">--Select
                                                 Card
+                                                Account--</option>
+                                            @foreach ($accounts as $item)
+                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                    {{ $item->name ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Advance Account<span style="color: red;">*</span>
+                                        </label>
+                                        <select id="advance_account_id" name="advance_account_id" class="form-control"
+                                            style="width:100%;">
+                                            <option value="0" disabled selected="selected">--Select
+                                                Advance
                                                 Account--</option>
                                             @foreach ($accounts as $item)
                                                 <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
@@ -146,7 +165,7 @@
                                         <label for="">Gold Impurity Account<span style="color: red;">*</span>
                                         </label>
                                         <select id="gold_impurity_account_id" name="gold_impurity_account_id"
-                                            class="form-control">
+                                            class="form-control" style="width:100%;">
                                             <option value="0" disabled selected="selected">--Select
                                                 Gold Impurity
                                                 Account--</option>
@@ -198,15 +217,15 @@
     <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-            {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
-            {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
-            {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
-            {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
-            {data: 'total',name: 'total', orderable: false, searchable: false},
-            {data: 'posted',name: 'posted', orderable: false, searchable: false},
-            {data: 'action',name: 'action','sortable': false,searchable: false}",
+                            {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
+                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                            {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
+                            {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
+                            {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
+                            {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
+                            {data: 'total',name: 'total', orderable: false, searchable: false},
+                            {data: 'posted',name: 'posted', orderable: false, searchable: false},
+                            {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'sale/data',
         'buttons' => false,
         'pageLength' => 50,
@@ -215,17 +234,18 @@
         'datefilter' => true,
         'params' => "customer_id:$('#customer_id').val(),posted:$('#posted').val()",
         'rowCallback' => ' rowCallback: function (row, data) {
-            if(data.posted.includes("Unposted"))
-            $(row).css("background-color", "Pink");
-            }',
+                            if(data.posted.includes("Unposted"))
+                            $(row).css("background-color", "Pink");
+                            }',
     ])
     <script>
         $(document).ready(function() {
             $('#customer_id').select2();
-            $("#sale_account_id").select2();
+            $("#cash_account_id").select2();
             $("#revenue_account_id").select2();
             $("#bank_transfer_account_id").select2();
             $("#card_account_id").select2();
+            $("#advance_account_id").select2();
             $("#gold_impurity_account_id").select2();
 
             $("#unselectAll").hide();
@@ -277,10 +297,10 @@
     </script>
     <script type="text/javascript">
         $('#search_button').click(function() {
-        $("#preloader").show();
+            $("#preloader").show();
             initDataTablesale_table();
             $("#div_post_sale").show();
-        $("#preloader").hide();
+            $("#preloader").hide();
         });
 
         function error(message) {
@@ -301,6 +321,48 @@
 
         $("#post_sale").click(function() {
             $("#preloader").show();
+            if ($("#cash_account_id").find(":selected").val() == "" || $("#cash_account_id").find(":selected")
+                .val() == 0) {
+                error("Please select sale account!");
+                $("#cash_account_id").focus();
+                $("#preloader").hide();
+                return false;
+            }
+            if ($("#revenue_account_id").find(":selected").val() == "" || $("#revenue_account_id").find(":selected")
+                .val() == 0) {
+                error("Please select revenue account!");
+                $("#revenue_account_id").focus();
+                $("#preloader").hide();
+                return false;
+            }
+            if ($("#bank_transfer_account_id").find(":selected").val() == "" || $("#bank_transfer_account_id").find(":selected")
+                .val() == 0) {
+                error("Please select bank transfer account!");
+                $("#bank_transfer_account_id").focus();
+                $("#preloader").hide();
+                return false;
+            }
+            if ($("#card_account_id").find(":selected").val() == "" || $("#card_account_id").find(":selected")
+                .val() == 0) {
+                error("Please select card account!");
+                $("#card_account_id").focus();
+                $("#preloader").hide();
+                return false;
+            }
+            if ($("#advance_account_id").find(":selected").val() == "" || $("#advance_account_id").find(":selected")
+                .val() == 0) {
+                error("Please select advance account!");
+                $("#advance_account_id").focus();
+                $("#preloader").hide();
+                return false;
+            }
+            if ($("#gold_impurity_account_id").find(":selected").val() == "" || $("#gold_impurity_account_id").find(":selected")
+                .val() == 0) {
+                error("Please select gold impurity account!");
+                $("#gold_impurity_account_id").focus();
+                $("#preloader").hide();
+                return false;
+            }
             var sales = [];
             $(".sub_chk:checked").each(function() {
 
@@ -308,6 +370,12 @@
             });
             var data = {};
             data.sale = sales;
+            data.cash_account_id = $("#cash_account_id").find(":selected").val();
+            data.revenue_account_id = $("#revenue_account_id").find(":selected").val();
+            data.bank_transfer_account_id = $("#bank_transfer_account_id").find(":selected").val();
+            data.card_account_id = $("#card_account_id").find(":selected").val();
+            data.advance_account_id = $("#advance_account_id").find(":selected").val();
+            data.gold_impurity_account_id = $("#gold_impurity_account_id").find(":selected").val();
             if (sales.length <= 0) {
                 $("#preloader").hide();
                 error("Please select Rows!");
@@ -326,8 +394,15 @@
                             $("#preloader").hide();
                             success(data.Message)
                             initDataTablesale_table();
+                        }else{
+                            error(data.Message);
+                            $("#preloader").hide();
                         }
                     },
+                    error: function(error) {
+                        error(error.Message);
+                        $("#preloader").hide();
+                    }
                 });
             }
         });
@@ -350,6 +425,10 @@
                         initDataTablesale_table();
                     }
                 },
+                error: function(error) {
+                    error(error.Message);
+                    $("#preloader").hide();
+                }
             });
         });
         // Delete sale Code
@@ -404,11 +483,11 @@
             });
         });
         $("body").on("click", ".sub_chk", function() {
-        if ($("input[type=checkbox]").is(':checked')) {
-            $("#sale_account").show();
-        } else {
-            $("#sale_account").hide();
-        }
-    });
+            if ($("input[type=checkbox]").is(':checked')) {
+                $("#sale_account").show();
+            } else {
+                $("#sale_account").hide();
+            }
+        });
     </script>
 @endsection
