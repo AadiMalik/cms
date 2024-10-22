@@ -45,6 +45,10 @@ class SaleDetail extends Model
         'created_at'
     ];
 
+    public function finish_product()
+    {
+        return $this->belongsTo(FinishProduct::class, 'finish_product_id');
+    }
     public function ratti_kaat()
     {
         return $this->belongsTo(RattiKaat::class, 'ratti_kaat_id');

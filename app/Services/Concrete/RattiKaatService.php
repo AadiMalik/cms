@@ -54,7 +54,7 @@ class RattiKaatService
             $wh[] = ['supplier_id', $obj['supplier_id']];
         }
         $model = RattiKaat::has('RattiKaatDetail')->with(['supplier_name', 'purchase_account_name', 'paid_account_name'])
-        ->whereBetween('purchase_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
+            ->whereBetween('purchase_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
             ->where('is_deleted', 0)
             ->where($wh);
         $data = DataTables::of($model)
@@ -228,188 +228,188 @@ class RattiKaatService
                 $journal_entry->save();
 
                 $journal_entry_id = $journal_entry->id ?? null;
+
+                if ($supplier->account_id == null || $supplier->account_au_id == null || $supplier->account_dollar_id == null) {
+                    $message = "This Supplier/Karigar have  not 3 accounts. please update then post again.!";
+                    return $message;
+                }
+
+                $purchase_account = Account::find($ratti_kaat->purchase_account);
+                $supplir_account = Account::find($supplier->account_id);
+                $supplir_au_account = Account::find($supplier->account_au_id);
+                $supplir_dollar_account = Account::find($supplier->account_dollar_id);
+
+                // Journal Entry Detail
+
+                //PKR Ratti Kaat
+                if ($ratti_kaat->total > 0) {
+                    $PKR_Amount = str_replace(',', '', $ratti_kaat->total ?? 0);
+                    // PKR (Debit)
+                    $this->journal_entry_service->saveJVDetail(
+                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Ratti Kaat PKR Debit Entry', //explaination
+                        $ratti_kaat->id, //bill no
+                        0, // check no or 0
+                        $ratti_kaat->purchase_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $PKR_Amount, //amount
+                        $purchase_account->id, // account id
+                        $purchase_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                    // PKR (Credit)
+                    $this->journal_entry_service->saveJVDetail(
+                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Ratti Kaat PKR Supplier/Karigar Credit Entry', //explaination
+                        $ratti_kaat->id, //bill no
+                        0, // check no or 0
+                        $ratti_kaat->purchase_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $PKR_Amount, //amount
+                        $supplir_account->id, // account id
+                        $supplir_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                }
+
+                //AU Ratti Kaat
+                if ($ratti_kaat->total_au > 0) {
+                    $AU_Amount = str_replace(',', '', $ratti_kaat->total_au ?? 0);
+
+                    // AU (Debit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Ratti Kaat Gold(AU) Debit Entry', //explaination
+                        $ratti_kaat->id, //bill no
+                        0, // check no or 0
+                        $ratti_kaat->purchase_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $AU_Amount, //amount
+                        $purchase_account->id, // account id
+                        $purchase_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+
+                    // AU (Credit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Ratti Kaat Gold(AU) Supplier/Karigar Credit Entry', //explaination
+                        $ratti_kaat->id, //bill no
+                        0, // check no or 0
+                        $ratti_kaat->purchase_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $AU_Amount, //amount
+                        $supplir_au_account->id, // account id
+                        $supplir_au_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                }
+
+                //Dollar Ratti Kaat
+                if ($ratti_kaat->total_dollar > 0) {
+                    $Dollar_Amount = str_replace(',', '', $ratti_kaat->total_dollar ?? 0);
+
+                    // AU (Debit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Ratti Kaat Dollar($) Debit Entry', //explaination
+                        $ratti_kaat->id, //bill no
+                        0, // check no or 0
+                        $ratti_kaat->purchase_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $Dollar_Amount, //amount
+                        $purchase_account->id, // account id
+                        $purchase_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+
+                    // Dollar (Credit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Ratti Kaat Dollar($) Supplier/Karigar Credit Entry', //explaination
+                        $ratti_kaat->id, //bill no
+                        0, // check no or 0
+                        $ratti_kaat->purchase_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $Dollar_Amount, //amount
+                        $supplir_dollar_account->id, // account id
+                        $supplir_dollar_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                }
+
+
+                if ($ratti_kaat->paid > 0 && $ratti_kaat->paid_account != null) {
+                    $Paid_Amount = str_replace(',', '', $ratti_kaat->paid ?? 0);
+
+                    $paid_account = Account::find($ratti_kaat->paid_account);
+                    $paid_jv = $this->PaidtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_account, $supplir_account, $Paid_Amount);
+                    // Supplier PKR payment
+                    $supplier_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                        $supplier->id,
+                        0,
+                        $ratti_kaat->paid_account,
+                        $$ratti_kaat->purchase_date,
+                        null,
+                        $Paid_Amount,
+                        $paid_jv
+                    );
+                }
+
+                // AU Payment JV
+                if ($ratti_kaat->paid_au > 0  && $ratti_kaat->paid_au_account != null) {
+                    $Paid_au_Amount = str_replace(',', '', $ratti_kaat->paid_au ?? 0);
+
+                    $paid_au_account = Account::find($ratti_kaat->paid_au_account);
+                    $paid_au_jv = $this->PaidAUtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount);
+
+                    // Supplier AU payment
+                    $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                        $supplier->id,
+                        0,
+                        $ratti_kaat->paid_au_account,
+                        $$ratti_kaat->purchase_date,
+                        null,
+                        $Paid_au_Amount,
+                        $paid_au_jv
+                    );
+                }
+
+                // Dollar Payment JV
+                if ($ratti_kaat->paid_dollar > 0  && $ratti_kaat->paid_dollar_account != null) {
+                    $Paid_dollar_Amount = str_replace(',', '', $ratti_kaat->paid_dollar ?? 0);
+
+                    $paid_dollar_account = Account::find($ratti_kaat->paid_dollar_account);
+                    $paid_dollar_jv = $this->PaidDollartoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_dollar_account, $supplir_dollar_account, $Paid_dollar_Amount);
+                    // Supplier Dollar payment
+                    $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                        $supplier->id,
+                        0,
+                        $ratti_kaat->paid_dollar_account,
+                        $$ratti_kaat->purchase_date,
+                        null,
+                        $Paid_dollar_Amount,
+                        $paid_dollar_jv
+                    );
+                }
+
+                // Purchase Update
+                $ratti_kaat->is_posted = 1;
+                $ratti_kaat->jv_id = $journal_entry_id;
+                $ratti_kaat->paid_jv_id = ($paid_jv != null) ? $paid_jv->id : null;
+                $ratti_kaat->paid_au_jv_id = ($paid_au_jv != null) ? $paid_au_jv->id : null;
+                $ratti_kaat->paid_dollar_jv_id = ($paid_dollar_jv != null) ? $paid_dollar_jv->id : null;
+                $ratti_kaat->supplier_payment_id = ($supplier_payment != null) ? $supplier_payment->id : null;
+                $ratti_kaat->supplier_au_payment_id = ($supplier_au_payment != null) ? $supplier_au_payment->id : null;
+                $ratti_kaat->supplier_dollar_payment_id = ($supplier_dollar_payment != null) ? $supplier_dollar_payment->id : null;
+                $ratti_kaat->update();
             }
-
-            if ($supplier->account_id == null || $supplier->account_au_id == null || $supplier->account_dollar_id == null) {
-                $message = "This Supplier/Karigar have  not 3 accounts. please update then post again.!";
-                return $message;
-            }
-
-            $purchase_account = Account::find($ratti_kaat->purchase_account);
-            $supplir_account = Account::find($supplier->account_id);
-            $supplir_au_account = Account::find($supplier->account_au_id);
-            $supplir_dollar_account = Account::find($supplier->account_dollar_id);
-
-            // Journal Entry Detail
-
-            //PKR Ratti Kaat
-            if ($ratti_kaat->total > 0) {
-                $PKR_Amount = str_replace(',', '', $ratti_kaat->total ?? 0);
-                // PKR (Debit)
-                $this->journal_entry_service->saveJVDetail(
-                    0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Ratti Kaat PKR Debit Entry', //explaination
-                    $ratti_kaat->id, //bill no
-                    0, // check no or 0
-                    $ratti_kaat->purchase_date, //check date
-                    1, // is credit flag 0 for credit, 1 for debit
-                    $PKR_Amount, //amount
-                    $purchase_account->id, // account id
-                    $purchase_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-                // PKR (Credit)
-                $this->journal_entry_service->saveJVDetail(
-                    0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Ratti Kaat PKR Supplier/Karigar Credit Entry', //explaination
-                    $ratti_kaat->id, //bill no
-                    0, // check no or 0
-                    $ratti_kaat->purchase_date, //check date
-                    0, // is credit flag 0 for credit, 1 for debit
-                    $PKR_Amount, //amount
-                    $supplir_account->id, // account id
-                    $supplir_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-            }
-
-            //AU Ratti Kaat
-            if ($ratti_kaat->total_au > 0) {
-                $AU_Amount = str_replace(',', '', $ratti_kaat->total_au ?? 0);
-
-                // AU (Debit)
-                $this->journal_entry_service->saveJVDetail(
-                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Ratti Kaat Gold(AU) Debit Entry', //explaination
-                    $ratti_kaat->id, //bill no
-                    0, // check no or 0
-                    $ratti_kaat->purchase_date, //check date
-                    1, // is credit flag 0 for credit, 1 for debit
-                    $AU_Amount, //amount
-                    $purchase_account->id, // account id
-                    $purchase_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-
-                // AU (Credit)
-                $this->journal_entry_service->saveJVDetail(
-                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Ratti Kaat Gold(AU) Supplier/Karigar Credit Entry', //explaination
-                    $ratti_kaat->id, //bill no
-                    0, // check no or 0
-                    $ratti_kaat->purchase_date, //check date
-                    0, // is credit flag 0 for credit, 1 for debit
-                    $AU_Amount, //amount
-                    $supplir_au_account->id, // account id
-                    $supplir_au_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-            }
-
-            //Dollar Ratti Kaat
-            if ($ratti_kaat->total_dollar > 0) {
-                $Dollar_Amount = str_replace(',', '', $ratti_kaat->total_dollar ?? 0);
-
-                // AU (Debit)
-                $this->journal_entry_service->saveJVDetail(
-                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Ratti Kaat Dollar($) Debit Entry', //explaination
-                    $ratti_kaat->id, //bill no
-                    0, // check no or 0
-                    $ratti_kaat->purchase_date, //check date
-                    1, // is credit flag 0 for credit, 1 for debit
-                    $Dollar_Amount, //amount
-                    $purchase_account->id, // account id
-                    $purchase_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-
-                // Dollar (Credit)
-                $this->journal_entry_service->saveJVDetail(
-                    1, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Ratti Kaat Dollar($) Supplier/Karigar Credit Entry', //explaination
-                    $ratti_kaat->id, //bill no
-                    0, // check no or 0
-                    $ratti_kaat->purchase_date, //check date
-                    0, // is credit flag 0 for credit, 1 for debit
-                    $Dollar_Amount, //amount
-                    $supplir_dollar_account->id, // account id
-                    $supplir_dollar_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-            }
-
-
-            if ($ratti_kaat->paid > 0 && $ratti_kaat->paid_account != null) {
-                $Paid_Amount = str_replace(',', '', $ratti_kaat->paid ?? 0);
-
-                $paid_account = Account::find($ratti_kaat->paid_account);
-                $paid_jv = $this->PaidtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_account, $supplir_account, $Paid_Amount);
-                // Supplier PKR payment
-                $supplier_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
-                    $supplier->id,
-                    0,
-                    $ratti_kaat->paid_account,
-                    $$ratti_kaat->purchase_date,
-                    null,
-                    $Paid_Amount,
-                    $paid_jv
-                );
-            }
-
-            // AU Payment JV
-            if ($ratti_kaat->paid_au > 0  && $ratti_kaat->paid_au_account != null) {
-                $Paid_au_Amount = str_replace(',', '', $ratti_kaat->paid_au ?? 0);
-
-                $paid_au_account = Account::find($ratti_kaat->paid_au_account);
-                $paid_au_jv = $this->PaidAUtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount);
-
-                // Supplier AU payment
-                $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
-                    $supplier->id,
-                    0,
-                    $ratti_kaat->paid_au_account,
-                    $$ratti_kaat->purchase_date,
-                    null,
-                    $Paid_au_Amount,
-                    $paid_au_jv
-                );
-            }
-
-            // Dollar Payment JV
-            if ($ratti_kaat->paid_dollar > 0  && $ratti_kaat->paid_dollar_account != null) {
-                $Paid_dollar_Amount = str_replace(',', '', $ratti_kaat->paid_dollar ?? 0);
-
-                $paid_dollar_account = Account::find($ratti_kaat->paid_dollar_account);
-                $paid_dollar_jv = $this->PaidDollartoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_dollar_account, $supplir_dollar_account, $Paid_dollar_Amount);
-                // Supplier Dollar payment
-                $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
-                    $supplier->id,
-                    0,
-                    $ratti_kaat->paid_dollar_account,
-                    $$ratti_kaat->purchase_date,
-                    null,
-                    $Paid_dollar_Amount,
-                    $paid_dollar_jv
-                );
-            }
-
-            // Purchase Update
-            $ratti_kaat->is_posted = 1;
-            $ratti_kaat->jv_id = $journal_entry_id;
-            $ratti_kaat->paid_jv_id = ($paid_jv != null) ? $paid_jv->id : null;
-            $ratti_kaat->paid_au_jv_id = ($paid_au_jv != null) ? $paid_au_jv->id : null;
-            $ratti_kaat->paid_dollar_jv_id = ($paid_dollar_jv != null) ? $paid_dollar_jv->id : null;
-            $ratti_kaat->supplier_payment_id = ($supplier_payment != null) ? $supplier_payment->id : null;
-            $ratti_kaat->supplier_au_payment_id = ($supplier_au_payment != null) ? $supplier_au_payment->id : null;
-            $ratti_kaat->supplier_dollar_payment_id = ($supplier_dollar_payment != null) ? $supplier_dollar_payment->id : null;
-            $ratti_kaat->update();
             DB::commit();
         } catch (Exception $e) {
 
