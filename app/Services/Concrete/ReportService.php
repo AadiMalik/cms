@@ -45,7 +45,7 @@ class ReportService
                         ->orderBy('journal_entries.date_post', 'ASC')
                         ->orderBy('journal_entry_details.journal_entry_id', 'ASC')
                         ->get();
-                  $opening_balance = JournalEntry::with(['supplier_name', 'customer_name', 'journal_name'])
+                  $opening_balance = $this->model_journal_entry->getModel()::with(['supplier_name', 'customer_name', 'journal_name'])
                         ->where('journal_entries.date_post', '<', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
                         ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
                         ->whereIn('journal_entry_details.account_id', $obj['account_id'])
@@ -69,7 +69,7 @@ class ReportService
                         ->orderBy('journal_entries.date_post', 'ASC')
                         ->orderBy('journal_entry_details.journal_entry_id', 'ASC')
                         ->get();
-                  $opening_balance = JournalEntry::with(['supplier_name', 'customer_name', 'journal_name'])
+                  $opening_balance = $this->model_journal_entry->getModel()::with(['supplier_name', 'customer_name', 'journal_name'])
                         ->where('journal_entries.date_post', '<', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
                         ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
                         ->where($wh)
