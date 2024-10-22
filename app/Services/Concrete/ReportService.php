@@ -24,11 +24,14 @@ class ReportService
             $opening_balance = [];
             $wh = [];
             $whIn = [];
-            if (isset($obj['vendor_id']) && $obj['vendor_id'] != 0 && $obj['vendor_id'] != "") {
-                  $wh[] = ['journal_entries.vendor_id', '=', $obj['vendor_id']];
+            if (isset($obj['supplier_id']) && $obj['supplier_id'] != 0 && $obj['supplier_id'] != "") {
+                  $wh[] = ['journal_entries.supplier_id', '=', $obj['supplier_id']];
             }
-            if (isset($obj['project_id']) && $obj['project_id'] != 0 && $obj['project_id'] != "") {
-                  $wh[] = ['journal_entries.project_id', '=', $obj['project_id']];
+            if (isset($obj['customer_id']) && $obj['customer_id'] != 0 && $obj['customer_id'] != "") {
+                  $wh[] = ['journal_entries.customer_id', '=', $obj['customer_id']];
+            }
+            if (isset($obj['currency']) && $obj['currency'] != "") {
+                  $wh[] = ['journal_entry_details.currency', '=', $obj['currency']];
             }
             if (isset($obj['account_id']) && $obj['account_id'] != 0 && $obj['account_id'] != "") {
                   $journal_entry = $this->model_journal_entry->getModel()::with(['supplier_name', 'customer_name', 'journal_name'])

@@ -157,6 +157,20 @@
                 </ul>
             </li>
             @endcan
+            @can('hrm_access')
+            <li
+                class="Ul_li--hover {{ Request::is('reports*') ? 'mm-active' : '' }}">
+                <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
+                        class="item-name text-15 text-muted">Reports</span></a>
+                <ul class="mm-collapse">
+                    @can('employees_access')
+                        <li class="item-name"><a class="{{ Request::is('reports/ledger-report*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('reports/ledger-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Ledger Report</span></a></li>
+                    @endcan
+                </ul>
+            </li>
+            @endcan
             @can('purchase_access')
             <li
                 class="Ul_li--hover {{ Request::is('dollar-rate*') ? 'mm-active' : '' }}">

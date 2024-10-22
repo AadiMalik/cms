@@ -2,14 +2,14 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Ledger</title>
+    <title>Ledger Report</title>
     <link rel="stylesheet" href="{{ asset('css/report-view.css') }}">
 </head>
 
 <div class="font-color-black">
 
     <center style="float:none;">
-        <h4><b>Ledger</b></h4>
+        <h4><b>Ledger Report</b></h4>
     </center>
     <div>
         <div style="float:left;">
@@ -19,6 +19,9 @@
         </div>
         <div style="float: right;">
             <b>Date: </b>{{ $parms->start_date ?? '' }} To {{ $parms->end_date ?? '' }} <br>
+            <b>Currency: </b>{{ $parms->currency ?? '' }}<br>
+            <b>Supplier/Karigar: </b>{{ $parms->supplier ?? '' }}<br>
+            <b>Customer: </b>{{ $parms->customer ?? '' }}<br>
         </div>
     </div>
     <br><br><br><br>
@@ -54,7 +57,7 @@
             <tr class="border-black" style="font-weight: bold;">
                 <td colspan="7" style="text-align: left;">Opening Balance</td>
                 <td style="color:black;text-align:right;">
-                    12345678
+                    {{ number_format($rBal, 3, '.', ',') }}
                 </td>
             </tr>
             @if ($parms->data['journal_entry'] != null)
@@ -75,14 +78,14 @@
                         <td>{{ $ledger['code'] ?? '' }} {{ $ledger['name'] ?? '' }}</td>
                         <td>{{ $ledger['reference'] ?? 'N/A' }}</td>
                         <td style="font-family:tahoma;color:black;text-align:right;">
-                            {{ number_format($ledger['debit'], 2, '.', ',') }}
+                            {{ number_format($ledger['debit'], 3, '.', ',') }}
                         </td>
                         <td style="font-family:tahoma;color:black;text-align:right;">
-                            {{ number_format($ledger['credit'], 2, '.', ',') }}
+                            {{ number_format($ledger['credit'], 3, '.', ',') }}
                         </td>
                         <td style="font-family:tahoma;color:black;text-align:right;">
 
-                            {{ number_format($rBal, 2, '.', ',') }}
+                            {{ number_format($rBal, 3, '.', ',') }}
 
                         </td>
 
@@ -98,10 +101,10 @@
             <tr style="font-weight: bold;">
                 <td colspan="5" style="text-align: left;">Total</td>
                 <td style="text-align: right;"> <span
-                        id='sum_debit'>{{ number_format($sum_drbal, 2, '.', ',') }}</span></td>
+                        id='sum_debit'>{{ number_format($sum_drbal, 3, '.', ',') }}</span></td>
                 <td style="text-align: right;"> <span
-                        id='sum_credit'>{{ number_format($sum_crbal, 2, '.', ',') }}</span></td>
-                <td style="text-align: right;"> <span id='sum_bal'>{{ number_format($rBal, 2, '.', ',') }}</span>
+                        id='sum_credit'>{{ number_format($sum_crbal, 3, '.', ',') }}</span></td>
+                <td style="text-align: right;"> <span id='sum_bal'>{{ number_format($rBal, 3, '.', ',') }}</span>
                 </td>
 
             </tr>

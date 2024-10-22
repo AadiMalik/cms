@@ -64,6 +64,7 @@ class ReportController extends Controller
             [
                 'start_date' => 'required',
                 'end_date' => 'required',
+                'currency' => 'required',
             ]
         );
         if ($validation->fails()) {
@@ -89,6 +90,7 @@ class ReportController extends Controller
                 $customer = $this->customer_service->getById($request->customer_id);
                 $parms->customer = $customer->name ?? '';
             }
+            $parms->currency = ($request->currency == 0) ? 'PKR (Rs)' : (($request->currency == 1) ? 'Gold (AU)' : 'Dollar ($)');
             $parms->report_name = "ledger_report";
             return view('/reports/ledger/partials.report', compact('parms'));
         } catch (Exception $e) {
@@ -97,20 +99,29 @@ class ReportController extends Controller
     }
     public function getLedgerReport(Request $request)
     {
-        try {
+        // try {
             $obj = $request->all();
             $parms['data'] = $this->report_service->ledgerReport($obj);
             $parms = (object)$parms;
             $parms->start_date = $request->start_date;
             $parms->end_date = $request->end_date;
+            if ($request->supplier_id != '' && $request->supplier_id != null) {
+                $supplier = $this->supplier_service->getById($request->supplier_id);
+                $parms->supplier = $supplier->name ?? '';
+            }
+            if ($request->customer_id != '' && $request->customer_id != null) {
+                $customer = $this->customer_service->getById($request->customer_id);
+                $parms->customer = $customer->name ?? '';
+            }
+            $parms->currency = ($request->currency == 0) ? 'PKR (Rs)' : (($request->currency == 1) ? 'Gold (AU)' : 'Dollar ($)');
             $parms->report_name = "ledger_report";
             if ($request->has('export-excel')) {
                 return Excel::download(new ReportExport($parms), 'Ledger-Report.xls');
             }
             $pdf = PDF::loadView('/reports/ledger/partials.report', compact('parms'));
             return $pdf->stream('Ledger Report' . $request->start_date . '-' . $request->end_date . '.pdf');
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 }

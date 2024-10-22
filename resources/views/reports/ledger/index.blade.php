@@ -2,7 +2,7 @@
 @section('css')
 @endsection
 @section('content')
-    <div class="breadcrumb">
+    <div class="breadcrumb pt-4">
         <h1>Ledger Report</h1>
         <ul>
             <li>Report</li>
@@ -47,6 +47,17 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="">Currency:<span class="text-danger">*</span> </label>
+                                        <select class="form-control" id="currency" name="currency" required>
+                                            <option value="" selected disabled>--Select Currency--</option>
+                                            <option value="0">PKR (Rs)</option>
+                                            <option value="1">Gold (AU)</option>
+                                            <option value="2">Dollar ($)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="">Account:</label>
                                         <select class="form-control" id="account_id" name="account_id[]"
                                             multiple="multiple">
@@ -85,6 +96,7 @@
                                         </select>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="form-group form-float">
                                 <div class="row">
@@ -129,6 +141,14 @@
 @endsection
 @section('js')
     <script type="text/javascript">
+        function successMessage(message) {
+            toastr.success(message, "Success!", {
+                showMethod: "slideDown",
+                hideMethod: "slideUp",
+                timeOut: 2e3,
+            });
+        }
+
         function errorMessage(message) {
 
             toastr.error(message, "Error", {
@@ -143,6 +163,7 @@
             $("#account_id").select2();
             $("#customer_id").select2();
             $("#supplier_id").select2();
+            $("#currency").select2();
 
             const startDate = document.getElementById("start_date");
             const endDate = document.getElementById("end_date");
@@ -175,6 +196,8 @@
             var end_date = $('#end_date').val();
             var supplier_id = $('#supplier_id').val();
             var customer_id = $('#customer_id').val();
+            var account_id = $('#account_id').val();
+            var currency = $('#currency').val();
             $("#preloader").show();
             if (start_date == '' || start_date == 0) {
                 errorMessage('Start Date Field Required!');
@@ -186,12 +209,19 @@
                 $("#preloader").hide();
                 return false;
             }
+            if (currency == '') {
+                errorMessage('Select Currency first!');
+                $("#preloader").hide();
+                return false;
+            }
 
             var data = {
                 start_date: start_date,
                 end_date: end_date,
                 supplier_id: supplier_id,
-                customer_id: customer_id
+                customer_id: customer_id,
+                currency: currency,
+                account_id: account_id,
             };
 
             $.ajax({
@@ -199,8 +229,14 @@
                 url: "{{ url('reports/get-preview-ledger-report') }}",
                 data: data,
             }).done(function(response) {
+                successMessage(response.Message);
                 $('.result').html('');
                 $('.result').html(response);
+                $("#preloader").hide();
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                // This will handle the error
+                $('.result').html('<div class="alert alert-danger">Error: ' + errorThrown + '</div>');
+                errorMessage(errorThrown);
                 $("#preloader").hide();
             });
         });
