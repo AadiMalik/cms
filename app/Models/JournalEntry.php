@@ -35,4 +35,8 @@ class JournalEntry extends Model
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
+    public function customer_name()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 }

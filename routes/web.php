@@ -10,6 +10,7 @@ use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RattiKaatController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SupplierController;
@@ -310,7 +311,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('logs', [GoldRateController::class, 'logs']);
         Route::post('data', [GoldRateController::class, 'getData'])->name('gold-rate.data');
         Route::post('store', [GoldRateController::class, 'store']);
-        
     });
 
     // Dollar Rate
@@ -318,7 +318,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('logs', [GoldRateController::class, 'dollarLog']);
         Route::post('data', [GoldRateController::class, 'getDollarData'])->name('dollar-rate.data');
         Route::post('store', [GoldRateController::class, 'storeDollar']);
-        
     });
 
     // Finish Product
@@ -332,7 +331,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('destroy/{id}', [FinishProductController::class, 'destroy']);
         Route::get('status/{id}', [FinishProductController::class, 'status']);
 
-        
+
         Route::get('get-bead-by-id/{id}', [FinishProductController::class, 'beadByFinishProductId']);
         Route::get('get-stone-by-id/{id}', [FinishProductController::class, 'stoneByFinishProductId']);
         Route::get('get-diamond-by-id/{id}', [FinishProductController::class, 'diamondByFinishProductId']);
@@ -373,7 +372,6 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
-        
     });
 
     // Sale
@@ -426,6 +424,17 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
-        
+    });
+
+
+
+    // Reports
+    Route::group(['prefix' => 'reports'], function () {
+
+        // Ledger Report
+        Route::get('ledger-report', [ReportController::class, 'ledgerReport']);
+        Route::get('get-preview-ledger-report', [ReportController::class, 'getPreviewLedgerReport']);
+        Route::get('get-ledger-report', [ReportController::class, 'getLedgerReport']);
+
     });
 });
