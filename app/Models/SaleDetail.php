@@ -44,6 +44,10 @@ class SaleDetail extends Model
         'updated_at',
         'created_at'
     ];
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id');
+    }
 
     public function finish_product()
     {

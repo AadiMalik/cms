@@ -99,7 +99,7 @@ class ReportController extends Controller
     }
     public function getLedgerReport(Request $request)
     {
-        // try {
+        try {
             $obj = $request->all();
             $parms['data'] = $this->report_service->ledgerReport($obj);
             $parms = (object)$parms;
@@ -120,8 +120,67 @@ class ReportController extends Controller
             }
             $pdf = PDF::loadView('/reports/ledger/partials.report', compact('parms'));
             return $pdf->stream('Ledger Report' . $request->start_date . '-' . $request->end_date . '.pdf');
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+
+    // Tag History Report
+    public function tagHistoryReport()
+    {
+        try {
+            return view('reports/tag_history/index');
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+    public function getPreviewTagHistoryReport(Request $request)
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'start_date' => 'required',
+                'end_date' => 'required',
+            ]
+        );
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->error(
+                $validation_error
+            );
+        }
+        try {
+            $obj = $request->all();
+            $parms['data'] = $this->report_service->tagHistoryReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->start_date;
+            $parms->end_date = $request->end_date;
+            $parms->report_name = "tag_history_report";
+            return view('/reports/tag_history/partials.report', compact('parms'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+    public function getTagHistoryReport(Request $request)
+    {
+        try {
+            $obj = $request->all();
+            $parms['data'] = $this->report_service->tagHistoryReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->start_date;
+            $parms->end_date = $request->end_date;
+            $parms->report_name = "tag_history_report";
+            if ($request->has('export-excel')) {
+                return Excel::download(new ReportExport($parms), 'Tag-History-Report.xls');
+            }
+            $pdf = PDF::loadView('/reports/tag_history/partials.report', compact('parms'));
+            return $pdf->stream('Tag History Report' . $request->start_date . '-' . $request->end_date . '.pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 }

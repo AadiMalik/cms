@@ -168,6 +168,11 @@
                                 href="{{ url('reports/ledger-report') }}"><i class="nav-icon fa fa-circle"></i><span
                                     class="item-name">Ledger Report</span></a></li>
                     @endcan
+                    @can('employees_access')
+                        <li class="item-name"><a class="{{ Request::is('reports/tag-history-report*') ? 'sidebar_active' : '' }}"
+                                href="{{ url('reports/tag-history-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                    class="item-name">Tag History Report</span></a></li>
+                    @endcan
                 </ul>
             </li>
             @endcan
