@@ -65,7 +65,7 @@
                     </tr>
                     <tr>
                         @php
-                            $bead_rate=$item['f_beads']->sum('gram_rate')/$item['f_beads']->count();
+                            $bead_rate=$item['f_beads']->sum('gram_rate')/($item['f_beads']->count()>0)?$item['f_beads']->count():1;
 
                         @endphp
                         <td>{{$item['f_beads']->sum('beads')}}</td>
@@ -81,7 +81,7 @@
                     </tr>
                     <tr>
                         @php
-                            $stone_rate=$item['f_stones']->sum('gram_rate')/$item['f_stones']->count();
+                            $stone_rate=$item['f_stones']->sum('gram_rate')/($item['f_stones']->count()>0)?$item['f_stones']->count():1;
 
                         @endphp
                         <td>{{$item['f_stones']->sum('stones')}}</td>
@@ -97,7 +97,7 @@
                     </tr>
                     <tr>
                         @php
-                            $diamond_rate=$item['f_diamonds']->sum('carat_rate')/$item['f_diamonds']->count();
+                            $diamond_rate=$item['f_diamonds']->sum('carat_rate')/($item['f_diamonds']->count()>0)?$item['f_diamonds']->count():1;
 
                         @endphp
                         <td>{{$item['f_diamonds']->sum('diamonds')}}</td>
