@@ -11,7 +11,7 @@ $(function () {
   //Click to Button
 
   $("#createNewJournal").click(function () {
-    $("#journal_id").val("");
+    $("#id").val("");
     $("#journalForm").trigger("reset");
     $("#modelHeading").html("Create New Journal");
     $("#ajaxModel").modal("show");

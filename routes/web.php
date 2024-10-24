@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\BeadTypeController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DiamondClarityController;
+use App\Http\Controllers\DiamondColorController;
+use App\Http\Controllers\DiamondCutController;
+use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinishProductController;
 use App\Http\Controllers\GoldRateController;
@@ -13,6 +18,7 @@ use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\StoneCategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierPaymentController;
 use App\Http\Controllers\UserController;
@@ -126,6 +132,132 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('status/{id}', [JournalController::class, 'status']);
         Route::get('/js/JournalForm.js', function () {
             $path = resource_path('views/journal/js/JournalForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Bead Type
+    Route::group(['prefix' => 'bead-type'], function () {
+        Route::get('/', [BeadTypeController::class, 'index']);
+        Route::post('data', [BeadTypeController::class, 'getData'])->name('bead-type.data');
+        Route::get('create', [BeadTypeController::class, 'create']);
+        Route::post('store', [BeadTypeController::class, 'store']);
+        Route::get('edit/{id}', [BeadTypeController::class, 'edit']);
+        Route::post('update', [BeadTypeController::class, 'update']);
+        Route::get('destroy/{id}', [BeadTypeController::class, 'destroy']);
+        Route::get('status/{id}', [BeadTypeController::class, 'status']);
+        Route::get('/js/BeadTypeForm.js', function () {
+            $path = resource_path('views/bead_type/js/BeadTypeForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Stone Category
+    Route::group(['prefix' => 'stone-category'], function () {
+        Route::get('/', [StoneCategoryController::class, 'index']);
+        Route::post('data', [StoneCategoryController::class, 'getData'])->name('stone-category.data');
+        Route::get('create', [StoneCategoryController::class, 'create']);
+        Route::post('store', [StoneCategoryController::class, 'store']);
+        Route::get('edit/{id}', [StoneCategoryController::class, 'edit']);
+        Route::post('update', [StoneCategoryController::class, 'update']);
+        Route::get('destroy/{id}', [StoneCategoryController::class, 'destroy']);
+        Route::get('status/{id}', [StoneCategoryController::class, 'status']);
+        Route::get('/js/StoneCategoryForm.js', function () {
+            $path = resource_path('views/stone_category/js/StoneCategoryForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Diamond Type
+    Route::group(['prefix' => 'diamond-type'], function () {
+        Route::get('/', [DiamondTypeController::class, 'index']);
+        Route::post('data', [DiamondTypeController::class, 'getData'])->name('diamond-type.data');
+        Route::get('create', [DiamondTypeController::class, 'create']);
+        Route::post('store', [DiamondTypeController::class, 'store']);
+        Route::get('edit/{id}', [DiamondTypeController::class, 'edit']);
+        Route::post('update', [DiamondTypeController::class, 'update']);
+        Route::get('destroy/{id}', [DiamondTypeController::class, 'destroy']);
+        Route::get('status/{id}', [DiamondTypeController::class, 'status']);
+        Route::get('/js/DiamondTypeForm.js', function () {
+            $path = resource_path('views/diamond_type/js/DiamondTypeForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Diamond Color
+    Route::group(['prefix' => 'diamond-color'], function () {
+        Route::get('/', [DiamondColorController::class, 'index']);
+        Route::post('data', [DiamondColorController::class, 'getData'])->name('diamond-color.data');
+        Route::get('create', [DiamondColorController::class, 'create']);
+        Route::post('store', [DiamondColorController::class, 'store']);
+        Route::get('edit/{id}', [DiamondColorController::class, 'edit']);
+        Route::post('update', [DiamondColorController::class, 'update']);
+        Route::get('destroy/{id}', [DiamondColorController::class, 'destroy']);
+        Route::get('status/{id}', [DiamondColorController::class, 'status']);
+        Route::get('/js/DiamondColorForm.js', function () {
+            $path = resource_path('views/diamond_color/js/DiamondColorForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Diamond Cut
+    Route::group(['prefix' => 'diamond-cut'], function () {
+        Route::get('/', [DiamondCutController::class, 'index']);
+        Route::post('data', [DiamondCutController::class, 'getData'])->name('diamond-cut.data');
+        Route::get('create', [DiamondCutController::class, 'create']);
+        Route::post('store', [DiamondCutController::class, 'store']);
+        Route::get('edit/{id}', [DiamondCutController::class, 'edit']);
+        Route::post('update', [DiamondCutController::class, 'update']);
+        Route::get('destroy/{id}', [DiamondCutController::class, 'destroy']);
+        Route::get('status/{id}', [DiamondCutController::class, 'status']);
+        Route::get('/js/DiamondCutForm.js', function () {
+            $path = resource_path('views/diamond_cut/js/DiamondCutForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Diamond Clarity
+    Route::group(['prefix' => 'diamond-clarity'], function () {
+        Route::get('/', [DiamondClarityController::class, 'index']);
+        Route::post('data', [DiamondClarityController::class, 'getData'])->name('diamond-clarity.data');
+        Route::get('create', [DiamondClarityController::class, 'create']);
+        Route::post('store', [DiamondClarityController::class, 'store']);
+        Route::get('edit/{id}', [DiamondClarityController::class, 'edit']);
+        Route::post('update', [DiamondClarityController::class, 'update']);
+        Route::get('destroy/{id}', [DiamondClarityController::class, 'destroy']);
+        Route::get('status/{id}', [DiamondClarityController::class, 'status']);
+        Route::get('/js/DiamondClarityForm.js', function () {
+            $path = resource_path('views/diamond_clarity/js/DiamondClarityForm.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

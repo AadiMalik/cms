@@ -10,12 +10,12 @@
             <div></div>
         </div>
         <div style="display: ruby;border: 2px solid peru;padding: 5px;border-radius: 30%;">
-            <h3 class="mr-1 tool_tip font-weight-bold" title="{{isset($dollar_rate)?$gold_rate->created_at->format('d-m-Y g:i A'):''}}">AU: {{number_format($gold_rate->rate_tola??0,2)}}</h3>
+            <h3 class="mr-1 font-weight-bold" data-toggle="tooltip" data-placement="top" title="{{isset($dollar_rate)?$gold_rate->created_at->format('d-m-Y g:i A'):''}}">AU: {{number_format($gold_rate->rate_tola??0,2)}}</h3>
             <a href="javascript:void(0)" id="ChangeGoldRate" style="padding: 3px 5px 3px 5px;" class="btn-primary mr-2"><i
                     class="fa fa-refresh text-white"></i></a>
         </div>
         <div style="display: ruby;border: 2px solid peru;padding: 5px;border-radius: 30%;">
-            <h3 class="mr-1 tool_tip font-weight-bold"  data-toggle="tooltip" data-placement="top" title="{{isset($dollar_rate)?$dollar_rate->created_at->format('d-m-Y g:i A'):''}}">$: {{number_format($dollar_rate->rate??0,2)}}</h3>
+            <h3 class="mr-1 font-weight-bold" data-toggle="tooltip" data-placement="top" title="{{isset($dollar_rate)?$dollar_rate->created_at->format('d-m-Y g:i A'):''}}">$: {{number_format($dollar_rate->rate??0,2)}}</h3>
             <a href="javascript:void(0)" id="ChangeDollarRate" style="padding: 3px 5px 3px 5px;" class="btn-primary mr-2"><i
                     class="fa fa-refresh text-white"></i></a>
         </div>
