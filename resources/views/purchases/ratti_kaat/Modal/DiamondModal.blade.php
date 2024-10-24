@@ -25,8 +25,8 @@
                                 <label for="name">Type:<span style="color:red;">*</span></label>
                                 <select name="type" class="form-control" name="type" id="type" required>
                                     <option value="" selected disabled>--Select Type--</option>
-                                    @foreach (config('enum.type') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_types as $item)
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -36,8 +36,8 @@
                                 <label for="name">Cut:<span style="color:red;">*</span></label>
                                 <select name="cut" class="form-control" name="cut" id="cut" required>
                                     <option value="" selected disabled>--Select Cut--</option>
-                                    @foreach (config('enum.cut') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_cuts as $item)
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -47,8 +47,8 @@
                                 <label for="name">Color:<span style="color:red;">*</span></label>
                                 <select name="color" class="form-control" name="color" id="color" required>
                                     <option value="" selected disabled>--Select Color--</option>
-                                    @foreach (config('enum.color') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_colors as $item)
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -58,8 +58,8 @@
                                 <label for="name">Clarity:<span style="color:red;">*</span></label>
                                 <select name="clarity" class="form-control" name="clarity" id="clarity" required>
                                     <option value="" selected disabled>--Select Clarity--</option>
-                                    @foreach (config('enum.clarity') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_clarities as $item)
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -68,32 +68,32 @@
                             <div class="form-group">
                                 <label for="name">Carat:<span style="color:red;">*</span></label>
                                 <input type="text" class="form-control" id="carat" name="carat"
-                                    placeholder="Enter diamond carat" value="0" onkeypress="return isNumberKey(event)"
-                                    maxlength="10" required>
+                                    placeholder="Enter diamond carat" value="0"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Rate/Carat:<span style="color:red;">*</span></label>
                                 <input type="text" class="form-control" id="carat_rate" name="carat_rate"
-                                    placeholder="Enter diamond carat rate" value="0" onkeypress="return isNumberKey(event)"
-                                    maxlength="10" required>
+                                    placeholder="Enter diamond carat rate" value="0"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Total PKR:<span style="color:red;">*</span></label>
                                 <input type="text" class="form-control" id="diamond_total" name="diamond_total"
-                                    placeholder="Enter diamond total" value="0" onkeypress="return isNumberKey(event)" maxlength="10"
-                                    required>
+                                    placeholder="Enter diamond total" value="0"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Total $:<span style="color:red;">*</span></label>
-                                <input type="text" class="form-control" id="diamond_total_dollar" name="diamond_total_dollar"
-                                    placeholder="Enter diamond total dollar" onkeypress="return isNumberKey(event)" maxlength="10"
-                                    required>
+                                <input type="text" class="form-control" id="diamond_total_dollar"
+                                    name="diamond_total_dollar" placeholder="Enter diamond total dollar"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
                             </div>
                         </div>
                         <div class="col-md-3">

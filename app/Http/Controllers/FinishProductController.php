@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Concrete\BeadTypeService;
+use App\Services\Concrete\DiamondClarityService;
+use App\Services\Concrete\DiamondColorService;
+use App\Services\Concrete\DiamondCutService;
+use App\Services\Concrete\DiamondTypeService;
+use App\Services\Concrete\StoneCategoryService;
 use App\Services\Concrete\FinishProductService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\WarehouseService;
@@ -18,15 +24,33 @@ class FinishProductController extends Controller
     protected $finish_product_service;
     protected $product_service;
     protected $warehouse_service;
+    protected $bead_type_service;
+    protected $stone_category_service;
+    protected $diamond_type_service;
+    protected $diamond_color_service;
+    protected $diamond_cut_service;
+    protected $diamond_clarity_service;
 
     public function __construct(
         FinishProductService $finish_product_service,
         ProductService $product_service,
-        WarehouseService $warehouse_service
+        WarehouseService $warehouse_service,
+        BeadTypeService $bead_type_service,
+        StoneCategoryService $stone_category_service,
+        DiamondTypeService $diamond_type_service,
+        DiamondColorService $diamond_color_service,
+        DiamondCutService $diamond_cut_service,
+        DiamondClarityService $diamond_clarity_service
     ) {
         $this->finish_product_service = $finish_product_service;
         $this->product_service = $product_service;
         $this->warehouse_service = $warehouse_service;
+        $this->bead_type_service = $bead_type_service;
+        $this->stone_category_service = $stone_category_service;
+        $this->diamond_type_service = $diamond_type_service;
+        $this->diamond_color_service = $diamond_color_service;
+        $this->diamond_cut_service = $diamond_cut_service;
+        $this->diamond_clarity_service = $diamond_clarity_service;
     }
     public function index()
     {
@@ -41,7 +65,22 @@ class FinishProductController extends Controller
     {
         $products = $this->product_service->getAllActiveProduct();
         $warehouses = $this->warehouse_service->getAll();
-        return view('finish_product.create', compact('products', 'warehouses'));
+        $bead_types = $this->bead_type_service->getAllActive();
+        $stone_categories = $this->stone_category_service->getAllActive();
+        $diamond_types = $this->diamond_type_service->getAllActive();
+        $diamond_colors = $this->diamond_color_service->getAllActive();
+        $diamond_cuts = $this->diamond_cut_service->getAllActive();
+        $diamond_clarities = $this->diamond_clarity_service->getAllActive();
+        return view('finish_product.create', compact(
+            'products',
+            'warehouses',
+            'bead_types',
+            'stone_categories',
+            'diamond_types',
+            'diamond_colors',
+            'diamond_cuts',
+            'diamond_clarities'
+        ));
     }
 
 

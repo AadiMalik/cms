@@ -9,6 +9,12 @@ use App\Services\Concrete\CommonService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\RattiKaatService;
 use App\Services\Concrete\SupplierService;
+use App\Services\Concrete\BeadTypeService;
+use App\Services\Concrete\DiamondClarityService;
+use App\Services\Concrete\DiamondColorService;
+use App\Services\Concrete\DiamondCutService;
+use App\Services\Concrete\DiamondTypeService;
+use App\Services\Concrete\StoneCategoryService;
 use App\Traits\JsonResponse;
 use Carbon\Carbon;
 use Exception;
@@ -25,19 +31,37 @@ class RattiKaatController extends Controller
     protected $product_service;
     protected $ratti_kaat_service;
     protected $common_service;
+    protected $bead_type_service;
+    protected $stone_category_service;
+    protected $diamond_type_service;
+    protected $diamond_color_service;
+    protected $diamond_cut_service;
+    protected $diamond_clarity_service;
 
     public function __construct(
         SupplierService $supplier_service,
         AccountService $account_service,
         ProductService $product_service,
         RattiKaatService $ratti_kaat_service,
-        CommonService $common_service
+        CommonService $common_service,
+        BeadTypeService $bead_type_service,
+        StoneCategoryService $stone_category_service,
+        DiamondTypeService $diamond_type_service,
+        DiamondColorService $diamond_color_service,
+        DiamondCutService $diamond_cut_service,
+        DiamondClarityService $diamond_clarity_service
     ) {
         $this->account_service = $account_service;
         $this->supplier_service = $supplier_service;
         $this->product_service = $product_service;
         $this->ratti_kaat_service = $ratti_kaat_service;
         $this->common_service = $common_service;
+        $this->bead_type_service = $bead_type_service;
+        $this->stone_category_service = $stone_category_service;
+        $this->diamond_type_service = $diamond_type_service;
+        $this->diamond_color_service = $diamond_color_service;
+        $this->diamond_cut_service = $diamond_cut_service;
+        $this->diamond_clarity_service = $diamond_clarity_service;
     }
 
     public function index()
@@ -69,7 +93,24 @@ class RattiKaatController extends Controller
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $products = $this->product_service->getAllActiveProduct();
         $ratti_kaat = $this->ratti_kaat_service->saveRattiKaat();
-        return view('purchases.ratti_kaat.create', compact('accounts', 'suppliers', 'products', 'ratti_kaat'));
+        $bead_types = $this->bead_type_service->getAllActive();
+        $stone_categories = $this->stone_category_service->getAllActive();
+        $diamond_types = $this->diamond_type_service->getAllActive();
+        $diamond_colors = $this->diamond_color_service->getAllActive();
+        $diamond_cuts = $this->diamond_cut_service->getAllActive();
+        $diamond_clarities = $this->diamond_clarity_service->getAllActive();
+        return view('purchases.ratti_kaat.create', compact(
+            'accounts',
+            'suppliers',
+            'products',
+            'ratti_kaat',
+            'bead_types',
+            'stone_categories',
+            'diamond_types',
+            'diamond_colors',
+            'diamond_cuts',
+            'diamond_clarities'
+        ));
     }
 
     // Bead Weight
@@ -91,7 +132,7 @@ class RattiKaatController extends Controller
         $validation = Validator::make(
             $request->all(),
             [
-                'type'                      =>'required',
+                'type'                      => 'required',
                 'bead_weight_product_id'    => 'required',
                 'bead_weight_ratti_kaat_id' => 'required',
                 'beads'                     => 'required',
@@ -339,7 +380,7 @@ class RattiKaatController extends Controller
                 foreach ($request->file('pictures') as $file) {
                     $filename = time() . uniqid() . '.' . $file->getClientOriginalExtension();
                     $file->move(public_path('pictures'), $filename);
-                    $filenames[] = 'pictures/'.$filename; 
+                    $filenames[] = 'pictures/' . $filename;
                 }
             }
             $obj = [
@@ -347,11 +388,11 @@ class RattiKaatController extends Controller
                 "purchase_date" => $request->purchase_date ?? Null,
                 "supplier_id" => $request->supplier_id ?? Null,
                 "purchase_account" => $request->purchase_account ?? Null,
-                "paid" => ($request->paid!='')?$request->paid:0,
+                "paid" => ($request->paid != '') ? $request->paid : 0,
                 "paid_account" => $request->paid_account ?? Null,
-                "paid_au" => ($request->paid_au!='')?$request->paid_au:0,
+                "paid_au" => ($request->paid_au != '') ? $request->paid_au : 0,
                 "paid_account_au" => $request->paid_account_au ?? Null,
-                "paid_dollar" => ($request->paid_dollar!='')?$request->paid_dollar:0,
+                "paid_dollar" => ($request->paid_dollar != '') ? $request->paid_dollar : 0,
                 "paid_account_dollar" => $request->paid_account_dollar ?? Null,
                 "reference" => $request->reference ?? Null,
                 "pictures" => $filenames ?? Null,
@@ -375,8 +416,25 @@ class RattiKaatController extends Controller
         $accounts = $this->account_service->getAllActiveChild();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $products = $this->product_service->getAllActiveProduct();
+        $bead_types = $this->bead_type_service->getAllActive();
+        $stone_categories = $this->stone_category_service->getAllActive();
+        $diamond_types = $this->diamond_type_service->getAllActive();
+        $diamond_colors = $this->diamond_color_service->getAllActive();
+        $diamond_cuts = $this->diamond_cut_service->getAllActive();
+        $diamond_clarities = $this->diamond_clarity_service->getAllActive();
         $ratti_kaat = $this->ratti_kaat_service->getRattiKaatById($id);
-        return view('purchases.ratti_kaat.create', compact('accounts', 'suppliers', 'products', 'ratti_kaat'));
+        return view('purchases.ratti_kaat.create', compact(
+            'accounts',
+            'suppliers',
+            'products',
+            'ratti_kaat',
+            'bead_types',
+            'stone_categories',
+            'diamond_types',
+            'diamond_colors',
+            'diamond_cuts',
+            'diamond_clarities'
+        ));
     }
 
 
@@ -422,7 +480,7 @@ class RattiKaatController extends Controller
                 config('enum.success'),
                 [
                     "approved_by" => $user->id,
-                    "kaat" => number_format($request->kaat,3)
+                    "kaat" => number_format($request->kaat, 3)
                 ]
             );
         } else {
@@ -431,7 +489,7 @@ class RattiKaatController extends Controller
             );
         }
     }
-    
+
     // Ratti Kaat Post
     public function postRattiKaat(Request $request)
     {
@@ -452,7 +510,8 @@ class RattiKaatController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         try {
             $response = $this->ratti_kaat_service->deleteRattiKaatById($id);
             return $this->success(
@@ -465,13 +524,14 @@ class RattiKaatController extends Controller
         }
     }
 
-    public function getRattiKaatByProductId($product_id){
+    public function getRattiKaatByProductId($product_id)
+    {
         try {
             $ratti_kaats = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
             $tag_no = $this->common_service->generateFinishProductTagNo($ratti_kaats[0]->prefix);
-            $data=[
-                "ratti_kaat"=>$ratti_kaats,
-                "tag_no"=>$tag_no
+            $data = [
+                "ratti_kaat" => $ratti_kaats,
+                "tag_no" => $tag_no
             ];
             return $this->success(
                 config('enum.success'),
@@ -483,7 +543,8 @@ class RattiKaatController extends Controller
         }
     }
 
-    public function getRattiKaatDetailById($detail_id){
+    public function getRattiKaatDetailById($detail_id)
+    {
         try {
             $response = $this->ratti_kaat_service->getRattiKaatDetailById($detail_id);
             return $this->success(

@@ -14,8 +14,8 @@
                                 <label for="name">Type:<span style="color:red;">*</span></label>
                                 <select name="type" class="form-control" name="type" id="type" required>
                                     <option value="" selected disabled>--Select Type--</option>
-                                    @foreach (config('enum.bead_type') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($bead_types as $item)
+                                        <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
                                     @endforeach
                                 </select>
                             </div>

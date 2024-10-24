@@ -22,8 +22,8 @@
                                 <label for="name">Type:<span style="color:red;">*</span></label>
                                 <select name="diamond_type" class="form-control" id="diamond_type" required>
                                     <option value="" selected disabled>--Select Type--</option>
-                                    @foreach (config('enum.type') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_types as $item)
+                                    <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -33,8 +33,8 @@
                                 <label for="name">Cut:<span style="color:red;">*</span></label>
                                 <select name="cut" class="form-control" id="cut" required>
                                     <option value="" selected disabled>--Select Cut--</option>
-                                    @foreach (config('enum.cut') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_cuts as $item)
+                                        <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -44,8 +44,8 @@
                                 <label for="name">Color:<span style="color:red;">*</span></label>
                                 <select name="color" class="form-control" id="color" required>
                                     <option value="" selected disabled>--Select Color--</option>
-                                    @foreach (config('enum.color') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_colors as $item)
+                                        <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -55,8 +55,8 @@
                                 <label for="name">Clarity:<span style="color:red;">*</span></label>
                                 <select name="clarity" class="form-control" id="clarity" required>
                                     <option value="" selected disabled>--Select Clarity--</option>
-                                    @foreach (config('enum.clarity') as $item)
-                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @foreach ($diamond_clarities as $item)
+                                        <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
                                     @endforeach
                                 </select>
                             </div>
