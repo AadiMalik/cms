@@ -574,5 +574,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-preview-tag-history-report', [ReportController::class, 'getPreviewTagHistoryReport']);
         Route::get('get-tag-history-report', [ReportController::class, 'getTagHistoryReport']);
 
+        // Profit Loss Report
+        Route::get('profit-loss-report', [ReportController::class, 'profitLossReport']);
+        Route::get('get-preview-profit-loss-report', [ReportController::class, 'getPreviewProfitLossReport']);
+        Route::get('get-profit-loss-report', [ReportController::class, 'getProfitLossReport']);
+
     });
 });

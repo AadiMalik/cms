@@ -16,6 +16,7 @@ use App\Models\SaleDetailDiamond;
 use App\Models\SaleDetailStone;
 use App\Repository\Repository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReportService
 {
@@ -150,6 +151,91 @@ class ReportService
                         "sale_detail" => $this->model_sale_detail->getModel()::with('sale')->where('finish_product_id', $item->id)->where('is_deleted', 0)->first(),
                   ];
             }
+            return $data;
+      }
+
+      // Profit & Loss
+      public function getProfitLossReport($obj)
+      {
+
+            $start_date = date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date'])));
+            $end_date = date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date'])));
+            $currency = $obj['currency'] ?? 2;
+
+
+            $otherIncomeAccounts = DB::select(DB::raw("SELECT accp.id as head_id,acct.`type`,accp.`name`,accp.`code`,acct.`id`,
+                            SUM(CASE WHEN jed.debit > 0 THEN jed.`debit` ELSE 0 END) AS Debit,
+                            SUM(CASE WHEN jed.credit > 0 THEN jed.`credit` ELSE 0 END) AS Credit
+                            FROM journal_entry_details jed
+                            JOIN `accounts` acch ON acch.`id`=jed.`account_id`
+                            JOIN `accounts` accp ON accp.`id`=acch.`parent_id`
+                            JOIN `journal_entries` je ON je.`id`=jed.`journal_entry_id`
+                            JOIN `account_types` acct ON acct.`id`=accp.`account_type_id`
+                            WHERE acct.id IN(5) AND date(je.date_post) BETWEEN '$start_date' AND '$end_date' AND jed.currency=$currency
+                            AND je.is_deleted is null
+                            GROUP BY accp.id,acct.type,accp.`name`,accp.`code`,acct.`id`
+                            ORDER BY accp.code,acct.type"));
+
+            $revenueAccounts = DB::select(DB::raw("SELECT accp.id as head_id,acct.`type`,accp.`name`,accp.`code`,acct.`id`,
+                            SUM(CASE WHEN jed.debit > 0 THEN jed.`debit` ELSE 0 END) AS Debit,
+                            SUM(CASE WHEN jed.credit > 0 THEN jed.`credit` ELSE 0 END) AS Credit
+                            FROM journal_entry_details jed
+                            JOIN `accounts` acch ON acch.`id`=jed.`account_id`
+                            JOIN `accounts` accp ON accp.`id`=acch.`parent_id`
+                            JOIN `journal_entries` je ON je.`id`=jed.`journal_entry_id`
+                            JOIN `account_types` acct ON acct.`id`=accp.`account_type_id`
+                            WHERE acct.id IN(9) AND date(je.date_post) BETWEEN '$start_date' AND '$end_date' AND jed.currency=$currency
+                            AND je.is_deleted is null
+                            GROUP BY accp.id,acct.type,accp.`name`,accp.`code`,acct.`id`
+                            ORDER BY accp.code,acct.type"));
+
+            $costRevenueAccounts = DB::select(DB::raw("SELECT accp.id as head_id,acct.`type`,accp.`name`,accp.`code`,acct.`id`,
+                            SUM(CASE WHEN jed.debit > 0 THEN jed.`debit` ELSE 0 END) AS Debit,
+                            SUM(CASE WHEN jed.credit > 0 THEN jed.`credit` ELSE 0 END) AS Credit
+                            FROM journal_entry_details jed
+                            JOIN `accounts` acch ON acch.`id`=jed.`account_id`
+                            JOIN `accounts` accp ON accp.`id`=acch.`parent_id`
+                            JOIN `journal_entries` je ON je.`id`=jed.`journal_entry_id`
+                            JOIN `account_types` acct ON acct.`id`=accp.`account_type_id`
+                            WHERE acct.id IN(10) AND date(je.date_post) BETWEEN '$start_date' AND '$end_date' AND jed.currency=$currency
+                            AND je.is_deleted is null
+                            GROUP BY accp.id,acct.type,accp.`name`,accp.`code`,acct.`id`
+                            ORDER BY accp.code,acct.type"));
+
+            $directExpenseAccounts = DB::select(DB::raw("SELECT accp.id as head_id,acct.`type`,accp.`name`,accp.`code`,acct.`id`,
+                            SUM(CASE WHEN jed.debit > 0 THEN jed.`debit` ELSE 0 END) AS Debit,
+                            SUM(CASE WHEN jed.credit > 0 THEN jed.`credit` ELSE 0 END) AS Credit
+                            FROM journal_entry_details jed
+                            JOIN `accounts` acch ON acch.`id`=jed.`account_id`
+                            JOIN `accounts` accp ON accp.`id`=acch.`parent_id`
+                            JOIN `journal_entries` je ON je.`id`=jed.`journal_entry_id`
+                            JOIN `account_types` acct ON acct.`id`= accp.`account_type_id`
+                            WHERE acct.id IN(16) AND date(je.date_post) BETWEEN '$start_date' AND '$end_date' AND jed.currency=$currency
+                            AND je.is_deleted is null
+                            GROUP BY accp.id,acct.type,accp.`name`,accp.`code`,acct.`id`
+                            ORDER BY accp.code,acct.type"));
+            $indirectExpenseAccounts = DB::select(DB::raw("SELECT accp.id as head_id,acct.`type`,accp.`name`,accp.`code`,acct.`id`,
+                            SUM(CASE WHEN jed.debit > 0 THEN jed.`debit` ELSE 0 END) AS Debit,
+                            SUM(CASE WHEN jed.credit > 0 THEN jed.`credit` ELSE 0 END) AS Credit
+                            FROM journal_entry_details jed
+                            JOIN `accounts` acch ON acch.`id`=jed.`account_id`
+                            JOIN `accounts` accp ON accp.`id`=acch.`parent_id`
+                            JOIN `journal_entries` je ON je.`id`=jed.`journal_entry_id`
+                            JOIN `account_types` acct ON acct.`id`= accp.`account_type_id`
+                            WHERE acct.id IN(11) AND date(je.date_post) BETWEEN '$start_date' AND '$end_date' AND jed.currency=$currency
+                            AND je.is_deleted is null
+                            GROUP BY accp.id,acct.type,accp.`name`,accp.`code`,acct.`id`
+                            ORDER BY accp.code,acct.type"));
+
+
+
+            $data = [
+                  "otherIncomeAccounts" => $otherIncomeAccounts,
+                  "revenueAccounts" => $revenueAccounts,
+                  "costRevenueAccounts" => $costRevenueAccounts,
+                  "directExpenseAccounts" => $directExpenseAccounts,
+                  "indirectExpenseAccounts" => $indirectExpenseAccounts
+            ];
             return $data;
       }
 }

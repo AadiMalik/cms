@@ -183,4 +183,64 @@ class ReportController extends Controller
             return $this->error(config('enum.error'));
         }
     }
+
+    // Profit Loss
+    public function profitLossReport()
+    {
+        try {
+            return view('reports/profit_loss/index');
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+    public function getProfitLossReport(Request $request)
+    {
+        try {
+            $obj = $request->all();
+            $parms['data'] = $this->report_service->getProfitLossReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->get('start_date');
+            $parms->end_date = $request->get('end_date');
+            $parms->report_name = "profit_loss_report"; 
+            // if export excel button is clicked
+            if ($request->has('export-excel')) {
+                return Excel::download(new ReportExport($parms), 'Profit-Loss.xls');
+            }
+            $pdf = PDF::loadView('/reports/profit_loss/partials.report', compact('parms'));
+            return $pdf->stream('Profit Loss - ' . $parms->start_date . '-' . $parms->end_date . '.pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+
+    public function getPreviewProfitLossReport(Request $request)
+    {
+        // try {
+            $obj = $request->all();
+
+            $parms['data'] = $this->report_service->getProfitLossReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->get('start_date');
+            $parms->end_date = $request->get('end_date');
+            $parms->report_name = "profit_loss_report"; 
+            return view('/reports/profit_loss/partials.report', compact('parms'));
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
+    }
+
+    public function goToLedgerReport($parent_id)
+    {
+        $accounts = $this->account_service->getAllByParentId($parent_id);
+        $child_ids = [];
+        foreach ($accounts as $item) {
+            $child_ids[] = $item['id'];
+        }
+        return  $this->success(
+            config("enum.success"),
+            $child_ids,
+            false
+        );
+    }
 }
