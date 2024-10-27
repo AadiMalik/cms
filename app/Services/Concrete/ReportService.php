@@ -116,6 +116,16 @@ class ReportService
       // Tag History Report
       public function tagHistoryReport($obj)
       {
+            $wh = [];
+            if (isset($obj['finish_product_id']) && $obj['finish_product_id'] != 0 && $obj['finish_product_id'] != "") {
+                  $wh[] = ['id', '=', $obj['finish_product_id']];
+            }
+            if (isset($obj['product_id']) && $obj['product_id'] != 0 && $obj['product_id'] != "") {
+                  $wh[] = ['product_id', '=', $obj['product_id']];
+            }
+            if (isset($obj['warehouse_id']) && $obj['warehouse_id'] != 0 && $obj['warehouse_id'] != "") {
+                  $wh[] = ['warehouse_id', '=', $obj['warehouse_id']];
+            }
             $finish_products = $this->model_finish_product->getModel()::with(
                   [
                         'product',
@@ -126,6 +136,7 @@ class ReportService
                   ->where('created_at', '>=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
                   ->where('created_at', '<=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date']))))
                   ->where('is_deleted', 0)
+                  ->where($wh)
                   ->orderBy('created_at', 'ASC')
                   ->get();
             $data = [];

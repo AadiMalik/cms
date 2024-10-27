@@ -19,6 +19,9 @@
         </div>
         <div style="float: right;">
             <b>Date: </b>{{ $parms->start_date ?? '' }} To {{ $parms->end_date ?? '' }} <br>
+            <b>Tag No: </b>{{ $parms->tag_no ?? 'All' }}<br>
+            <b>Product: </b>{{ $parms->product ?? 'All' }}<br>
+            <b>Warehouse: </b>{{ $parms->warehouse ?? 'All' }}<br>
         </div>
     </div>
     <br><br><br><br>

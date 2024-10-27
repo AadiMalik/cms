@@ -63,6 +63,11 @@
                                     href="{{ url('products') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Products</span></a></li>
                         @endcan
+                        @can('suppliers_access')
+                            <li class="item-name"><a class="{{ Request::is('other-product*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('other-product') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Other Products</span></a></li>
+                        @endcan
                         @can('warehouses_access')
                             <li class="item-name"><a class="{{ Request::is('warehouses*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('warehouses') }}"><i class="nav-icon fa fa-circle"></i><span
@@ -161,14 +166,19 @@
                 </li>
             @endcan
             @can('hrm_access')
-                <li class="Ul_li--hover {{ Request::is('sale*') ? 'mm-active' : '' }}">
+                <li class="Ul_li--hover {{ (Request::is('sale*') || Request::is('other-sale*') )? 'mm-active' : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                             class="item-name text-15 text-muted">Sales</span></a>
                     <ul class="mm-collapse">
                         @can('employees_access')
                             <li class="item-name"><a class="{{ Request::is('sale*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('sale') }}"><i class="nav-icon fa fa-circle"></i><span
-                                        class="item-name">Sale</span></a></li>
+                                        class="item-name">Sales</span></a></li>
+                        @endcan
+                        @can('employees_access')
+                            <li class="item-name"><a class="{{ Request::is('other-sale*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('other-sale') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Other Sales</span></a></li>
                         @endcan
                     </ul>
                 </li>

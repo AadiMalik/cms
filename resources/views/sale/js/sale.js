@@ -589,7 +589,7 @@ function ProductRemove(id) {
             }
         });
 
-        beadData.splice(item_index, 1);
+        productData.splice(item_index, 1);
         var check = ".productr" + id;
         $(check).closest("tr").remove();
         success("Product Deleted Successfully!");

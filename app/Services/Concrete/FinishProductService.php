@@ -41,6 +41,14 @@ class FinishProductService
             ->addColumn('warehouse', function ($item) {
                 return $item->warehouse->name ?? '';
             })
+            ->addColumn('saled', function ($item) {
+                if ($item->is_saled == 1) {
+                    $saled = '<span class=" badge badge-success mr-3">Yes</span>';
+                } else {
+                    $saled = '<span class=" badge badge-danger mr-3">No</span>';
+                }
+                return $saled;
+            })
             ->addColumn('status', function ($item) {
                 if ($item->is_active == 1) {
                     $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
@@ -64,7 +72,7 @@ class FinishProductService
 
                 return $action_column;
             })
-            ->rawColumns(['product', 'warehouse', 'status', 'action'])
+            ->rawColumns(['product', 'warehouse','saled', 'status', 'action'])
             ->make(true);
         return $data;
     }
@@ -75,6 +83,15 @@ class FinishProductService
             ->where('is_deleted', 0)
             ->where('is_active', 1)
             ->where('is_saled',0)
+            ->get();
+    }
+
+    public function getAllSaledFinishProduct()
+    {
+        return $this->model_finish_product->getModel()::with(['product', 'warehouse'])
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->where('is_saled',1)
             ->get();
     }
 

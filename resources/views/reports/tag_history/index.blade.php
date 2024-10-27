@@ -45,6 +45,45 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Tag No:</label>
+                                        <select class="form-control" id="finish_product_id" name="finish_product_id">
+                                            <option value="">--Select Tag--</option>
+                                            @foreach ($finish_products as $item)
+                                                <option value="{{ $item->id }}" data-id="{{ $item->id }}">
+                                                    {{ $item->tag_no }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Product:</label>
+                                        <select class="form-control" id="product_id" name="product_id">
+                                            <option value="">--Select Product--</option>
+                                            @foreach ($products as $item)
+                                                <option value="{{ $item->id }}" data-id="{{ $item->id }}">
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="">Warehouse:</label>
+                                        <select class="form-control" id="warehouse_id" name="warehouse_id">
+                                            <option value="">--Select Warehouse--</option>
+                                            @foreach ($warehouses as $item)
+                                                <option value="{{ $item->id }}" data-id="{{ $item->id }}">
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group form-float">
                                 <div class="row">
@@ -107,6 +146,9 @@
 
         }
         $(document).ready(function() {
+            $("#finish_product_id").select2();
+            $("#product_id").select2();
+            $("#warehouse_id").select2();
 
             const startDate = document.getElementById("start_date");
             const endDate = document.getElementById("end_date");
@@ -137,6 +179,9 @@
 
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
+            var finish_product_id = $('#finish_product_id').val();
+            var product_id = $('#product_id').val();
+            var warehouse_id = $('#warehouse_id').val();
             $("#preloader").show();
             if (start_date == '' || start_date == 0) {
                 errorMessage('Start Date Field Required!');
@@ -151,7 +196,10 @@
 
             var data = {
                 start_date: start_date,
-                end_date: end_date
+                end_date: end_date,
+                finish_product_id:finish_product_id,
+                product_id:product_id,
+                warehouse_id:warehouse_id
             };
 
             $.ajax({

@@ -3,6 +3,7 @@
 namespace App\Services\Concrete;
 
 use App\Models\FinishProduct;
+use App\Models\OtherSale;
 use App\Models\RattiKaat;
 use App\Models\Sale;
 use App\Repository\Repository;
@@ -69,6 +70,31 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "SL-" . date('dmY') . "-" . $mystring;
+      }
+
+      public function generateOtherSaleNo()
+      {
+            $other_sale = OtherSale::orderby('id', 'desc')->first();
+
+            if (!$other_sale) {
+                  return "OSL-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $other_sale->other_sale_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "OSL-" . date('dmY') . "-" . $mystring;
       }
 
       public function generateFinishProductTagNo($prefix)

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sale;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CommonService;
 use App\Services\Concrete\CustomerService;
@@ -73,21 +72,21 @@ class SaleController extends Controller
     }
     public function getData(Request $request)
     {
-        // try {
-        $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
-        $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
-        $customer_id = $request['customer_id'] ?? '';
-        $posted = $request['posted'] ?? '';
-        $obj = [
-            "customer_id" => $customer_id,
-            "end" => $end,
-            "start" => $start,
-            "posted" => $posted,
-        ];
-        return $this->sale_service->getSaleSource($obj);
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        try {
+            $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
+            $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
+            $customer_id = $request['customer_id'] ?? '';
+            $posted = $request['posted'] ?? '';
+            $obj = [
+                "customer_id" => $customer_id,
+                "end" => $end,
+                "start" => $start,
+                "posted" => $posted,
+            ];
+            return $this->sale_service->getSaleSource($obj);
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
     public function create()
     {

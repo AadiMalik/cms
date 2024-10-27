@@ -20,8 +20,8 @@
         <div style="float: right;">
             <b>Date: </b>{{ $parms->start_date ?? '' }} To {{ $parms->end_date ?? '' }} <br>
             <b>Currency: </b>{{ $parms->currency ?? '' }}<br>
-            <b>Supplier/Karigar: </b>{{ $parms->supplier ?? '' }}<br>
-            <b>Customer: </b>{{ $parms->customer ?? '' }}<br>
+            <b>Supplier/Karigar: </b>{{ $parms->supplier ?? 'All' }}<br>
+            <b>Customer: </b>{{ $parms->customer ?? 'All' }}<br>
         </div>
     </div>
     <br><br><br><br>

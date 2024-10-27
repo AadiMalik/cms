@@ -12,6 +12,8 @@ use App\Http\Controllers\FinishProductController;
 use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\OtherProductController;
+use App\Http\Controllers\OtherSaleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RattiKaatController;
@@ -560,6 +562,49 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
 
+    // Other product
+    Route::group(['prefix' => 'other-product'], function () {
+        Route::get('/', [OtherProductController::class, 'index']);
+        Route::post('data', [OtherProductController::class, 'getData'])->name('other-product.data');
+        Route::get('create', [OtherProductController::class, 'create']);
+        Route::post('store', [OtherProductController::class, 'store']);
+        Route::get('edit/{id}', [OtherProductController::class, 'edit']);
+        Route::post('update', [OtherProductController::class, 'update']);
+        Route::get('destroy/{id}', [OtherProductController::class, 'destroy']);
+        Route::get('status/{id}', [OtherProductController::class, 'status']);
+        Route::get('/js/OtherProductForm.js', function () {
+            $path = resource_path('views/other_product/js/OtherProductForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Other Sale
+    Route::group(['prefix' => 'other-sale'], function () {
+        Route::get('/', [OtherSaleController::class, 'index']);
+        Route::get('create', [OtherSaleController::class, 'create']);
+        Route::post('data', [OtherSaleController::class, 'getData'])->name('other-sale.data');
+        Route::post('store', [OtherSaleController::class, 'store']);
+        Route::get('print/{id}', [OtherSaleController::class, 'print']);
+        Route::get('destroy/{id}', [OtherSaleController::class, 'destroy']);
+        Route::get('status/{id}', [OtherSaleController::class, 'status']);
+        Route::post('post', [OtherSaleController::class, 'post']);
+        Route::get('unpost/{id}', [OtherSaleController::class, 'unpost']);
+
+        Route::get('/js/other_sale.js', function () {
+            $path = resource_path('views/other_sale/js/other_sale.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
 
     // Reports
     Route::group(['prefix' => 'reports'], function () {
@@ -580,4 +625,5 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-profit-loss-report', [ReportController::class, 'getProfitLossReport']);
 
     });
+    
 });

@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\ExcelExports\ReportExport;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CustomerService;
+use App\Services\Concrete\FinishProductService;
 use App\Services\Concrete\JournalEntryService;
+use App\Services\Concrete\ProductService;
 use App\Services\Concrete\ReportService;
 use App\Services\Concrete\SupplierService;
+use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
 use PDF;
 use Exception;
@@ -25,6 +28,9 @@ class ReportController extends Controller
     protected $journal_entry_service;
     protected $supplier_service;
     protected $customer_service;
+    protected $finish_product_service;
+    protected $product_service;
+    protected $warehouse_service;
 
     #endregion
 
@@ -35,13 +41,19 @@ class ReportController extends Controller
         AccountService  $account_service,
         SupplierService $supplier_service,
         JournalEntryService $journal_entry_service,
-        CustomerService $customer_service
+        CustomerService $customer_service,
+        FinishProductService $finish_product_service,
+        ProductService $product_service,
+        WarehouseService $warehouse_service
     ) {
         $this->report_service = $report_service;
         $this->account_service = $account_service;
         $this->journal_entry_service = $journal_entry_service;
         $this->supplier_service = $supplier_service;
         $this->customer_service = $customer_service;
+        $this->finish_product_service = $finish_product_service;
+        $this->product_service = $product_service;
+        $this->warehouse_service = $warehouse_service;
     }
 
 
@@ -130,7 +142,10 @@ class ReportController extends Controller
     public function tagHistoryReport()
     {
         try {
-            return view('reports/tag_history/index');
+            $finish_products=$this->finish_product_service->getAllSaledFinishProduct();
+            $products = $this->product_service->getAllProduct();
+            $warehouses = $this->warehouse_service->getAll();
+            return view('reports/tag_history/index',compact('finish_products','products','warehouses'));
         } catch (Exception $e) {
             return back()->with('error', config('enum.error'));
         }
@@ -159,6 +174,18 @@ class ReportController extends Controller
             $parms = (object)$parms;
             $parms->start_date = $request->start_date;
             $parms->end_date = $request->end_date;
+            if ($request->finish_product_id != '' && $request->finish_product_id != null) {
+                $tag_no = $this->finish_product_service->getById($request->finish_product_id);
+                $parms->tag_no = $tag_no->tag_no ?? '';
+            }
+            if ($request->product_id != '' && $request->product_id != null) {
+                $product = $this->product_service->getProductById($request->product_id);
+                $parms->product = $product->name ?? '';
+            }
+            if ($request->warehouse_id != '' && $request->warehouse_id != null) {
+                $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+                $parms->warehouse = $warehouse->name ?? '';
+            }
             $parms->report_name = "tag_history_report";
             return view('/reports/tag_history/partials.report', compact('parms'));
         } catch (Exception $e) {
@@ -173,6 +200,18 @@ class ReportController extends Controller
             $parms = (object)$parms;
             $parms->start_date = $request->start_date;
             $parms->end_date = $request->end_date;
+            if ($request->finish_product_id != '' && $request->finish_product_id != null) {
+                $tag_no = $this->finish_product_service->getById($request->finish_product_id);
+                $parms->tag_no = $tag_no->tag_no ?? '';
+            }
+            if ($request->product_id != '' && $request->product_id != null) {
+                $product = $this->product_service->getProductById($request->product_id);
+                $parms->product = $product->name ?? '';
+            }
+            if ($request->warehouse_id != '' && $request->warehouse_id != null) {
+                $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+                $parms->warehouse = $warehouse->name ?? '';
+            }
             $parms->report_name = "tag_history_report";
             if ($request->has('export-excel')) {
                 return Excel::download(new ReportExport($parms), 'Tag-History-Report.xls');

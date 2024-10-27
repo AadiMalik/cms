@@ -95,6 +95,8 @@
                                             <tr>
                                                 <td class="font-weight-bold">Total Amount:</td>
                                                 <td>{{ $finish_product->total_amount ?? '' }}</td>
+                                                <td class="font-weight-bold">Saled:</td>
+                                                <td>@if($finish_product->is_saled==1)<span class=" badge badge-success mr-3">Yes</span> @else <span class=" badge badge-danger mr-3">No</span>@endif</td>
                                             </tr>
                                         </tbody>
                                     </table>

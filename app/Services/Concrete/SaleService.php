@@ -561,16 +561,16 @@ class SaleService
 
     public function statusById($id)
     {
-        $finish_product = $this->model_sale->getModel()::find($id);
-        if ($finish_product->is_active == 0) {
-            $finish_product->is_active = 1;
+        $sale = $this->model_sale->getModel()::find($id);
+        if ($sale->is_active == 0) {
+            $sale->is_active = 1;
         } else {
-            $finish_product->is_active = 0;
+            $sale->is_active = 0;
         }
-        $finish_product->updatedby_id = Auth::user()->id;
-        $finish_product->update();
+        $sale->updatedby_id = Auth::user()->id;
+        $sale->update();
 
-        if ($finish_product)
+        if ($sale)
             return true;
 
         return false;
