@@ -4,7 +4,6 @@ namespace App\Services\Concrete;
 
 use App\Models\Account;
 use App\Models\Customer;
-use App\Models\OtherProduct;
 use App\Models\Journal;
 use App\Models\JournalEntry;
 use App\Repository\Repository;
@@ -213,7 +212,7 @@ class OtherSaleService
                 $journal_entry = new JournalEntry;
                 $journal_entry->journal_id = $journal->id;
                 $journal_entry->customer_id = $other_sale->customer_id;
-                $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $other_sale->sale_date)));
+                $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $other_sale->other_sale_date)));
                 $journal_entry->reference = 'Date :' . $other_sale->other_sale_date . ' other Sale ' . $other_sale->other_sale_no . '. Customer is ' . $other_sale->customer_name;
                 $journal_entry->entryNum = $entryNum;
                 $journal_entry->createdby_id = Auth::User()->id;

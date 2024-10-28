@@ -2,20 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Concrete\AccountService;
-use App\Services\Concrete\CommonService;
-use App\Services\Concrete\CustomerService;
-use App\Services\Concrete\OtherProductService;
-use App\Services\Concrete\OtherSaleService;
-use App\Services\Concrete\WarehouseService;
+use App\Models\OtherPurchase;
 use App\Traits\JsonResponse;
-use Carbon\Carbon;
-use Exception;
 use Illuminate\Http\Request;
-use PDF;
-use Illuminate\Support\Facades\Validator;
 
-class OtherSaleController extends Controller
+class OtherPurchaseController extends Controller
 {
     use JsonResponse;
     protected $other_sale_service;

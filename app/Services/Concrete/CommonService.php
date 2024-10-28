@@ -3,6 +3,7 @@
 namespace App\Services\Concrete;
 
 use App\Models\FinishProduct;
+use App\Models\OtherPurchase;
 use App\Models\OtherSale;
 use App\Models\RattiKaat;
 use App\Models\Sale;
@@ -45,6 +46,32 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "RK-" . date('dmY') . "-" . $mystring;
+      }
+
+      // Other purchase no
+      public function generateOtherPurchaseNo()
+      {
+            $other_purchase = OtherPurchase::orderby('id', 'desc')->first();
+
+            if (!$other_purchase) {
+                  return "OPO-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $other_purchase->other_purchase_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "OPO-" . date('dmY') . "-" . $mystring;
       }
 
       public function generateSaleNo()

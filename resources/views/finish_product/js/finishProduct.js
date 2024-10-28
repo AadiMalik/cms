@@ -167,7 +167,7 @@ $("#gold_rate").on("keyup", function (event) {
 function TotalGoldAmount() {
     var gross_wt = $("#gross_weight").val();
     var gold_rate = $("#gold_rate").val();
-    var total_gold_price = (gold_rate * 1) + (gross_wt * 1);
+    var total_gold_price = (gold_rate * 1) * (gross_wt * 1);
     $("#total_gold_price").val(total_gold_price.toFixed(3));
 }
 function TotalAmount() {

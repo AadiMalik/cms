@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('type')->nullable()->comment('0 for purchase, 1 for other sale');
+            $table->date('date')->nullable();
             $table->integer('other_product_id')->nullable();
             $table->decimal('qty',18,3)->nullable();
             $table->decimal('unit_price',18,3)->nullable();
