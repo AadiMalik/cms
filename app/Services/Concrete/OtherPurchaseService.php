@@ -49,7 +49,7 @@ class OtherPurchaseService
         if ($obj['supplier_id'] != '') {
             $wh[] = ['supplier_id', $obj['supplier_id']];
         }
-        $model = $this->model_other_purchase->getModel()::has('OtherPurchaseDetail')->where('is_deleted', 0)
+        $model = $this->model_other_purchase->getModel()::has('OtherPurchaseDetail')->with('supplier_name')->where('is_deleted', 0)
             ->whereBetween('other_purchase_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
             ->where($wh);
 
@@ -63,11 +63,17 @@ class OtherPurchaseService
                 $badge_text = $item->posted == 0 ? 'Unposted' : 'Posted';
                 return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
             })
+            ->addColumn('supplier', function ($item) {
+                return $item->supplier_name->name ?? '';
+            })
             ->addColumn('action', function ($item) {
 
                 $jvs = '';
                 if ($item->jv_id != null)
                     $jvs .= "filter[]=" . $item->jv_id . "";
+
+                if ($item->paid_jv_id != null)
+                    $jvs .= "&filter[]=" . $item->paid_jv_id . "";
 
                 $action_column = '';
                 $unpost = '<a class="text text-danger" id="unpost" data-toggle="tooltip" data-id="' . $item->id . '" data-original-title="Unpost" href="javascript:void(0)"><i class="fa fa-repeat"></i>Unpost</a>';
@@ -88,7 +94,7 @@ class OtherPurchaseService
 
                 return $action_column;
             })
-            ->rawColumns(['check_box', 'posted', 'action'])
+            ->rawColumns(['check_box', 'supplier', 'posted', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;
@@ -125,7 +131,7 @@ class OtherPurchaseService
             DB::beginTransaction();
             $otherPurchaseDetail = json_decode($obj['otherProductDetail']);
             $otherPurchaseObj = [
-                "other_sale_date" => $obj['other_sale_date'],
+                "other_purchase_date" => $obj['other_purchase_date'],
                 "supplier_id" => $obj['supplier_id'],
                 "total_qty" => $obj['total_qty'] ?? 0,
                 "warehouse_id" => $obj['warehouse_id'] ?? null,
@@ -135,8 +141,7 @@ class OtherPurchaseService
                 "paid_account_id" => $obj['paid_account_id'] ?? null,
                 "updatedby_id" => Auth::user()->id
             ];
-            $other_purchase = $this->model_other_purchase->update($otherPurchaseObj, $obj['id']);
-
+            $total_qty = 0;
             foreach ($otherPurchaseDetail as $item) {
                 $otherPurchaseDetailObj = [
                     "other_purchase_id" => $obj['id'],
@@ -146,9 +151,11 @@ class OtherPurchaseService
                     "total_amount" => $item->total_amount,
                     "createdby_id" => Auth::user()->id
                 ];
+                $total_qty = $total_qty + $item->qty;
                 $other_purchase_detail = $this->model_other_purchase_detail->create($otherPurchaseDetailObj);
             }
-
+            $otherPurchaseObj['total_qty'] = $total_qty;
+            $other_purchase = $this->model_other_purchase->update($otherPurchaseObj, $obj['id']);
             DB::commit();
         } catch (Exception $e) {
             return $e;
@@ -229,10 +236,10 @@ class OtherPurchaseService
                     $debit_amount
                 );
 
-                // revenue Amount
+                // paid Amount
                 if ($other_purchase->paid > 0) {
-                    if ($obj['revenue_account_id'] == null || $obj['revenue_account_id'] == '') {
-                        $msg = 'Revenue Account not select!';
+                    if ($other_purchase->paid_account_id == null || $other_purchase->paid_account_id == '') {
+                        $msg = 'Paid amount is greater then 0 but paid account not select!';
                         return $msg;
                     }
 
@@ -251,7 +258,16 @@ class OtherPurchaseService
                     );
 
                     //============== Create Purchase Supplier Payment
-                    $supplier_payment = $this->createOtherPurchaseSupplierPayment($journal_entry_supplier_payment->id, $purchase->poNum, $purchase->poDate, $supplier, $purchase->purchasePaidAccountHead, $paid_amount, $purchase->tax_amount, $purchase->id);
+                    $supplier_payment = $this->createOtherPurchaseSupplierPayment(
+                        $journal_entry_supplier_payment,
+                        $other_purchase->other_purchase_no,
+                        $other_purchase->other_purchase_date,
+                        $supplier,
+                        $other_purchase->paid_account,
+                        $paid_amount,
+                        $other_purchase->tax_amount ?? 0,
+                        $other_purchase->id
+                    );
                 }
                 $other_purchase->posted = 1;
                 $other_purchase->jv_id = $other_purchase_voucher;
@@ -312,7 +328,7 @@ class OtherPurchaseService
         return true;
     }
 
-    public function deleteById($other_sale_id)
+    public function deleteById($other_purchase_id)
     {
         try {
             DB::beginTransaction();
@@ -437,7 +453,7 @@ class OtherPurchaseService
                 "other_product_id" => $item->other_product_id,
                 "qty" => $item->qty ?? 0,
                 "unit_price" => $item->unit_price ?? 0,
-                "created_by" => Auth::User()->id,
+                "createdby_id" => Auth::User()->id,
                 "type" => 0,
                 "created_at" => Carbon::now(),
                 "updated_at" => Carbon::now()

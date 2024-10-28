@@ -82,7 +82,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="other_sale_table" class="display table" style="width:100%">
+                                    <table id="other_purchase_table" class="display table" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th></th>
@@ -123,7 +123,7 @@
                             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                             {data: 'other_purchase_date', name: 'other_purchase_date', orderable: false, searchable: false},
                             {data: 'other_purchase_no', name: 'other_purchase_no', orderable: false, searchable: false},
-                            {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
+                            {data: 'supplier',name: 'supplier', orderable: false, searchable: false},
                             {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
                             {data: 'total',name: 'total', orderable: false, searchable: false},
                             {data: 'posted',name: 'posted', orderable: false, searchable: false},

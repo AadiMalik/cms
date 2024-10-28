@@ -54,101 +54,17 @@ function getCustomer() {
         },
     });
 }
-$("#customer_id").on("change", function () {
-    var customer_id = $("#customer_id").val();
-    $("#preloader").show();
-    $.ajax({
-        url: url_local + "/customers/detail/" + customer_id,
-        type: "GET",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        success: function (data) {
-            console.log(data);
-            if (data.Success) {
-                var data = data.Data;
-                $("#customer").empty();
-                var row =
-                    '<table class="table table-bordered" style="margin-bottom: 0px;">';
-                row += "<tbody>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">Name:</td>';
-                row += '<td style="padding: 3px;">' + data.name + "</td>";
-                row += "</tr>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">CNIC:</td>';
-                row += '<td style="padding: 3px;">' + data.cnic + "</td>";
-                row += "</tr>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">Contact #:</td>';
-                row += '<td style="padding: 3px;">' + data.contact + "</td>";
-                row += "</tr>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">Address:</td>';
-                row += '<td style="padding: 3px;">' + data.address + "</td>";
-                row += "</tr>";
-                row += "</tbody>";
-                row += "</table>";
-                $("#customer").html(row);
-                $("#preloader").hide();
-            } else {
-                error(data.Message);
-                $("#preloader").hide();
-            }
-        },
-    });
-});
-$("#customerForm").submit(function (e) {
-    e.preventDefault();
-    $("#preloader").show();
-    if ($("#name").val() == "" && $("#name").val() == 0) {
-        error("Please enter name!");
-        $("#name").focus();
-        $("#preloader").hide();
-        return false;
-    }
-    if ($("#contact").val() == "" && $("#contact").val() == 0) {
-        error("Please enter contact and unique!");
-        $("#contact").focus();
-        $("#preloader").hide();
-        return false;
-    }
-
-    $.ajax({
-        url: url_local + "/customers/json-store",
-        type: "POST",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        data: $("#customerForm").serialize(),
-        dataType: "json",
-
-        success: function (data) {
-            if (data.Success) {
-                success(data.Message);
-                $("#customerForm").trigger("reset");
-                $("#customerModel").modal("hide");
-                getCustomer();
-                $("#preloader").hide();
-            } else {
-                error(data.Message);
-                $("#preloader").hide();
-            }
-        },
-    });
-});
-
 
 $("#unit_price").on("keyup", function (event) {
     var qty = $("#qty").val();
     var unit_price = $("#unit_price").val();
-    var total = (qty * 1) * (unit_price * 1);
+    var total = qty * 1 * (unit_price * 1);
     $("#total_amount").val(total.toFixed(3));
 });
 $("#qty").on("keyup", function (event) {
     var qty = $("#qty").val();
     var unit_price = $("#unit_price").val();
-    var total = (qty * 1) * (unit_price * 1);
+    var total = qty * 1 * (unit_price * 1);
     $("#total_amount").val(total.toFixed(3));
 });
 
@@ -197,7 +113,7 @@ function addProduct() {
         other_product: other_product,
         qty: qty,
         unit_price: unit_price,
-        total_amount: total_amount
+        total_amount: total_amount,
     });
 
     $("#total").val(total);
@@ -223,25 +139,29 @@ function addProduct() {
     $("#preloader").hide();
 }
 
-
 $("body").on("click", "#submit", function (e) {
     e.preventDefault();
 
     $("#preloader").show();
     // Validation logic
-    if ($("#other_sale_date").val() == "") {
-        error("Please select sale date!");
-        $("#sale_date").focus();
+    if ($("#other_purchase_date").val() == "") {
+        error("Please select purchase date!");
+        $("#purchase_date").focus();
         $("#preloader").hide();
         return false;
     }
-
+    if ($("#bill_no").val() == "") {
+        error("Please add bill no!");
+        $("#bill_no").focus();
+        $("#preloader").hide();
+        return false;
+    }
     if (
-        $("#customer_id").find(":selected").val() == "" ||
-        $("#customer_id").find(":selected").val() == 0
+        $("#supplier_id").find(":selected").val() == "" ||
+        $("#supplier_id").find(":selected").val() == 0
     ) {
-        error("Please Select customer!");
-        $("#customer_id").focus();
+        error("Please Select supplier!");
+        $("#supplier_id").focus();
         $("#preloader").hide();
         return false;
     }
@@ -252,6 +172,15 @@ $("body").on("click", "#submit", function (e) {
     ) {
         error("Please Select warehouse!");
         $("#warehouse_id").focus();
+        $("#preloader").hide();
+        return false;
+    }
+    if (
+        $("#purchase_account_id").find(":selected").val() == "" ||
+        $("#purchase_account_id").find(":selected").val() == 0
+    ) {
+        error("Please Select Purchase Account!");
+        $("#purchase_account_id").focus();
         $("#preloader").hide();
         return false;
     }
@@ -266,19 +195,18 @@ $("body").on("click", "#submit", function (e) {
     // Create FormData object for Ajax
     var formData = new FormData();
     formData.append("id", $("#id").val());
-    formData.append("other_sale_date", $("#other_sale_date").val());
-    formData.append("customer_id", $("#customer_id").find(":selected").val());
+    formData.append("other_purchase_date", $("#other_purchase_date").val());
+    formData.append("supplier_id", $("#supplier_id").find(":selected").val());
     formData.append("warehouse_id", $("#warehouse_id").find(":selected").val());
+    formData.append("purchase_account_id", $("#purchase_account_id").find(":selected").val());
     formData.append("total", $("#grand_total").val());
-    formData.append("cash_amount", $("#cash_amount").val());
-    formData.append("bank_transfer_amount", $("#bank_transfer_amount").val());
-    formData.append("card_amount", $("#card_amount").val());
-    formData.append("advance_amount", $("#advance_amount").val());
+    formData.append("paid", $("#paid").val());
+    formData.append("paid_account_id", $("#paid_account_id").find(":selected").val());
 
     formData.append("otherProductDetail", JSON.stringify(otherProductData));
 
     $.ajax({
-        url: url_local + "/other-sale/store", // Laravel route
+        url: url_local + "/other-purchase/store", // Laravel route
         type: "POST",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -295,7 +223,7 @@ $("body").on("click", "#submit", function (e) {
 
                 setTimeout(function () {
                     $("#submit").prop("disabled", false);
-                    window.location = url_local + "/other-sale";
+                    window.location = url_local + "/other-purchase";
                 }, 1000); // Disable button for 1 second
             } else {
                 error(data.Message);
@@ -350,6 +278,7 @@ function Clear() {
     $("#qty").val("");
     $("#unit_price").val("");
     $("#total_amount").val(0);
+    
 }
 // Short
 function OtherProductShort() {

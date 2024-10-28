@@ -13,6 +13,7 @@ use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\OtherProductController;
+use App\Http\Controllers\OtherPurchaseController;
 use App\Http\Controllers\OtherSaleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
@@ -597,6 +598,29 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/other_sale.js', function () {
             $path = resource_path('views/other_sale/js/other_sale.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Other Purchase
+    Route::group(['prefix' => 'other-purchase'], function () {
+        Route::get('/', [OtherPurchaseController::class, 'index']);
+        Route::get('create', [OtherPurchaseController::class, 'create']);
+        Route::post('data', [OtherPurchaseController::class, 'getData'])->name('other-purchase.data');
+        Route::post('store', [OtherPurchaseController::class, 'store']);
+        Route::get('print/{id}', [OtherPurchaseController::class, 'print']);
+        Route::get('destroy/{id}', [OtherPurchaseController::class, 'destroy']);
+        Route::get('status/{id}', [OtherPurchaseController::class, 'status']);
+        Route::post('post', [OtherPurchaseController::class, 'post']);
+        Route::get('unpost/{id}', [OtherPurchaseController::class, 'unpost']);
+
+        Route::get('/js/other_purchase.js', function () {
+            $path = resource_path('views/purchases/other_purchase/js/other_purchase.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

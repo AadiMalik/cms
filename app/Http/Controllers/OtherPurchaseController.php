@@ -3,67 +3,79 @@
 namespace App\Http\Controllers;
 
 use App\Models\OtherPurchase;
+use App\Services\Concrete\AccountService;
+use App\Services\Concrete\CommonService;
+use App\Services\Concrete\OtherProductService;
+use App\Services\Concrete\OtherPurchaseService;
+use App\Services\Concrete\SupplierService;
+use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class OtherPurchaseController extends Controller
 {
     use JsonResponse;
-    protected $other_sale_service;
+    protected $other_purchase_service;
     protected $account_service;
-    protected $customer_service;
+    protected $supplier_service;
     protected $other_product_service;
     protected $warehouse_service;
     protected $common_service;
 
     public function __construct(
-        OtherSaleService $other_sale_service,
-        CustomerService $customer_service,
+        OtherPurchaseService $other_purchase_service,
+        SupplierService $supplier_service,
         AccountService $account_service,
         OtherProductService $other_product_service,
         WarehouseService $warehouse_service,
         CommonService $common_service
     ) {
-        $this->other_sale_service = $other_sale_service;
+        $this->other_purchase_service = $other_purchase_service;
         $this->account_service = $account_service;
-        $this->customer_service = $customer_service;
+        $this->supplier_service = $supplier_service;
         $this->other_product_service = $other_product_service;
         $this->warehouse_service = $warehouse_service;
         $this->common_service = $common_service;
     }
     public function index()
     {
-        $customers = $this->customer_service->getAllActiveCustomer();
-        $accounts = $this->account_service->getAllActiveChild();
-        return view('other_sale.index', compact('customers', 'accounts'));
+        $suppliers = $this->supplier_service->getAllActiveSupplier();
+        return view('purchases/other_purchase.index', compact('suppliers'));
     }
     public function getData(Request $request)
     {
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
-            $customer_id = $request['customer_id'] ?? '';
+            $supplier_id = $request['supplier_id'] ?? '';
             $posted = $request['posted'] ?? '';
             $obj = [
-                "customer_id" => $customer_id,
+                "supplier_id" => $supplier_id,
                 "end" => $end,
                 "start" => $start,
                 "posted" => $posted,
             ];
-            return $this->other_sale_service->getSource($obj);
+            return $this->other_purchase_service->getSource($obj);
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }
     }
     public function create()
     {
-        $other_sale = $this->other_sale_service->saveOtherSale();
+        $other_purchase = $this->other_purchase_service->saveOtherPurchase();
         $other_products = $this->other_product_service->getAllActiveOtherProduct();
+        $accounts = $this->account_service->getAllActiveChild();
+        $suppliers = $this->supplier_service->getAllActiveSupplier();
         $warehouses = $this->warehouse_service->getAll();
-        return view('other_sale.create', compact(
-            'other_sale',
+        return view('purchases/other_purchase.create', compact(
+            'other_purchase',
             'other_products',
-            'warehouses'
+            'warehouses',
+            'accounts',
+            'suppliers'
         ));
     }
     public function store(Request $request)
@@ -72,9 +84,10 @@ class OtherPurchaseController extends Controller
             $request->all(),
             [
                 'id'             => 'required',
-                'other_sale_date'      => 'required',
-                'customer_id'    => 'required',
+                'other_purchase_date'      => 'required',
+                'supplier_id'    => 'required',
                 'warehouse_id'    => 'required',
+                'purchase_account_id'    => 'required',
                 'total'          => 'required',
                 'otherProductDetail'  => 'required'
             ],
@@ -93,10 +106,10 @@ class OtherPurchaseController extends Controller
 
         try {
             $obj = $request->all();
-            $other_sale = $this->other_sale_service->save($obj);
+            $other_purchase = $this->other_purchase_service->save($obj);
             return  $this->success(
                 config("enum.saved"),
-                $other_sale
+                $other_purchase
             );
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
@@ -108,11 +121,11 @@ class OtherPurchaseController extends Controller
     {
         try {
 
-            $other_sale =  $this->other_sale_service->getById($id);
-            $other_sale_detail = $this->other_sale_service->otherSaleDetail($id);
+            $other_purchase =  $this->other_purchase_service->getById($id);
+            $other_purchase_detail = $this->other_purchase_service->otherPurchaseDetail($id);
 
 
-            return view('other_sale/partials.print', compact('other_sale', 'other_sale_detail'));
+            return view('purchases/other_purchase/partials.print', compact('other_purchase', 'other_purchase_detail'));
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }
@@ -122,7 +135,7 @@ class OtherPurchaseController extends Controller
     public function unpost($id)
     {
         try {
-            $this->other_sale_service->unpost($id);
+            $this->other_purchase_service->unpost($id);
             return $this->success(
                 config('enum.unposted'),
                 []
@@ -133,8 +146,8 @@ class OtherPurchaseController extends Controller
     }
     public function post(Request $request)
     {
-        try {
-            $other_sale = $this->other_sale_service->post($request->all());
+        // try {
+            $other_sale = $this->other_purchase_service->post($request->all());
             if ($other_sale != 'true') {
                 return $this->error(
                     $other_sale
@@ -144,15 +157,15 @@ class OtherPurchaseController extends Controller
                 config('enum.posted'),
                 []
             );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 
     public function destroy($id)
     {
         try {
-            $other_sale = $this->other_sale_service->deleteById($id);
+            $other_purchase = $this->other_purchase_service->deleteById($id);
             return $this->success(
                 config("enum.delete"),
                 [],
