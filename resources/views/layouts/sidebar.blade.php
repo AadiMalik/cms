@@ -82,9 +82,28 @@
                     </ul>
                 </li>
             @endcan
+            @can('accounting_access')
+                <li class="Ul_li--hover {{ (Request::is('stock') || Request::is('stock-taking*') ) ? 'mm-active' : '' }}">
+                    <a class="has-arrow" href="#"><i class="fa fa-line-chart text-20 mr-2 text-muted"></i><span
+                            class="item-name text-15 text-muted">Stock</span></a>
+                    <ul class="mm-collapse">
+                        @can('accounts_access')
+                            <li class="item-name"><a class="{{ Request::is('stock') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('stock') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Stock</span></a></li>
+                        @endcan
+                        @can('journals_access')
+                            <li class="item-name"><a class="{{ Request::is('stock-taking*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('stock-taking') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Stock Taking</span></a></li>
+                        @endcan
+
+                    </ul>
+                </li>
+            @endcan
             @can('purchase_access')
                 <li
-                    class="Ul_li--hover {{ Request::is('ratti-kaats*') || Request::is('stock*') || Request::is('supplier-payment*') || Request::is('other-purchase*') ? 'mm-active' : '' }}">
+                    class="Ul_li--hover {{ Request::is('ratti-kaats*') || Request::is('supplier-payment*') || Request::is('other-purchase*') ? 'mm-active' : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
                             class="item-name text-15 text-muted">Purchase</span></a>
                     <ul class="mm-collapse">

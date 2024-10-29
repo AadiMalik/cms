@@ -41,4 +41,11 @@ class StockController extends Controller
             return $this->error(config('enum.error'));
         }
     }
+
+    public function getDetail(Request $request)
+    {
+        $obj = $request->all();
+        $stock_detail = $this->stock_service->getStockDetail($obj);
+        return $stock_detail;
+    }
 }

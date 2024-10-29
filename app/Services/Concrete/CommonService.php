@@ -174,4 +174,37 @@ class CommonService
 
         return number_format((float)($stock->stock ?? 0), 2, '.', '');
     }
+
+    public function getOtherProductUnitPrice($other_product_id, $warehouse_id, $start_date, $end_date, $restaurant_id = null)
+  {
+    
+    // Initialize the base query
+    $query = "
+        SELECT SUM(unit_price * qty)/SUM(qty) AS unit_price
+        FROM transactions
+        WHERE transactions.other_product_id = $other_product_id
+        AND transactions.is_deleted = 0
+        AND transactions.type IN (0, 2, 3)
+        AND transactions.unit_price > 0
+        AND transactions.qty > 0
+    ";
+
+    // Date filters
+    if (!empty($start_date) && !empty($end_date)) {
+      $query .= " AND DATE(transactions.date) BETWEEN '$start_date' AND '$end_date'";
+    } elseif (!empty($start_date)) {
+      $query .= " AND DATE(transactions.date) <= '$start_date'";
+    }
+
+    // Warehouse filter
+    if (!empty($warehouse_id) && $warehouse_id != 0) {
+      $query .= " AND transactions.warehouse_id = $warehouse_id";
+    }
+
+    // Execute the raw query with bound parameters
+    $result = DB::select(DB::raw($query));
+
+    // Return the calculated average unit price or 0 if no result is found
+    return round((float)$result[0]->unit_price ?? 0, 2);
+  }
 }

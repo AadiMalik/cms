@@ -22,6 +22,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\StockTakingController;
 use App\Http\Controllers\StoneCategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierPaymentController;
@@ -589,6 +590,28 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'stock'], function () {
         Route::get('/', [StockController::class, 'index']);
         Route::post('data', [StockController::class, 'getData'])->name('stock.data');
+        Route::get('detail', [StockController::class, 'getDetail']);
+    });
+
+    // Stock Taking
+    Route::group(['prefix' => 'stock-taking'], function () {
+        Route::get('/', [StockTakingController::class, 'index']);
+        Route::get('create', [StockTakingController::class, 'create']);
+        Route::post('data', [StockTakingController::class, 'getData'])->name('stock-taking.data');
+        Route::post('store', [StockTakingController::class, 'store']);
+        Route::get('view/{id}', [StockTakingController::class, 'view']);
+        Route::get('print', [StockTakingController::class, 'print']);
+        Route::get('destroy/{id}', [StockTakingController::class, 'destroy']);
+
+        Route::get('/js/stock_taking.js', function () {
+            $path = resource_path('views/stock_taking/js/stock_taking.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 
     // Other Sale

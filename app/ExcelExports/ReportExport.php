@@ -21,6 +21,9 @@ class ReportExport implements FromView
       {
             $parms   = $this->obj_rport;
             switch ($parms->report_name) {
+                  case 'stock_taking_report';
+                        return view('stock_taking/print', compact('parms'));
+                        break;
                   case 'ledger_report';
                         return view('reports/ledger/partials.report', compact('parms'));
                         break;
