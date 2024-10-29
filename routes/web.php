@@ -21,6 +21,7 @@ use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\StoneCategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierPaymentController;
@@ -582,6 +583,12 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // stock
+    Route::group(['prefix' => 'stock'], function () {
+        Route::get('/', [StockController::class, 'index']);
+        Route::post('data', [StockController::class, 'getData'])->name('stock.data');
     });
 
     // Other Sale

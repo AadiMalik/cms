@@ -126,7 +126,7 @@ class OtherPurchaseService
     }
     public function save($obj)
     {
-
+        dd($obj);
         try {
             DB::beginTransaction();
             $otherPurchaseDetail = json_decode($obj['otherProductDetail']);

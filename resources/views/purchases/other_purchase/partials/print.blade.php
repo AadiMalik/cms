@@ -1,153 +1,71 @@
-@extends('layouts.master')
-@section('content')
-    <div class="breadcrumb">
-        <h1>Other Purchase Print</h1>
+<html lang="en">
 
-        <ul>
-            <li>View</li>
-            <li>Print</li>
-        </ul>
-    </div>
-    <div class="separator-breadcrumb border-top"></div>
-    <!-- end of row -->
-    <section class="contact-list">
-        <div class="row">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Other Purchase Order</title>
+    <link rel="stylesheet" href="{{ asset('assets/styles/css/pdf.css') }}">
+</head>
 
-            <div class="col-md-12 mb-4">
-
-                <div class="card text-left">
-                    <div class="card-header text-right bg-transparent">
-                        <button class="btn btn-info" onclick="printDiv('printData')" type="submit"><span
-                                class="fas fa-print"></span> Print</button>
-                    </div>
-                    <div class="card-body" id="printData">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table style="width:100%;">
-                                    <tbody>
-                                        <tr style="text-align: center;">
-                                            <td><img src="{{ asset('assets/images/logo.png') }}"
-                                                    style="width:40%; height:130px;" alt=""></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div style="width: 100%;">
-                                    <div style="float: left; line-height: 25px; width:70%;">
-                                        <b style="font-size:18px;">Bill To</b><br>
-                                        <b>{{ $other_sale->customer_name ?? '' }}</b><br>
-                                        <b>CNIC:</b> {{ $other_sale->customer_cnic ?? '' }}<br>
-                                        <b>Contact #:</b> {{ $other_sale->customer_contact ?? '' }}<br>
-                                        <b>Address:</b> {{ $other_sale->customer_address ?? '' }}
-                                    </div>
-                                    <div style="float: right; line-height: 25px;">
-                                        <b>Invoice No:</b> {{$other_sale->other_sale_no??''}} <br>
-                                        <b>Date:</b> {{date("d M Y g:h:i A", strtotime(str_replace('/', '-', $other_sale->other_sale_date)))}} <br>
-                                        <b>Created By:</b> {{$other_sale->created_by->name??''}}
-                                    </div>
-                                </div>
-                                <br><br><br><br>
-                                <table border="1" class="table" style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Product</th>
-                                            <th>Unit</th>
-                                            <th>Unit Price</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $total_qty=0;
-                                        @endphp
-                                        @foreach ($other_sale_detail as $index=> $item)
-                                        @php
-                                            $total_qty = $total_qty + $item['qty'];
-                                        @endphp
-                                            <tr>
-                                                <td>{{$index+1}}</td>
-                                                <td><b>{{$item['code']}} {{$item['product']}}</b></td>
-                                                <td>{{$item['unit']??''}}</td>
-                                                <td style="text-align: right;">{{number_format($item['unit_price'],2)}}</td>
-                                                <td style="text-align: right;">{{number_format($item['qty'],2)}}</td>
-                                                <td style="text-align: right;">{{number_format($item['total_amount'],2)}}</td>
-                                            </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                </table>
-                                <br>
-                                <div style="float: right;">
-                                    @php
-                                        $change = ($other_sale->cash_amount + $other_sale->bank_transfer_amount + $other_sale->card_amount + $other_sale->advance_amount) - $other_sale->total;
-                                    @endphp
-                                    <table style="width: 300px; line-height: 30px;">
-                                        <tbody>
-                                            <tr>
-                                                <td><b>Total QTY:</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($total_qty,2)}}</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Total:</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($other_sale->total,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Cash Amount</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->cash_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Bank Transfer</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->bank_transfer_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Card Amount</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->card_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Advance Amount</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->advance_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr style="border-top:1px solid #444;">
-                                                <td><b>Change</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($change,2)}} PKR</b></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div style="float: left;">
-                                    <b>Signature:</b><br>
-                                    <div style="height: 100px;">
-
-                                    </div><br>
-                                    <b>Name:</b> <span>........................................</span><br><br>
-                                    <b>Position:</b> <span>....................................</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<body>
+    <center style="float:none; margin-top:20px;">
+        <h3>Other Purchase Order</h3>
+    </center>
+    <div>
+        <div style="float:left;">
+            <b style="font-size: 13px;">Alsaeed Jeweler</b><br>
+            <small><b>Email: </b>alsaeed@gmail.com</small> <br>
+            <small><b>Phone No: </b>03002126787</small><br>
         </div>
-    </section>
-@endsection
-@section('js')
-    <script>
-        function printDiv(e) {
-            var divToPrint = document.getElementById(e);
+        <div style="float: right;">
+            <small><b>Purchase No: </b>{{ $other_purchase->other_purchase_no??'' }}</small> <br>
+            <small><b>Purchase Date: </b>{{ date('d-M-Y', strtotime($other_purchase->other_purchase_date)) }} </small> <br>
+            <small><b>Vendor: </b>{{ $other_purchase->vendor->first_name??'' }} {{ $other_purchase->vendor->last_name??'' }}</small> <br>
+            <small><b>Payment: </b>@if($other_purchase->paid>0 && $other_purchase->paid_account_id!=null) <span style="color:green;">Paid</span> @else <span style="color:red;">Unpaid</span> @endif </small><br>
+        </div>
+    </div>
+    <br><br><br><br><br>
+    <table border="1" style="border:1px dotted #000; float:none; width:100%;">
+        <thead>
+            <tr style="background: #87CEFA;color: #000;">
+                <th style="text-align:center; font-size:11px;">Sr.No</th>
+                <th style="text-align:center; font-size:11px;">Product</th>
+                <th style="text-align:center; font-size:11px;">UOM</th>
+                <th style="text-align:center; font-size:11px;">Unit Price(Rs.)</th>
+                <th style="text-align:center; font-size:11px;">Tax Amount</th>
+                <th style="text-align:center; font-size:11px;">Total QTY</th>
+                <th style="text-align:center; font-size:11px;">Sub Total</th>
+            </tr>
+        </thead>
 
-            var newWin = window.open('', 'Print-Window');
+        <tbody>
+            @foreach ($other_purchase_detail as $index=>$item)
+            <tr>
+                <td style="text-align:center; font-size:10px;">{{ $index+1 }}</td>
+                <td style="text-align:center; font-size:10px;">{{ $item->other_product->name??'' }}</td>
+                <td style="text-align:center; font-size:10px;">{{ $item->other_product->other_product_unit->name??'' }}</td>
+                <td style="text-align:right; font-size:10px;">{{ number_format($item->unit_price??0.00,2) }}</td>
+                <td style="text-align:right; font-size:10px;">{{ number_format($item->tax_amount??0.00,2) }}</td>
+                <td style="text-align:right; font-size:10px;">{{ number_format($item->qty??0.00,2) }}</td>
+                <td style="text-align:right; font-size:10px;">{{ number_format($item->total_amount??0.00,2) }}</td>
+            </tr>
+            @endforeach
 
-            newWin.document.open();
+        </tbody>
+        <tfoot>
+            <tr style="background: #87CEFA;color: #000;">
+                <td colspan="4" style=" font-size:11px;"><b>Total(Rs.)</b></td>
+                <td style="text-align:right; font-size:11px;"><b>{{number_format($other_purchase->total_qty??0.00,2)}}</b></td>
+                <td style="text-align:right; font-size:11px;"><b>{{number_format($other_purchase->total??0.00,2)}}</b></td>
+            </tr>
+            <tr style="background: #87CEFA;color: #000;">
+                <td colspan="6" style=" font-size:11px;"><b>Paid Amount</b></td>
+                <td style="text-align:right; font-size:11px;"><b> @if($other_purchase->paid>0 && $other_purchase->paid_account!=null) {{number_format($other_purchase->paid??0.00,2)}} @else 0.00 @endif</b></td>
+            </tr>
+        </tfoot>
 
-            newWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+    </table>
+    <small><b>Description:</b> {{ $other_purchase->referenece??'' }}</small><br>
+    <small><b>Generate By:</b> {{ $other_purchase->created_by->name ?? '' }}</small>
+</body>
 
-            newWin.document.close();
-
-            setTimeout(function() {
-                newWin.close();
-            }, 10);
-        }
-    </script>
-@endsection
+</html>

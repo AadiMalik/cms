@@ -13,6 +13,7 @@ class OtherPurchase extends Model
         'other_purchase_no',
         'other_purchase_date',
         'supplier_id',
+        'warehouse_id',
         'bill_no',
         'reference',
         'purchase_account_id',
@@ -57,6 +58,10 @@ class OtherPurchase extends Model
     public function supplier_name()
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+    public function warehouse_name()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
     public function purchase_account()
     {

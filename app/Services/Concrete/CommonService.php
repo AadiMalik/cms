@@ -134,4 +134,44 @@ class CommonService
 
             return $randomNumber;
       }
+
+      // get stock
+      public function getOtherProductStockWithWarehouse($other_product_id, $warehouse_id, $start_date, $end_date)
+    {
+        $stock = 0.00;
+        $wh = [];
+        if (!empty($start_date) && !empty($end_date)) {
+            $wh[] = ['date', '>=', $start_date];
+            $wh[] = ['date', '<=', $end_date];
+        }
+        if (!empty($start_date) && empty($end_date)) {
+            $wh[] = ['date', '<=', $start_date];
+        }
+        $stock = DB::table('transactions')
+            ->select(DB::raw("SUM(
+            CASE
+                WHEN type IN (0) THEN qty
+                WHEN type IN (1) THEN -qty
+                WHEN type = 2 AND stock_taking_link_id IS NULL THEN
+                    CASE
+                        WHEN qty >= 0 THEN -qty
+                        ELSE ABS(qty)
+                    END
+                WHEN type = 2 AND stock_taking_link_id > 0 THEN
+                    CASE
+                        WHEN qty >= 0 THEN qty
+                        ELSE -ABS(qty)
+                    END
+                ELSE 0
+            END
+        ) AS stock
+    "))
+            ->where('warehouse_id', $warehouse_id)
+            ->where('other_product_id', $other_product_id)
+            ->where('is_deleted', 0)
+            ->where($wh)
+            ->first();
+
+        return number_format((float)($stock->stock ?? 0), 2, '.', '');
+    }
 }

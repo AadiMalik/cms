@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OtherPurchase;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CommonService;
 use App\Services\Concrete\OtherProductService;
@@ -14,6 +13,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class OtherPurchaseController extends Controller
 {
@@ -83,13 +83,13 @@ class OtherPurchaseController extends Controller
         $validation = Validator::make(
             $request->all(),
             [
-                'id'             => 'required',
-                'other_purchase_date'      => 'required',
-                'supplier_id'    => 'required',
-                'warehouse_id'    => 'required',
-                'purchase_account_id'    => 'required',
-                'total'          => 'required',
-                'otherProductDetail'  => 'required'
+                'id'                    => 'required',
+                'other_purchase_date'   => 'required',
+                'supplier_id'           => 'required',
+                'warehouse_id'          => 'required',
+                'purchase_account_id'   => 'required',
+                'total'                 => 'required',
+                'otherProductDetail'    => 'required'
             ],
             $this->validationMessage()
         );
@@ -124,8 +124,8 @@ class OtherPurchaseController extends Controller
             $other_purchase =  $this->other_purchase_service->getById($id);
             $other_purchase_detail = $this->other_purchase_service->otherPurchaseDetail($id);
 
-
-            return view('purchases/other_purchase/partials.print', compact('other_purchase', 'other_purchase_detail'));
+            $pdf = PDF::loadView('/purchases/other_purchase/partials.print', compact('other_purchase', 'other_purchase_detail'));
+            return $pdf->stream();
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }
@@ -147,16 +147,16 @@ class OtherPurchaseController extends Controller
     public function post(Request $request)
     {
         // try {
-            $other_sale = $this->other_purchase_service->post($request->all());
-            if ($other_sale != 'true') {
-                return $this->error(
-                    $other_sale
-                );
-            }
-            return $this->success(
-                config('enum.posted'),
-                []
+        $other_sale = $this->other_purchase_service->post($request->all());
+        if ($other_sale != 'true') {
+            return $this->error(
+                $other_sale
             );
+        }
+        return $this->success(
+            config('enum.posted'),
+            []
+        );
         // } catch (Exception $e) {
         //     return $this->error(config('enum.error'));
         // }
