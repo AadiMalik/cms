@@ -26,6 +26,7 @@ use App\Http\Controllers\StockTakingController;
 use App\Http\Controllers\StoneCategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierPaymentController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Auth;
@@ -612,6 +613,13 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // transaction
+    Route::group(['prefix' => 'transaction'], function () {
+        Route::get('/', [TransactionController::class, 'index']);
+        Route::post('data', [TransactionController::class, 'getData'])->name('transaction.data');
+        Route::get('destroy/{id}', [TransactionController::class, 'destroy']);
     });
 
     // Other Sale

@@ -32,6 +32,10 @@ class Transaction extends Model
         'created_at',
     ];
 
+    public function warehouse_name()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
+    }
     public function other_sale()
     {
         return $this->belongsTo(OtherSale::class, 'other_sale_id');
@@ -40,6 +44,11 @@ class Transaction extends Model
     public function other_purchase()
     {
         return $this->belongsTo(OtherPurchase::class, 'other_purchase_id');
+    }
+
+    public function stock_taking()
+    {
+        return $this->belongsTo(StockTaking::class, 'stock_taking_id');
     }
 
     public function other_product()

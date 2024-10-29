@@ -83,7 +83,7 @@
                 </li>
             @endcan
             @can('accounting_access')
-                <li class="Ul_li--hover {{ (Request::is('stock') || Request::is('stock-taking*') ) ? 'mm-active' : '' }}">
+                <li class="Ul_li--hover {{ (Request::is('stock') || Request::is('stock-taking*') || Request::is('transaction*') ) ? 'mm-active' : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-line-chart text-20 mr-2 text-muted"></i><span
                             class="item-name text-15 text-muted">Stock</span></a>
                     <ul class="mm-collapse">
@@ -96,6 +96,11 @@
                             <li class="item-name"><a class="{{ Request::is('stock-taking*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('stock-taking') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Stock Taking</span></a></li>
+                        @endcan
+                        @can('journals_access')
+                            <li class="item-name"><a class="{{ Request::is('transaction*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('transaction') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Transaction Logs</span></a></li>
                         @endcan
 
                     </ul>
