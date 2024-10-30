@@ -33,6 +33,18 @@ class ReportExport implements FromView
                   case 'profit_loss_report';
                         return view('reports/profit_loss/partials.report', compact('parms'));
                         break;
+                  case 'stock_ledger_report';
+                        return view('reports/stock_ledger/partials.report', compact('parms'));
+                        break;
+                  case 'product_ledger_report';
+                        return view('reports/product_ledger/partials.report', compact('parms'));
+                        break;
+                  case 'customer_list_report';
+                        return view('reports/customer_list/partials.report', compact('parms'));
+                        break;
+                  case 'product_consumption';
+                        return view('reports/product_consumption/partials.report', compact('parms'));
+                        break;
             }
       }
 }

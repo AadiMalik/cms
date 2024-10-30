@@ -12,9 +12,9 @@
     </center>
     <div>
         <div style="float:left;">
-            <b style="font-size: 13px;">Alsaeed Jeweler</b><br>
-            <small><b>Email: </b>alsaeed@gmail.com</small> <br>
-            <small><b>Phone No: </b>03002126787</small><br>
+            <b style="font-size: 13px;">{{config('enum.company_name')}}</b><br>
+            <small><b>Email: </b>{{config('enum.company_email')}}</small> <br>
+            <small><b>Phone No: </b>{{config('enum.company_phone')}}</small><br>
         </div>
         <div style="float: right;">
             <small><b>Purchase No: </b>{{ $other_purchase->other_purchase_no??'' }}</small> <br>

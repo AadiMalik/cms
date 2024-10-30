@@ -259,6 +259,32 @@
                                     href="{{ url('reports/profit-loss-report') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Profit Loss Report</span></a></li>
                         @endcan
+                        @can('employees_access')
+                            <li class="item-name"><a
+                                    class="{{ Request::is('reports/stock-ledger-report*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('reports/stock-ledger-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Stock Ledger</span></a></li>
+                        @endcan
+
+                        @can('employees_access')
+                            <li class="item-name"><a
+                                    class="{{ Request::is('reports/product-ledger-report*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('reports/product-ledger-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Product Ledger</span></a></li>
+                        @endcan
+
+                        @can('employees_access')
+                            <li class="item-name"><a
+                                    class="{{ Request::is('reports/customer-list-report*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('reports/customer-list-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Customer List</span></a></li>
+                        @endcan
+                        @can('employees_access')
+                            <li class="item-name"><a
+                                    class="{{ Request::is('reports/product-consumption-report*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('reports/product-consumption-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Product Consumption</span></a></li>
+                        @endcan
                     </ul>
                 </li>
             @endcan

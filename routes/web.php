@@ -686,6 +686,24 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-preview-profit-loss-report', [ReportController::class, 'getPreviewProfitLossReport']);
         Route::get('get-profit-loss-report', [ReportController::class, 'getProfitLossReport']);
 
+        // Stock Ledger Report
+        Route::get('stock-ledger-report', [ReportController::class, 'stockLedger']);
+        Route::get('get-preview-stock-ledger-report', [ReportController::class, 'getPreviewStockLedgerReport']);
+        Route::get('get-stock-ledger-report', [ReportController::class, 'getStockLedgerReport']);
+
+        // Product Ledger Report
+        Route::get('product-ledger-report', [ReportController::class, 'productLedger']);
+        Route::get('get-preview-product-ledger-report', [ReportController::class, 'getPreviewProductLedgerReport']);
+        Route::get('get-product-ledger-report', [ReportController::class, 'getProductLedgerReport']);
+
+        // Customer List Report
+        Route::get('customer-list-report', [ReportController::class, 'customerList']);
+        Route::get('get-preview-customer-list-report', [ReportController::class, 'getPreviewCustomerListReport']);
+        Route::get('get-customer-list-report', [ReportController::class, 'getCustomerListReport']);
+
+        // Product Consumption Report
+        Route::get('product-consumption-report', [ReportController::class, 'productConsumption']);
+        Route::get('get-preview-product-consumption-report', [ReportController::class, 'getPreviewProductConsumptionReport']);
+        Route::get('get-product-consumption-report', [ReportController::class, 'getProductConsumptionReport']);
     });
-    
 });

@@ -7,6 +7,7 @@ use App\Models\FinishProductBead;
 use App\Models\FinishProductDiamond;
 use App\Models\FinishProductStone;
 use App\Models\JournalEntry;
+use App\Models\OtherProduct;
 use App\Models\Product;
 use App\Models\RattiKaatDetail;
 use App\Models\Sale;
@@ -14,6 +15,8 @@ use App\Models\SaleDetail;
 use App\Models\SaleDetailBead;
 use App\Models\SaleDetailDiamond;
 use App\Models\SaleDetailStone;
+use App\Models\Transaction;
+use App\Models\Warehouse;
 use App\Repository\Repository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +34,9 @@ class ReportService
       protected $model_sale_detail_bead;
       protected $model_sale_detail_stone;
       protected $model_sale_detail_diamond;
+      protected $model_warehouse;
+      protected $model_other_product;
+      protected $model_transaction;
       public function __construct()
       {
             // set the model
@@ -45,6 +51,9 @@ class ReportService
             $this->model_sale_detail_bead = new Repository(new SaleDetailBead);
             $this->model_sale_detail_stone = new Repository(new SaleDetailStone);
             $this->model_sale_detail_diamond = new Repository(new SaleDetailDiamond);
+            $this->model_warehouse = new Repository(new Warehouse);
+            $this->model_other_product = new Repository(new OtherProduct);
+            $this->model_transaction = new Repository(new Transaction);
       }
 
       // Ledger Report
@@ -248,5 +257,202 @@ class ReportService
                   "indirectExpenseAccounts" => $indirectExpenseAccounts
             ];
             return $data;
+      }
+
+      // Stock Ledger
+      public function getStockLedgerReport($obj)
+      {
+
+            $start_date = date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date'] . ' 00:00:00')));
+            $end_date = date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date'] . ' 23:59:59')));
+
+            $warehouses = isset($obj['warehouse_id']) ?
+                  $this->model_warehouse->getModel()::where('id', $obj['warehouse_id'])->where('is_deleted', 0)->get() :
+                  $this->model_warehouse->getModel()::where('is_deleted', 0)->get();
+
+            $response = [];
+
+            foreach ($warehouses as $warehouse) {
+                  $qry_str = "SELECT prod.id, prod.name AS product, other_product_units.name AS unit,
+            SUM(IFNULL(CASE WHEN transactions.type IN (0,3)  AND transactions.qty>0 AND transactions.unit_price>0 AND transactions.is_deleted=0 THEN transactions.unit_price * transactions.qty ELSE 0 END, 0)) / SUM(CASE WHEN transactions.type IN (0,3) AND transactions.unit_price>0  AND transactions.qty>0 AND transactions.is_deleted=0 THEN transactions.qty END)
+             AS unit_price,
+            (SUM(IFNULL(CASE WHEN transactions.type IN (0,3) AND date(transactions.date) < '$start_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END, 0)) + 
+            SUM(IFNULL(CASE WHEN type = 2 AND stock_taking_link_id IS NOT NULL AND date(transactions.date) < '$start_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END,0)))-
+            (SUM(IFNULL(CASE WHEN transactions.type IN (1) AND date(transactions.date) < '$start_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END, 0)) +
+            SUM(IFNULL(CASE WHEN type = 2 AND stock_taking_link_id IS NULL AND date(transactions.date) < '$start_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END,0)))
+             AS opening_qty,
+            SUM(IFNULL(CASE WHEN transactions.type IN (0,3) AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END, 0)) +
+            SUM(IFNULL(CASE WHEN type = 2 AND stock_taking_link_id IS NOT NULL AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END,0))
+             AS stock_in_qty,
+            SUM(IFNULL(CASE WHEN transactions.type IN (1) AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END, 0)) +
+            SUM(IFNULL(CASE WHEN type = 2 AND stock_taking_link_id IS NULL AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END,0))
+             AS stock_out_qty
+        FROM other_products prod
+        JOIN other_product_units ON other_product_units.id = prod.other_product_unit_id
+        LEFT JOIN transactions ON transactions.other_product_id = prod.id 
+            AND transactions.is_deleted = 0
+        GROUP BY prod.id, prod.name, other_product_units.name";
+
+                  $data = DB::select(DB::raw($qry_str));
+                  $response[] = [
+                        "warehouse_name" => $warehouse->name,
+                        "data" => $data
+                  ];
+            }
+            return $response;
+      }
+
+      // Product Ledger
+      public function getProductLedgerReport($obj)
+      {
+            $wh = [];
+            $wearhouses = [];
+            if ($obj['other_product_id'] > 0) {
+                  $wh[] = ['id', $obj['other_product_id']];
+            }
+            if ($obj['warehouse_id'] > 0) {
+                  $wearhouses[] = ['warehouse_id', $obj['warehouse_id']];
+            }
+            $other_products = $this->model_other_product->getModel()::with(['other_product_unit'])
+                  ->where($wh)
+                  ->where('is_deleted', 0)
+                  ->get();
+            $data = [];
+            foreach ($other_products as $item) {
+
+                  $total_stock_in = 0.0;
+                  $total_stock_out = 0.0;
+                  $transaction_data = [];
+
+                  // Opening Stock
+                  $opening_stock = $this->model_transaction->getModel()::where('other_product_id', $item->id)
+                        ->where('date', '<', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
+                        ->where($wearhouses)
+                        ->where('is_deleted', 0)
+                        ->orderBy('date', 'ASC')
+                        ->get();
+
+                  $open_stock = 0;
+                  foreach ($opening_stock as $item1) {
+                        if ($item1->type == 0) {
+                              $open_stock = $open_stock + $item1->qty;
+                        } elseif ($item1->type == 1) {
+                              $open_stock = $open_stock - $item1->qty;
+                        } elseif ($item1->type == 2 && $item1->stock_taking_link_id == null) {
+                              $open_stock = $open_stock - ($item1->qty >= 0) ? $item1->qty : (-1) * $item1->qty;
+                        } elseif ($item1->type == 2 && $item1->stock_taking_link_id > 0) {
+                              $open_stock = $open_stock + ($item1->qty >= 0) ? $item1->qty : (-1) * $item1->qty;
+                        } elseif ($item1->type == 3) {
+                              $open_stock = $open_stock + $item1->qty;
+                        }
+                  }
+                  $stock = $open_stock;
+                  $transactions = $this->model_transaction->getModel()::with(['other_product', 'warehouse_name'])
+                        ->where('date', '>=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))) . " 00:00:00")
+                        ->where('date', '<=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date']))) . " 23:59:59")
+                        ->where('other_product_id', $item->id)
+                        ->where($wearhouses)
+                        ->where('is_deleted', 0)
+                        ->orderBy('date', 'ASC')
+                        ->get();
+
+                  foreach ($transactions as $item1) {
+                        $stock_in = 0;
+                        $stock_out = 0;
+                        $type = '';
+
+                        if ($item1->type == 0) {
+                              $type = 'Purchase';
+                              $stock = $stock + $item1->qty;
+                              $stock_in = $item1->qty;
+                        } elseif ($item1->type == 1) {
+                              $type = 'Sale';
+                              $stock = $stock - $item1->qty;
+                              $stock_out = $item1->qty;
+                        } elseif ($item1->type == 3) {
+
+                              $type = 'Opening Stock';
+                              $stock = $stock + $item1->qty;
+                              $stock_in = $item1->qty;
+                        } elseif ($item1->type == 2 && $item1->stock_taking_link_id == null) {
+                              $type = 'Stock Taking';
+                              if ($item1->qty >= 0) {
+                                    $stock = $stock - $item1->qty;
+                              } else {
+                                    $stock = abs($stock) + $item1->qty;
+                              }
+                              $stock_out = ($item1->qty >= 0) ? $item1->qty : $item1->qty;
+                        } elseif ($item1->type == 2 && $item1->stock_taking_link_id > 0) {
+
+                              $type = 'Stock Taking';
+                              if ($item1->qty >= 0) {
+                                    $stock = $stock + $item1->qty;
+                              } else {
+                                    $stock = abs($stock) - $item1->qty;
+                              }
+                              $stock_in = ($item1->qty >= 0) ? $item1->qty : $item1->qty;
+                        }
+                        $total_stock_in += $stock_in;
+                        $total_stock_out += $stock_out;
+
+                        $transaction_data[] = [
+                              "date" => $item1->date,
+                              "warehouse" => $item1->warehouse_name->name ?? '',
+                              "type" => $type,
+                              "stock_in" => $stock_in,
+                              "stock_out" => $stock_out,
+                              "stock" => $stock
+                        ];
+                  }
+                  $data[] = [
+                        "product_name" => $item->name ?? '',
+                        "opening_stock" => $open_stock,
+                        "report" => $transaction_data,
+                        "total_stock" => $stock,
+                        "total_stock_in" => $total_stock_in,
+                        "total_stock_out" => $total_stock_out
+                  ];
+            }
+            return $data;
+      }
+
+      //product consumption
+
+      public function getProductConsumptionReport($obj)
+      {
+            set_time_limit(0);
+
+            $start_date = date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date'] . ' 00:00:00')));
+            $end_date = date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date'] . ' 23:59:59')));
+
+            $warehouses = isset($obj['warehouse_id']) ?
+                  $this->model_warehouse->getModel()::where('id', $obj['warehouse_id'])->where('is_deleted', 0)->get() :
+                  $this->model_warehouse->getModel()::where('is_deleted', 0)->get();
+
+            $response = [];
+
+            foreach ($warehouses as $warehouse) {
+                  $qry_str = "SELECT prod.id, prod.name AS product, other_product_units.name AS unit,
+            SUM(IFNULL(CASE WHEN transactions.type IN (0,3)  AND transactions.qty>0 AND transactions.unit_price>0 AND transactions.is_deleted=0 THEN transactions.unit_price * transactions.qty ELSE 0 END, 0)) / SUM(CASE WHEN transactions.type IN (0,3) AND transactions.unit_price>0  AND transactions.qty>0 AND transactions.is_deleted=0 THEN transactions.qty END)
+             AS unit_price,
+            SUM(IFNULL(CASE WHEN transactions.type IN (0,3) AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END, 0)) +
+            SUM(IFNULL(CASE WHEN type = 2 AND stock_taking_link_id IS NOT NULL AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END,0))
+             AS stock_in_qty,
+            SUM(IFNULL(CASE WHEN transactions.type IN (1) AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END, 0)) +
+            SUM(IFNULL(CASE WHEN type = 2 AND stock_taking_link_id IS NULL AND date(transactions.date) BETWEEN '$start_date' AND '$end_date' AND transactions.is_deleted=0 AND transactions.warehouse_id = {$warehouse->id} THEN transactions.qty ELSE 0 END,0))
+             AS stock_out_qty
+                  FROM other_products prod
+                  JOIN other_product_units ON other_product_units.id = prod.other_product_unit_id
+                  LEFT JOIN transactions ON transactions.other_product_id = prod.id 
+                        AND transactions.is_deleted = 0
+                  GROUP BY prod.id, prod.name, other_product_units.name";
+
+                  $data = DB::select(DB::raw($qry_str));
+                  $response[] = [
+                        "warehouse_name" => $warehouse->name,
+                        "data" => $data
+                  ];
+            }
+            return $response;
       }
 }

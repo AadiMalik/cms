@@ -57,11 +57,16 @@ class CustomerService
         return $data;
     }
 
-    public function getAllActiveCustomer()
+    public function getAllActiveCustomer($obj=null)
     {
+        $wh=[];
+        if(isset($obj['customer_id']) && $obj['customer_id']!=''){
+            $wh[]=['id',$obj['customer_id']];
+        }
         return $this->model_customer->getModel()::with('account_name')
             ->where('is_deleted', 0)
             ->where('is_active', 1)
+            ->where($wh)
             ->get();
     }
 

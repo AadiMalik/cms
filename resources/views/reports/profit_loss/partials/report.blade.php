@@ -13,9 +13,9 @@
     </center>
     <div>
         <div style="float:left;">
-            <b>Al Saeed</b><br>
-            <b>Email: </b>alsaeed@gmail.com <br>
-            <b>Phone No: </b>0321456789
+            <b>{{config('enum.company_name')}}</b><br>
+            <b>Email: </b>{{config('enum.company_email')}} <br>
+            <b>Phone No: </b>{{config('enum.company_phone')}}
         </div>
         <div style="float: right;">
             <b>Date: </b>{{ $parms->start_date ?? '' }} To {{ $parms->end_date ?? '' }} <br>

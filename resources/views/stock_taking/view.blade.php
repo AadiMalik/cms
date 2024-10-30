@@ -27,9 +27,9 @@
                                           </center>
                                           <div>
                                                 <div style="float:left;">
-                                                      <b style="font-size: 13px;">alsaeed jeweler</b><br>
-                                                      <b>Email: </b>alsaeed@gmail.com <br>
-                                                      <b>Phone No: </b>03002787864<br>
+                                                      <b style="font-size: 13px;">{{config('enum.company_name')}}</b><br>
+                                                      <b>Email: </b>{{config('enum.company_email')}} <br>
+                                                      <b>Phone No: </b>{{config('enum.company_phone')}}<br>
                                                 </div>
                                                 <div style="float: right;">
                                                       <b>Warehouse: </b>{{ $stock_taking->warehouse_name->name??'' }} <br>

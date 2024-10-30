@@ -7,6 +7,7 @@ use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CustomerService;
 use App\Services\Concrete\FinishProductService;
 use App\Services\Concrete\JournalEntryService;
+use App\Services\Concrete\OtherProductService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\ReportService;
 use App\Services\Concrete\SupplierService;
@@ -31,6 +32,7 @@ class ReportController extends Controller
     protected $finish_product_service;
     protected $product_service;
     protected $warehouse_service;
+    protected $other_product_service;
 
     #endregion
 
@@ -44,7 +46,8 @@ class ReportController extends Controller
         CustomerService $customer_service,
         FinishProductService $finish_product_service,
         ProductService $product_service,
-        WarehouseService $warehouse_service
+        WarehouseService $warehouse_service,
+        OtherProductService $other_product_service
     ) {
         $this->report_service = $report_service;
         $this->account_service = $account_service;
@@ -54,6 +57,7 @@ class ReportController extends Controller
         $this->finish_product_service = $finish_product_service;
         $this->product_service = $product_service;
         $this->warehouse_service = $warehouse_service;
+        $this->other_product_service = $other_product_service;
     }
 
 
@@ -142,10 +146,10 @@ class ReportController extends Controller
     public function tagHistoryReport()
     {
         try {
-            $finish_products=$this->finish_product_service->getAllSaledFinishProduct();
+            $finish_products = $this->finish_product_service->getAllSaledFinishProduct();
             $products = $this->product_service->getAllProduct();
             $warehouses = $this->warehouse_service->getAll();
-            return view('reports/tag_history/index',compact('finish_products','products','warehouses'));
+            return view('reports/tag_history/index', compact('finish_products', 'products', 'warehouses'));
         } catch (Exception $e) {
             return back()->with('error', config('enum.error'));
         }
@@ -240,7 +244,7 @@ class ReportController extends Controller
             $parms = (object)$parms;
             $parms->start_date = $request->get('start_date');
             $parms->end_date = $request->get('end_date');
-            $parms->report_name = "profit_loss_report"; 
+            $parms->report_name = "profit_loss_report";
             // if export excel button is clicked
             if ($request->has('export-excel')) {
                 return Excel::download(new ReportExport($parms), 'Profit-Loss.xls');
@@ -256,14 +260,14 @@ class ReportController extends Controller
     public function getPreviewProfitLossReport(Request $request)
     {
         // try {
-            $obj = $request->all();
+        $obj = $request->all();
 
-            $parms['data'] = $this->report_service->getProfitLossReport($obj);
-            $parms = (object)$parms;
-            $parms->start_date = $request->get('start_date');
-            $parms->end_date = $request->get('end_date');
-            $parms->report_name = "profit_loss_report"; 
-            return view('/reports/profit_loss/partials.report', compact('parms'));
+        $parms['data'] = $this->report_service->getProfitLossReport($obj);
+        $parms = (object)$parms;
+        $parms->start_date = $request->get('start_date');
+        $parms->end_date = $request->get('end_date');
+        $parms->report_name = "profit_loss_report";
+        return view('/reports/profit_loss/partials.report', compact('parms'));
         // } catch (Exception $e) {
         //     return $this->error(config('enum.error'));
         // }
@@ -281,5 +285,229 @@ class ReportController extends Controller
             $child_ids,
             false
         );
+    }
+
+
+    // Stock Ledger Report
+    public function stockLedger()
+    {
+        try {
+            $warehouses = $this->warehouse_service->getAll();
+            return view('reports/stock_ledger/index', compact('warehouses'));
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+    public function getStockLedgerReport(Request $request)
+    {
+        try {
+            $obj = $request->all();
+
+            $parms['data'] = $this->report_service->getStockLedgerReport($obj);
+
+            $parms = (object)$parms;
+            $parms->start_date = $request->get('start_date');
+            $parms->end_date = $request->get('end_date');
+            $parms->warehouse = 'All';
+            if ($request->warehouse_id != '' && $request->warehouse_id != null) {
+                $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+                $parms->warehouse = $warehouse->name ?? '';
+            }
+            $parms->report_name = "stock_ledger_report";
+
+            // if export excel button is clicked
+            if ($request->has('export-excel')) {
+                return Excel::download(new ReportExport($parms), 'Stock-Ledger.xls');
+            }
+
+            $pdf = PDF::loadView('/reports/stock_ledger/partials.report', compact('parms'))->setPaper('a4', 'landscape');
+            return $pdf->stream('Stock Ledger - ' . $parms->start_date . '-' . $parms->end_date . '.pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+    public function getPreviewStockLedgerReport(Request $request)
+    {
+        try {
+            $obj = $request->all();
+
+            $parms['data'] = $this->report_service->getStockLedgerReport($obj);
+
+            $parms = (object)$parms;
+
+            $parms->start_date = $request->get('start_date');
+            $parms->end_date = $request->get('end_date');
+            $parms->warehouse = 'All';
+            if ($request->warehouse_id != '' && $request->warehouse_id != null) {
+                $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+                $parms->warehouse = $warehouse->name ?? '';
+            }
+            $parms->report_name = "stock_ledger_report";
+
+            return view('/reports/stock_ledger/partials.report', compact('parms'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+
+    //Product Ledger
+    public function productLedger()
+    {
+        try {
+            $other_products = $this->other_product_service->getAllActiveOtherProduct();
+            $warehouses = $this->warehouse_service->getAll();
+            return view('reports/product_ledger/index', compact('other_products', 'warehouses'));
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+    public function getPreviewProductLedgerReport(Request $request)
+    {
+        // try {
+        $obj = $request->all();
+        $start = $request->start_date;
+        $end = $request->end_date;
+        $data = $this->report_service->getProductLedgerReport($obj);
+        $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+        return view('/reports/product_ledger/partials.report', compact('start', 'end', 'data', 'warehouse'));
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
+    }
+    public function getProductLedgerReport(Request $request)
+    {
+        try {
+            $obj = $request->all();
+            $start = $request->start_date;
+            $end = $request->end_date;
+            $data = $this->report_service->getProductLedgerReport($obj);
+            $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+            $pdf = PDF::loadView('/reports/stock_ledger/partials.report', compact('start', 'end', 'data', 'warehouse'));
+            return $pdf->stream('Product Ledger - ' . $start . '-' . $end . '.pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+    //customer List
+    public function customerList()
+    {
+        try {
+            $customers = $this->customer_service->getAllActiveCustomer();
+            return view('reports/customer_list/index', compact('customers'));
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+
+    public function getCustomerListReport(Request $request)
+    {
+        try {
+            $parms['data'] = $this->customer_service->getAllActiveCustomer($request->all());
+
+            $parms = (object)$parms;
+
+            if (isset($request->customer_id) && $request->customer_id != '') {
+                $customer = $this->customer_service->getById($request->customer_id);
+                $parms->customer = $customer->name ?? 'All';
+            }
+            $parms->report_name = "customer_list_report";  // report name for export expor tfunction
+
+            if ($request->has('export-excel')) {
+                return Excel::download(new ReportExport($parms), 'Customer-List.xls');
+            }
+
+            $pdf = PDF::loadView('/reports/customer_list/partials.report', compact('parms'));
+            return $pdf->stream('Customer List .pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+
+    public function getPreviewCustomerListReport(Request $request)
+    {
+        try {
+
+            $parms['data'] = $this->customer_service->getAllActiveCustomer($request->all());
+
+            $parms = (object)$parms;
+            if (isset($request->customer_id) && $request->customer_id != '') {
+                $customer = $this->customer_service->getById($request->customer_id);
+                $parms->customer = $customer->name ?? 'All';
+            }
+            $parms->report_name = "customer_list_report";  // report name for export expor tfunction
+
+            return view('/reports/customer_list/partials.report', compact('parms'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+    // Product Consumption
+    public function productConsumption()
+    {
+        try {
+            $warehouses = $this->warehouse_service->getAll();
+            return view('reports/product_consumption/index', compact('warehouses'));
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+
+    public function getProductConsumptionReport(Request $request)
+    {
+        try {
+            ini_set("memory_limit", "800M");
+            ini_set("max_execution_time", "800");
+            $obj = $request->all();
+
+            $parms['data'] = $this->report_service->getProductConsumptionReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->get('start_date');
+            $parms->end_date = $request->get('end_date');
+            if ($request->warehouse_id != '' && $request->warehouse_id != null) {
+                $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+                $parms->warehouse = $warehouse->name ?? '';
+            }
+            $parms->report_name = "product_consumption";  // report name for export expor tfunction
+
+            // if export excel button is clicked
+            if ($request->has('export-excel')) {
+                return Excel::download(new ReportExport($parms), 'Product-Consumption.xls');
+            }
+
+            $pdf = PDF::loadView('/reports/product_consumption/partials.report', compact('parms'))->setPaper('a4', 'landscape');
+            return $pdf->stream('Product Consumption - ' . $parms->start_date . '-' . $parms->end_date . '.pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+
+    public function getPreviewProductConsumptionReport(Request $request)
+    {
+        try {
+            $obj = $request->all();
+
+            $parms['data'] = $this->report_service->getProductConsumptionReport($obj);
+
+            $parms = (object)$parms;
+
+            $parms->start_date = $request->get('start_date');
+            $parms->end_date = $request->get('end_date');
+            if ($request->warehouse_id != '' && $request->warehouse_id != null) {
+                $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+                $parms->warehouse = $warehouse->name ?? '';
+            }
+            $parms->report_name = "product_consumption";  // report name for export expor tfunction
+
+            return view('/reports/product_consumption/partials.report', compact('parms'));
+        } catch (Exception $e) {
+            InsertErrorLog(config('global.adminSide'), $e->getCode(), $e->getLine(), $e->getFile(), $e->getMessage());
+            return $this->error(config('global.error'));
+        }
     }
 }
