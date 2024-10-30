@@ -123,11 +123,6 @@
                                         class="item-name">Other Purchase</span></a></li>
                         @endcan
                         @can('supplier_payment_access')
-                            <li class="item-name"><a class="{{ Request::is('stock*') ? 'sidebar_active' : '' }}"
-                                    href="{{ url('stock') }}"><i class="nav-icon fa fa-circle"></i><span
-                                        class="item-name">Stock</span></a></li>
-                        @endcan
-                        @can('supplier_payment_access')
                             <li class="item-name"><a class="{{ Request::is('supplier-payment*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('supplier-payment') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Supplier Payment</span></a></li>
