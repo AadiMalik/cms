@@ -487,8 +487,7 @@ class ReportService
                               SUM(journal_entry_details.credit) as total_credit,
                               (SUM(journal_entry_details.debit) - SUM(journal_entry_details.credit)) as balance
                         ')
-                        ->orderBy('journal_entries.date_post', 'ASC')
-                        ->orderBy('journal_entry_details.journal_entry_id', 'ASC')
+                        ->orderBy('accounts.code', 'ASC')
                         ->get();
             } else {
                   $journal_entry = $this->model_journal_entry->getModel()::with(['supplier_name', 'customer_name', 'journal_name'])
@@ -498,7 +497,7 @@ class ReportService
                         ->join('accounts', 'journal_entry_details.account_id', '=', 'accounts.id')
                         ->where($wh)
                         ->where('journal_entries.is_deleted', 0)
-                        ->groupBy('journal_entry_details.account_id','accounts.name','accounts.code')
+                        ->groupBy('journal_entry_details.account_id', 'accounts.name', 'accounts.code')
                         ->selectRaw('
                               journal_entry_details.account_id,
                               accounts.code,
@@ -507,8 +506,7 @@ class ReportService
                               SUM(journal_entry_details.credit) as total_credit,
                               (SUM(journal_entry_details.debit) - SUM(journal_entry_details.credit)) as balance
                         ')
-                        ->orderBy('journal_entries.date_post', 'ASC')
-                        ->orderBy('journal_entry_details.journal_entry_id', 'ASC')
+                        ->orderBy('accounts.code', 'ASC')
                         ->get();
             }
             return $journal_entry;
