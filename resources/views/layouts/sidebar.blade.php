@@ -316,6 +316,12 @@
                     </ul>
                 </li>
             @endcan
+            @can('dashboard_access')
+                <li class="Ul_li--hover"><a class="{{ Request::is('company-setting') ? 'sidebar_active' : '' }}"
+                        href="{{ url('company-setting') }}"><i class="fa fa-cogs mr-2 text-muted" style="font-size:20px;"></i><span
+                            class="item-name text-15 text-muted">Setting</span></a>
+                </li>
+            @endcan
             @can('logout_access')
                 <li class="Ul_li--hover"><a href="{{ route('logout') }}"
                         onclick="event.preventDefault();

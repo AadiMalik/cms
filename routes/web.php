@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BeadTypeController;
+use App\Http\Controllers\CompanySettingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DiamondClarityController;
 use App\Http\Controllers\DiamondColorController;
@@ -666,6 +667,12 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // Other Purchase
+    Route::group(['prefix' => 'company-setting'], function () {
+        Route::get('/', [CompanySettingController::class, 'index']);
+        Route::post('store', [CompanySettingController::class, 'store']);
     });
 
     // Reports
