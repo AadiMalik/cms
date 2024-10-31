@@ -455,4 +455,62 @@ class ReportService
             }
             return $response;
       }
+
+      // Financial Report
+      public function financialReport($obj)
+      {
+            $wh = [];
+            if (isset($obj['supplier_id']) && $obj['supplier_id'] != 0 && $obj['supplier_id'] != "") {
+                  $wh[] = ['journal_entries.supplier_id', '=', $obj['supplier_id']];
+            }
+            if (isset($obj['customer_id']) && $obj['customer_id'] != 0 && $obj['customer_id'] != "") {
+                  $wh[] = ['journal_entries.customer_id', '=', $obj['customer_id']];
+            }
+            if (isset($obj['currency']) && $obj['currency'] != "") {
+                  $wh[] = ['journal_entry_details.currency', '=', $obj['currency']];
+            }
+            if (isset($obj['account_id']) && $obj['account_id'] != 0 && $obj['account_id'] != "") {
+                  $journal_entry = $this->model_journal_entry->getModel()::with(['supplier_name', 'customer_name', 'journal_name'])
+                        ->where('journal_entries.date_post', '>=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
+                        ->where('journal_entries.date_post', '<=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date']))))
+                        ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', '=', 'journal_entries.id')
+                        ->join('accounts', 'journal_entry_details.account_id', '=', 'accounts.id')
+                        ->whereIn('journal_entry_details.account_id', $obj['account_id'])
+                        ->where($wh)
+                        ->where('journal_entries.is_deleted', 0)
+                        ->groupBy('journal_entry_details.account_id','accounts.name','accounts.code')
+                        ->selectRaw('
+                              journal_entry_details.account_id,
+                              accounts.code,
+                              accounts.name,
+                              SUM(journal_entry_details.debit) as total_debit,
+                              SUM(journal_entry_details.credit) as total_credit,
+                              (SUM(journal_entry_details.debit) - SUM(journal_entry_details.credit)) as balance
+                        ')
+                        ->orderBy('journal_entries.date_post', 'ASC')
+                        ->orderBy('journal_entry_details.journal_entry_id', 'ASC')
+                        ->get();
+            } else {
+                  $journal_entry = $this->model_journal_entry->getModel()::with(['supplier_name', 'customer_name', 'journal_name'])
+                        ->where('journal_entries.date_post', '>=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
+                        ->where('journal_entries.date_post', '<=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date']))))
+                        ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', '=', 'journal_entries.id')
+                        ->join('accounts', 'journal_entry_details.account_id', '=', 'accounts.id')
+                        ->where($wh)
+                        ->where('journal_entries.is_deleted', 0)
+                        ->groupBy('journal_entry_details.account_id','accounts.name','accounts.code')
+                        ->selectRaw('
+                              journal_entry_details.account_id,
+                              accounts.code,
+                              accounts.name,
+                              SUM(journal_entry_details.debit) as total_debit,
+                              SUM(journal_entry_details.credit) as total_credit,
+                              (SUM(journal_entry_details.debit) - SUM(journal_entry_details.credit)) as balance
+                        ')
+                        ->orderBy('journal_entries.date_post', 'ASC')
+                        ->orderBy('journal_entry_details.journal_entry_id', 'ASC')
+                        ->get();
+            }
+            return $journal_entry;
+      }
 }

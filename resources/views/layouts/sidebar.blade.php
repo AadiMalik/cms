@@ -280,6 +280,12 @@
                                     href="{{ url('reports/product-consumption-report') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Product Consumption</span></a></li>
                         @endcan
+                        @can('employees_access')
+                            <li class="item-name"><a
+                                    class="{{ Request::is('reports/financial-report*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('reports/financial-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Financial Report</span></a></li>
+                        @endcan
                     </ul>
                 </li>
             @endcan

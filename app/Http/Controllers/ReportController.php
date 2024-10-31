@@ -506,8 +506,87 @@ class ReportController extends Controller
 
             return view('/reports/product_consumption/partials.report', compact('parms'));
         } catch (Exception $e) {
-            InsertErrorLog(config('global.adminSide'), $e->getCode(), $e->getLine(), $e->getFile(), $e->getMessage());
             return $this->error(config('global.error'));
+        }
+    }
+
+    // Financial Report
+    public function financialReport()
+    {
+        try {
+            $accounts = $this->account_service->getAllActiveChild();
+            $suppliers = $this->supplier_service->getAllActiveSupplier();
+            $customers = $this->customer_service->getAllActiveCustomer();
+            return view('reports/financial_report/index', compact('accounts', 'suppliers', 'customers'));
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+    public function getPreviewFinancialReport(Request $request)
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'start_date' => 'required',
+                'end_date' => 'required',
+                'currency' => 'required',
+            ]
+        );
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->error(
+                $validation_error
+            );
+        }
+        try {
+            $obj = $request->all();
+            $parms['data'] = $this->report_service->financialReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->start_date;
+            $parms->end_date = $request->end_date;
+            if ($request->supplier_id != '' && $request->supplier_id != null) {
+                $supplier = $this->supplier_service->getById($request->supplier_id);
+                $parms->supplier = $supplier->name ?? '';
+            }
+            if ($request->customer_id != '' && $request->customer_id != null) {
+                $customer = $this->customer_service->getById($request->customer_id);
+                $parms->customer = $customer->name ?? '';
+            }
+            $parms->currency = ($request->currency == 0) ? 'PKR (Rs)' : (($request->currency == 1) ? 'Gold (AU)' : 'Dollar ($)');
+            $parms->report_name = "financial_report";
+            return view('/reports/financial_report/partials.report', compact('parms'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+    public function getFinancialReport(Request $request)
+    {
+        try {
+            $obj = $request->all();
+            $parms['data'] = $this->report_service->financialReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->start_date;
+            $parms->end_date = $request->end_date;
+            if ($request->supplier_id != '' && $request->supplier_id != null) {
+                $supplier = $this->supplier_service->getById($request->supplier_id);
+                $parms->supplier = $supplier->name ?? '';
+            }
+            if ($request->customer_id != '' && $request->customer_id != null) {
+                $customer = $this->customer_service->getById($request->customer_id);
+                $parms->customer = $customer->name ?? '';
+            }
+            $parms->currency = ($request->currency == 0) ? 'PKR (Rs)' : (($request->currency == 1) ? 'Gold (AU)' : 'Dollar ($)');
+            $parms->report_name = "financial_report";
+            if ($request->has('export-excel')) {
+                return Excel::download(new ReportExport($parms), 'Financial-Report.xls');
+            }
+            $pdf = PDF::loadView('/reports/financial_report/partials.report', compact('parms'));
+            return $pdf->stream('Financial Report' . $request->start_date . '-' . $request->end_date . '.pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
         }
     }
 }

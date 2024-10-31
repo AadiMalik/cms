@@ -705,5 +705,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('product-consumption-report', [ReportController::class, 'productConsumption']);
         Route::get('get-preview-product-consumption-report', [ReportController::class, 'getPreviewProductConsumptionReport']);
         Route::get('get-product-consumption-report', [ReportController::class, 'getProductConsumptionReport']);
+
+        // Financial Report
+        Route::get('financial-report', [ReportController::class, 'financialReport']);
+        Route::get('get-preview-financial-report', [ReportController::class, 'getPreviewFinancialReport']);
+        Route::get('get-financial-report', [ReportController::class, 'getFinancialReport']);
     });
 });
