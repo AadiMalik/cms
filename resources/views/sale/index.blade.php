@@ -88,7 +88,7 @@
                                             <option value="0" disabled selected="selected">--Select Cash
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}" {{($setting->cash_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -102,7 +102,7 @@
                                             <option value="0" disabled selected="selected">--Select Revenue
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}" {{($setting->revenue_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -119,7 +119,7 @@
                                                 Bank Transfer
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}" {{($setting->bank_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -136,7 +136,7 @@
                                                 Card
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}" {{($setting->card_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -153,7 +153,7 @@
                                                 Advance
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}" {{($setting->advance_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -170,7 +170,7 @@
                                                 Gold Impurity
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}">{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}" {{($setting->gold_impurity_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach

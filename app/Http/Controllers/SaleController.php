@@ -9,6 +9,7 @@ use App\Services\Concrete\FinishProductService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\SaleService;
 use App\Services\Concrete\BeadTypeService;
+use App\Services\Concrete\CompanySettingService;
 use App\Services\Concrete\DiamondClarityService;
 use App\Services\Concrete\DiamondColorService;
 use App\Services\Concrete\DiamondCutService;
@@ -36,6 +37,7 @@ class SaleController extends Controller
     protected $diamond_color_service;
     protected $diamond_cut_service;
     protected $diamond_clarity_service;
+    protected $company_setting_service;
 
     public function __construct(
         SaleService $sale_service,
@@ -49,7 +51,8 @@ class SaleController extends Controller
         DiamondTypeService $diamond_type_service,
         DiamondColorService $diamond_color_service,
         DiamondCutService $diamond_cut_service,
-        DiamondClarityService $diamond_clarity_service
+        DiamondClarityService $diamond_clarity_service,
+        CompanySettingService $company_setting_service
     ) {
         $this->sale_service = $sale_service;
         $this->account_service = $account_service;
@@ -63,12 +66,14 @@ class SaleController extends Controller
         $this->diamond_color_service = $diamond_color_service;
         $this->diamond_cut_service = $diamond_cut_service;
         $this->diamond_clarity_service = $diamond_clarity_service;
+        $this->company_setting_service = $company_setting_service;
     }
     public function index()
     {
         $customers = $this->customer_service->getAllActiveCustomer();
         $accounts = $this->account_service->getAllActiveChild();
-        return view('sale.index', compact('customers', 'accounts'));
+        $setting = $this->company_setting_service->getSetting();
+        return view('sale.index', compact('customers', 'accounts','setting'));
     }
     public function getData(Request $request)
     {
