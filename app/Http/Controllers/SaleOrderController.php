@@ -97,16 +97,16 @@ class SaleOrderController extends Controller
             );
         }
 
-        // try {
+        try {
             $obj = $request->all();
             $sale_order = $this->sale_order_service->save($obj);
             return  $this->success(
                 config("enum.saved"),
                 $sale_order
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
 
