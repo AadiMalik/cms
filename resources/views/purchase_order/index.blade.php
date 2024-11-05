@@ -2,7 +2,7 @@
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
-            <h1>Sale Order</h1>
+            <h1>Purchase Order</h1>
             <ul>
                 <li>List</li>
                 <li>All</li>
@@ -20,8 +20,8 @@
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
-                            <a class="btn btn-primary btn-md m-1" href="{{ url('sale-order/create') }}"><i
-                                    class="fa fa-plus text-white mr-2"></i> Add Sale Order</a>
+                            <a class="btn btn-primary btn-md m-1" href="{{ url('purchase-order/create') }}"><i
+                                    class="fa fa-plus text-white mr-2"></i> Add Purchase Order</a>
                         </div>
                         <div class="card-body">
 
@@ -41,10 +41,10 @@
                                 </div>
                                 <div class="col-md-3" id="div_vendor">
                                     <div class="form-group">
-                                        <label for="">Customer</label>
-                                        <select id="customer_id" name="customer_id" class="form-control">
-                                            <option value="">--Select Customer--</option>
-                                            @foreach ($customers as $item)
+                                        <label for="">Supplier</label>
+                                        <select id="supplier_id" name="supplier_id" class="form-control">
+                                            <option value="">--Select Supplier--</option>
+                                            @foreach ($suppliers as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
                                             @endforeach
                                         </select>
@@ -58,17 +58,16 @@
                                 </div>
 
                             </div>
-                            
+
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="sale_order_table" class="display table" style="width:100%">
+                                    <table id="purchase_order_table" class="display table" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
                                                 <th>Sale Order No</th>
-                                                <th>Customer Name</th>
-                                                <th>Gold Rate</th>
-                                                <th>Rate Type</th>
+                                                <th>Supplier Name</th>
+                                                <th>Sale Order No</th>
                                                 <th>Warehouse</th>
                                                 <th>Total QTY</th>
                                                 <th>Action</th>
@@ -96,25 +95,24 @@
     <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-                            {data: 'sale_order_date', name: 'sale_order_date'},
-                            {data: 'sale_order_no', name: 'sale_order_no', orderable: false, searchable: false},
-                            {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
-                            {data: 'gold_rate',name: 'gold_rate'},
-                            {data: 'gold_rate_type',name: 'gold_rate_type', orderable: false, searchable: false},
-                            {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
-                            {data: 'total_qty',name: 'total_qty'},
-                            {data: 'action',name: 'action','sortable': false,searchable: false}",
-        'route' => 'sale-order/data',
+                                {data: 'purchase_order_date', name: 'purchase_order_date'},
+                                {data: 'purchase_order_no', name: 'purchase_order_no', orderable: false, searchable: false},
+                                {data: 'supplier_name',name: 'supplier_name', orderable: false, searchable: false},
+                                {data: 'sale_order',name: 'sale_order', orderable: false, searchable: false},
+                                {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
+                                {data: 'total_qty',name: 'total_qty'},
+                                {data: 'action',name: 'action','sortable': false,searchable: false}",
+        'route' => 'purchase-order/data',
         'buttons' => false,
         'pageLength' => 50,
-        'class' => 'sale_order_table',
-        'variable' => 'sale_order_table',
+        'class' => 'purchase_order_table',
+        'variable' => 'purchase_order_table',
         'datefilter' => true,
-        'params' => "customer_id:$('#customer_id').val()",
+        'params' => "supplier_id:$('#supplier_id').val()",
     ])
     <script>
         $(document).ready(function() {
-            $('#customer_id').select2();
+            $('#supplier_id').select2();
 
             const startDate = document.getElementById("start_date");
             const endDate = document.getElementById("end_date");
@@ -153,7 +151,7 @@
     <script type="text/javascript">
         $('#search_button').click(function() {
             $("#preloader").show();
-            initDataTablesale_order_table();
+            initDataTablepurchase_order_table();
             $("#preloader").hide();
         });
 
@@ -174,8 +172,8 @@
         }
         // Delete other sale Code
 
-        $("body").on("click", "#deleteSaleOrder", function() {
-            var sale_order_id = $(this).data("id");
+        $("body").on("click", "#deletePurchaseOrder", function() {
+            var purchase_order_id = $(this).data("id");
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -188,12 +186,12 @@
                 if (result.isConfirmed) {
                     $.ajax({
                             type: "get",
-                            url: "{{ url('sale-order/destroy') }}/" + sale_order_id,
+                            url: "{{ url('purchase-order/destroy') }}/" + purchase_order_id,
                         }).done(function(data) {
                             if ((data.Success = true)) {
                                 $("#preloader").hide();
                                 success(data.Message)
-                                initDataTablesale_order_table();
+                                initDataTablepurchase_order_table();
                             } else {
                                 error(data.Message);
                             }

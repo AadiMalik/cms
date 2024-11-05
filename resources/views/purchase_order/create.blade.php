@@ -93,7 +93,7 @@
                                                 <b>Sale Order Detail</b>
                                             </div>
                                             <div class="card-body" style="min-height: 60px; overflow: auto; padding: 8px;"
-                                                id="customer">
+                                                id="sale_order">
 
                                             </div>
                                         </div>
@@ -107,7 +107,7 @@
                                         <hr class="mb-2 mt-2">
                                         <b>Add Purchase Detail:</b>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="form-label">Category:<span class="text-danger">*</span></label>
                                             <input type="text" name="category" id="category"
@@ -115,7 +115,7 @@
                                                 placeholder="Enter category" required>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="form-label">Disign No:</label>
                                             <div class="form-group form-float">
@@ -126,7 +126,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="form-label">Net Weight:<span style="color:red;">*</span></label>
                                             <div class="form-group form-float">
@@ -138,32 +138,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Waste:<span style="color:red;">*</span></label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="waste" id="waste"
-                                                        class="form-control" required
-                                                        onkeypress="return isNumberKey(event)" maxlength="10">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Gross Weight:<span
-                                                    style="color:red;">*</span></label>
-                                            <div class="form-group form-float">
-                                                <div class="form-line">
-                                                    <input type="text" name="gross_weight" id="gross_weight"
-                                                        class="form-control" readonly>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="form-label">Description:<span
                                                     style="color:red;">*</span></label>
@@ -196,8 +171,6 @@
                                                     <th>Category</th>
                                                     <th>Design No</th>
                                                     <th>Net Weight</th>
-                                                    <th>Waste</th>
-                                                    <th>Gross Weight</th>
                                                     <th>Description</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -230,7 +203,7 @@
     </div>
 @endsection
 @section('js')
-    <script src="{{ url('Purchase-order/js/purchase_order.js') }}"></script>
+    <script src="{{ url('purchase-order/js/purchase_order.js') }}"></script>
     <script type="text/javascript">
         var url_local = "{{ url('/') }}";
     </script>
@@ -239,7 +212,6 @@
         $(document).ready(function() {
             $('#supplier_id').select2();
             $('#warehouse_id').select2();
-            $('#gold_rate_type_id').select2();
             const purchase_order_date = document.getElementById("purchase_order_date");
 
             // ✅ Using the visitor's timezone

@@ -18,6 +18,7 @@ use App\Http\Controllers\OtherPurchaseController;
 use App\Http\Controllers\OtherSaleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
@@ -684,9 +685,31 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('store', [SaleOrderController::class, 'store']);
         Route::get('print/{id}', [SaleOrderController::class, 'print']);
         Route::get('destroy/{id}', [SaleOrderController::class, 'destroy']);
+        Route::get('by-warehouse/{warehouse_id}', [SaleOrderController::class, 'byWarehouse']);
+        Route::get('get-detail/{id}', [SaleOrderController::class, 'getDetail']);
 
         Route::get('/js/sale_order.js', function () {
             $path = resource_path('views/sale_order/js/sale_order.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Purchase Order
+    Route::group(['prefix' => 'purchase-order'], function () {
+        Route::get('/', [PurchaseOrderController::class, 'index']);
+        Route::get('create', [PurchaseOrderController::class, 'create']);
+        Route::post('data', [PurchaseOrderController::class, 'getData'])->name('purchase-order.data');
+        Route::post('store', [PurchaseOrderController::class, 'store']);
+        Route::get('print/{id}', [PurchaseOrderController::class, 'print']);
+        Route::get('destroy/{id}', [PurchaseOrderController::class, 'destroy']);
+
+        Route::get('/js/purchase_order.js', function () {
+            $path = resource_path('views/purchase_order/js/purchase_order.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

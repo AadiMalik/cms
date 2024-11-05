@@ -138,4 +138,33 @@ class SaleOrderController extends Controller
             return $this->error(config('enum.noDelete'),);
         }
     }
+
+    public function byWarehouse($warehouse_id)
+    {
+        try {
+            $sale_order = $this->sale_order_service->getByWarehouseId($warehouse_id);
+            return $this->success(
+                config("enum.success"),
+                $sale_order,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'),);
+        }
+    }
+
+    public function getDetail($id)
+    {
+        try {
+
+            $sale_order_detail = $this->sale_order_service->saleOrderDetail($id);
+            return $this->success(
+                config("enum.success"),
+                $sale_order_detail,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'),);
+        }
+    }
 }

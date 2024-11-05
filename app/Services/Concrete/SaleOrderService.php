@@ -187,6 +187,13 @@ class SaleOrderService
         return true;
     }
 
+    public function getByWarehouseId($warehouse_id)
+    {
+        return $this->model_sale_order->getModel()::where('warehouse_id', $warehouse_id)
+        ->where('is_saled',0)->where('is_complete',0)
+            ->where('is_deleted', 0)->get();
+    }
+
     // gold rate type
     public function getGoldRateType()
     {

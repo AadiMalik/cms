@@ -12,8 +12,8 @@ function success(message) {
         timeOut: 2e3,
     });
 }
-var saleOrderData = [];
-var sale_order_sr = 0;
+var purchaseOrderData = [];
+var purchase_order_sr = 0;
 Clear();
 function isNumberKey(evt) {
     var charCode = evt.which ? evt.which : evt.keyCode;
@@ -22,11 +22,11 @@ function isNumberKey(evt) {
 
     return true;
 }
-$("#customer_id").on("change", function () {
-    var customer_id = $("#customer_id").val();
+$("#warehouse_id").on("change", function () {
+    var warehouse_id = $("#warehouse_id").val();
     $("#preloader").show();
     $.ajax({
-        url: url_local + "/customers/detail/" + customer_id,
+        url: url_local + "/sale-order/by-warehouse/" + warehouse_id,
         type: "GET",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -35,29 +35,23 @@ $("#customer_id").on("change", function () {
             console.log(data);
             if (data.Success) {
                 var data = data.Data;
-                $("#customer").empty();
+                $("#sale_order").empty();
                 var row =
                     '<table class="table table-bordered" style="margin-bottom: 0px;">';
                 row += "<tbody>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">Name:</td>';
-                row += '<td style="padding: 3px;">' + data.name + "</td>";
-                row += "</tr>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">CNIC:</td>';
-                row += '<td style="padding: 3px;">' + data.cnic + "</td>";
-                row += "</tr>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">Contact #:</td>';
-                row += '<td style="padding: 3px;">' + data.contact + "</td>";
-                row += "</tr>";
-                row += "<tr>";
-                row += '<td style="padding: 3px; width:75px;">Address:</td>';
-                row += '<td style="padding: 3px;">' + data.address + "</td>";
-                row += "</tr>";
+                $.each(data, function (k, value) {
+                    row += "<tr>";
+                    row +=
+                        '<td style="padding: 3px;"><a  id="SaleOrder" href="javascript:void(0)" data-toggle="tooltip" data-id="' +
+                        value.id +
+                        '" data-original-title="Sale order"><b>' +
+                        value.sale_order_no +
+                        "</b></a></td>";
+                    row += "</tr>";
+                });
                 row += "</tbody>";
                 row += "</table>";
-                $("#customer").html(row);
+                $("#sale_order").html(row);
                 $("#preloader").hide();
             } else {
                 error(data.Message);
@@ -66,11 +60,54 @@ $("#customer_id").on("change", function () {
         },
     });
 });
-$("#net_weight,#waste").on("keyup", function (event) {
-    var net_weight = $("#net_weight").val();
-    var waste = $("#waste").val();
-    var gross_weight = (net_weight * 1) + (waste * 1);
-    $("#gross_weight").val(gross_weight.toFixed(3));
+
+$("body").on("click", "#SaleOrder", function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var sale_order_id = $(this).data("id");
+    $("td a.sale_order_active").removeClass("sale_order_active");
+    $(this).addClass("sale_order_active");
+    $.ajax({
+        url: url_local + "/sale-order/get-detail/" + sale_order_id,
+        type: "GET",
+    }).done(function (data) {
+        console.log(data);
+        var data = data.Data;
+        $("#purchase_order_products").empty();
+        var purchase_order_sr =0;
+        var rows = "";
+        $.each(data, function (k, value) {
+            purchaseOrderData.push({
+                // sr: i,
+                category: value.category,
+                design_no: value.design_no,
+                net_weight: value.net_weight,
+                description: value.description,
+            });
+        });
+        $.each(purchaseOrderData, function (e, val) {
+            purchase_order_sr = purchase_order_sr + 1;
+            purchaseOrderData.sr = purchase_order_sr;
+
+            rows += `<tr id="${
+                val.category + "_" + val.design_no
+            }"><td>${purchase_order_sr}</td><td>${val.category}</td>
+                <td>${val.design_no}</td><td style="text-align: right;">${
+                val.net_weight
+            }</td>
+                <td>${val.description}</td>
+                <td><a class="text-danger text-white purchaseorderr${
+                    val.category + "_" + val.design_no
+                }" onclick="PurchaseOrderRemove(${
+                val.category + "_" + val.design_no
+            })"><i class="fa fa-trash"></i></a></td></tr>`;
+        });
+        console.log(rows);
+        $("#purchase_order_products").html(rows);
+        Clear();
+        PurchaseOrderShort();
+        $("#sale_order_id").val(sale_order_id);
+    });
 });
 
 function addProduct() {
@@ -78,8 +115,6 @@ function addProduct() {
     var category = $("#category").val();
     var design_no = $("#design_no").val();
     var net_weight = $("#net_weight").val();
-    var waste = $("#waste").val();
-    var gross_weight = $("#gross_weight").val();
     var description = $("#description").val();
 
     if (category == 0 || category == "") {
@@ -97,24 +132,17 @@ function addProduct() {
         $("#preloader").hide();
         return false;
     }
-    if (waste == 0 || waste == "") {
-        error("Please Enter Waste!");
-        $("#preloader").hide();
-        return false;
-    }
-    if (gross_weight == 0 || gross_weight == "") {
-        error("Please Enter Gross Weight!");
-        $("#preloader").hide();
-        return false;
-    }
     if (description == 0 || description == "") {
         error("Please Enter Description!");
         $("#preloader").hide();
         return false;
     }
     var check = true;
-    $.each(saleOrderData, function (e, val) {
-        if (val.category+'_'+val.design_no == $("#category").val()+'_'+$("#design_no").val()) {
+    $.each(purchaseOrderData, function (e, val) {
+        if (
+            val.category + "_" + val.design_no ==
+            $("#category").val() + "_" + $("#design_no").val()
+        ) {
             error("Product is already added !");
             $("#preloader").hide();
             check = false;
@@ -126,58 +154,59 @@ function addProduct() {
     }
 
     var rows = "";
-    var total = 0;
 
-    saleOrderData.push({
+    purchaseOrderData.push({
         // sr: i,
         category: category,
         design_no: design_no,
         net_weight: net_weight,
-        waste: waste,
-        gross_weight: gross_weight,
         description: description,
     });
 
-    $.each(saleOrderData, function (e, val) {
-        sale_order_sr = sale_order_sr + 1;
-        saleOrderData.sr = sale_order_sr;
+    $.each(purchaseOrderData, function (e, val) {
+        purchase_order_sr = purchase_order_sr + 1;
+        purchaseOrderData.sr = purchase_order_sr;
 
-        rows += `<tr id="${val.category+'_'+val.design_no}"><td>${sale_order_sr}</td><td>${val.category}</td>
-                <td>${val.design_no}</td><td style="text-align: right;">${val.net_weight}</td>
-                <td style="text-align: right;">${val.waste}</td>
-                <td style="text-align: right;">${val.gross_weight}</td>
+        rows += `<tr id="${
+            val.category + "_" + val.design_no
+        }"><td>${purchase_order_sr}</td><td>${val.category}</td>
+                <td>${val.design_no}</td><td style="text-align: right;">${
+            val.net_weight
+        }</td>
                 <td>${val.description}</td>
-                <td><a class="text-danger text-white saleorderr${val.category+'_'+val.design_no}" onclick="SaleOrderRemove(${val.category+'_'+val.design_no})"><i class="fa fa-trash"></i></a></td></tr>`;
-
+                <td><a class="text-danger text-white purchaseorderr${
+                    val.category + "_" + val.design_no
+                }" onclick="PurchaseOrderRemove(${
+            val.category + "_" + val.design_no
+        })"><i class="fa fa-trash"></i></a></td></tr>`;
     });
     success("Product Added Successfully!");
-    $("#sale_order_products").empty();
+    $("#purchase_order_products").empty();
     console.log(rows);
-    $("#sale_order_products").html(rows);
+    $("#purchase_order_products").html(rows);
     Clear();
-    SaleOrderShort();
+    PurchaseOrderShort();
     $("#preloader").hide();
 }
-
 
 $("body").on("click", "#submit", function (e) {
     e.preventDefault();
 
     $("#preloader").show();
     // Validation logic
-    if ($("#sale_order_date").val() == "") {
+    if ($("#purchase_order_date").val() == "") {
         error("Please select sale date!");
-        $("#sale_order_date").focus();
+        $("#purchase_order_date").focus();
         $("#preloader").hide();
         return false;
     }
 
     if (
-        $("#customer_id").find(":selected").val() == "" ||
-        $("#customer_id").find(":selected").val() == 0
+        $("#supplier_id").find(":selected").val() == "" ||
+        $("#supplier_id").find(":selected").val() == 0
     ) {
-        error("Please Select customer!");
-        $("#customer_id").focus();
+        error("Please Select Supplier!");
+        $("#supplier_id").focus();
         $("#preloader").hide();
         return false;
     }
@@ -192,36 +221,17 @@ $("body").on("click", "#submit", function (e) {
         return false;
     }
 
-    if ($("#gold_rate").val() == "" || $("#gold_rate").val() == 0) {
-        error("Gold Rate is zero!");
-        $("#gold_rate").focus();
-        $("#preloader").hide();
-        return false;
-    }
-    if (
-        $("#gold_rate_type_id").find(":selected").val() == "" ||
-        $("#gold_rate_type_id").find(":selected").val() == 0
-    ) {
-        error("Please Select Gold Rate Type!");
-        $("#gold_rate_type_id").focus();
-        $("#preloader").hide();
-        return false;
-    }
-    
-
     // Create FormData object for Ajax
     var formData = new FormData();
     formData.append("id", $("#id").val());
-    formData.append("sale_order_date", $("#sale_order_date").val());
-    formData.append("customer_id", $("#customer_id").find(":selected").val());
+    formData.append("purchase_order_date", $("#purchase_order_date").val());
+    formData.append("supplier_id", $("#supplier_id").find(":selected").val());
     formData.append("warehouse_id", $("#warehouse_id").find(":selected").val());
-    formData.append("gold_rate_type_id", $("#gold_rate_type_id").find(":selected").val());
-    formData.append("gold_rate", $("#gold_rate").val());
 
-    formData.append("saleOrderDetail", JSON.stringify(saleOrderData));
+    formData.append("purchaseOrderDetail", JSON.stringify(purchaseOrderData));
 
     $.ajax({
-        url: url_local + "/sale-order/store", // Laravel route
+        url: url_local + "/purchase-order/store", // Laravel route
         type: "POST",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -238,7 +248,7 @@ $("body").on("click", "#submit", function (e) {
 
                 setTimeout(function () {
                     $("#submit").prop("disabled", false);
-                    window.location = url_local + "/sale-order";
+                    window.location = url_local + "/purchase-order";
                 }, 1000); // Disable button for 1 second
             } else {
                 error(data.Message);
@@ -252,7 +262,7 @@ $("body").on("click", "#submit", function (e) {
     });
 });
 
-function SaleOrderRemove(id) {
+function PurchaseOrderRemove(id) {
     console.log(id);
     Swal.fire({
         title: "Are you sure?",
@@ -266,19 +276,19 @@ function SaleOrderRemove(id) {
         var item_index = "";
         var total = 0;
         $("#preloader").show();
-        $.each(saleOrderData, function (i, val) {
-            if (val.category+'_'+val.design_no == id) {
+        $.each(purchaseOrderData, function (i, val) {
+            if (val.category + "_" + val.design_no == id) {
                 $("#" + id).hide();
                 item_index = i;
                 return false;
             }
         });
 
-        saleOrderData.splice(item_index, 1);
-        var check = ".saleorderr" + id;
+        purchaseOrderData.splice(item_index, 1);
+        var check = ".purchaseorderr" + id;
         $(check).closest("tr").remove();
         success("Product Deleted Successfully!");
-        SaleOrderShort();
+        PurchaseOrderShort();
         $("#preloader").hide();
     });
 }
@@ -287,14 +297,12 @@ function Clear() {
     $("#category").val("");
     $("#design_no").val("");
     $("#net_weight").val(0);
-    $("#waste").val(0);
-    $("#gross_weight").val(0);
     $("#description").val("");
 }
 // Short
-function SaleOrderShort() {
+function PurchaseOrderShort() {
     var tbody, j, x, y;
-    tbody = document.getElementById("sale_order_products");
+    tbody = document.getElementById("purchase_order_products");
     var switching = true;
 
     // Run loop until no switching is needed
