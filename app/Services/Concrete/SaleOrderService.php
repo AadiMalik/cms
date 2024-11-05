@@ -41,7 +41,7 @@ class SaleOrderService
             $wh[] = ['customer_id', $obj['customer_id']];
         }
         $model = $this->model_sale_order->getModel()::has('SaleOrderDetail')
-            ->with(['gold_rate_type', 'customer_name'])
+            ->with(['gold_rate_type', 'warehouse_name', 'customer_name'])
             ->where('is_deleted', 0)
             ->whereBetween('sale_order_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
             ->where($wh);

@@ -5,6 +5,7 @@ namespace App\Services\Concrete;
 use App\Models\FinishProduct;
 use App\Models\OtherPurchase;
 use App\Models\OtherSale;
+use App\Models\PurchaseOrder;
 use App\Models\RattiKaat;
 use App\Models\Sale;
 use App\Models\SaleOrder;
@@ -160,6 +161,32 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "SO-" . date('dmY') . "-" . $mystring;
+      }
+
+      //Purchase Order
+      public function generatePurchaseOrderNo()
+      {
+            $purchase_order = PurchaseOrder::orderby('id', 'desc')->first();
+
+            if (!$purchase_order) {
+                  return "POO-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $purchase_order->purchase_order_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "POO-" . date('dmY') . "-" . $mystring;
       }
 
       // get stock

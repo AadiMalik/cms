@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SaleOrderDetail extends Model
+class PurchaseOrderDetail extends Model
 {
     use HasFactory;
     protected $fillable = [
         'id',
-        'sale_order_id',
+        'purchase_order_id',
         'category',
         'design_no',
         'net_weight',
-        'waste',
-        'gross_weight',
         'description',
         'is_deleted',
         'createdby_id',
@@ -27,9 +25,9 @@ class SaleOrderDetail extends Model
         'updated_at',
         'created_at'
     ];
-    public function sale_order()
+    public function purchase_order()
     {
-        return $this->belongsTo(SaleOrder::class, 'sale_order_id');
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
 
     public function created_by()
