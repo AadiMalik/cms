@@ -7,6 +7,7 @@ use App\Models\JournalEntry;
 use App\Repository\Repository;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderDetail;
+use App\Models\SaleOrder;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class PurchaseOrderService
       protected $model_purchase_order;
       protected $model_purchase_order_detail;
       protected $model_journal_entry;
-      protected $model_gold_rate_type;
+      protected $model_sale_order;
 
       protected $common_service;
       protected $journal_entry_service;
@@ -28,7 +29,7 @@ class PurchaseOrderService
             $this->model_purchase_order = new Repository(new PurchaseOrder);
             $this->model_purchase_order_detail = new Repository(new PurchaseOrderDetail);
             $this->model_journal_entry = new Repository(new JournalEntry);
-            $this->model_gold_rate_type = new Repository(new GoldRateType);
+            $this->model_sale_order = new Repository(new SaleOrder);
 
             $this->common_service = new CommonService();
             $this->journal_entry_service = new JournalEntryService();
@@ -56,6 +57,14 @@ class PurchaseOrderService
                   ->addColumn('warehouse_name', function ($item) {
                         return $item->warehouse_name->name ?? '';
                   })
+                  ->addColumn('is_complete', function ($item) {
+                        if ($item->is_complete == 1) {
+                            $saled = '<span class=" badge badge-success mr-3">Yes</span>';
+                        } else {
+                            $saled = '<span class=" badge badge-danger mr-3">No</span>';
+                        }
+                        return $saled;
+                    })
                   ->addColumn('action', function ($item) {
 
                         $action_column = '';
@@ -71,7 +80,7 @@ class PurchaseOrderService
 
                         return $action_column;
                   })
-                  ->rawColumns(['supplier_name', 'warehouse_name', 'sale_order', 'action'])
+                  ->rawColumns(['supplier_name', 'warehouse_name', 'sale_order','is_complete', 'action'])
                   ->addIndexColumn()
                   ->make(true);
             return $data;
@@ -106,7 +115,7 @@ class PurchaseOrderService
             try {
                   DB::beginTransaction();
 
-                  $PurchaseOrderDetail = json_decode($obj['PurchaseOrderDetail'], true);
+                  $PurchaseOrderDetail = json_decode($obj['purchaseOrderDetail'], true);
                   $PurchaseOrderObj = [
                         "purchase_order_date" => $obj['purchase_order_date'],
                         "supplier_id" => $obj['supplier_id'],
@@ -126,6 +135,11 @@ class PurchaseOrderService
                               "createdby_id" => Auth::user()->id
                         ];
                         $purchase_order_detail = $this->model_purchase_order_detail->create($PurchaseOrderDetailObj);
+                  }
+                  if($obj['sale_order_id']!='' && $obj['sale_order_id']!=null){
+                        $sale_order = $this->model_sale_order->getModel()::find($obj['sale_order_id']);
+                        $sale_order->is_purchased = 1;
+                        $sale_order->update();
                   }
 
                   DB::commit();

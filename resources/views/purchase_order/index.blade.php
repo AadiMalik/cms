@@ -67,9 +67,10 @@
                                                 <th>Date</th>
                                                 <th>Sale Order No</th>
                                                 <th>Supplier Name</th>
-                                                <th>Sale Order No</th>
+                                                <th>Sale Order</th>
                                                 <th>Warehouse</th>
                                                 <th>Total QTY</th>
+                                                <th>Complete</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -101,6 +102,7 @@
                                 {data: 'sale_order',name: 'sale_order', orderable: false, searchable: false},
                                 {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
                                 {data: 'total_qty',name: 'total_qty'},
+                                {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
                                 {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'purchase-order/data',
         'buttons' => false,

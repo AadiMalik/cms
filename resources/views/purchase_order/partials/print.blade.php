@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
     <div class="breadcrumb mt-4">
-        <h1>Sale Order Print</h1>
+        <h1>Purchase Order Print</h1>
 
         <ul>
             <li>View</li>
@@ -21,87 +21,51 @@
                                 class="fas fa-print"></span> Print</button>
                     </div>
                     <div class="card-body" id="printData">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table style="width:100%;">
-                                    <tbody>
-                                        <tr style="text-align: center;">
-                                            <td><img src="{{ asset('assets/images/logo.png') }}"
-                                                    style="width:40%; height:130px;" alt=""></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div style="width: 100%;">
-                                    <div style="float: left; line-height: 25px; width:70%;">
-                                        <b style="font-size:18px;">Bill To</b><br>
-                                        <b>{{ $sale_order->customer_name->name ?? '' }}</b><br>
-                                        <b>CNIC:</b> {{ $sale_order->customer_name->cnic ?? '' }}<br>
-                                        <b>Contact #:</b> {{ $sale_order->customer_name->contact ?? '' }}<br>
-                                        <b>Address:</b> {{ $sale_order->customer_name->address ?? '' }}
-                                    </div>
-                                    <div style="float: right; line-height: 25px;">
-                                        <b>Invoice No:</b> {{$sale_order->sale_order_no??''}} <br>
-                                        <b>Date:</b> {{date("d M Y g:h:i A", strtotime(str_replace('/', '-', $sale_order->sale_order_date)))}} <br>
-                                        <b>Warehouse:</b> {{$sale_order->warehouse_name->name??''}} <br>
-                                        <b>Created By:</b> {{$sale_order->created_by->name??''}}
-                                    </div>
-                                </div>
-                                <br><br><br><br>
-                                <table border="1" class="table" style="width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Category</th>
-                                            <th>Design No</th>
-                                            <th>Net Weight</th>
-                                            <th>Waste</th>
-                                            <th>Gross Weight</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($sale_order_detail as $index=> $item)
-                                            <tr>
-                                                <td>{{$index+1}}</td>
-                                                <td>{{$item['category']}}</td>
-                                                <td>{{$item['design_no']??''}}</td>
-                                                <td style="text-align: right;">{{number_format($item['net_weight'],3)}}</td>
-                                                <td style="text-align: right;">{{number_format($item['waste'],3)}}</td>
-                                                <td style="text-align: right;">{{number_format($item['gross_weight'],3)}}</td>
-                                            </tr>
-                                        @endforeach
-
-                                    </tbody>
-                                </table>
-                                <br>
-                                <div style="float: right;">
-                                    <table style="width: 300px; line-height: 30px;">
-                                        <tbody>
-                                            <tr>
-                                                <td><b>Total QTY:</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($sale_order->total_qty,2)}}</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Gold Rate</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($sale_order->gold_rate,3)}}/Gram</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Rate Type</b></td>
-                                                <td style="text-align: right;"><b>{{$sale_order->gold_rate_type->name??''}}</b></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div style="float: left;">
-                                    <b>Signature:</b><br>
-                                    <div style="height: 100px;">
-
-                                    </div><br>
-                                    <b>Name:</b> <span>........................................</span><br><br>
-                                    <b>Position:</b> <span>....................................</span>
-                                </div>
+                        <center style="float:none; margin-top:20px;">
+                            <h3>Purchase Order</h3>
+                        </center>
+                        <div>
+                            <div style="float:left;">
+                                <b>{{config('enum.company_name')}}</b><br>
+                                <b>Email: </b>{{config('enum.company_email')}} <br>
+                                <b>Phone No: </b>{{config('enum.company_phone')}}<br>
+                            </div>
+                            <div style="float: right;">
+                                <b>Purchase No: </b>{{ $purchase_order->purchase_order_no??'' }} <br>
+                                <b>Purchase Date: </b>{{ date('d-M-Y', strtotime($purchase_order->purchase_order_date)) }}  <br>
+                                <b>Supplier: </b>{{ $purchase_order->supplier_name->name??'' }} <br>
+                                <b>Warehouse: </b>{{ $purchase_order->warehouse_name->name??'' }} <br>
+                                <b>Sale Order: </b>{{ $purchase_order->sale_order->sale_order_no??'' }} <br>
                             </div>
                         </div>
+                        <br><br><br><br><br>
+                        <table border="1" style="border:1px dotted #000; float:none; width:100%;">
+                            <thead>
+                                <tr style="background: #87CEFA;color: #000;">
+                                    <th style="text-align:center;">Sr.No</th>
+                                    <th style="text-align:center;">Category</th>
+                                    <th style="text-align:center;">Design No</th>
+                                    <th style="text-align:center;">Net Weight</th>
+                                    <th style="text-align:center;">Description</th>
+                                </tr>
+                            </thead>
+                    
+                            <tbody>
+                                @foreach ($purchase_order_detail as $index=>$item)
+                                <tr>
+                                    <td style="text-align:center;">{{ $index+1 }}</td>
+                                    <td style="text-align:left;">{{ $item['category']??'' }}</td>
+                                    <td style="text-align:left;">{{ $item['design_no']??'' }}</td>
+                                    <td style="text-align:right;">{{ number_format($item['net_weight']??0.000,3) }}</td>
+                                    <td style="text-align:left;">{{ $item['description']??'' }}</td>
+                                </tr>
+                                @endforeach
+                    
+                            </tbody>
+                    
+                        </table>
+                        <br>
+                        <b>Generate By:</b> {{ $purchase_order->created_by->name ?? '' }}
                     </div>
                 </div>
             </div>

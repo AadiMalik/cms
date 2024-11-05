@@ -56,6 +56,22 @@ class SaleOrderService
             ->addColumn('warehouse_name', function ($item) {
                 return $item->warehouse_name->name ?? '';
             })
+            ->addColumn('is_purchased', function ($item) {
+                if ($item->is_purchased == 1) {
+                    $saled = '<span class=" badge badge-success mr-3">Yes</span>';
+                } else {
+                    $saled = '<span class=" badge badge-danger mr-3">No</span>';
+                }
+                return $saled;
+            })
+            ->addColumn('is_complete', function ($item) {
+                if ($item->is_complete == 1) {
+                    $saled = '<span class=" badge badge-success mr-3">Yes</span>';
+                } else {
+                    $saled = '<span class=" badge badge-danger mr-3">No</span>';
+                }
+                return $saled;
+            })
             ->addColumn('action', function ($item) {
 
                 $action_column = '';
@@ -71,7 +87,7 @@ class SaleOrderService
 
                 return $action_column;
             })
-            ->rawColumns(['customer_name', 'warehouse_name', 'gold_rate_type', 'action'])
+            ->rawColumns(['customer_name', 'warehouse_name', 'gold_rate_type','is_purchased','is_complete', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;

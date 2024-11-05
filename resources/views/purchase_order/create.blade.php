@@ -1,4 +1,13 @@
 @extends('layouts.master')
+@section('css')
+<style>
+    .sale_order_active{
+        background:green;
+        color:#fff;
+
+    }
+</style>
+@endsection
 @section('content')
     <div class="main-content pt-4">
         <div class="row pl-2">
@@ -103,6 +112,9 @@
                                     <input type="hidden" class="form-control"
                                         value="{{ isset($purchase_order) ? $purchase_order->id : '' }}" id="id"
                                         name="id">
+                                        <input type="hidden" class="form-control"
+                                        value="{{ isset($purchase_order) ? $purchase_order->sale_order_id : '' }}" id="sale_order_id"
+                                        name="sale_order_id">
                                     <div class="col-md-12">
                                         <hr class="mb-2 mt-2">
                                         <b>Add Purchase Detail:</b>
