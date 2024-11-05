@@ -104,7 +104,7 @@
                             {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
                             {data: 'total_qty',name: 'total_qty'},
                             {data: 'action',name: 'action','sortable': false,searchable: false}",
-        'route' => 'other-sale/data',
+        'route' => 'sale-order/data',
         'buttons' => false,
         'pageLength' => 50,
         'class' => 'sale_order_table',
