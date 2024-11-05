@@ -22,6 +22,7 @@ use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockTakingController;
 use App\Http\Controllers\StoneCategoryController;
@@ -673,6 +674,26 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'company-setting'], function () {
         Route::get('/', [CompanySettingController::class, 'index']);
         Route::post('store', [CompanySettingController::class, 'store']);
+    });
+
+    // Sale Order
+    Route::group(['prefix' => 'sale-order'], function () {
+        Route::get('/', [SaleOrderController::class, 'index']);
+        Route::get('create', [SaleOrderController::class, 'create']);
+        Route::post('data', [SaleOrderController::class, 'getData'])->name('sale-order.data');
+        Route::post('store', [SaleOrderController::class, 'store']);
+        Route::get('print/{id}', [SaleOrderController::class, 'print']);
+        Route::get('destroy/{id}', [SaleOrderController::class, 'destroy']);
+
+        Route::get('/js/sale_order.js', function () {
+            $path = resource_path('views/sale_order/js/sale_order.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 
     // Reports

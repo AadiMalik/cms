@@ -7,6 +7,7 @@ use App\Models\OtherPurchase;
 use App\Models\OtherSale;
 use App\Models\RattiKaat;
 use App\Models\Sale;
+use App\Models\SaleOrder;
 use App\Repository\Repository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -133,6 +134,32 @@ class CommonService
             } while ($exists);
 
             return $randomNumber;
+      }
+
+      //Sale Order
+      public function generateSaleOrderNo()
+      {
+            $sale_order = SaleOrder::orderby('id', 'desc')->first();
+
+            if (!$sale_order) {
+                  return "SO-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $sale_order->sale_order_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "SO-" . date('dmY') . "-" . $mystring;
       }
 
       // get stock
