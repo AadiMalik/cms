@@ -120,12 +120,12 @@ class SaleOrderService
             foreach ($saleOrderDetail as $item) {
                 $saleOrderDetailObj = [
                     "sale_order_id" => $obj['id'],
-                    "category" => $item->category ?? '',
-                    "design_no" => $item->design_no ?? '',
-                    "net_weight" => $item->net_weight ?? 0.000,
-                    "waste" => $item->waste ?? 0.000,
-                    "gross_weight" => $item->gross_weight ?? 0.000,
-                    "description" => $item->description ?? '',
+                    "category" => $item['category'] ?? '',
+                    "design_no" => $item['design_no'] ?? '',
+                    "net_weight" => $item['net_weight'] ?? 0.000,
+                    "waste" => $item['waste'] ?? 0.000,
+                    "gross_weight" => $item['gross_weight'] ?? 0.000,
+                    "description" => $item['description'] ?? '',
                     "createdby_id" => Auth::user()->id
                 ];
                 $sale__order_detail = $this->model_sale_order_detail->create($saleOrderDetailObj);

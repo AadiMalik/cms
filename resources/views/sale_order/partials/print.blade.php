@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
-    <div class="breadcrumb">
-        <h1>Sale Print</h1>
+    <div class="breadcrumb mt-4">
+        <h1>Sale Order Print</h1>
 
         <ul>
             <li>View</li>
@@ -34,15 +34,16 @@
                                 <div style="width: 100%;">
                                     <div style="float: left; line-height: 25px; width:70%;">
                                         <b style="font-size:18px;">Bill To</b><br>
-                                        <b>{{ $other_sale->customer_name ?? '' }}</b><br>
-                                        <b>CNIC:</b> {{ $other_sale->customer_cnic ?? '' }}<br>
-                                        <b>Contact #:</b> {{ $other_sale->customer_contact ?? '' }}<br>
-                                        <b>Address:</b> {{ $other_sale->customer_address ?? '' }}
+                                        <b>{{ $sale_order->customer_name->name ?? '' }}</b><br>
+                                        <b>CNIC:</b> {{ $sale_order->customer_name->cnic ?? '' }}<br>
+                                        <b>Contact #:</b> {{ $sale_order->customer_name->contact ?? '' }}<br>
+                                        <b>Address:</b> {{ $sale_order->customer_name->address ?? '' }}
                                     </div>
                                     <div style="float: right; line-height: 25px;">
-                                        <b>Invoice No:</b> {{$other_sale->other_sale_no??''}} <br>
-                                        <b>Date:</b> {{date("d M Y g:h:i A", strtotime(str_replace('/', '-', $other_sale->other_sale_date)))}} <br>
-                                        <b>Created By:</b> {{$other_sale->created_by->name??''}}
+                                        <b>Invoice No:</b> {{$sale_order->sale_order_no??''}} <br>
+                                        <b>Date:</b> {{date("d M Y g:h:i A", strtotime(str_replace('/', '-', $sale_order->sale_order_date)))}} <br>
+                                        <b>Warehouse:</b> {{$sale_order->warehouse_name->name??''}} <br>
+                                        <b>Created By:</b> {{$sale_order->created_by->name??''}}
                                     </div>
                                 </div>
                                 <br><br><br><br>
@@ -50,28 +51,22 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Product</th>
-                                            <th>Unit</th>
-                                            <th>Unit Price</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
+                                            <th>Category</th>
+                                            <th>Design No</th>
+                                            <th>Net Weight</th>
+                                            <th>Waste</th>
+                                            <th>Gross Weight</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
-                                            $total_qty=0;
-                                        @endphp
-                                        @foreach ($other_sale_detail as $index=> $item)
-                                        @php
-                                            $total_qty = $total_qty + $item['qty'];
-                                        @endphp
+                                        @foreach ($sale_order_detail as $index=> $item)
                                             <tr>
                                                 <td>{{$index+1}}</td>
-                                                <td><b>{{$item['code']}} {{$item['product']}}</b></td>
-                                                <td>{{$item['unit']??''}}</td>
-                                                <td style="text-align: right;">{{number_format($item['unit_price'],2)}}</td>
-                                                <td style="text-align: right;">{{number_format($item['qty'],2)}}</td>
-                                                <td style="text-align: right;">{{number_format($item['total_amount'],2)}}</td>
+                                                <td>{{$item['category']}}</td>
+                                                <td>{{$item['design_no']??''}}</td>
+                                                <td style="text-align: right;">{{number_format($item['net_weight'],3)}}</td>
+                                                <td style="text-align: right;">{{number_format($item['waste'],3)}}</td>
+                                                <td style="text-align: right;">{{number_format($item['gross_weight'],3)}}</td>
                                             </tr>
                                         @endforeach
 
@@ -79,38 +74,19 @@
                                 </table>
                                 <br>
                                 <div style="float: right;">
-                                    @php
-                                        $change = ($other_sale->cash_amount + $other_sale->bank_transfer_amount + $other_sale->card_amount + $other_sale->advance_amount) - $other_sale->total;
-                                    @endphp
                                     <table style="width: 300px; line-height: 30px;">
                                         <tbody>
                                             <tr>
                                                 <td><b>Total QTY:</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($total_qty,2)}}</b></td>
+                                                <td style="text-align: right;"><b>{{number_format($sale_order->total_qty,2)}}</b></td>
                                             </tr>
                                             <tr>
-                                                <td><b>Total:</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($other_sale->total,2)}} PKR</b></td>
+                                                <td><b>Gold Rate</b></td>
+                                                <td style="text-align: right;"><b>{{number_format($sale_order->gold_rate,3)}}/Gram</b></td>
                                             </tr>
                                             <tr>
-                                                <td><b>Cash Amount</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->cash_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Bank Transfer</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->bank_transfer_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Card Amount</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->card_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>Advance Amount</b></td>
-                                                <td style="text-align: right;"><b>(-) {{number_format($other_sale->advance_amount,2)}} PKR</b></td>
-                                            </tr>
-                                            <tr style="border-top:1px solid #444;">
-                                                <td><b>Change</b></td>
-                                                <td style="text-align: right;"><b>{{number_format($change,2)}} PKR</b></td>
+                                                <td><b>Rate Type</b></td>
+                                                <td style="text-align: right;"><b>{{$sale_order->gold_rate_type->name??''}}</b></td>
                                             </tr>
                                         </tbody>
                                     </table>

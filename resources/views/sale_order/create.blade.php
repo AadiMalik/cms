@@ -72,9 +72,10 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label class="form-label">Warehouse:</label>
+                                                    <label class="form-label">Warehouse:<span
+                                                            class="text-danger">*</span></label>
                                                     <select id="warehouse_id" name="warehouse_id"
-                                                        class="form-control show-tick">
+                                                        class="form-control show-tick" required>
                                                         <option value="" selected disabled>--Select Warehouse--</option>
                                                         @foreach ($warehouses as $item)
                                                             <option value="{{ $item->id }}"
@@ -97,9 +98,10 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="form-label">Rate Type:</label>
+                                                    <label class="form-label">Rate Type:<span
+                                                            class="text-danger">*</span></label>
                                                     <select id="gold_rate_type_id" name="gold_rate_type_id"
-                                                        class="form-control show-tick">
+                                                        class="form-control show-tick" required>
                                                         <option value="" selected disabled>--Select Rate Type--</option>
                                                         @foreach ($gold_rate_type as $item)
                                                             <option value="{{ $item->id }}"
