@@ -707,6 +707,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('store', [PurchaseOrderController::class, 'store']);
         Route::get('print/{id}', [PurchaseOrderController::class, 'print']);
         Route::get('destroy/{id}', [PurchaseOrderController::class, 'destroy']);
+        Route::get('approve/{id}', [PurchaseOrderController::class, 'approve']);
+        Route::get('reject/{id}', [PurchaseOrderController::class, 'reject']);
 
         Route::get('/js/purchase_order.js', function () {
             $path = resource_path('views/purchase_order/js/purchase_order.js');

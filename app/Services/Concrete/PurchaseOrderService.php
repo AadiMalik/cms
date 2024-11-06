@@ -42,7 +42,7 @@ class PurchaseOrderService
                   $wh[] = ['supplier_id', $obj['supplier_id']];
             }
             $model = $this->model_purchase_order->getModel()::has('PurchaseOrderDetail')
-                  ->with(['sale_order','warehouse_name', 'supplier_name'])
+                  ->with(['sale_order', 'warehouse_name', 'supplier_name'])
                   ->where('is_deleted', 0)
                   ->whereBetween('purchase_order_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
                   ->where($wh);
@@ -59,17 +59,29 @@ class PurchaseOrderService
                   })
                   ->addColumn('is_complete', function ($item) {
                         if ($item->is_complete == 1) {
-                            $saled = '<span class=" badge badge-success mr-3">Yes</span>';
+                              $saled = '<span class=" badge badge-success mr-3">Yes</span>';
                         } else {
-                            $saled = '<span class=" badge badge-danger mr-3">No</span>';
+                              $saled = '<span class=" badge badge-danger mr-3">No</span>';
                         }
                         return $saled;
-                    })
+                  })
+                  ->addColumn('status', function ($item) {
+                        if ($item->status == 'Pending')
+                              $status = "<span class='btn-warning p-1 text-white' style='border-radius: 8px;'>Pendding</span> ";
+                        if ($item->status == 'Approved')
+                              $status = "<span class='btn-success p-1 text-white' style='border-radius: 8px;'>Approved</span> ";
+                        if ($item->status == 'Rejected')
+                              $status = "<span class='btn-danger p-1 text-white' style='border-radius: 8px;'>Rejected</span> ";
+
+                        return $status;
+                  })
                   ->addColumn('action', function ($item) {
 
                         $action_column = '';
                         $print_column    = "<a class='text-info mr-2' href='purchase-order/print/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
                         $delete_column    = "<a class='text-danger mr-2' id='deletePurchaseOrder' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
+                        $approve_column    = "<a class='text-success mr-2' id='approvePurchaseOrder' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Approve'><i title='Approve' class='nav-icon mr-2 fa fa-check'></i>Approve</a>";
+                        $reject_column    = "<a class='text-danger mr-2' id='rejectPurchaseOrder' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Reject'><i title='Reject' class='nav-icon mr-2 fa fa-close'></i>Reject</a>";
 
 
                         if (Auth::user()->can('customers_edit'))
@@ -77,10 +89,15 @@ class PurchaseOrderService
 
                         if (Auth::user()->can('customers_delete'))
                               $action_column .= $delete_column;
+                        if (Auth::user()->can('customers_delete'))
+                              $action_column .= $approve_column;
+
+                        if (Auth::user()->can('customers_delete'))
+                              $action_column .= $reject_column;
 
                         return $action_column;
                   })
-                  ->rawColumns(['supplier_name', 'warehouse_name', 'sale_order','is_complete', 'action'])
+                  ->rawColumns(['supplier_name', 'warehouse_name', 'status', 'sale_order', 'is_complete', 'action'])
                   ->addIndexColumn()
                   ->make(true);
             return $data;
@@ -118,6 +135,8 @@ class PurchaseOrderService
                   $PurchaseOrderDetail = json_decode($obj['purchaseOrderDetail'], true);
                   $PurchaseOrderObj = [
                         "purchase_order_date" => $obj['purchase_order_date'],
+                        "reference_no" => $obj['reference_no'],
+                        "delivery_date" => $obj['delivery_date'],
                         "supplier_id" => $obj['supplier_id'],
                         "warehouse_id" => $obj['warehouse_id'],
                         "total_qty" => count($PurchaseOrderDetail) ?? 0,
@@ -136,7 +155,7 @@ class PurchaseOrderService
                         ];
                         $purchase_order_detail = $this->model_purchase_order_detail->create($PurchaseOrderDetailObj);
                   }
-                  if($obj['sale_order_id']!='' && $obj['sale_order_id']!=null){
+                  if ($obj['sale_order_id'] != '' && $obj['sale_order_id'] != null) {
                         $sale_order = $this->model_sale_order->getModel()::find($obj['sale_order_id']);
                         $sale_order->is_purchased = 1;
                         $sale_order->update();
@@ -196,4 +215,57 @@ class PurchaseOrderService
             return true;
       }
 
+      //approved
+      public function approved($purchase_order_id)
+      {
+            try {
+                  DB::beginTransaction();
+                  $purchase_order = $this->model_purchase_order->getModel()::find($purchase_order_id);
+
+                  if ($purchase_order->status == 'Pending') {
+                        $purchase_order->status = 'Approved';
+                        $purchase_order->approvedby_id = Auth::user()->user_id;
+                        $purchase_order->updated_at = date("Y-m-d H:i:s");
+                        $purchase_order->update();
+                  } else {
+                        $msg = "Purchase order not pending!";
+                        return $msg;
+                  }
+
+                  DB::commit();
+            } catch (Exception $e) {
+
+                  DB::rollback();
+                  throw $e;
+            }
+
+            return true;
+      }
+
+      //rejected
+      public function rejected($purchase_order_id)
+      {
+            try {
+                  DB::beginTransaction();
+                  $purchase_order = $this->model_purchase_order->getModel()::find($purchase_order_id);
+
+                  if ($purchase_order->status == 'Pending') {
+                        $purchase_order->status = 'Rejected';
+                        $purchase_order->updatedby_id = Auth::user()->user_id;
+                        $purchase_order->updated_at = date("Y-m-d H:i:s");
+                        $purchase_order->update();
+                  } else {
+                        $msg = "Purchase order not pending!";
+                        return $msg;
+                  }
+
+                  DB::commit();
+            } catch (Exception $e) {
+
+                  DB::rollback();
+                  throw $e;
+            }
+
+            return true;
+      }
 }

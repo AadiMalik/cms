@@ -1,12 +1,12 @@
 @extends('layouts.master')
 @section('css')
-<style>
-    .sale_order_active{
-        background:green;
-        color:#fff;
+    <style>
+        .sale_order_active {
+            background: green;
+            color: #fff;
 
-    }
-</style>
+        }
+    </style>
 @endsection
 @section('content')
     <div class="main-content pt-4">
@@ -53,13 +53,22 @@
                                                 <div class="form-group">
                                                     <label class="form-label">Purchase Order Date:<span
                                                             style="color:red;">*</span></label>
-                                                    <input type="date" name="purchase_order_date" id="purchase_order_date"
-                                                        class="form-control"
+                                                    <input type="date" name="purchase_order_date"
+                                                        id="purchase_order_date" class="form-control"
                                                         value="{{ isset($purchase_order) ? $purchase_order->purchase_order_date : old('purchase_order_date') }}"
                                                         required>
                                                 </div>
                                             </div>
-
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Reference:<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="date" name="reference_no"
+                                                        id="reference_no" class="form-control"
+                                                        value="{{ isset($purchase_order) ? $purchase_order->reference_no : old('purchase_order_date') }}"
+                                                        required>
+                                                </div>
+                                            </div>
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label class="form-label">Supplier: <span
@@ -82,7 +91,8 @@
                                                             class="text-danger">*</span></label>
                                                     <select id="warehouse_id" name="warehouse_id"
                                                         class="form-control show-tick" required>
-                                                        <option value="" selected disabled>--Select Warehouse--</option>
+                                                        <option value="" selected disabled>--Select Warehouse--
+                                                        </option>
                                                         @foreach ($warehouses as $item)
                                                             <option value="{{ $item->id }}"
                                                                 @if (isset($purchase_order)) {{ $purchase_order->warehouse_id == $item->id ? 'selected' : '' }} @endif>
@@ -90,6 +100,16 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label class="form-label">Delivery Date:<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="date" name="delivery_date" id="delivery_date"
+                                                        class="form-control"
+                                                        value="{{ isset($purchase_order) ? $purchase_order->delivery_date : old('purchase_order_date') }}"
+                                                        required>
                                                 </div>
                                             </div>
 
@@ -112,9 +132,9 @@
                                     <input type="hidden" class="form-control"
                                         value="{{ isset($purchase_order) ? $purchase_order->id : '' }}" id="id"
                                         name="id">
-                                        <input type="hidden" class="form-control"
-                                        value="{{ isset($purchase_order) ? $purchase_order->sale_order_id : '' }}" id="sale_order_id"
-                                        name="sale_order_id">
+                                    <input type="hidden" class="form-control"
+                                        value="{{ isset($purchase_order) ? $purchase_order->sale_order_id : '' }}"
+                                        id="sale_order_id" name="sale_order_id">
                                     <div class="col-md-12">
                                         <hr class="mb-2 mt-2">
                                         <b>Add Purchase Detail:</b>

@@ -92,16 +92,16 @@ class PurchaseOrderController extends Controller
             );
         }
 
-        // try {
+        try {
             $obj = $request->all();
             $purchase_order = $this->purchase_order_service->save($obj);
             return  $this->success(
                 config("enum.saved"),
                 $purchase_order
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
 
@@ -134,4 +134,39 @@ class PurchaseOrderController extends Controller
         }
     }
 
+    //approve
+    public function approve($purchase_order_id)
+    {
+        try {
+            $purchase_order = $this->purchase_order_service->approved($purchase_order_id);
+            if ($purchase_order == true)
+                return $this->success(
+                    config('enum.status'),
+                    $purchase_order,
+                    false
+                );
+
+            return $this->error($purchase_order);
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+    //reject
+    public function reject($purchase_order_id)
+    {
+        try {
+            $purchase_order = $this->purchase_order_service->rejected($purchase_order_id);
+            if ($purchase_order == true)
+                return $this->success(
+                    config('enum.status'),
+                    $purchase_order,
+                    false
+                );
+
+            return $this->error($purchase_order);
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
 }

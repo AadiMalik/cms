@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PurchaseOrder extends Model
+class JobTask extends Model
 {
     use HasFactory;
     protected $fillable = [
         'id',
-        'purchase_order_no',
-        'purchase_order_date',
-        'reference_no',
-        'delivery_date',
-        'approvedby_id',
+        'job_task_no',
+        'job_task_date',
+        'purchase_order_id',
+        'sale_order_id',
         'supplier_id',
         'warehouse_id',
-        'sale_order_id',
         'total_qty',
         'is_complete',
         'is_deleted',
@@ -30,14 +28,18 @@ class PurchaseOrder extends Model
         'created_at'
     ];
 
-    public function PurchaseOrderDetail()
+    public function JobTaskDetail()
     {
-        return $this->hasMany(PurchaseOrderDetail::class, 'purchase_order_id');
+        return $this->hasMany(JobTaskDetail::class, 'job_task_id');
     }
 
     public function warehouse_name()
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_id');
+    }
+    public function purchase_order()
+    {
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
     public function sale_order()
     {
@@ -51,9 +53,5 @@ class PurchaseOrder extends Model
     public function created_by()
     {
         return $this->belongsTo(User::class, 'createdby_id');
-    }
-    public function approved_by()
-    {
-        return $this->belongsTo(User::class, 'approvedby_id');
     }
 }

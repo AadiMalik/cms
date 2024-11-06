@@ -71,6 +71,7 @@
                                                 <th>Warehouse</th>
                                                 <th>Total QTY</th>
                                                 <th>Complete</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -96,14 +97,15 @@
     <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-                                {data: 'purchase_order_date', name: 'purchase_order_date'},
-                                {data: 'purchase_order_no', name: 'purchase_order_no', orderable: false, searchable: false},
-                                {data: 'supplier_name',name: 'supplier_name', orderable: false, searchable: false},
-                                {data: 'sale_order',name: 'sale_order', orderable: false, searchable: false},
-                                {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
-                                {data: 'total_qty',name: 'total_qty'},
-                                {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
-                                {data: 'action',name: 'action','sortable': false,searchable: false}",
+                                    {data: 'purchase_order_date', name: 'purchase_order_date'},
+                                    {data: 'purchase_order_no', name: 'purchase_order_no', orderable: false, searchable: false},
+                                    {data: 'supplier_name',name: 'supplier_name', orderable: false, searchable: false},
+                                    {data: 'sale_order',name: 'sale_order', orderable: false, searchable: false},
+                                    {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
+                                    {data: 'total_qty',name: 'total_qty'},
+                                    {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
+                                    {data: 'status',name: 'status', orderable: false, searchable: false},
+                                    {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'purchase-order/data',
         'buttons' => false,
         'pageLength' => 50,
@@ -172,7 +174,7 @@
                 timeOut: 2e3,
             });
         }
-        // Delete other sale Code
+        // Delete Code
 
         $("body").on("click", "#deletePurchaseOrder", function() {
             var purchase_order_id = $(this).data("id");
@@ -189,6 +191,74 @@
                     $.ajax({
                             type: "get",
                             url: "{{ url('purchase-order/destroy') }}/" + purchase_order_id,
+                        }).done(function(data) {
+                            if ((data.Success = true)) {
+                                $("#preloader").hide();
+                                success(data.Message)
+                                initDataTablepurchase_order_table();
+                            } else {
+                                error(data.Message);
+                            }
+
+                        })
+                        .catch(function(err) {
+                            error(err.Message);
+                        });
+                }
+            });
+        });
+
+        //approve Code
+
+        $("body").on("click", "#approvePurchaseOrder", function() {
+            var purchase_order_id = $(this).data("id");
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, approve it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                            type: "get",
+                            url: "{{ url('purchase-order/approve') }}/" + purchase_order_id,
+                        }).done(function(data) {
+                            if ((data.Success = true)) {
+                                $("#preloader").hide();
+                                success(data.Message)
+                                initDataTablepurchase_order_table();
+                            } else {
+                                error(data.Message);
+                            }
+
+                        })
+                        .catch(function(err) {
+                            error(err.Message);
+                        });
+                }
+            });
+        });
+
+        //reject Code
+
+        $("body").on("click", "#rejectPurchaseOrder", function() {
+            var purchase_order_id = $(this).data("id");
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, reject it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                            type: "get",
+                            url: "{{ url('purchase-order/reject') }}/" + purchase_order_id,
                         }).done(function(data) {
                             if ((data.Success = true)) {
                                 $("#preloader").hide();
