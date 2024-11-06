@@ -65,7 +65,7 @@ $("body").on("click", "#SaleOrder", function (event) {
     event.preventDefault();
     event.stopImmediatePropagation();
     var sale_order_id = $(this).data("id");
-    $("td.sale_order_active").removeClass("sale_order_active");
+    $("td a.sale_order_active").removeClass("sale_order_active");
     $(this).addClass("sale_order_active");
     $.ajax({
         url: url_local + "/sale-order/get-detail/" + sale_order_id,
@@ -73,7 +73,7 @@ $("body").on("click", "#SaleOrder", function (event) {
     }).done(function (data) {
         console.log(data);
         var data = data.Data;
-        var purchaseOrderData = [];
+        purchaseOrderData = [];
         $("#purchase_order_products").empty();
         var purchase_order_sr =0;
         var rows = "";
@@ -227,6 +227,8 @@ $("body").on("click", "#submit", function (e) {
     var formData = new FormData();
     formData.append("id", $("#id").val());
     formData.append("purchase_order_date", $("#purchase_order_date").val());
+    formData.append("delivery_date", $("#delivery_date").val());
+    formData.append("reference_no", $("#reference_no").val());
     formData.append("sale_order_id", $("#sale_order_id").val());
     formData.append("supplier_id", $("#supplier_id").find(":selected").val());
     formData.append("warehouse_id", $("#warehouse_id").find(":selected").val());

@@ -59,17 +59,27 @@
                                                         required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label">Reference:<span
                                                             style="color:red;">*</span></label>
-                                                    <input type="date" name="reference_no"
+                                                    <input type="text" name="reference_no"
                                                         id="reference_no" class="form-control"
                                                         value="{{ isset($purchase_order) ? $purchase_order->reference_no : old('purchase_order_date') }}"
                                                         required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Delivery Date:<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="datetime-local" name="delivery_date" id="delivery_date"
+                                                        class="form-control"
+                                                        value="{{ isset($purchase_order) ? $purchase_order->delivery_date : old('purchase_order_date') }}"
+                                                        required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label">Supplier: <span
                                                             class="text-danger">*</span></label>
@@ -85,7 +95,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label">Warehouse:<span
                                                             class="text-danger">*</span></label>
@@ -102,16 +112,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label class="form-label">Delivery Date:<span
-                                                            style="color:red;">*</span></label>
-                                                    <input type="date" name="delivery_date" id="delivery_date"
-                                                        class="form-control"
-                                                        value="{{ isset($purchase_order) ? $purchase_order->delivery_date : old('purchase_order_date') }}"
-                                                        required>
-                                                </div>
-                                            </div>
+                                            
 
                                         </div>
                                     </div>

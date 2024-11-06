@@ -77,6 +77,8 @@ class PurchaseOrderController extends Controller
                 'purchase_order_date'   => 'required',
                 'supplier_id'       => 'required',
                 'warehouse_id'      => 'required',
+                'delivery_date'      => 'required',
+                'reference_no'      => 'required',
                 'purchaseOrderDetail'   => 'required'
             ],
             $this->validationMessage()
@@ -92,16 +94,16 @@ class PurchaseOrderController extends Controller
             );
         }
 
-        try {
+        // try {
             $obj = $request->all();
             $purchase_order = $this->purchase_order_service->save($obj);
             return  $this->success(
                 config("enum.saved"),
                 $purchase_order
             );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 
 

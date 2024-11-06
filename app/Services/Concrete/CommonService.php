@@ -3,6 +3,7 @@
 namespace App\Services\Concrete;
 
 use App\Models\FinishProduct;
+use App\Models\JobTask;
 use App\Models\OtherPurchase;
 use App\Models\OtherSale;
 use App\Models\PurchaseOrder;
@@ -187,6 +188,32 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "POO-" . date('dmY') . "-" . $mystring;
+      }
+
+      //Job Task
+      public function generateJobTaskNo()
+      {
+            $job_task = JobTask::orderby('id', 'desc')->first();
+
+            if (!$job_task) {
+                  return "JT-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $job_task->job_task_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "JT-" . date('dmY') . "-" . $mystring;
       }
 
       // get stock

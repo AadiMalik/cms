@@ -3,6 +3,8 @@
 namespace App\Services\Concrete;
 
 use App\Models\GoldRateType;
+use App\Models\JobTask;
+use App\Models\JobTaskDetail;
 use App\Models\JournalEntry;
 use App\Repository\Repository;
 use App\Models\PurchaseOrder;
@@ -20,6 +22,8 @@ class PurchaseOrderService
       protected $model_purchase_order_detail;
       protected $model_journal_entry;
       protected $model_sale_order;
+      protected $model_job_task;
+      protected $model_job_task_detail;
 
       protected $common_service;
       protected $journal_entry_service;
@@ -30,6 +34,8 @@ class PurchaseOrderService
             $this->model_purchase_order_detail = new Repository(new PurchaseOrderDetail);
             $this->model_journal_entry = new Repository(new JournalEntry);
             $this->model_sale_order = new Repository(new SaleOrder);
+            $this->model_job_task = new Repository(new JobTask);
+            $this->model_job_task_detail = new Repository(new JobTaskDetail);
 
             $this->common_service = new CommonService();
             $this->journal_entry_service = new JournalEntryService();
@@ -87,12 +93,12 @@ class PurchaseOrderService
                         if (Auth::user()->can('customers_edit'))
                               $action_column .= $print_column;
 
-                        if (Auth::user()->can('customers_delete'))
+                        if (Auth::user()->can('customers_delete') && $item->status == 'Pending')
                               $action_column .= $delete_column;
-                        if (Auth::user()->can('customers_delete'))
+                        if (Auth::user()->can('customers_delete') && $item->status == 'Pending')
                               $action_column .= $approve_column;
 
-                        if (Auth::user()->can('customers_delete'))
+                        if (Auth::user()->can('customers_delete') && $item->status == 'Pending')
                               $action_column .= $reject_column;
 
                         return $action_column;
@@ -227,6 +233,35 @@ class PurchaseOrderService
                         $purchase_order->approvedby_id = Auth::user()->user_id;
                         $purchase_order->updated_at = date("Y-m-d H:i:s");
                         $purchase_order->update();
+
+
+                        // Job Task Create
+                        $JobTaskObj = [
+                              "job_task_no" => $this->common_service->generateJobTaskNo(),
+                              "job_task_date" => $purchase_order->purchase_order_date,
+                              "purchase_order_id" => $purchase_order->id,
+                              "reference_no" => $purchase_order->reference_no,
+                              "delivery_date" => $purchase_order->delivery_date,
+                              "supplier_id" => $purchase_order->supplier_id,
+                              "warehouse_id" => $purchase_order->warehouse_id,
+                              "total_qty" =>  $purchase_order->total_qty ?? 0,
+                              "sale_order_id" => $purchase_order->sale_order_id ?? null,
+                              "createdby_id" => Auth::user()->id
+                        ];
+                        $job_task = $this->model_job_task->create($JobTaskObj);
+                        $purchase_order_detail = $this->model_purchase_order_detail->getModel()::where('purchase_order_id', $purchase_order_id)
+                              ->where('is_deleted', 0)->get();
+                        foreach ($purchase_order_detail as $item) {
+                              $JobTaskDetailObj = [
+                                    "job_task_id" => $job_task->id,
+                                    "category" => $item['category'] ?? '',
+                                    "design_no" => $item['design_no'] ?? '',
+                                    "net_weight" => $item['net_weight'] ?? 0.000,
+                                    "description" => $item['description'] ?? '',
+                                    "createdby_id" => Auth::user()->id
+                              ];
+                              $job_task_detail = $this->model_job_task_detail->create($JobTaskDetailObj);
+                        }
                   } else {
                         $msg = "Purchase order not pending!";
                         return $msg;
