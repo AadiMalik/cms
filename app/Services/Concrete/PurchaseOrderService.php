@@ -238,7 +238,7 @@ class PurchaseOrderService
                         // Job Task Create
                         $JobTaskObj = [
                               "job_task_no" => $this->common_service->generateJobTaskNo(),
-                              "job_task_date" => $purchase_order->purchase_order_date,
+                              "job_task_date" => date("Y-m-d H:i:s"),
                               "purchase_order_id" => $purchase_order->id,
                               "reference_no" => $purchase_order->reference_no,
                               "delivery_date" => $purchase_order->delivery_date,

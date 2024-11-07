@@ -94,16 +94,16 @@ class PurchaseOrderController extends Controller
             );
         }
 
-        // try {
+        try {
             $obj = $request->all();
             $purchase_order = $this->purchase_order_service->save($obj);
             return  $this->success(
                 config("enum.saved"),
                 $purchase_order
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
 

@@ -53,6 +53,9 @@ class JobTaskService
                   ->addColumn('sale_order', function ($item) {
                         return $item->sale_order->sale_order_no ?? '';
                   })
+                  ->addColumn('purchase_order', function ($item) {
+                        return $item->purchase_order->purchase_order_no ?? '';
+                  })
                   ->addColumn('warehouse_name', function ($item) {
                         return $item->warehouse_name->name ?? '';
                   })
@@ -67,12 +70,15 @@ class JobTaskService
                   ->addColumn('action', function ($item) {
 
                         $action_column = '';
-                        $print_column    = "<a class='text-info mr-2' href='purchase-order/print/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
+                        $activity_column    = "<a class='text-info mr-2' href='job-task-activity/" . $item->id . "'><i title='Activity' class='nav-icon mr-2 fa fa-star'></i>Activity</a>";
+                        $view_column    = "<a class='text-warning mr-2' href='job-task/view/" . $item->id . "'><i title='View' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
                         $delete_column    = "<a class='text-danger mr-2' id='deleteJobTask' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
 
                         if (Auth::user()->can('customers_edit'))
-                              $action_column .= $print_column;
+                              $action_column .= $activity_column;
+                        if (Auth::user()->can('customers_edit'))
+                              $action_column .= $view_column;
 
                         if (Auth::user()->can('customers_delete'))
                               $action_column .= $delete_column;
@@ -90,24 +96,6 @@ class JobTaskService
             return $this->model_job_task->getModel()::with('supplier_name')
                   ->where('is_deleted', 0)
                   ->get();
-      }
-      public function saveJobTask()
-      {
-            try {
-                  DB::beginTransaction();
-                  $obj = [
-                        'purchase_order_no' => $this->common_service->generateJobTaskNo(),
-                        'createdby_id' => Auth::User()->id
-                  ];
-                  $saved_obj = $this->model_job_task->create($obj);
-
-                  DB::commit();
-            } catch (Exception $e) {
-
-                  DB::rollback();
-                  throw $e;
-            }
-            return $saved_obj;
       }
       public function save($obj)
       {

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('job_task_no')->nullable();
             $table->string('job_task_date')->nullable();
+            $table->string('delivery_date')->nullable();
             $table->integer('supplier_id')->nullable();
             $table->integer('warehouse_id')->nullable();
             $table->integer('purchase_order_id')->nullable();

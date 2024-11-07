@@ -11,6 +11,8 @@ use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinishProductController;
 use App\Http\Controllers\GoldRateController;
+use App\Http\Controllers\JobTaskActivityController;
+use App\Http\Controllers\JobTaskController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\OtherProductController;
@@ -712,6 +714,43 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/purchase_order.js', function () {
             $path = resource_path('views/purchase_order/js/purchase_order.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Job Task
+    Route::group(['prefix' => 'job-task'], function () {
+        Route::get('/', [JobTaskController::class, 'index']);
+        Route::post('data', [JobTaskController::class, 'getData'])->name('job-task.data');
+        Route::post('store', [JobTaskController::class, 'store']);
+        Route::get('print/{id}', [JobTaskController::class, 'print']);
+        Route::get('destroy/{id}', [JobTaskController::class, 'destroy']);
+
+        Route::get('/js/job_task.js', function () {
+            $path = resource_path('views/job_task/js/job_task.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Job Task
+    Route::group(['prefix' => 'job-task-activity'], function () {
+        Route::get('/{id}', [JobTaskActivityController::class, 'index']);
+        Route::post('data', [JobTaskActivityController::class, 'getData'])->name('job-task-activity.data');
+        Route::post('store', [JobTaskActivityController::class, 'store']);
+        Route::get('destroy/{id}', [JobTaskActivityController::class, 'destroy']);
+
+        Route::get('/js/job_task_activity.js', function () {
+            $path = resource_path('views/job_task_activity/js/job_task_activity.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',
