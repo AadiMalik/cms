@@ -80,6 +80,8 @@ $("body").on("click", "#SaleOrder", function (event) {
         $.each(data, function (k, value) {
             purchaseOrderData.push({
                 // sr: i,
+                product_id:value.product_id,
+                product:value.product,
                 category: value.category,
                 design_no: value.design_no,
                 net_weight: value.net_weight,
@@ -91,16 +93,16 @@ $("body").on("click", "#SaleOrder", function (event) {
             purchaseOrderData.sr = purchase_order_sr;
 
             rows += `<tr id="${
-                val.category + "_" + val.design_no
-            }"><td>${purchase_order_sr}</td><td>${val.category}</td>
+                val.product_id
+            }"><td>${purchase_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
                 <td>${val.design_no}</td><td style="text-align: right;">${
                 val.net_weight
             }</td>
                 <td>${val.description}</td>
                 <td><a class="text-danger text-white purchaseorderr${
-                    val.category + "_" + val.design_no
+                    val.product_id
                 }" onclick="PurchaseOrderRemove(${
-                val.category + "_" + val.design_no
+                val.product_id
             })"><i class="fa fa-trash"></i></a></td></tr>`;
         });
         console.log(rows);
@@ -114,11 +116,17 @@ $("body").on("click", "#SaleOrder", function (event) {
 function addProduct() {
     $("#preloader").show();
     $("#sale_order_id").val('');
+    var product_id = $("#product_id").find(":selected").val();
+    var product = $("#product_id").find(":selected").text();
     var category = $("#category").val();
     var design_no = $("#design_no").val();
     var net_weight = $("#net_weight").val();
     var description = $("#description").val();
-
+    if (product_id == 0 || product_id == "") {
+        error("Please Select Product!");
+        $("#preloader").hide();
+        return false;
+    }
     if (category == 0 || category == "") {
         error("Please Enter Category!");
         $("#preloader").hide();
@@ -142,8 +150,8 @@ function addProduct() {
     var check = true;
     $.each(purchaseOrderData, function (e, val) {
         if (
-            val.category + "_" + val.design_no ==
-            $("#category").val() + "_" + $("#design_no").val()
+            val.product_id ==
+            $("#product_id").find(":selected").val()
         ) {
             error("Product is already added !");
             $("#preloader").hide();
@@ -159,6 +167,8 @@ function addProduct() {
 
     purchaseOrderData.push({
         // sr: i,
+        product_id:product_id,
+        product:product,
         category: category,
         design_no: design_no,
         net_weight: net_weight,
@@ -170,16 +180,16 @@ function addProduct() {
         purchaseOrderData.sr = purchase_order_sr;
 
         rows += `<tr id="${
-            val.category + "_" + val.design_no
-        }"><td>${purchase_order_sr}</td><td>${val.category}</td>
+            val.product_id
+        }"><td>${purchase_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
                 <td>${val.design_no}</td><td style="text-align: right;">${
             val.net_weight
         }</td>
                 <td>${val.description}</td>
                 <td><a class="text-danger text-white purchaseorderr${
-                    val.category + "_" + val.design_no
+                    val.product_id
                 }" onclick="PurchaseOrderRemove(${
-            val.category + "_" + val.design_no
+            val.product_id
         })"><i class="fa fa-trash"></i></a></td></tr>`;
     });
     success("Product Added Successfully!");
@@ -282,7 +292,7 @@ function PurchaseOrderRemove(id) {
         var total = 0;
         $("#preloader").show();
         $.each(purchaseOrderData, function (i, val) {
-            if (val.category + "_" + val.design_no == id) {
+            if (val.product_id == id) {
                 $("#" + id).hide();
                 item_index = i;
                 return false;
@@ -299,6 +309,10 @@ function PurchaseOrderRemove(id) {
 }
 
 function Clear() {
+    $("#product_id option[value='0']").remove();
+    $("#product_id").append(
+        '<option disabled selected value="0">--Select Product--</option>'
+    );
     $("#category").val("");
     $("#design_no").val("");
     $("#net_weight").val(0);

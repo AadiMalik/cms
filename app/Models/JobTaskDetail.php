@@ -11,6 +11,7 @@ class JobTaskDetail extends Model
     protected $fillable = [
         'id',
         'job_task_id',
+        'product_id',
         'category',
         'design_no',
         'net_weight',
@@ -28,6 +29,11 @@ class JobTaskDetail extends Model
     public function job_task()
     {
         return $this->belongsTo(JobTask::class, 'job_task_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function created_by()

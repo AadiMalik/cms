@@ -51,6 +51,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Product</th>
                                             <th>Category</th>
                                             <th>Design No</th>
                                             <th>Net Weight</th>
@@ -62,6 +63,7 @@
                                         @foreach ($sale_order_detail as $index=> $item)
                                             <tr>
                                                 <td>{{$index+1}}</td>
+                                                <td>{{$item['product_name']}}</td>
                                                 <td>{{$item['category']}}</td>
                                                 <td>{{$item['design_no']??''}}</td>
                                                 <td style="text-align: right;">{{number_format($item['net_weight'],3)}}</td>

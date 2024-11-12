@@ -11,6 +11,7 @@ class PurchaseOrderDetail extends Model
     protected $fillable = [
         'id',
         'purchase_order_id',
+        'product_id',
         'category',
         'design_no',
         'net_weight',
@@ -29,7 +30,10 @@ class PurchaseOrderDetail extends Model
     {
         return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
-
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
     public function created_by()
     {
         return $this->belongsTo(User::class, 'createdby_id');

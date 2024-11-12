@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sale_order_details', function (Blueprint $table) {
             $table->id();
             $table->integer('sale_order_id')->nullable();
+            $table->integer('product_id')->nullable();
             $table->string('category')->nullable();
             $table->string('design_no')->nullable();
             $table->decimal('net_weight',18,3)->default(0);

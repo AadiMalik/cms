@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CommonService;
+use App\Services\Concrete\ProductService;
 use App\Services\Concrete\PurchaseOrderService;
 use App\Services\Concrete\SupplierService;
 use App\Services\Concrete\WarehouseService;
@@ -21,6 +22,7 @@ class PurchaseOrderController extends Controller
     protected $supplier_service;
     protected $other_product_service;
     protected $warehouse_service;
+    protected $product_service;
     protected $common_service;
 
     public function __construct(
@@ -28,12 +30,14 @@ class PurchaseOrderController extends Controller
         SupplierService $supplier_service,
         AccountService $account_service,
         WarehouseService $warehouse_service,
+        ProductService $product_service,
         CommonService $common_service
     ) {
         $this->purchase_order_service = $purchase_order_service;
         $this->account_service = $account_service;
         $this->supplier_service = $supplier_service;
         $this->warehouse_service = $warehouse_service;
+        $this->product_service = $product_service;
         $this->common_service = $common_service;
     }
     public function index()
@@ -62,9 +66,11 @@ class PurchaseOrderController extends Controller
         $purchase_order = $this->purchase_order_service->savePurchaseOrder();
         $warehouses = $this->warehouse_service->getAll();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
+        $products = $this->product_service->getAllActiveProduct();
         return view('purchase_order.create', compact(
             'purchase_order',
             'warehouses',
+            'products',
             'suppliers'
         ));
     }

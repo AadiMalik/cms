@@ -11,6 +11,7 @@ use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinishProductController;
 use App\Http\Controllers\GoldRateController;
+use App\Http\Controllers\JobPurchaseController;
 use App\Http\Controllers\JobTaskActivityController;
 use App\Http\Controllers\JobTaskController;
 use App\Http\Controllers\JournalController;
@@ -751,6 +752,67 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/job_task_activity.js', function () {
             $path = resource_path('views/job_task_activity/js/job_task_activity.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+
+    // Sale
+    Route::group(['prefix' => 'job-purchase'], function () {
+        Route::get('/', [JobPurchaseController::class, 'index']);
+        Route::get('create/{id}', [JobPurchaseController::class, 'create']);
+        Route::post('data', [JobPurchaseController::class, 'getData'])->name('job-purchase.data');
+        Route::post('store', [JobPurchaseController::class, 'store']);
+        Route::get('print/{id}', [JobPurchaseController::class, 'print']);
+        Route::get('destroy/{id}', [JobPurchaseController::class, 'destroy']);
+        Route::get('status/{id}', [JobPurchaseController::class, 'status']);
+        Route::get('get-detail/{id}', [JobPurchaseController::class, 'jobPurchaseDetail']);
+        Route::post('post', [JobPurchaseController::class, 'post']);
+        Route::get('unpost/{id}', [JobPurchaseController::class, 'unpost']);
+
+        Route::get('/js/job_purchase.js', function () {
+            $path = resource_path('views/purchases/job_purchase/js/job_purchase.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/job_purchase_detail.js', function () {
+            $path = resource_path('views/purchases/job_purchase/js/job_purchase_detail.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/bead_weight.js', function () {
+            $path = resource_path('views/purchases/job_purchase/js/bead_weight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/stone_weight.js', function () {
+            $path = resource_path('views/purchases/job_purchase/js/stone_weight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/diamond_carat.js', function () {
+            $path = resource_path('views/purchases/job_purchase/js/diamond_carat.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

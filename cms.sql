@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2024 at 12:01 PM
+-- Generation Time: Nov 12, 2024 at 10:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -89,6 +89,61 @@ INSERT INTO `account_types` (`id`, `type`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bead_types`
+--
+
+CREATE TABLE `bead_types` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `bead_types`
+--
+
+INSERT INTO `bead_types` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Bead1', 1, 0, 1, NULL, NULL, '2024-10-24 17:32:20', '2024-10-24 17:32:20');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `company_settings`
+--
+
+CREATE TABLE `company_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `company_id` int(11) DEFAULT NULL,
+  `purchase_account_id` int(11) DEFAULT NULL,
+  `sale_account_id` int(11) DEFAULT NULL,
+  `cash_account_id` int(11) DEFAULT NULL,
+  `revenue_account_id` int(11) DEFAULT NULL,
+  `bank_account_id` int(11) DEFAULT NULL,
+  `card_account_id` int(11) DEFAULT NULL,
+  `advance_account_id` int(11) DEFAULT NULL,
+  `gold_impurity_account_id` int(11) DEFAULT NULL,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `company_settings`
+--
+
+INSERT INTO `company_settings` (`id`, `company_id`, `purchase_account_id`, `sale_account_id`, `cash_account_id`, `revenue_account_id`, `bank_account_id`, `card_account_id`, `advance_account_id`, `gold_impurity_account_id`, `createdby_id`, `updatedby_id`, `created_at`, `updated_at`) VALUES
+(1, NULL, 10, 10, 11, 12, 8, 5, 6, 5, 1, NULL, '2024-10-31 18:22:48', '2024-10-31 18:22:48');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `customers`
 --
 
@@ -129,6 +184,106 @@ INSERT INTO `customers` (`id`, `name`, `contact`, `email`, `cnic`, `address`, `d
 (3, 'new customer', '54444444444', NULL, '122222222222', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 0, 1, NULL, '2024-10-08 03:51:59', '2024-10-08 03:51:59', NULL),
 (4, 'customer 2', '5678888777777', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 0, 1, NULL, '2024-10-08 03:53:07', '2024-10-08 03:53:07', NULL),
 (5, 'Journal Voucher', '030028718912', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 0, 1, NULL, '2024-10-08 03:53:33', '2024-10-08 03:53:33', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `diamond_clarities`
+--
+
+CREATE TABLE `diamond_clarities` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `diamond_clarities`
+--
+
+INSERT INTO `diamond_clarities` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Clarity', 1, 0, 1, 1, NULL, '2024-10-24 17:34:12', '2024-10-24 17:34:19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `diamond_colors`
+--
+
+CREATE TABLE `diamond_colors` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `diamond_colors`
+--
+
+INSERT INTO `diamond_colors` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Color 1', 1, 0, 1, 1, NULL, '2024-10-24 17:33:31', '2024-10-24 17:33:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `diamond_cuts`
+--
+
+CREATE TABLE `diamond_cuts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `diamond_cuts`
+--
+
+INSERT INTO `diamond_cuts` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Cut 1', 1, 0, 1, NULL, NULL, '2024-10-24 17:33:53', '2024-10-24 17:33:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `diamond_types`
+--
+
+CREATE TABLE `diamond_types` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `diamond_types`
+--
+
+INSERT INTO `diamond_types` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Diamond 1', 1, 0, 1, 1, NULL, '2024-10-24 17:33:13', '2024-10-24 17:33:17');
 
 -- --------------------------------------------------------
 
@@ -271,7 +426,9 @@ CREATE TABLE `finish_products` (
 --
 
 INSERT INTO `finish_products` (`id`, `ratti_kaat_id`, `ratti_kaat_detail_id`, `tag_no`, `barcode`, `product_id`, `warehouse_id`, `picture`, `gold_carat`, `scale_weight`, `bead_weight`, `stones_weight`, `diamond_weight`, `net_weight`, `waste_per`, `waste`, `gross_weight`, `making_gram`, `making`, `laker`, `bead_price`, `stones_price`, `diamond_price`, `total_bead_price`, `total_stones_price`, `total_diamond_price`, `other_amount`, `gold_rate`, `total_gold_price`, `total_amount`, `is_saled`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
-(2, 103, 11, 'BL95552', 'barcodes/BL95552.png', 2, 1, 'pictures/1728251298670305a2e0317.png', 21.000, 100.356, 25.690, 3.485, 0.250, 70.931, 20.000, 14.186, 85.117, 750.000, 63837.750, 1200.000, 0.000, 0.000, 0.000, 1926.750, 261.375, 29625.000, 0.000, 19782.022, 19867.139, 116718.014, 0, 1, 0, 1, NULL, 1, '2024-10-06 16:48:18', '2024-10-06 17:28:48');
+(2, 103, 11, 'BL95552', 'barcodes/BL95552.png', 2, 1, 'pictures/1728251298670305a2e0317.png', 21.000, 100.356, 25.690, 3.485, 0.250, 70.931, 20.000, 14.186, 85.117, 750.000, 63837.750, 1200.000, 0.000, 0.000, 0.000, 1926.750, 261.375, 29625.000, 0.000, 19782.022, 19867.139, 116718.014, 1, 1, 0, 1, 1, 1, '2024-10-06 16:48:18', '2024-10-10 17:20:44'),
+(3, 103, 11, 'BL23290', 'barcodes/BL23290.png', 2, 1, 'pictures/172860192667085f46581aa.PNG', 21.000, 100.356, 25.690, 3.485, 0.250, 70.931, 20.000, 14.186, 85.117, 750.000, 63837.750, 1200.000, 0.000, 0.000, 0.000, 1926.750, 261.375, 29625.000, 0.000, 19782.022, 19867.139, 116718.014, 1, 1, 0, 1, 1, NULL, '2024-10-10 18:12:06', '2024-10-10 18:55:53'),
+(4, 79, 9, 'BL72763', 'barcodes/BL72763.png', 2, 1, 'pictures/172860197467085f763e2e6.png', 21.000, 100.000, 25.690, 3.485, 1.250, 69.575, 20.000, 13.915, 83.490, 750.000, 62617.500, 1200.000, 0.000, 0.000, 0.000, 1926.750, 261.375, 148125.000, 5000.000, 19782.022, 19865.512, 238996.137, 1, 1, 0, 1, 1, NULL, '2024-10-10 18:12:54', '2024-10-10 18:55:53');
 
 -- --------------------------------------------------------
 
@@ -301,7 +458,9 @@ CREATE TABLE `finish_product_beads` (
 --
 
 INSERT INTO `finish_product_beads` (`id`, `type`, `finish_product_id`, `beads`, `gram`, `carat`, `gram_rate`, `carat_rate`, `total_amount`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
-(1, 'Glass Bead', 2, 1.000, 25.690, 128.450, 75.000, 15.000, 1926.750, 0, NULL, 1, '2024-10-06 16:48:18', '2024-10-06 17:28:48');
+(1, 'Glass Bead', 2, 1.000, 25.690, 128.450, 75.000, 15.000, 1926.750, 0, NULL, 1, '2024-10-06 16:48:18', '2024-10-06 17:28:48'),
+(2, 'Glass Bead', 3, 1.000, 25.690, 128.450, 75.000, 15.000, 1926.750, 0, NULL, NULL, '2024-10-10 18:12:06', '2024-10-10 18:12:06'),
+(3, 'Glass Bead', 4, 1.000, 25.690, 128.450, 75.000, 15.000, 1926.750, 0, NULL, NULL, '2024-10-10 18:12:54', '2024-10-10 18:12:54');
 
 -- --------------------------------------------------------
 
@@ -333,7 +492,10 @@ CREATE TABLE `finish_product_diamonds` (
 --
 
 INSERT INTO `finish_product_diamonds` (`id`, `finish_product_id`, `diamonds`, `type`, `color`, `cut`, `clarity`, `carat`, `carat_rate`, `total_amount`, `total_dollar`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
-(1, 2, 1.000, 'Natural', 'E', 'Round', 'VVS-1', 0.250, 118500.000, 29625.000, 0.000, 0, NULL, 1, '2024-10-06 16:48:18', '2024-10-06 17:28:48');
+(1, 2, 1.000, 'Natural', 'E', 'Round', 'VVS-1', 0.250, 118500.000, 29625.000, 0.000, 0, NULL, 1, '2024-10-06 16:48:18', '2024-10-06 17:28:48'),
+(2, 3, 1.000, 'Natural', 'E', 'Round', 'VVS-1', 0.250, 118500.000, 29625.000, 0.000, 0, NULL, NULL, '2024-10-10 18:12:06', '2024-10-10 18:12:06'),
+(3, 4, 1.000, 'Natural', 'G', 'Round', 'VVS-1', 0.250, 118500.000, 29625.000, 0.000, 0, NULL, NULL, '2024-10-10 18:12:54', '2024-10-10 18:12:54'),
+(4, 4, 1.000, 'Natural', 'H', 'Princess', 'VVS-2', 1.000, 118500.000, 118500.000, 0.000, 0, NULL, NULL, '2024-10-10 18:12:54', '2024-10-10 18:12:54');
 
 -- --------------------------------------------------------
 
@@ -364,7 +526,9 @@ CREATE TABLE `finish_product_stones` (
 --
 
 INSERT INTO `finish_product_stones` (`id`, `category`, `type`, `finish_product_id`, `stones`, `gram`, `carat`, `gram_rate`, `carat_rate`, `total_amount`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
-(1, 'Sedimentary', 'stone', 2, 1.000, 3.485, 17.425, 75.000, 15.000, 261.375, 0, NULL, 1, '2024-10-06 16:48:18', '2024-10-06 17:28:48');
+(1, 'Sedimentary', 'stone', 2, 1.000, 3.485, 17.425, 75.000, 15.000, 261.375, 0, NULL, 1, '2024-10-06 16:48:18', '2024-10-06 17:28:48'),
+(2, 'Sedimentary', 'stone', 3, 1.000, 3.485, 17.425, 75.000, 15.000, 261.375, 0, NULL, NULL, '2024-10-10 18:12:06', '2024-10-10 18:12:06'),
+(3, 'Sedimentary', 'stone', 4, 1.000, 3.485, 17.425, 75.000, 15.000, 261.375, 0, NULL, NULL, '2024-10-10 18:12:54', '2024-10-10 18:12:54');
 
 -- --------------------------------------------------------
 
@@ -394,6 +558,288 @@ INSERT INTO `gold_rates` (`id`, `carat`, `gold`, `impurity`, `ratti`, `ratti_imp
 (2, 24, 100.000, 0.000, 96, 0, 0.000, 0.000, 1, '2024-09-26 19:51:33', '2024-09-26 19:51:33'),
 (3, 24, 100.000, 0.000, 96, 0, 1234567.000, 105844.222, 1, '2024-09-26 19:53:58', '2024-09-26 19:53:58'),
 (4, 24, 100.000, 0.000, 96, 0, 263700.000, 22608.025, 1, '2024-09-26 19:55:56', '2024-09-26 19:55:56');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gold_rate_types`
+--
+
+CREATE TABLE `gold_rate_types` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `gold_rate_types`
+--
+
+INSERT INTO `gold_rate_types` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Fixed Rate', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(2, 'Not Fixed Rate', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(3, 'Fixed Rate Upto', 1, 0, NULL, NULL, NULL, NULL, NULL),
+(4, 'Open Rate', 1, 0, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_purchases`
+--
+
+CREATE TABLE `job_purchases` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_purchase_no` varchar(255) DEFAULT NULL,
+  `job_purchase_date` date DEFAULT NULL,
+  `purchase_order_id` int(11) DEFAULT NULL,
+  `sale_order_id` int(11) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `purchase_account_id` int(11) DEFAULT NULL,
+  `reference` varchar(255) DEFAULT NULL,
+  `total_recieved_au` decimal(18,3) DEFAULT NULL,
+  `total` decimal(18,3) DEFAULT NULL,
+  `total_au` decimal(18,3) DEFAULT NULL,
+  `total_dollar` decimal(18,3) DEFAULT NULL,
+  `jv_id` int(11) DEFAULT NULL,
+  `jv_au_id` int(11) DEFAULT NULL,
+  `jv_dollar_id` int(11) DEFAULT NULL,
+  `jv_recieved_id` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1 for active, 0 for inactive',
+  `is_posted` tinyint(1) NOT NULL DEFAULT 0,
+  `is_saled` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_purchase_details`
+--
+
+CREATE TABLE `job_purchase_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_purchase_id` int(11) DEFAULT NULL,
+  `purchase_order_detail_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `design_no` varchar(255) DEFAULT NULL,
+  `waste_ratti` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `waste` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `polish_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `stone_waste` decimal(18,3) NOT NULL DEFAULT 0.000 COMMENT '0.25/100 stones',
+  `mail` varchar(255) DEFAULT NULL COMMENT 'Upper, Inner',
+  `mail_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `stone_waste_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `recieved_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_recieved_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `bead_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `stones_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `diamond_carat` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `with_stone_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `pure_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `payable_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `stone_adjustement` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `final_pure_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `pure_payable` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `laker` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `rp` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `wax` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `other` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_bead_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_stones_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_diamond_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_dollar` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `approvedby_id` int(11) DEFAULT NULL,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_purchase_detail_beads`
+--
+
+CREATE TABLE `job_purchase_detail_beads` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_purchase_detail_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `beads` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `gram` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `carat` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `gram_rate` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `carat_rate` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_purchase_detail_diamonds`
+--
+
+CREATE TABLE `job_purchase_detail_diamonds` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_purchase_detail_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `diamonds` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `type` varchar(255) DEFAULT NULL,
+  `color` varchar(255) DEFAULT NULL,
+  `cut` varchar(255) DEFAULT NULL,
+  `clarity` varchar(255) DEFAULT NULL,
+  `carat` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `carat_rate` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_dollar` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_purchase_detail_stones`
+--
+
+CREATE TABLE `job_purchase_detail_stones` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_purchase_detail_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `stones` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `gram` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `carat` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `gram_rate` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `carat_rate` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_tasks`
+--
+
+CREATE TABLE `job_tasks` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_task_no` varchar(255) DEFAULT NULL,
+  `job_task_date` varchar(255) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `warehouse_id` int(11) DEFAULT NULL,
+  `purchase_order_id` int(11) DEFAULT NULL,
+  `sale_order_id` int(11) DEFAULT NULL,
+  `total_qty` decimal(18,3) DEFAULT NULL,
+  `is_complete` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `delivery_date` varchar(191) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `job_tasks`
+--
+
+INSERT INTO `job_tasks` (`id`, `job_task_no`, `job_task_date`, `supplier_id`, `warehouse_id`, `purchase_order_id`, `sale_order_id`, `total_qty`, `is_complete`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`, `delivery_date`) VALUES
+(1, 'JT-06112024-0001', '2024-11-06', 2, 1, 11, NULL, 2.000, 0, 0, 1, NULL, NULL, '2024-11-06 17:25:46', '2024-11-06 17:25:46', '2024-11-06'),
+(5, 'JT-11112024-0002', '2024-11-11 23:27:18', 2, 1, 25, NULL, 1.000, 0, 0, 1, NULL, NULL, '2024-11-11 18:27:18', '2024-11-11 18:27:18', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_task_activities`
+--
+
+CREATE TABLE `job_task_activities` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_task_id` int(11) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `design_no` varchar(255) DEFAULT NULL,
+  `weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `picture` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `job_task_activities`
+--
+
+INSERT INTO `job_task_activities` (`id`, `job_task_id`, `category`, `design_no`, `weight`, `picture`, `description`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Asperiores ut libero', 'Sapiente provident', 12.330, 'activity/pictures/1730939072672c08c05b964.png', 'Iste tempore quia n', 1, 1, 1, '2024-11-06 19:24:32', '2024-11-06 19:33:01'),
+(2, 1, 'cat1', 'd1', 120.000, 'activity/pictures/1730939511672c0a7703f7d.png', 'Reaction on Trade of Jannah', 0, 1, NULL, '2024-11-06 19:31:51', '2024-11-06 19:31:51');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `job_task_details`
+--
+
+CREATE TABLE `job_task_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `job_task_id` int(11) DEFAULT NULL,
+  `product_id` int(12) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `design_no` varchar(255) DEFAULT NULL,
+  `net_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `description` text DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `job_task_details`
+--
+
+INSERT INTO `job_task_details` (`id`, `job_task_id`, `product_id`, `category`, `design_no`, `net_weight`, `description`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 1, NULL, 'cat1', 'd1', 100.000, 'Reaction on Trade of Jannah', 0, 1, NULL, '2024-11-06 17:25:46', '2024-11-06 17:25:46'),
+(2, 1, NULL, 'cat2', 'd2', 23.000, 'aa', 0, 1, NULL, '2024-11-06 17:25:46', '2024-11-06 17:25:46'),
+(3, 5, 2, 'Category1', 'Design 1', 118.300, 'Reaction on Trade of Jannah', 0, 1, NULL, '2024-11-11 18:27:18', '2024-11-11 18:27:18');
 
 -- --------------------------------------------------------
 
@@ -468,7 +914,18 @@ INSERT INTO `journal_entries` (`id`, `entryNum`, `journal_id`, `supplier_id`, `c
 (23, 'BPV-2024-09-0021', 1, 2, NULL, '2024-09-21', 'Date :2024-09-21 PKR Payment Against RK. RK-19092024-0001', NULL, 1, NULL, 0, NULL, '2024-09-25 00:26:12', '2024-09-25 00:26:12'),
 (24, 'BPV-2024-09-0024', 1, 2, NULL, '2024-09-26', 'Date :2024-09-26 Against Supplier/Karigar. Sopoline Palmer', NULL, 1, NULL, 1, 1, '2024-09-25 17:25:50', '2024-09-25 18:28:20'),
 (25, 'PV-2024-09-0023', 8, 2, NULL, '2024-09-27', 'Date :2024-09-27 Against RK-27092024-0090. From Sopoline Palmer', NULL, 1, NULL, 0, NULL, '2024-09-27 16:50:38', '2024-09-27 16:50:38'),
-(26, 'PV-2024-10-0001', 8, 2, NULL, '2024-10-02', 'Date :2024-10-02 Against RK-02102024-0100. From Sopoline Palmer', NULL, 1, NULL, 0, NULL, '2024-10-02 18:58:34', '2024-10-02 18:58:34');
+(26, 'PV-2024-10-0001', 8, 2, NULL, '2024-10-02', 'Date :2024-10-02 Against RK-02102024-0100. From Sopoline Palmer', NULL, 1, NULL, 0, NULL, '2024-10-02 18:58:34', '2024-10-02 18:58:34'),
+(30, 'SV-2024-10-0001', 10, NULL, 3, '2024-10-10', 'Date :2024-10-10 Sale SL-10102024-0003. Customer is new customer', NULL, 1, NULL, 1, 1, '2024-10-15 18:38:38', '2024-10-15 18:47:56'),
+(31, 'SV-2024-10-0031', 10, NULL, 3, '2024-10-10', 'Date :2024-10-10 Sale SL-10102024-0003. Customer is new customer', NULL, 1, NULL, 1, 1, '2024-10-15 18:51:06', '2024-10-15 18:52:09'),
+(32, 'SV-2024-10-0032', 10, NULL, 3, '2024-10-10', 'Date :2024-10-10 Sale SL-10102024-0003. Customer is new customer', NULL, 1, NULL, 1, 1, '2024-10-15 18:52:13', '2024-10-15 18:54:32'),
+(33, 'SV-2024-10-0033', 10, NULL, 2, '2024-10-10', 'Date :2024-10-10 Sale SL-10102024-0015. Customer is Merrill Benson', NULL, 1, NULL, 1, 1, '2024-10-15 18:52:46', '2024-10-15 18:54:10'),
+(35, 'SV-2024-10-0034', 10, NULL, 2, '1970-01-01', 'Date :2024-10-27 other Sale OSL-27102024-0017. Customer is Merrill Benson', NULL, 1, NULL, 1, 1, '2024-10-27 07:02:16', '2024-10-27 07:05:42'),
+(36, 'SV-2024-10-0034', 10, NULL, 2, '1970-01-01', 'Date :2024-10-27 other Sale OSL-27102024-0017. Customer is Merrill Benson', NULL, 1, NULL, 0, NULL, '2024-10-27 07:05:45', '2024-10-27 07:05:45'),
+(37, 'PV-2024-10-0027', 8, 2, NULL, '2024-10-28', 'Date :2024-10-28 other purchase OPO-28102024-0001. Supplier is Sopoline Palmer', NULL, 1, NULL, 0, NULL, '2024-10-28 17:38:42', '2024-10-28 17:38:42'),
+(38, 'BPV-2024-10-0001', 1, 2, NULL, '2024-10-28', 'Date :2024-10-28 Against OPO. OPO-28102024-0001', NULL, 1, NULL, 0, NULL, '2024-10-28 17:38:42', '2024-10-28 17:38:42'),
+(39, 'PV-2024-10-0038', 8, 2, NULL, '2024-10-28', 'Date :2024-10-28 other purchase OPO-28102024-0001. Supplier is Sopoline Palmer', NULL, 1, NULL, 0, NULL, '2024-10-28 18:15:36', '2024-10-28 18:15:36'),
+(40, 'BPV-2024-10-0039', 1, 2, NULL, '2024-10-28', 'Date :2024-10-28 Against OPO. OPO-28102024-0001', NULL, 1, NULL, 0, NULL, '2024-10-28 18:15:36', '2024-10-28 18:15:36'),
+(41, 'PV-2024-10-0040', 8, 2, NULL, '2024-10-28', 'Date :2024-10-28 other purchase OPO-28102024-0003. Supplier is Sopoline Palmer', NULL, 1, NULL, 0, NULL, '2024-10-28 18:15:36', '2024-10-28 18:15:36');
 
 -- --------------------------------------------------------
 
@@ -530,7 +987,40 @@ INSERT INTO `journal_entry_details` (`id`, `journal_entry_id`, `explanation`, `b
 (67, 26, 'Ratti Kaat Gold(AU) Debit Entry', '103', '0', '2024-10-02', 0.000, 65.759, 1, NULL, 6, 65.759, 'Sixty  Five', '12345', 1, NULL, NULL),
 (68, 26, 'Ratti Kaat Gold(AU) Supplier/Karigar Credit Entry', '103', '0', '2024-10-02', 65.759, 0.000, 1, NULL, 11, 65.759, 'Sixty  Five', '002-002', 1, NULL, NULL),
 (69, 26, 'Ratti Kaat Dollar($) Debit Entry', '103', '0', '2024-10-02', 0.000, 105.804, 1, NULL, 6, 105.804, 'One Hundred  Five', '12345', 1, NULL, NULL),
-(70, 26, 'Ratti Kaat Dollar($) Supplier/Karigar Credit Entry', '103', '0', '2024-10-02', 105.804, 0.000, 1, NULL, 12, 105.804, 'One Hundred  Five', '002-003', 1, NULL, NULL);
+(70, 26, 'Ratti Kaat Dollar($) Supplier/Karigar Credit Entry', '103', '0', '2024-10-02', 105.804, 0.000, 1, NULL, 12, 105.804, 'One Hundred  Five', '002-003', 1, NULL, NULL),
+(78, 30, 'Cash Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 23000.000, 0, NULL, 10, 23000.000, 'Twenty  Three  Thousand', '002-001', 1, NULL, NULL),
+(79, 30, 'Bank Amount Transfer From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 50000.000, 0, NULL, 12, 50000.000, 'Fifty    Thousand', '002-003', 1, NULL, NULL),
+(80, 30, 'Card Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 10000.000, 0, NULL, 8, 10000.000, 'Ten  Thousand', '12-001', 1, NULL, NULL),
+(81, 30, 'Advance Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 20000.000, 0, NULL, 5, 20000.000, 'Twenty    Thousand', '1234', 1, NULL, NULL),
+(82, 30, 'Gold Impurity Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 20344.017, 0, NULL, 6, 20344.017, 'Twenty    Thousand and  Three Hundreds  Forty  Four', '12345', 1, NULL, NULL),
+(83, 30, 'Revenue From Sale Credit Entry', '3', '0', '2024-10-10', 0.000, 123344.017, 1, NULL, 11, 123344.017, 'One Hundred  Twenty  Three  Thousand and  Three Hundreds  Forty  Four', '002-002', 1, NULL, NULL),
+(84, 31, 'Cash Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 23000.000, 0, NULL, 10, 23000.000, 'Twenty  Three  Thousand', '002-001', 1, NULL, NULL),
+(85, 31, 'Bank Amount Transfer From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 50000.000, 0, NULL, 11, 50000.000, 'Fifty    Thousand', '002-002', 1, NULL, NULL),
+(86, 31, 'Card Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 10000.000, 0, NULL, 8, 10000.000, 'Ten  Thousand', '12-001', 1, NULL, NULL),
+(87, 31, 'Advance Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 20000.000, 0, NULL, 5, 20000.000, 'Twenty    Thousand', '1234', 1, NULL, NULL),
+(88, 31, 'Gold Impurity Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 20344.017, 0, NULL, 6, 20344.017, 'Twenty    Thousand and  Three Hundreds  Forty  Four', '12345', 1, NULL, NULL),
+(89, 31, 'Revenue From Sale Credit Entry', '3', '0', '2024-10-10', 0.000, 123344.017, 1, NULL, 11, 123344.017, 'One Hundred  Twenty  Three  Thousand and  Three Hundreds  Forty  Four', '002-002', 1, NULL, NULL),
+(90, 32, 'Cash Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 23000.000, 0, NULL, 10, 23000.000, 'Twenty  Three  Thousand', '002-001', 1, NULL, NULL),
+(91, 32, 'Bank Amount Transfer From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 50000.000, 0, NULL, 11, 50000.000, 'Fifty    Thousand', '002-002', 1, NULL, NULL),
+(92, 32, 'Card Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 10000.000, 0, NULL, 8, 10000.000, 'Ten  Thousand', '12-001', 1, NULL, NULL),
+(93, 32, 'Advance Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 20000.000, 0, NULL, 5, 20000.000, 'Twenty    Thousand', '1234', 1, NULL, NULL),
+(94, 32, 'Gold Impurity Amount From Sale Debit Entry', '3', '0', '2024-10-10', 0.000, 20344.017, 0, NULL, 6, 20344.017, 'Twenty    Thousand and  Three Hundreds  Forty  Four', '12345', 1, NULL, NULL),
+(95, 32, 'Revenue From Sale Credit Entry', '3', '0', '2024-10-10', 123344.017, 0.000, 0, NULL, 11, 123344.017, 'One Hundred  Twenty  Three  Thousand and  Three Hundreds  Forty  Four', '002-002', 1, NULL, NULL),
+(96, 33, 'Revenue From Sale Credit Entry', '15', '0', '2024-10-10', 358966.157, 0.000, 0, NULL, 11, 358966.157, 'Three Hundreds  Fifty  Eight  Thousand and  Nine Hundreds  Sixty  Six', '002-002', 1, NULL, NULL),
+(97, 35, 'Cash Amount From Sale Debit Entry', '17', '0', '2024-10-27', 0.000, 2200.000, 0, NULL, 10, 2200.000, 'Two  Thousand and  Two Hundreds', '002-001', 1, NULL, NULL),
+(98, 35, 'Revenue From Sale Credit Entry', '17', '0', '2024-10-27', 2200.000, 0.000, 0, NULL, 11, 2200.000, 'Two  Thousand and  Two Hundreds', '002-002', 1, NULL, NULL),
+(99, 36, 'Cash Amount From Sale Debit Entry', '17', '0', '2024-10-27', 0.000, 2200.000, 0, NULL, 10, 2200.000, 'Two  Thousand and  Two Hundreds', '002-001', 1, NULL, NULL),
+(100, 36, 'Revenue From Sale Credit Entry', '17', '0', '2024-10-27', 2200.000, 0.000, 0, NULL, 11, 2200.000, 'Two  Thousand and  Two Hundreds', '002-002', 1, NULL, NULL),
+(101, 37, 'Purchase Amount From Purchase Debit Entry', '', '0', '2024-10-28', 0.000, 5800.000, 0, NULL, 5, 5800.000, 'Five  Thousand and  Eight Hundreds', '1234', 1, NULL, NULL),
+(102, 37, 'Credit Amount From Purchase Credit Entry from Sopoline Palmer', '', '0', '2024-10-28', 5800.000, 0.000, 0, NULL, 10, 5800.000, 'Five  Thousand and  Eight Hundreds', '002-001', 1, NULL, NULL),
+(103, 38, 'Supplier Paid Payment Against Other Purchase Credit', '', '0', '2024-10-28', 5800.000, 0.000, 0, NULL, 6, 5800.000, 'Five  Thousand and  Eight Hundreds', '12345', 1, NULL, NULL),
+(104, 38, 'Supplier Paid Payment Against Purchase Debit', '', '0', '2024-10-28', 0.000, 5800.000, 0, NULL, 10, 5800.000, 'Five  Thousand and  Eight Hundreds', '002-001', 1, NULL, NULL),
+(105, 39, 'Purchase Amount From Purchase Debit Entry', '', '0', '2024-10-28', 0.000, 15000.000, 0, NULL, 5, 15000.000, 'Fifteen  Thousand', '1234', 1, NULL, NULL),
+(106, 39, 'Credit Amount From Purchase Credit Entry from Sopoline Palmer', '', '0', '2024-10-28', 15000.000, 0.000, 0, NULL, 10, 15000.000, 'Fifteen  Thousand', '002-001', 1, NULL, NULL),
+(107, 40, 'Supplier Paid Payment Against Other Purchase Credit', '', '0', '2024-10-28', 15000.000, 0.000, 0, NULL, 6, 15000.000, 'Fifteen  Thousand', '12345', 1, NULL, NULL),
+(108, 40, 'Supplier Paid Payment Against Purchase Debit', '', '0', '2024-10-28', 0.000, 15000.000, 0, NULL, 10, 15000.000, 'Fifteen  Thousand', '002-001', 1, NULL, NULL),
+(109, 41, 'Purchase Amount From Purchase Debit Entry', '', '0', '2024-10-28', 0.000, 2640.000, 0, NULL, 5, 2640.000, 'Two  Thousand and  Six Hundreds  Forty', '1234', 1, NULL, NULL),
+(110, 41, 'Credit Amount From Purchase Credit Entry from Sopoline Palmer', '', '0', '2024-10-28', 2640.000, 0.000, 0, NULL, 10, 2640.000, 'Two  Thousand and  Six Hundreds  Forty', '002-001', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -580,7 +1070,36 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (33, '2024_10_04_232014_create_sale_detail_diamonds_table', 19),
 (34, '2024_10_05_210049_create_finish_product_beads_table', 20),
 (35, '2024_10_05_211105_create_finish_product_stones_table', 20),
-(36, '2024_10_05_211222_create_finish_product_diamonds_table', 20);
+(36, '2024_10_05_211222_create_finish_product_diamonds_table', 20),
+(37, '2024_10_24_133042_create_bead_types_table', 21),
+(38, '2024_10_24_133652_create_stone_categories_table', 21),
+(39, '2024_10_24_133806_create_diamond_types_table', 21),
+(40, '2024_10_24_133844_create_diamond_colors_table', 21),
+(41, '2024_10_24_133905_create_diamond_cuts_table', 21),
+(42, '2024_10_24_133945_create_diamond_clarities_table', 21),
+(43, '2024_10_26_215001_create_other_sales_table', 22),
+(44, '2024_10_26_215627_create_other_sale_details_table', 22),
+(45, '2024_10_26_231811_create_other_products_table', 22),
+(46, '2024_10_26_232159_create_other_product_units_table', 22),
+(47, '2024_10_26_233238_create_transactions_table', 22),
+(48, '2024_10_27_173619_create_other_purchases_table', 23),
+(49, '2024_10_27_182503_create_other_purchase_details_table', 23),
+(52, '2024_10_29_002339_create_stock_takings_table', 24),
+(53, '2024_10_29_002813_create_stock_taking_details_table', 24),
+(54, '2024_10_31_225107_create_company_settings_table', 25),
+(55, '2024_11_01_221029_create_sale_orders_table', 26),
+(56, '2024_11_01_221955_create_gold_rate_types_table', 26),
+(57, '2024_11_01_222120_create_sale_order_details_table', 27),
+(58, '2024_11_05_141632_create_purchase_orders_table', 28),
+(59, '2024_11_05_141949_create_purchase_order_details_table', 28),
+(60, '2024_11_06_165508_create_job_tasks_table', 29),
+(61, '2024_11_06_165907_create_job_task_details_table', 29),
+(62, '2024_11_06_165934_create_job_task_activities_table', 29),
+(68, '2024_11_08_223900_create_job_purchases_table', 30),
+(69, '2024_11_08_224031_create_job_purchase_details_table', 30),
+(70, '2024_11_08_224144_create_job_purchase_detail_beads_table', 30),
+(71, '2024_11_08_224203_create_job_purchase_detail_stones_table', 30),
+(72, '2024_11_08_224222_create_job_purchase_detail_diamonds_table', 30);
 
 -- --------------------------------------------------------
 
@@ -612,6 +1131,231 @@ CREATE TABLE `model_has_roles` (
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (1, 'App\\Models\\User', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_products`
+--
+
+CREATE TABLE `other_products` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `other_product_unit_id` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `other_products`
+--
+
+INSERT INTO `other_products` (`id`, `code`, `name`, `other_product_unit_id`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'BO0800', 'Box', 1, 1, 0, 1, NULL, NULL, '2024-10-27 03:54:35', '2024-10-27 03:54:35'),
+(2, 'CH6614', 'Chain', 1, 1, 0, 1, NULL, NULL, '2024-10-27 03:54:49', '2024-10-27 03:54:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_product_units`
+--
+
+CREATE TABLE `other_product_units` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `other_product_units`
+--
+
+INSERT INTO `other_product_units` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Piece', 1, 0, 1, NULL, NULL, NULL, NULL),
+(2, 'KG', 1, 0, 1, NULL, NULL, NULL, NULL),
+(3, 'Liter', 1, 0, 1, NULL, NULL, NULL, NULL),
+(4, 'Meter', 1, 0, 1, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_purchases`
+--
+
+CREATE TABLE `other_purchases` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `other_purchase_no` varchar(255) DEFAULT NULL,
+  `other_purchase_date` varchar(255) DEFAULT NULL,
+  `bill_no` varchar(255) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `warehouse_id` int(11) DEFAULT NULL,
+  `reference` text DEFAULT NULL,
+  `total_qty` decimal(18,3) DEFAULT NULL,
+  `tax` decimal(18,3) DEFAULT NULL,
+  `tax_amount` decimal(18,3) DEFAULT NULL,
+  `sub_total` decimal(18,3) DEFAULT NULL,
+  `total` decimal(18,3) DEFAULT NULL,
+  `paid` decimal(18,3) DEFAULT NULL,
+  `purchase_account_id` int(11) DEFAULT NULL,
+  `paid_account_id` int(11) DEFAULT NULL,
+  `supplier_payment_id` int(11) DEFAULT NULL,
+  `jv_id` int(11) DEFAULT NULL,
+  `paid_jv_id` int(11) DEFAULT NULL,
+  `posted` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `other_purchases`
+--
+
+INSERT INTO `other_purchases` (`id`, `other_purchase_no`, `other_purchase_date`, `bill_no`, `supplier_id`, `warehouse_id`, `reference`, `total_qty`, `tax`, `tax_amount`, `sub_total`, `total`, `paid`, `purchase_account_id`, `paid_account_id`, `supplier_payment_id`, `jv_id`, `paid_jv_id`, `posted`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'OPO-28102024-0001', '2024-10-28', NULL, 2, 1, NULL, 90.000, NULL, NULL, NULL, 15000.000, 15000.000, 5, 6, 6, 39, 40, 1, 0, 1, 1, NULL, '2024-10-28 18:05:06', '2024-10-28 18:15:36'),
+(2, 'OPO-28102024-0002', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-28 18:05:08', '2024-10-28 18:05:08'),
+(3, 'OPO-28102024-0003', '2024-10-28', NULL, 2, 1, NULL, 11.000, NULL, NULL, NULL, 2640.000, 0.000, 5, NULL, 6, 41, NULL, 1, 0, 1, 1, NULL, '2024-10-28 18:08:43', '2024-10-28 18:15:36'),
+(4, 'OPO-28102024-0004', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-28 18:08:48', '2024-10-28 18:08:48'),
+(5, 'OPO-28102024-0005', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-28 18:13:28', '2024-10-28 18:13:28'),
+(6, 'OPO-28102024-0006', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-28 18:13:29', '2024-10-28 18:13:29'),
+(7, 'OPO-31102024-0007', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-31 17:53:41', '2024-10-31 17:53:41'),
+(8, 'OPO-31102024-0008', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-31 17:53:43', '2024-10-31 17:53:43'),
+(9, 'OPO-31102024-0009', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-31 18:21:19', '2024-10-31 18:21:19'),
+(10, 'OPO-31102024-0010', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-31 18:21:21', '2024-10-31 18:21:21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_purchase_details`
+--
+
+CREATE TABLE `other_purchase_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `other_purchase_id` int(11) DEFAULT NULL,
+  `other_product_id` int(11) DEFAULT NULL,
+  `qty` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `unit_price` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `other_purchase_details`
+--
+
+INSERT INTO `other_purchase_details` (`id`, `other_purchase_id`, `other_product_id`, `qty`, `unit_price`, `total_amount`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 30.000, 240.000, 7200.000, 0, 1, NULL, '2024-10-28 18:07:41', '2024-10-28 18:07:41'),
+(2, 1, 2, 60.000, 130.000, 7800.000, 0, 1, NULL, '2024-10-28 18:07:41', '2024-10-28 18:07:41'),
+(3, 3, 1, 11.000, 240.000, 2640.000, 0, 1, NULL, '2024-10-28 18:11:44', '2024-10-28 18:11:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_sales`
+--
+
+CREATE TABLE `other_sales` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `other_sale_no` varchar(255) DEFAULT NULL,
+  `other_sale_date` varchar(255) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `customer_name` varchar(255) DEFAULT NULL,
+  `customer_cnic` varchar(255) DEFAULT NULL,
+  `customer_contact` varchar(255) DEFAULT NULL,
+  `customer_email` varchar(255) DEFAULT NULL,
+  `customer_address` varchar(255) DEFAULT NULL,
+  `total_qty` decimal(18,3) DEFAULT NULL,
+  `tax` decimal(18,3) DEFAULT NULL,
+  `tax_amount` decimal(18,3) DEFAULT NULL,
+  `sub_total` decimal(18,3) DEFAULT NULL,
+  `total` decimal(18,3) DEFAULT NULL,
+  `is_credit` tinyint(1) NOT NULL DEFAULT 0,
+  `cash_amount` decimal(18,3) DEFAULT NULL,
+  `bank_transfer_amount` decimal(18,3) DEFAULT NULL,
+  `card_amount` decimal(18,3) DEFAULT NULL,
+  `advance_amount` decimal(18,3) DEFAULT NULL,
+  `total_received` decimal(18,3) DEFAULT NULL,
+  `warehouse_id` int(11) DEFAULT NULL,
+  `jv_id` int(11) DEFAULT NULL,
+  `posted` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `other_sales`
+--
+
+INSERT INTO `other_sales` (`id`, `other_sale_no`, `other_sale_date`, `customer_id`, `customer_name`, `customer_cnic`, `customer_contact`, `customer_email`, `customer_address`, `total_qty`, `tax`, `tax_amount`, `sub_total`, `total`, `is_credit`, `cash_amount`, `bank_transfer_amount`, `card_amount`, `advance_amount`, `total_received`, `warehouse_id`, `jv_id`, `posted`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'OSL-27102024-0001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:12:41', '2024-10-27 06:12:41'),
+(2, 'SL-27102024-0002', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:12:45', '2024-10-27 06:12:45'),
+(3, 'SL-27102024-0003', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:13:21', '2024-10-27 06:13:21'),
+(4, 'SL-27102024-0004', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:13:24', '2024-10-27 06:13:24'),
+(5, 'SL-27102024-0005', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:13:42', '2024-10-27 06:13:42'),
+(6, 'SL-27102024-0006', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:13:44', '2024-10-27 06:13:44'),
+(7, 'SL-27102024-0007', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:14:57', '2024-10-27 06:14:57'),
+(8, 'SL-27102024-0008', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:15:02', '2024-10-27 06:15:02'),
+(9, 'SL-27102024-0009', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:48:55', '2024-10-27 06:48:55'),
+(10, 'SL-27102024-0010', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:49:00', '2024-10-27 06:49:00'),
+(11, 'OSL-27102024-0011', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:49:54', '2024-10-27 06:49:54'),
+(12, 'OSL-27102024-0012', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:49:56', '2024-10-27 06:49:56'),
+(13, 'OSL-27102024-0013', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:52:12', '2024-10-27 06:52:12'),
+(14, 'OSL-27102024-0014', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:52:14', '2024-10-27 06:52:14'),
+(15, 'OSL-27102024-0015', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:53:07', '2024-10-27 06:53:07'),
+(16, 'OSL-27102024-0016', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:53:12', '2024-10-27 06:53:12'),
+(17, 'OSL-27102024-0017', '2024-10-27', 2, 'Merrill Benson', 'Dolorem cupiditate non necessitatibus est eum accusamus consequat Quas exercitation sit eu earum deleniti aliquam et velit dolor', '123456789023467', NULL, 'Minim delectus nostrud magna irure in accusamus cillum aliquip perferendis deleniti neque officiis adipisicing laborum Molestiae enim quis qui incidunt', 0.000, NULL, NULL, NULL, 2200.000, 0, 2200.000, 0.000, 0.000, 0.000, 2200.000, NULL, 36, 1, 0, 1, 1, NULL, '2024-10-27 06:54:05', '2024-10-27 07:05:45'),
+(18, 'OSL-27102024-0018', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 06:54:07', '2024-10-27 06:54:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `other_sale_details`
+--
+
+CREATE TABLE `other_sale_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `other_sale_id` int(11) DEFAULT NULL,
+  `other_product_id` int(11) DEFAULT NULL,
+  `qty` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `unit_price` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `total_amount` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `other_sale_details`
+--
+
+INSERT INTO `other_sale_details` (`id`, `other_sale_id`, `other_product_id`, `qty`, `unit_price`, `total_amount`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 17, 1, 1.000, 1200.000, 1200.000, 0, 1, NULL, '2024-10-27 06:54:53', '2024-10-27 06:54:53'),
+(2, 17, 2, 1.000, 1000.000, 1000.000, 0, 1, NULL, '2024-10-27 06:54:53', '2024-10-27 06:54:53');
 
 -- --------------------------------------------------------
 
@@ -755,6 +1499,95 @@ CREATE TABLE `products` (
 INSERT INTO `products` (`id`, `name`, `prefix`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
 (1, 'Ladies Rings', 'LR', 1, 1, 1, 1, 1, '2024-09-09 19:13:26', '2024-09-09 19:13:38'),
 (2, 'Baliya', 'BL', 1, 0, 1, NULL, NULL, '2024-09-16 11:27:42', '2024-09-16 11:27:42');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purchase_orders`
+--
+
+CREATE TABLE `purchase_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `purchase_order_no` varchar(255) DEFAULT NULL,
+  `purchase_order_date` varchar(255) DEFAULT NULL,
+  `reference_no` varchar(191) DEFAULT NULL,
+  `delivery_date` datetime DEFAULT NULL,
+  `approvedby_id` int(12) DEFAULT NULL,
+  `supplier_id` int(11) DEFAULT NULL,
+  `warehouse_id` int(11) DEFAULT NULL,
+  `sale_order_id` int(11) DEFAULT NULL,
+  `total_qty` decimal(18,3) DEFAULT NULL,
+  `status` varchar(191) NOT NULL DEFAULT 'Pending' COMMENT 'Pending, Approved, Rejected',
+  `is_complete` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `purchase_orders`
+--
+
+INSERT INTO `purchase_orders` (`id`, `purchase_order_no`, `purchase_order_date`, `reference_no`, `delivery_date`, `approvedby_id`, `supplier_id`, `warehouse_id`, `sale_order_id`, `total_qty`, `status`, `is_complete`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'POO-05112024-0001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 15:53:06', '2024-11-05 15:53:06'),
+(2, 'POO-05112024-0002', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 15:53:08', '2024-11-05 15:53:08'),
+(3, 'POO-05112024-0003', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 15:54:44', '2024-11-05 15:54:44'),
+(4, 'POO-05112024-0004', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 15:54:46', '2024-11-05 15:54:46'),
+(5, 'POO-05112024-0005', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 16:41:46', '2024-11-05 16:41:46'),
+(6, 'POO-05112024-0006', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 16:42:03', '2024-11-05 16:42:03'),
+(7, 'POO-05112024-0007', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 16:42:53', '2024-11-05 16:42:53'),
+(8, 'POO-05112024-0008', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 16:43:01', '2024-11-05 16:43:01'),
+(9, 'POO-05112024-0009', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 17:02:05', '2024-11-05 17:02:05'),
+(10, 'POO-05112024-0010', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 17:02:11', '2024-11-05 17:02:11'),
+(11, 'POO-05112024-0011', '2024-11-05', NULL, NULL, NULL, 2, 1, NULL, 2.000, 'Approved', 0, 0, 1, 1, NULL, '2024-11-05 17:04:35', '2024-11-06 17:25:46'),
+(12, 'POO-05112024-0012', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-05 17:04:40', '2024-11-05 17:04:40'),
+(13, 'POO-09112024-0013', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:31:59', '2024-11-09 10:31:59'),
+(14, 'POO-09112024-0014', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:32:01', '2024-11-09 10:32:01'),
+(15, 'POO-09112024-0015', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:32:21', '2024-11-09 10:32:21'),
+(16, 'POO-09112024-0016', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:32:25', '2024-11-09 10:32:25'),
+(17, 'POO-09112024-0017', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:33:27', '2024-11-09 10:33:27'),
+(18, 'POO-09112024-0018', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:33:33', '2024-11-09 10:33:33'),
+(19, 'POO-09112024-0019', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:34:48', '2024-11-09 10:34:48'),
+(20, 'POO-09112024-0020', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 10:34:53', '2024-11-09 10:34:53'),
+(21, 'POO-09112024-0021', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 11:39:37', '2024-11-09 11:39:37'),
+(22, 'POO-09112024-0022', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 11:39:41', '2024-11-09 11:39:41'),
+(23, 'POO-10112024-0023', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 20:20:58', '2024-11-09 20:20:58'),
+(24, 'POO-10112024-0024', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-09 20:20:59', '2024-11-09 20:20:59'),
+(25, 'POO-11112024-0025', '2024-11-11', '123', '2024-11-29 04:24:00', NULL, 2, 1, NULL, 1.000, 'Approved', 0, 0, 1, 1, NULL, '2024-11-11 18:24:08', '2024-11-11 18:27:18'),
+(26, 'POO-11112024-0026', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pending', 0, 0, 1, NULL, NULL, '2024-11-11 18:24:10', '2024-11-11 18:24:10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `purchase_order_details`
+--
+
+CREATE TABLE `purchase_order_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `purchase_order_id` int(11) DEFAULT NULL,
+  `product_id` int(12) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `design_no` varchar(255) DEFAULT NULL,
+  `net_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `description` text DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `purchase_order_details`
+--
+
+INSERT INTO `purchase_order_details` (`id`, `purchase_order_id`, `product_id`, `category`, `design_no`, `net_weight`, `description`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(11, 11, NULL, 'cat1', 'd1', 100.000, 'Reaction on Trade of Jannah', 0, 1, NULL, '2024-11-05 17:05:31', '2024-11-05 17:05:31'),
+(12, 11, NULL, 'cat2', 'd2', 23.000, 'aa', 0, 1, NULL, '2024-11-05 17:05:31', '2024-11-05 17:05:31'),
+(13, 25, 2, 'Category1', 'Design 1', 118.300, 'Reaction on Trade of Jannah', 0, 1, NULL, '2024-11-11 18:25:11', '2024-11-11 18:25:11');
 
 -- --------------------------------------------------------
 
@@ -910,7 +1743,9 @@ INSERT INTO `ratti_kaats` (`id`, `ratti_kaat_no`, `purchase_date`, `supplier_id`
 (107, 'RK-06102024-0104', NULL, NULL, NULL, 0.000, NULL, 0.000, NULL, 0.000, NULL, NULL, NULL, NULL, NULL, 0.000, 0.000, 0.000, 0.000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, NULL, NULL, '2024-10-06 14:07:26', '2024-10-06 14:07:26'),
 (108, 'RK-06102024-0105', NULL, NULL, NULL, 0.000, NULL, 0.000, NULL, 0.000, NULL, NULL, NULL, NULL, NULL, 0.000, 0.000, 0.000, 0.000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, NULL, NULL, '2024-10-06 14:07:27', '2024-10-06 14:07:27'),
 (109, 'RK-06102024-0106', NULL, NULL, NULL, 0.000, NULL, 0.000, NULL, 0.000, NULL, NULL, NULL, NULL, NULL, 0.000, 0.000, 0.000, 0.000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, NULL, NULL, '2024-10-06 14:07:30', '2024-10-06 14:07:30'),
-(110, 'RK-08102024-0107', NULL, NULL, NULL, 0.000, NULL, 0.000, NULL, 0.000, NULL, NULL, NULL, NULL, NULL, 0.000, 0.000, 0.000, 0.000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, NULL, NULL, '2024-10-08 04:42:54', '2024-10-08 04:42:54');
+(110, 'RK-08102024-0107', NULL, NULL, NULL, 0.000, NULL, 0.000, NULL, 0.000, NULL, NULL, NULL, NULL, NULL, 0.000, 0.000, 0.000, 0.000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, NULL, NULL, '2024-10-08 04:42:54', '2024-10-08 04:42:54'),
+(111, 'RK-24102024-0108', NULL, NULL, NULL, 0.000, NULL, 0.000, NULL, 0.000, NULL, NULL, NULL, NULL, NULL, 0.000, 0.000, 0.000, 0.000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, NULL, NULL, '2024-10-24 17:34:37', '2024-10-24 17:34:37'),
+(112, 'RK-24102024-0109', NULL, NULL, NULL, 0.000, NULL, 0.000, NULL, 0.000, NULL, NULL, NULL, NULL, NULL, 0.000, 0.000, 0.000, 0.000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, 0, 1, NULL, NULL, '2024-10-24 17:34:41', '2024-10-24 17:34:41');
 
 -- --------------------------------------------------------
 
@@ -993,9 +1828,9 @@ CREATE TABLE `ratti_kaat_details` (
 INSERT INTO `ratti_kaat_details` (`id`, `ratti_kaat_id`, `product_id`, `description`, `scale_weight`, `bead_weight`, `stones_weight`, `diamond_carat`, `net_weight`, `supplier_kaat`, `kaat`, `approved_by`, `pure_payable`, `other_charge`, `total_bead_amount`, `total_stones_amount`, `total_diamond_amount`, `total_amount`, `total_dollar`, `is_finish_product`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
 (1, 1, 2, 'Manual', 100.356, 0.000, 3.485, 0.000, 70.931, 0.000, 2.955, NULL, 67.976, 0.000, 1926.750, 261.375, 29625.000, 31813.125, 0.000, 0, 1, 1, NULL, 1, '2024-09-19 18:49:07', '2024-09-20 19:22:33'),
 (3, 25, 2, 'aa', 300.000, 234.000, 0.000, 0.000, 66.000, 7.000, 4.813, 1, 61.187, 0.000, 17550.000, 0.000, 0.000, 17550.000, 0.000, 0, 0, 1, NULL, NULL, '2024-09-20 16:53:17', '2024-09-20 16:53:17'),
-(9, 79, 2, 'Reaction on Trade of Jannah', 100.000, 25.690, 3.485, 1.250, 69.575, 4.000, 2.899, NULL, 66.676, 0.000, 1926.750, 261.375, 148125.000, 150313.125, 225.806, 0, 0, 1, 1, NULL, '2024-09-23 19:10:06', '2024-10-06 16:29:40'),
+(9, 79, 2, 'Reaction on Trade of Jannah', 100.000, 25.690, 3.485, 1.250, 69.575, 4.000, 2.899, NULL, 66.676, 0.000, 1926.750, 261.375, 148125.000, 150313.125, 225.806, 1, 0, 1, 1, NULL, '2024-09-23 19:10:06', '2024-10-10 18:12:54'),
 (10, 93, 2, 'aa', 100.000, 0.000, 0.000, 0.000, 100.000, 4.000, 4.167, NULL, 95.833, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0, 0, 1, 1, NULL, '2024-09-27 16:50:12', '2024-10-03 16:41:14'),
-(11, 103, 2, 'aa', 100.356, 25.690, 3.485, 0.250, 70.931, 7.000, 5.172, 1, 65.759, 0.000, 1926.750, 261.375, 29625.000, 31813.125, 105.804, 0, 0, 1, 1, NULL, '2024-10-02 18:57:22', '2024-10-06 17:28:48');
+(11, 103, 2, 'aa', 100.356, 25.690, 3.485, 0.250, 70.931, 7.000, 5.172, 1, 65.759, 0.000, 1926.750, 261.375, 29625.000, 31813.125, 105.804, 1, 0, 1, 1, NULL, '2024-10-02 18:57:22', '2024-10-10 18:12:06');
 
 -- --------------------------------------------------------
 
@@ -1206,8 +2041,8 @@ CREATE TABLE `sales` (
   `gold_impure_amount` decimal(18,3) DEFAULT NULL,
   `total_received` decimal(18,3) DEFAULT NULL,
   `jv_id` int(11) DEFAULT NULL,
-  `posted` tinyint(1) DEFAULT NULL,
-  `is_deleted` tinyint(1) DEFAULT NULL,
+  `posted` tinyint(1) DEFAULT 0,
+  `is_deleted` tinyint(1) DEFAULT 0,
   `createdby_id` int(11) DEFAULT NULL,
   `updatedby_id` int(11) DEFAULT NULL,
   `deletedby_id` int(11) DEFAULT NULL,
@@ -1220,16 +2055,30 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`id`, `sale_no`, `sale_date`, `customer_id`, `customer_name`, `customer_cnic`, `customer_contact`, `customer_email`, `customer_address`, `total_qty`, `tax`, `tax_amount`, `sub_total`, `total`, `is_credit`, `cash_amount`, `bank_transfer_amount`, `card_amount`, `advance_amount`, `gold_impure_amount`, `total_received`, `jv_id`, `posted`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
-(1, 'SL-05102024-0001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:52:00', '2024-10-04 19:52:00'),
-(2, 'SL-05102024-0002', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:52:04', '2024-10-04 19:52:04'),
-(3, 'SL-05102024-0003', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:54:10', '2024-10-04 19:54:10'),
-(4, 'SL-05102024-0004', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:54:13', '2024-10-04 19:54:13'),
-(5, 'SL-05102024-0005', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:55:26', '2024-10-04 19:55:26'),
-(6, 'SL-05102024-0006', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:55:28', '2024-10-04 19:55:28'),
-(7, 'SL-05102024-0007', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:57:20', '2024-10-04 19:57:20'),
-(8, 'SL-05102024-0008', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:57:23', '2024-10-04 19:57:23'),
-(9, 'SL-05102024-0009', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:57:49', '2024-10-04 19:57:49'),
-(10, 'SL-05102024-0010', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2024-10-04 19:57:51', '2024-10-04 19:57:51');
+(1, 'SL-10102024-0001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:15:45', '2024-10-10 17:15:45'),
+(2, 'SL-10102024-0002', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, '2024-10-10 17:15:46', '2024-10-10 17:15:46'),
+(3, 'SL-10102024-0003', '2024-10-10', 3, 'new customer', '122222222222', '54444444444', NULL, '', 1.000, NULL, NULL, NULL, 123344.017, 0, 23000.000, 50000.000, 10000.000, 20000.000, 20344.017, 123344.017, NULL, 0, 1, 1, 1, 1, '2024-10-10 17:20:07', '2024-10-15 18:54:32'),
+(4, 'SL-10102024-0004', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, '2024-10-10 17:20:14', '2024-10-10 17:20:14'),
+(5, 'SL-10102024-0005', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:52:38', '2024-10-10 17:52:38'),
+(6, 'SL-10102024-0006', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:52:44', '2024-10-10 17:52:44'),
+(7, 'SL-10102024-0007', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:53:25', '2024-10-10 17:53:25'),
+(8, 'SL-10102024-0008', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:53:31', '2024-10-10 17:53:31'),
+(9, 'SL-10102024-0009', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:54:26', '2024-10-10 17:54:26'),
+(10, 'SL-10102024-0010', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:54:32', '2024-10-10 17:54:32'),
+(11, 'SL-10102024-0011', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:54:42', '2024-10-10 17:54:42'),
+(12, 'SL-10102024-0012', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 17:54:46', '2024-10-10 17:54:46'),
+(13, 'SL-10102024-0013', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 18:54:26', '2024-10-10 18:54:26'),
+(14, 'SL-10102024-0014', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 18:54:28', '2024-10-10 18:54:28'),
+(15, 'SL-10102024-0015', '2024-10-10', 2, 'Merrill Benson', 'Dolorem cupiditate non necessitatibus est eum accusamus consequat Quas exercitation sit eu earum deleniti aliquam et velit dolor', '123456789023467', NULL, 'Minim delectus nostrud magna irure in accusamus cillum aliquip perferendis deleniti neque officiis adipisicing laborum Molestiae enim quis qui incidunt', 2.000, NULL, NULL, NULL, 358966.157, 0, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, NULL, 0, 0, 1, 1, NULL, '2024-10-10 18:55:14', '2024-10-15 18:54:10'),
+(16, 'SL-10102024-0016', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-10 18:55:17', '2024-10-10 18:55:17'),
+(17, 'SL-24102024-0017', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-24 17:35:21', '2024-10-24 17:35:21'),
+(18, 'SL-24102024-0018', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-24 17:35:23', '2024-10-24 17:35:23'),
+(19, 'SL-27102024-0019', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 13:26:59', '2024-10-27 13:26:59'),
+(20, 'SL-27102024-0020', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-27 13:27:02', '2024-10-27 13:27:02'),
+(21, 'SL-31102024-0021', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-31 17:53:23', '2024-10-31 17:53:23'),
+(22, 'SL-31102024-0022', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-10-31 17:53:27', '2024-10-31 17:53:27'),
+(23, 'SL-08112024-0023', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-11-08 16:18:47', '2024-11-08 16:18:47'),
+(24, 'SL-08112024-0024', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 1, NULL, NULL, '2024-11-08 16:18:51', '2024-11-08 16:18:51');
 
 -- --------------------------------------------------------
 
@@ -1270,6 +2119,15 @@ CREATE TABLE `sale_details` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `sale_details`
+--
+
+INSERT INTO `sale_details` (`id`, `sale_id`, `finish_product_id`, `ratti_kaat_id`, `ratti_kaat_detail_id`, `product_id`, `gold_carat`, `scale_weight`, `bead_weight`, `stones_weight`, `diamond_weight`, `net_weight`, `waste`, `gross_weight`, `making`, `bead_price`, `stones_price`, `diamond_price`, `total_bead_price`, `total_stones_price`, `total_diamond_price`, `other_amount`, `gold_rate`, `total_gold_price`, `total_amount`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(7, 3, 2, 103, 11, 2, 21.000, 100.356, 25.690, 3.485, 0.250, 70.931, 14.186, 85.117, 63837.750, 0.000, 0.000, 0.000, 1926.750, 261.375, 29625.000, 5000.000, 22608.025, 22693.142, 123344.017, 0, 1, NULL, '2024-10-10 17:20:44', '2024-10-10 17:20:44'),
+(8, 15, 3, 103, 11, 2, 21.000, 100.356, 25.690, 3.485, 0.250, 70.931, 14.186, 85.117, 63837.750, 0.000, 0.000, 0.000, 1926.750, 261.375, 29625.000, 0.000, 22608.025, 22693.142, 118344.017, 0, 1, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53'),
+(9, 15, 4, 79, 9, 2, 21.000, 100.000, 25.690, 3.485, 1.250, 69.575, 13.915, 83.490, 62617.500, 0.000, 0.000, 0.000, 1926.750, 261.375, 148125.000, 5000.000, 22608.025, 22691.515, 240622.140, 0, 1, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53');
+
 -- --------------------------------------------------------
 
 --
@@ -1293,6 +2151,15 @@ CREATE TABLE `sale_detail_beads` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sale_detail_beads`
+--
+
+INSERT INTO `sale_detail_beads` (`id`, `type`, `sale_detail_id`, `product_id`, `beads`, `gram`, `carat`, `gram_rate`, `carat_rate`, `total_amount`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(6, 'Glass Bead', 7, NULL, 1.000, 25.690, 128.450, 75.000, 15.000, 1926.750, 0, NULL, NULL, '2024-10-10 17:20:44', '2024-10-10 17:20:44'),
+(7, 'Glass Bead', 8, NULL, 1.000, 25.690, 128.450, 75.000, 15.000, 1926.750, 0, NULL, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53'),
+(8, 'Glass Bead', 9, NULL, 1.000, 25.690, 128.450, 75.000, 15.000, 1926.750, 0, NULL, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53');
 
 -- --------------------------------------------------------
 
@@ -1320,6 +2187,16 @@ CREATE TABLE `sale_detail_diamonds` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `sale_detail_diamonds`
+--
+
+INSERT INTO `sale_detail_diamonds` (`id`, `sale_detail_id`, `product_id`, `diamonds`, `type`, `color`, `cut`, `clarity`, `carat`, `carat_rate`, `total_amount`, `total_dollar`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 7, NULL, 1.000, 'Natural', 'E', 'Round', 'VVS-1', 0.250, 118500.000, 29625.000, 0.000, 0, NULL, NULL, '2024-10-10 17:20:44', '2024-10-10 17:20:44'),
+(2, 8, NULL, 1.000, 'Natural', 'E', 'Round', 'VVS-1', 0.250, 118500.000, 29625.000, 0.000, 0, NULL, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53'),
+(3, 9, NULL, 1.000, 'Natural', 'G', 'Round', 'VVS-1', 0.250, 118500.000, 29625.000, 0.000, 0, NULL, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53'),
+(4, 9, NULL, 1.000, 'Natural', 'H', 'Princess', 'VVS-2', 1.000, 118500.000, 118500.000, 0.000, 0, NULL, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53');
+
 -- --------------------------------------------------------
 
 --
@@ -1344,6 +2221,177 @@ CREATE TABLE `sale_detail_stones` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sale_detail_stones`
+--
+
+INSERT INTO `sale_detail_stones` (`id`, `category`, `type`, `sale_detail_id`, `product_id`, `stones`, `gram`, `carat`, `gram_rate`, `carat_rate`, `total_amount`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Sedimentary', 'stone', 7, NULL, 1.000, 3.485, 17.425, 75.000, 15.000, 261.375, 0, NULL, NULL, '2024-10-10 17:20:44', '2024-10-10 17:20:44'),
+(2, 'Sedimentary', 'stone', 8, NULL, 1.000, 3.485, 17.425, 75.000, 15.000, 261.375, 0, NULL, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53'),
+(3, 'Sedimentary', 'stone', 9, NULL, 1.000, 3.485, 17.425, 75.000, 15.000, 261.375, 0, NULL, NULL, '2024-10-10 18:55:53', '2024-10-10 18:55:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sale_orders`
+--
+
+CREATE TABLE `sale_orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `sale_order_no` varchar(255) DEFAULT NULL,
+  `sale_order_date` varchar(255) DEFAULT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `warehouse_id` int(11) DEFAULT NULL,
+  `total_qty` decimal(18,3) DEFAULT NULL,
+  `gold_rate` decimal(18,3) DEFAULT NULL,
+  `gold_rate_type_id` int(11) DEFAULT NULL,
+  `is_purchased` tinyint(1) NOT NULL DEFAULT 0,
+  `is_saled` tinyint(1) NOT NULL DEFAULT 0,
+  `is_complete` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sale_orders`
+--
+
+INSERT INTO `sale_orders` (`id`, `sale_order_no`, `sale_order_date`, `customer_id`, `warehouse_id`, `total_qty`, `gold_rate`, `gold_rate_type_id`, `is_purchased`, `is_saled`, `is_complete`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'SO-04112024-0001', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:44:53', '2024-11-04 17:44:53'),
+(2, 'SO-04112024-0002', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:44:59', '2024-11-04 17:44:59'),
+(3, 'SO-04112024-0003', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:48:20', '2024-11-04 17:48:20'),
+(4, 'SO-04112024-0004', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:48:26', '2024-11-04 17:48:26'),
+(5, 'SO-04112024-0005', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:49:40', '2024-11-04 17:49:40'),
+(6, 'SO-04112024-0006', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:49:48', '2024-11-04 17:49:48'),
+(7, 'SO-04112024-0007', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:50:37', '2024-11-04 17:50:37'),
+(8, 'SO-04112024-0008', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-04 17:50:52', '2024-11-04 17:50:52'),
+(9, 'SO-05112024-0009', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-05 03:03:27', '2024-11-05 03:03:27'),
+(10, 'SO-05112024-0010', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-05 03:03:32', '2024-11-05 03:03:32'),
+(11, 'SO-05112024-0011', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-05 03:06:29', '2024-11-05 03:06:29'),
+(12, 'SO-05112024-0012', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-05 03:06:35', '2024-11-05 03:06:35'),
+(13, 'SO-05112024-0013', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-05 03:08:22', '2024-11-05 03:08:22'),
+(14, 'SO-05112024-0014', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-05 03:08:29', '2024-11-05 03:08:29'),
+(15, 'SO-05112024-0015', '2024-11-05', 5, 1, 1.000, 12345.000, 3, 0, 0, 0, 0, 1, 1, NULL, '2024-11-05 03:13:07', '2024-11-05 03:14:22'),
+(16, 'SO-05112024-0016', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 1, NULL, NULL, '2024-11-05 03:13:11', '2024-11-05 03:13:11');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sale_order_details`
+--
+
+CREATE TABLE `sale_order_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `sale_order_id` int(11) DEFAULT NULL,
+  `product_id` int(12) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `design_no` varchar(255) DEFAULT NULL,
+  `net_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `waste` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `gross_weight` decimal(18,3) NOT NULL DEFAULT 0.000,
+  `description` text DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `sale_order_details`
+--
+
+INSERT INTO `sale_order_details` (`id`, `sale_order_id`, `product_id`, `category`, `design_no`, `net_weight`, `waste`, `gross_weight`, `description`, `is_deleted`, `createdby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 15, NULL, '', '', 0.000, 0.000, 0.000, '', 0, 1, NULL, '2024-11-05 03:13:37', '2024-11-05 03:13:37'),
+(2, 15, NULL, '', '', 0.000, 0.000, 0.000, '', 0, 1, NULL, '2024-11-05 03:13:49', '2024-11-05 03:13:49'),
+(3, 15, NULL, '', '', 0.000, 0.000, 0.000, '', 0, 1, NULL, '2024-11-05 03:14:22', '2024-11-05 03:14:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stock_takings`
+--
+
+CREATE TABLE `stock_takings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `stock_date` varchar(255) DEFAULT NULL,
+  `warehouse_id` int(11) DEFAULT NULL,
+  `posted` tinyint(1) NOT NULL DEFAULT 0,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `stock_takings`
+--
+
+INSERT INTO `stock_takings` (`id`, `stock_date`, `warehouse_id`, `posted`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, '2024-10-29', 1, 0, 1, 1, NULL, 1, '2024-10-28 20:47:06', '2024-10-28 21:04:40'),
+(2, '2024-10-29', 1, 0, 0, 1, NULL, NULL, '2024-10-28 21:00:50', '2024-10-28 21:00:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stock_taking_details`
+--
+
+CREATE TABLE `stock_taking_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `stock_taking_id` int(11) DEFAULT NULL,
+  `other_product_id` int(11) DEFAULT NULL,
+  `quantity_in_stock` varchar(255) DEFAULT NULL,
+  `actual_quantity` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `stock_taking_details`
+--
+
+INSERT INTO `stock_taking_details` (`id`, `stock_taking_id`, `other_product_id`, `quantity_in_stock`, `actual_quantity`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '41.00', '40', 0, 1, NULL, NULL, NULL, NULL),
+(2, 1, 2, '60.00', '50', 0, 1, NULL, NULL, NULL, NULL),
+(3, 2, 1, '41.00', '40', 0, 1, NULL, NULL, NULL, NULL),
+(4, 2, 2, '60.00', '50', 0, 1, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stone_categories`
+--
+
+CREATE TABLE `stone_categories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `stone_categories`
+--
+
+INSERT INTO `stone_categories` (`id`, `name`, `is_active`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, 'Stone Category 1', 1, 0, 1, 1, NULL, '2024-10-24 17:32:54', '2024-10-24 17:33:02');
 
 -- --------------------------------------------------------
 
@@ -1396,6 +2444,7 @@ CREATE TABLE `supplier_payments` (
   `supplier_id` int(11) DEFAULT NULL,
   `account_id` int(11) DEFAULT NULL,
   `payment_date` varchar(255) DEFAULT NULL,
+  `other_purchase_id` int(12) DEFAULT NULL,
   `cheque_ref` varchar(255) DEFAULT NULL,
   `currency` int(11) NOT NULL DEFAULT 0 COMMENT '0 for PKR, 1 for AU and 2 for Dollar',
   `tax` decimal(18,3) DEFAULT NULL,
@@ -1416,8 +2465,49 @@ CREATE TABLE `supplier_payments` (
 -- Dumping data for table `supplier_payments`
 --
 
-INSERT INTO `supplier_payments` (`id`, `supplier_id`, `account_id`, `payment_date`, `cheque_ref`, `currency`, `tax`, `tax_amount`, `tax_account_id`, `sub_total`, `total`, `jv_id`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
-(4, 2, 5, '2024-09-26', NULL, 0, 0.000, 0.000, NULL, 1000.000, 1000.000, 24, 1, NULL, NULL, 1, '2024-09-25 17:25:50', '2024-09-25 18:28:20');
+INSERT INTO `supplier_payments` (`id`, `supplier_id`, `account_id`, `payment_date`, `other_purchase_id`, `cheque_ref`, `currency`, `tax`, `tax_amount`, `tax_account_id`, `sub_total`, `total`, `jv_id`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(4, 2, 5, '2024-09-26', NULL, NULL, 0, 0.000, 0.000, NULL, 1000.000, 1000.000, 24, 1, NULL, NULL, 1, '2024-09-25 17:25:50', '2024-09-25 18:28:20'),
+(5, 2, 6, '2024-10-28', NULL, 'Date :2024-10-28 Against OPO. OPO-28102024-0001', 0, 0.000, 0.000, NULL, 5800.000, 5800.000, 38, 0, 1, NULL, NULL, '2024-10-28 17:38:42', '2024-10-28 17:38:42'),
+(6, 2, 6, '2024-10-28', NULL, 'Date :2024-10-28 Against OPO. OPO-28102024-0001', 0, 0.000, 0.000, NULL, 15000.000, 15000.000, 40, 0, 1, NULL, NULL, '2024-10-28 18:15:36', '2024-10-28 18:15:36');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `type` varchar(255) DEFAULT NULL COMMENT '0 for purchase, 1 for other sale',
+  `date` date DEFAULT NULL,
+  `other_product_id` int(11) DEFAULT NULL,
+  `qty` decimal(18,3) DEFAULT NULL,
+  `unit_price` decimal(18,3) DEFAULT NULL,
+  `other_purchase_id` int(11) DEFAULT NULL,
+  `other_sale_id` int(11) DEFAULT NULL,
+  `stock_taking_id` int(11) DEFAULT NULL,
+  `stock_taking_link_id` int(11) DEFAULT NULL,
+  `warehouse_id` int(11) DEFAULT NULL,
+  `is_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `createdby_id` int(11) DEFAULT NULL,
+  `updatedby_id` int(11) DEFAULT NULL,
+  `deletedby_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`id`, `type`, `date`, `other_product_id`, `qty`, `unit_price`, `other_purchase_id`, `other_sale_id`, `stock_taking_id`, `stock_taking_link_id`, `warehouse_id`, `is_deleted`, `createdby_id`, `updatedby_id`, `deletedby_id`, `created_at`, `updated_at`) VALUES
+(1, '0', '2024-10-28', 1, 30.000, 240.000, 1, NULL, NULL, NULL, 1, 0, 1, NULL, NULL, '2024-10-28 18:15:35', '2024-10-28 18:15:35'),
+(2, '0', '2024-10-28', 2, 60.000, 130.000, 1, NULL, NULL, NULL, 1, 0, 1, NULL, NULL, '2024-10-28 18:15:35', '2024-10-28 18:15:35'),
+(3, '0', '2024-10-28', 1, 11.000, 240.000, 3, NULL, NULL, NULL, 1, 0, 1, NULL, NULL, '2024-10-28 18:15:36', '2024-10-28 18:15:36'),
+(8, '2', '2024-10-29', 1, 41.000, 240.000, NULL, NULL, 2, NULL, 1, 0, 1, NULL, NULL, '2024-10-28 19:00:00', '2024-10-28 19:00:00'),
+(9, '2', '2024-10-29', 1, 40.000, 240.000, NULL, NULL, 2, 8, 1, 0, 1, NULL, NULL, '2024-10-28 19:00:00', '2024-10-28 19:00:00'),
+(10, '2', '2024-10-29', 2, 60.000, 130.000, NULL, NULL, 2, NULL, 1, 0, 1, NULL, NULL, '2024-10-28 19:00:00', '2024-10-28 19:00:00'),
+(11, '2', '2024-10-29', 2, 50.000, 130.000, NULL, NULL, 2, 10, 1, 0, 1, NULL, NULL, '2024-10-28 19:00:00', '2024-10-28 19:00:00');
 
 -- --------------------------------------------------------
 
@@ -1489,9 +2579,45 @@ ALTER TABLE `account_types`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `bead_types`
+--
+ALTER TABLE `bead_types`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `company_settings`
+--
+ALTER TABLE `company_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `diamond_clarities`
+--
+ALTER TABLE `diamond_clarities`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `diamond_colors`
+--
+ALTER TABLE `diamond_colors`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `diamond_cuts`
+--
+ALTER TABLE `diamond_cuts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `diamond_types`
+--
+ALTER TABLE `diamond_types`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1544,6 +2670,60 @@ ALTER TABLE `gold_rates`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `gold_rate_types`
+--
+ALTER TABLE `gold_rate_types`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_purchases`
+--
+ALTER TABLE `job_purchases`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_purchase_details`
+--
+ALTER TABLE `job_purchase_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_purchase_detail_beads`
+--
+ALTER TABLE `job_purchase_detail_beads`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_purchase_detail_diamonds`
+--
+ALTER TABLE `job_purchase_detail_diamonds`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_purchase_detail_stones`
+--
+ALTER TABLE `job_purchase_detail_stones`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_tasks`
+--
+ALTER TABLE `job_tasks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_task_activities`
+--
+ALTER TABLE `job_task_activities`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `job_task_details`
+--
+ALTER TABLE `job_task_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `journals`
 --
 ALTER TABLE `journals`
@@ -1582,6 +2762,42 @@ ALTER TABLE `model_has_roles`
   ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
 
 --
+-- Indexes for table `other_products`
+--
+ALTER TABLE `other_products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `other_product_units`
+--
+ALTER TABLE `other_product_units`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `other_purchases`
+--
+ALTER TABLE `other_purchases`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `other_purchase_details`
+--
+ALTER TABLE `other_purchase_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `other_sales`
+--
+ALTER TABLE `other_sales`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `other_sale_details`
+--
+ALTER TABLE `other_sale_details`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
@@ -1606,6 +2822,18 @@ ALTER TABLE `personal_access_tokens`
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purchase_orders`
+--
+ALTER TABLE `purchase_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `purchase_order_details`
+--
+ALTER TABLE `purchase_order_details`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1683,6 +2911,36 @@ ALTER TABLE `sale_detail_stones`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `sale_orders`
+--
+ALTER TABLE `sale_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sale_order_details`
+--
+ALTER TABLE `sale_order_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stock_takings`
+--
+ALTER TABLE `stock_takings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stock_taking_details`
+--
+ALTER TABLE `stock_taking_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stone_categories`
+--
+ALTER TABLE `stone_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `suppliers`
 --
 ALTER TABLE `suppliers`
@@ -1692,6 +2950,12 @@ ALTER TABLE `suppliers`
 -- Indexes for table `supplier_payments`
 --
 ALTER TABLE `supplier_payments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1724,10 +2988,46 @@ ALTER TABLE `account_types`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `bead_types`
+--
+ALTER TABLE `bead_types`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `company_settings`
+--
+ALTER TABLE `company_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `diamond_clarities`
+--
+ALTER TABLE `diamond_clarities`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `diamond_colors`
+--
+ALTER TABLE `diamond_colors`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `diamond_cuts`
+--
+ALTER TABLE `diamond_cuts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `diamond_types`
+--
+ALTER TABLE `diamond_types`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `dollar_rates`
@@ -1751,31 +3051,85 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `finish_products`
 --
 ALTER TABLE `finish_products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `finish_product_beads`
 --
 ALTER TABLE `finish_product_beads`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `finish_product_diamonds`
 --
 ALTER TABLE `finish_product_diamonds`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `finish_product_stones`
 --
 ALTER TABLE `finish_product_stones`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `gold_rates`
 --
 ALTER TABLE `gold_rates`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `gold_rate_types`
+--
+ALTER TABLE `gold_rate_types`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `job_purchases`
+--
+ALTER TABLE `job_purchases`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_purchase_details`
+--
+ALTER TABLE `job_purchase_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_purchase_detail_beads`
+--
+ALTER TABLE `job_purchase_detail_beads`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_purchase_detail_diamonds`
+--
+ALTER TABLE `job_purchase_detail_diamonds`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_purchase_detail_stones`
+--
+ALTER TABLE `job_purchase_detail_stones`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `job_tasks`
+--
+ALTER TABLE `job_tasks`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `job_task_activities`
+--
+ALTER TABLE `job_task_activities`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `job_task_details`
+--
+ALTER TABLE `job_task_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `journals`
@@ -1787,19 +3141,55 @@ ALTER TABLE `journals`
 -- AUTO_INCREMENT for table `journal_entries`
 --
 ALTER TABLE `journal_entries`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `journal_entry_details`
 --
 ALTER TABLE `journal_entry_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+
+--
+-- AUTO_INCREMENT for table `other_products`
+--
+ALTER TABLE `other_products`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `other_product_units`
+--
+ALTER TABLE `other_product_units`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `other_purchases`
+--
+ALTER TABLE `other_purchases`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `other_purchase_details`
+--
+ALTER TABLE `other_purchase_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `other_sales`
+--
+ALTER TABLE `other_sales`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `other_sale_details`
+--
+ALTER TABLE `other_sale_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `permissions`
@@ -1820,10 +3210,22 @@ ALTER TABLE `products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `purchase_orders`
+--
+ALTER TABLE `purchase_orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT for table `purchase_order_details`
+--
+ALTER TABLE `purchase_order_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
 -- AUTO_INCREMENT for table `ratti_kaats`
 --
 ALTER TABLE `ratti_kaats`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- AUTO_INCREMENT for table `ratti_kaat_beads`
@@ -1859,31 +3261,61 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `sale_details`
 --
 ALTER TABLE `sale_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `sale_detail_beads`
 --
 ALTER TABLE `sale_detail_beads`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `sale_detail_diamonds`
 --
 ALTER TABLE `sale_detail_diamonds`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `sale_detail_stones`
 --
 ALTER TABLE `sale_detail_stones`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `sale_orders`
+--
+ALTER TABLE `sale_orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `sale_order_details`
+--
+ALTER TABLE `sale_order_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `stock_takings`
+--
+ALTER TABLE `stock_takings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `stock_taking_details`
+--
+ALTER TABLE `stock_taking_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `stone_categories`
+--
+ALTER TABLE `stone_categories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
@@ -1895,7 +3327,13 @@ ALTER TABLE `suppliers`
 -- AUTO_INCREMENT for table `supplier_payments`
 --
 ALTER TABLE `supplier_payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `users`

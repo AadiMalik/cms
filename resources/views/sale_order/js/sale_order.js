@@ -75,6 +75,8 @@ $("#net_weight,#waste").on("keyup", function (event) {
 
 function addProduct() {
     $("#preloader").show();
+    var product_id = $("#product_id").find(":selected").val();
+    var product = $("#product_id").find(":selected").text();
     var category = $("#category").val();
     var design_no = $("#design_no").val();
     var net_weight = $("#net_weight").val();
@@ -82,6 +84,11 @@ function addProduct() {
     var gross_weight = $("#gross_weight").val();
     var description = $("#description").val();
 
+    if (product_id == 0 || product_id == "") {
+        error("Please Select Product!");
+        $("#preloader").hide();
+        return false;
+    }
     if (category == 0 || category == "") {
         error("Please Enter Category!");
         $("#preloader").hide();
@@ -114,7 +121,7 @@ function addProduct() {
     }
     var check = true;
     $.each(saleOrderData, function (e, val) {
-        if (val.category+'_'+val.design_no == $("#category").val()+'_'+$("#design_no").val()) {
+        if (val.product_id == $("#product_id").find(":selected").val()) {
             error("Product is already added !");
             $("#preloader").hide();
             check = false;
@@ -130,6 +137,8 @@ function addProduct() {
 
     saleOrderData.push({
         // sr: i,
+        product_id: product_id,
+        product: product,
         category: category,
         design_no: design_no,
         net_weight: net_weight,
@@ -142,12 +151,12 @@ function addProduct() {
         sale_order_sr = sale_order_sr + 1;
         saleOrderData.sr = sale_order_sr;
 
-        rows += `<tr id="${val.category+'_'+val.design_no}"><td>${sale_order_sr}</td><td>${val.category}</td>
+        rows += `<tr id="${val.product_id}"><td>${sale_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
                 <td>${val.design_no}</td><td style="text-align: right;">${val.net_weight}</td>
                 <td style="text-align: right;">${val.waste}</td>
                 <td style="text-align: right;">${val.gross_weight}</td>
                 <td>${val.description}</td>
-                <td><a class="text-danger text-white saleorderr${val.category+'_'+val.design_no}" onclick="SaleOrderRemove(${val.category+'_'+val.design_no})"><i class="fa fa-trash"></i></a></td></tr>`;
+                <td><a class="text-danger text-white saleorderr${val.product_id}" onclick="SaleOrderRemove(${val.product_id})"><i class="fa fa-trash"></i></a></td></tr>`;
 
     });
     success("Product Added Successfully!");
@@ -267,7 +276,7 @@ function SaleOrderRemove(id) {
         var total = 0;
         $("#preloader").show();
         $.each(saleOrderData, function (i, val) {
-            if (val.category+'_'+val.design_no == id) {
+            if (val.product_id == id) {
                 $("#" + id).hide();
                 item_index = i;
                 return false;
@@ -284,6 +293,10 @@ function SaleOrderRemove(id) {
 }
 
 function Clear() {
+    $("#product_id option[value='0']").remove();
+    $("#product_id").append(
+        '<option disabled selected value="0">--Select Product--</option>'
+    );
     $("#category").val("");
     $("#design_no").val("");
     $("#net_weight").val(0);

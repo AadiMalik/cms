@@ -153,6 +153,7 @@ class PurchaseOrderService
                   foreach ($PurchaseOrderDetail as $item) {
                         $PurchaseOrderDetailObj = [
                               "purchase_order_id" => $obj['id'],
+                              "product_id" => $item['product_id'] ?? '',
                               "category" => $item['category'] ?? '',
                               "design_no" => $item['design_no'] ?? '',
                               "net_weight" => $item['net_weight'] ?? 0.000,
@@ -189,6 +190,8 @@ class PurchaseOrderService
             $data = [];
             foreach ($purchase_order_detail as $item) {
                   $data[] = [
+                        "product_id" => $item->product_id ?? '',
+                        "product" => $item->product->name ?? '',
                         "category" => $item->category ?? '',
                         "design_no" => $item->design_no ?? '',
                         "net_weight" => $item->net_weight ?? 0.000,
@@ -254,6 +257,7 @@ class PurchaseOrderService
                         foreach ($purchase_order_detail as $item) {
                               $JobTaskDetailObj = [
                                     "job_task_id" => $job_task->id,
+                                    "product_id" => $item['product_id'] ?? '',
                                     "category" => $item['category'] ?? '',
                                     "design_no" => $item['design_no'] ?? '',
                                     "net_weight" => $item['net_weight'] ?? 0.000,

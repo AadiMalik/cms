@@ -11,6 +11,7 @@ class SaleOrderDetail extends Model
     protected $fillable = [
         'id',
         'sale_order_id',
+        'product_id',
         'category',
         'design_no',
         'net_weight',
@@ -31,7 +32,10 @@ class SaleOrderDetail extends Model
     {
         return $this->belongsTo(SaleOrder::class, 'sale_order_id');
     }
-
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
     public function created_by()
     {
         return $this->belongsTo(User::class, 'createdby_id');

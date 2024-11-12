@@ -43,6 +43,7 @@
                             <thead>
                                 <tr style="background: #87CEFA;color: #000;">
                                     <th style="text-align:center;">Sr.No</th>
+                                    <th style="text-align:center;">Product</th>
                                     <th style="text-align:center;">Category</th>
                                     <th style="text-align:center;">Design No</th>
                                     <th style="text-align:center;">Net Weight</th>
@@ -54,6 +55,7 @@
                                 @foreach ($purchase_order_detail as $index=>$item)
                                 <tr>
                                     <td style="text-align:center;">{{ $index+1 }}</td>
+                                    <td style="text-align:left;">{{ $item['product_name']??'' }}</td>
                                     <td style="text-align:left;">{{ $item['category']??'' }}</td>
                                     <td style="text-align:left;">{{ $item['design_no']??'' }}</td>
                                     <td style="text-align:right;">{{ number_format($item['net_weight']??0.000,3) }}</td>

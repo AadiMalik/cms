@@ -72,6 +72,7 @@ class JobTaskService
                         $action_column = '';
                         $activity_column    = "<a class='text-info mr-2' href='job-task-activity/" . $item->id . "'><i title='Activity' class='nav-icon mr-2 fa fa-star'></i>Activity</a>";
                         $view_column    = "<a class='text-warning mr-2' href='job-task/view/" . $item->id . "'><i title='View' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
+                        $complete_column    = "<a class='text-success mr-2' href='job-purchase/create/" . $item->id . "'><i title='View' class='nav-icon mr-2 fa fa-check'></i>Complete</a>";
                         $delete_column    = "<a class='text-danger mr-2' id='deleteJobTask' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
 
@@ -79,7 +80,8 @@ class JobTaskService
                               $action_column .= $activity_column;
                         if (Auth::user()->can('customers_edit'))
                               $action_column .= $view_column;
-
+                        if (Auth::user()->can('customers_edit'))
+                              $action_column .= $complete_column;
                         if (Auth::user()->can('customers_delete'))
                               $action_column .= $delete_column;
 
@@ -143,18 +145,23 @@ class JobTaskService
             return $this->model_job_task->getModel()::with(['supplier_name', 'warehouse_name'])->find($id);
       }
 
-      public function JobTaskDetail($purchase_order_id)
+      public function JobTaskDetail($job_task_id)
       {
-            $purchase_order_detail = $this->model_job_task_detail->getModel()::where('purchase_order_id', $purchase_order_id)
+            $job_task_detail = $this->model_job_task_detail->getModel()::with(['job_task', 'product'])
+                  ->where('job_task_id', $job_task_id)
                   ->where('is_deleted', 0)->get();
 
             $data = [];
-            foreach ($purchase_order_detail as $item) {
+            foreach ($job_task_detail as $item) {
                   $data[] = [
+                        "id" => $item->id ?? '',
+                        "product_id" => $item->product_id ?? '',
+                        "product" => $item->product->name ?? '',
                         "category" => $item->category ?? '',
                         "design_no" => $item->design_no ?? '',
                         "net_weight" => $item->net_weight ?? 0.000,
-                        "description" => $item->description ?? ''
+                        "description" => $item->description ?? '',
+                        "supplier_id" => $item->job_task->supplier_id ?? '',
                   ];
             }
 

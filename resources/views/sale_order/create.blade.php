@@ -112,7 +112,6 @@
                                                     </select>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="col-md-5">
@@ -135,6 +134,22 @@
                                     <div class="col-md-12">
                                         <hr class="mb-2 mt-2">
                                         <b>Add Sale Detail:</b>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label class="form-label">Product:<span
+                                                    class="text-danger">*</span></label>
+                                            <select id="product_id" name="product_id"
+                                                class="form-control show-tick" required>
+                                                <option disabled selected value="0">--Select Product--</option>
+                                                @foreach ($products as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        @if (isset($sale_order)) {{ $sale_order->product_id == $item->id ? 'selected' : '' }} @endif>
+                                                        {{ $item->name ?? '' }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
@@ -192,7 +207,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         <div class="form-group">
                                             <label class="form-label">Description:<span
                                                     style="color:red;">*</span></label>
@@ -222,6 +237,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Sr.</th>
+                                                    <th>Product</th>
                                                     <th>Category</th>
                                                     <th>Design No</th>
                                                     <th>Net Weight</th>
@@ -269,6 +285,7 @@
             $('#customer_id').select2();
             $('#warehouse_id').select2();
             $('#gold_rate_type_id').select2();
+            $('#product_id').select2();
             const sale_order_date = document.getElementById("sale_order_date");
 
             // ✅ Using the visitor's timezone

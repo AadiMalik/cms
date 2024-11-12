@@ -6,6 +6,7 @@ use App\Models\SaleOrder;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CommonService;
 use App\Services\Concrete\CustomerService;
+use App\Services\Concrete\ProductService;
 use App\Services\Concrete\SaleOrderService;
 use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
@@ -22,6 +23,7 @@ class SaleOrderController extends Controller
     protected $customer_service;
     protected $other_product_service;
     protected $warehouse_service;
+    protected $product_service;
     protected $common_service;
 
     public function __construct(
@@ -29,12 +31,14 @@ class SaleOrderController extends Controller
         CustomerService $customer_service,
         AccountService $account_service,
         WarehouseService $warehouse_service,
+        ProductService $product_service,
         CommonService $common_service
     ) {
         $this->sale_order_service = $sale_order_service;
         $this->account_service = $account_service;
         $this->customer_service = $customer_service;
         $this->warehouse_service = $warehouse_service;
+        $this->product_service = $product_service;
         $this->common_service = $common_service;
     }
     public function index()
@@ -64,11 +68,13 @@ class SaleOrderController extends Controller
         $warehouses = $this->warehouse_service->getAll();
         $gold_rate_type = $this->sale_order_service->getGoldRateType();
         $customers = $this->customer_service->getAllActiveCustomer();
+        $products = $this->product_service->getAllActiveProduct();
         return view('sale_order.create', compact(
             'sale_order',
             'warehouses',
             'gold_rate_type',
-            'customers'
+            'customers',
+            'products'
         ));
     }
     public function store(Request $request)

@@ -136,6 +136,7 @@ class SaleOrderService
             foreach ($saleOrderDetail as $item) {
                 $saleOrderDetailObj = [
                     "sale_order_id" => $obj['id'],
+                    "product_id" => $item['product_id'] ?? '',
                     "category" => $item['category'] ?? '',
                     "design_no" => $item['design_no'] ?? '',
                     "net_weight" => $item['net_weight'] ?? 0.000,
@@ -163,12 +164,15 @@ class SaleOrderService
 
     public function saleOrderDetail($sale_order_id)
     {
-        $sale_order_detail = $this->model_sale_order_detail->getModel()::where('sale_order_id', $sale_order_id)
+        $sale_order_detail = $this->model_sale_order_detail->getModel()::with('product')
+        ->where('sale_order_id', $sale_order_id)
             ->where('is_deleted', 0)->get();
 
         $data = [];
         foreach ($sale_order_detail as $item) {
             $data[] = [
+                "product_id" => $item->product_id ?? '',
+                "product_name" => $item->product->name ?? '',
                 "category" => $item->category ?? '',
                 "design_no" => $item->design_no ?? '',
                 "net_weight" => $item->net_weight ?? 0.000,
