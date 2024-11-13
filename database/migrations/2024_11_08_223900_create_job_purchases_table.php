@@ -30,6 +30,7 @@ return new class extends Migration
             $table->integer('jv_au_id')->nullable();
             $table->integer('jv_dollar_id')->nullable();
             $table->integer('jv_recieved_id')->nullable();
+            $table->integer('supplier_au_payment_id')->nullable();
             $table->boolean('is_active')->default(1)->comment('1 for active, 0 for inactive');
             $table->boolean('is_posted')->default(0);
             $table->boolean('is_saled')->default(0);

@@ -76,7 +76,7 @@
                                         All</a>
                                     <a class="btn btn-danger" style="color:#fff;" type="button" id="unselectAll">Uncheck
                                         All</a>
-                                    <a class="btn btn-primary" style="color:#fff;" type="button" id="post_sale">Post</a>
+                                    <a class="btn btn-primary" style="color:#fff;" type="button" id="post">Post</a>
                                 </div>
                             </div>
                             <div class="row mt-2" id="job_purchase_account" style="display: none;">
@@ -88,6 +88,20 @@
                                                 Account--</option>
                                             @foreach ($accounts as $item)
                                                 <option value="{{ $item->id }}" {{($setting->purchase_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                                    {{ $item->name ?? '' }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Recieved AU Account<span style="color: red;">*</span> </label>
+                                        <select id="recieved_au_account_id" name="recieved_au_account_id" class="form-control" style="width:100%;">
+                                            <option value="0" disabled selected="selected">--Select Recieved
+                                                Account--</option>
+                                            @foreach ($accounts as $item)
+                                                <option value="{{ $item->id }}" {{($setting->recieved_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -165,6 +179,7 @@
         $(document).ready(function() {
             $('#supplier_id').select2();
             $("#purchase_account_id").select2();
+            $("#recieved_au_account_id").select2();
 
             $("#unselectAll").hide();
             $("#selectAll").click(function() {
@@ -246,6 +261,13 @@
                 $("#preloader").hide();
                 return false;
             }
+            if ($("#recieved_au_account_id").find(":selected").val() == "" || $("#recieved_au_account_id").find(":selected")
+                .val() == 0) {
+                error("Please select recieved account!");
+                $("#recieved_au_account_id").focus();
+                $("#preloader").hide();
+                return false;
+            }
             
             var job_purchases = [];
             $(".sub_chk:checked").each(function() {
@@ -255,6 +277,7 @@
             var data = {};
             data.job_purchase = job_purchases;
             data.purchase_account_id = $("#purchase_account_id").find(":selected").val();
+            data.recieved_au_account_id = $("#recieved_au_account_id").find(":selected").val();
             if (job_purchases.length <= 0) {
                 $("#preloader").hide();
                 error("Please select Rows!");

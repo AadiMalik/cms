@@ -24,6 +24,7 @@ class JobPurchase extends Model
         'jv_au_id',
         'jv_dollar_id',
         'jv_recieved_id',
+        'supplier_au_payment_id',
         'is_posted',
         'is_saled',
         'is_active',

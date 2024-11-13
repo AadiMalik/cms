@@ -355,7 +355,7 @@ class RattiKaatService
                         $supplier->id,
                         0,
                         $ratti_kaat->paid_account,
-                        $$ratti_kaat->purchase_date,
+                        $ratti_kaat->purchase_date,
                         null,
                         $Paid_Amount,
                         $paid_jv
@@ -372,9 +372,9 @@ class RattiKaatService
                     // Supplier AU payment
                     $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
                         $supplier->id,
-                        0,
+                        1,
                         $ratti_kaat->paid_au_account,
-                        $$ratti_kaat->purchase_date,
+                        $ratti_kaat->purchase_date,
                         null,
                         $Paid_au_Amount,
                         $paid_au_jv
@@ -390,9 +390,9 @@ class RattiKaatService
                     // Supplier Dollar payment
                     $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
                         $supplier->id,
-                        0,
+                        2,
                         $ratti_kaat->paid_dollar_account,
-                        $$ratti_kaat->purchase_date,
+                        $ratti_kaat->purchase_date,
                         null,
                         $Paid_dollar_Amount,
                         $paid_dollar_jv

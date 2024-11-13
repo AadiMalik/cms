@@ -217,7 +217,7 @@ class SupplierPaymentService
             'tax' => 0.000,
             'tax_amount' => 0.000,
             'tax_account_id' => null,
-            'jv_id'=>$jv_id
+            'jv_id'=>$jv_id->id
         ];
 
         $saved_obj = $this->model_supplier_payment->create($obj);

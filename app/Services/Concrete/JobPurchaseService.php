@@ -20,6 +20,8 @@ use App\Models\SaleDetail;
 use App\Models\SaleDetailBead;
 use App\Models\SaleDetailDiamond;
 use App\Models\SaleDetailStone;
+use App\Models\Supplier;
+use App\Models\SupplierPayment;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +39,7 @@ class JobPurchaseService
     protected $model_purchase_order;
 
     protected $common_service;
+    protected $supplier_payment_service;
     protected $journal_entry_service;
     public function __construct()
     {
@@ -50,6 +53,7 @@ class JobPurchaseService
         $this->model_purchase_order = new Repository(new PurchaseOrder);
 
         $this->common_service = new CommonService();
+        $this->supplier_payment_service = new SupplierPaymentService();
         $this->journal_entry_service = new JournalEntryService();
     }
 
@@ -104,6 +108,12 @@ class JobPurchaseService
                 $jvs = '';
                 if ($item->jv_id != null)
                     $jvs .= "filter[]=" . $item->jv_id . "";
+                if ($item->jv_au_id != null)
+                    $jvs .= "&filter[]=" . $item->jv_au_id . "";
+                if ($item->jv_dollar_id != null)
+                    $jvs .= "&filter[]=" . $item->jv_dollar_id . "";
+                if ($item->jv_recieved_id != null)
+                    $jvs .= "&filter[]=" . $item->jv_recieved_id . "";
 
                 $action_column = '';
                 $unpost = '<a class="text text-danger" id="unpost" data-toggle="tooltip" data-id="' . $item->id . '" data-original-title="Unpost" href="javascript:void(0)"><i class="fa fa-repeat"></i>Unpost</a>';
@@ -116,9 +126,9 @@ class JobPurchaseService
 
                 if (Auth::user()->can('customers_edit'))
                     $action_column .= $print_column;
-                if (Auth::user()->can('customers_edit') && $item->posted == 1)
+                if (Auth::user()->can('customers_edit') && $item->is_posted == 1)
                     $action_column .= $unpost;
-                if (Auth::user()->can('ratti_kaat_access') && $item->posted == 1)
+                if (Auth::user()->can('ratti_kaat_access') && $item->is_posted == 1)
                     $action_column .= $all_print_column;
 
                 if (Auth::user()->can('customers_delete'))
@@ -126,7 +136,7 @@ class JobPurchaseService
 
                 return $action_column;
             })
-            ->rawColumns(['check_box', 'purchase_order', 'sale_order', 'customer_name', 'supplier_name', 'posted','saled', 'action'])
+            ->rawColumns(['check_box', 'purchase_order', 'sale_order', 'customer_name', 'supplier_name', 'posted', 'saled', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;
@@ -237,23 +247,23 @@ class JobPurchaseService
         return $data;
     }
 
+    // post job purchase
     public function post($obj)
     {
-
         try {
             DB::beginTransaction();
 
             $journal_entry_id = null;
-            $jv_id = null;
-            foreach ($obj['sale'] as $item) {
-                $sale = Sale::with('customer_name')->find($item);
-                $customer = Customer::find($sale->customer_id);
+            $supplier_au_payment = null;
+            foreach ($obj['job_purchase'] as $item) {
+                $job_purchase = $this->model_job_purchase->getModel()::with('supplier_name')->find($item);
+                $supplier = Supplier::find($job_purchase->supplier_id);
 
-                $journal = Journal::find(config('enum.SV'));
-                $sale_date = date("Y-m-d", strtotime(str_replace('/', '-', $sale->sale_date)));
+                $journal = Journal::find(config('enum.PV'));
+                $job_purchase_date = date("Y-m-d", strtotime(str_replace('/', '-', $job_purchase->job_purchase_date)));
                 // Add journal entry
                 $data = [
-                    "date" => $sale_date,
+                    "date" => $job_purchase_date,
                     "prefix" => $journal->prefix,
                     "journal_id" => $journal->id
                 ];
@@ -261,186 +271,169 @@ class JobPurchaseService
 
                 $journal_entry = new JournalEntry;
                 $journal_entry->journal_id = $journal->id;
-                $journal_entry->customer_id = $sale->customer_id;
-                $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $sale->sale_date)));
-                $journal_entry->reference = 'Date :' . $sale->sale_date . ' Sale ' . $sale->sale_no . '. Customer is ' . $sale->customer_name;
+                $journal_entry->supplier_id = $job_purchase->supplier_id;
+                $journal_entry->date_post = $job_purchase_date;
+                $journal_entry->reference = 'Date :' . $job_purchase_date . ' Against ' . $job_purchase->job_purchase_no . '. From ' . $job_purchase->supplier_name->name;
                 $journal_entry->entryNum = $entryNum;
                 $journal_entry->createdby_id = Auth::User()->id;
                 $journal_entry->save();
 
                 $journal_entry_id = $journal_entry->id ?? null;
 
-                // cash amount
-                if ($sale->cash_amount > 0) {
-                    if ($obj['cash_account_id'] == null || $obj['cash_account_id'] == '') {
-                        $msg = 'Cash Account not select but cash amount is greater then 0';
-                        return $msg;
-                    }
-                    $cash_account = Account::find($obj['cash_account_id']);
-                    $Cash_Amount = str_replace(',', '', $sale->cash_amount ?? 0);
+                if (
+                    $supplier->account_id == null || $supplier->account_au_id == null || $supplier->account_dollar_id == null
+                ) {
+                    $message = "This Supplier/Karigar have  not 3 accounts. please update then post again.!";
+                    return $message;
+                }
+
+                $purchase_account = Account::find($obj['purchase_account_id']);
+                $supplir_account = Account::find($supplier->account_id);
+                $supplir_au_account = Account::find($supplier->account_au_id);
+                $supplir_dollar_account = Account::find($supplier->account_dollar_id);
+
+                // Journal Entry Detail
+
+                //PKR Job Purchase
+                if ($job_purchase->total > 0) {
+                    $PKR_Amount = str_replace(
+                        ',',
+                        '',
+                        $job_purchase->total ?? 0
+                    );
                     // PKR (Debit)
                     $this->journal_entry_service->saveJVDetail(
                         0, // currency 0 for PKR, 1 for AU, 2 for Dollar
                         $journal_entry_id, // journal entry id
-                        'Cash Amount From Sale Debit Entry', //explaination
-                        $sale->id, //bill no
+                        'Job Purchase PKR Debit Entry', //explaination
+                        $job_purchase->id, //bill no
                         0, // check no or 0
-                        $sale->sale_date, //check date
+                        $job_purchase_date, //check date
                         1, // is credit flag 0 for credit, 1 for debit
-                        $Cash_Amount, //amount
-                        $cash_account->id, // account id
-                        $cash_account->code, // account code
+                        $PKR_Amount, //amount
+                        $purchase_account->id, // account id
+                        $purchase_account->code, // account code
                         Auth::User()->id //created by id
                     );
-                }
-
-                // Bank Transfer
-                if ($sale->bank_transfer_amount > 0) {
-                    if ($obj['bank_transfer_account_id'] == null || $obj['bank_transfer_account_id'] == '') {
-                        $msg = 'Bank Transfer Account not select but bank transfer amount is greater then 0';
-                        return $msg;
-                    }
-                    $bank_transfer_account = Account::find($obj['bank_transfer_account_id']);
-                    $bank_transfer_Amount = str_replace(',', '', $sale->bank_transfer_amount ?? 0);
-                    // PKR (Debit)
-                    $this->journal_entry_service->saveJVDetail(
-                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                        $journal_entry_id, // journal entry id
-                        'Bank Amount Transfer From Sale Debit Entry', //explaination
-                        $sale->id, //bill no
-                        0, // check no or 0
-                        $sale->sale_date, //check date
-                        1, // is credit flag 0 for credit, 1 for debit
-                        $bank_transfer_Amount, //amount
-                        $bank_transfer_account->id, // account id
-                        $bank_transfer_account->code, // account code
-                        Auth::User()->id //created by id
-                    );
-                }
-
-                // Card Amount
-                if ($sale->card_amount > 0) {
-                    if ($obj['card_account_id'] == null || $obj['card_account_id'] == '') {
-                        $msg = 'Card Account not select but card amount is greater then 0';
-                        return $msg;
-                    }
-                    $card_account = Account::find($obj['card_account_id']);
-                    $card_amount = str_replace(',', '', $sale->card_amount ?? 0);
-                    // PKR (Debit)
-                    $this->journal_entry_service->saveJVDetail(
-                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                        $journal_entry_id, // journal entry id
-                        'Card Amount From Sale Debit Entry', //explaination
-                        $sale->id, //bill no
-                        0, // check no or 0
-                        $sale->sale_date, //check date
-                        1, // is credit flag 0 for credit, 1 for debit
-                        $card_amount, //amount
-                        $card_account->id, // account id
-                        $card_account->code, // account code
-                        Auth::User()->id //created by id
-                    );
-                }
-
-                // advance Amount
-                if ($sale->advance_amount > 0) {
-                    if ($obj['advance_account_id'] == null || $obj['advance_account_id'] == '') {
-                        $msg = 'Advance Account not select but advance amount is greater then 0';
-                        return $msg;
-                    }
-                    $advance_account = Account::find($obj['advance_account_id']);
-                    $advance_amount = str_replace(',', '', $sale->advance_amount ?? 0);
-                    // PKR (Debit)
-                    $this->journal_entry_service->saveJVDetail(
-                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                        $journal_entry_id, // journal entry id
-                        'Advance Amount From Sale Debit Entry', //explaination
-                        $sale->id, //bill no
-                        0, // check no or 0
-                        $sale->sale_date, //check date
-                        1, // is credit flag 0 for credit, 1 for debit
-                        $advance_amount, //amount
-                        $advance_account->id, // account id
-                        $advance_account->code, // account code
-                        Auth::User()->id //created by id
-                    );
-                }
-
-                // gold impure Amount
-                if ($sale->gold_impure_amount > 0) {
-                    if ($obj['gold_impurity_account_id'] == null || $obj['gold_impurity_account_id'] == '') {
-                        $msg = 'Gold Impurity Account not select but gold impure amount is greater then 0';
-                        return $msg;
-                    }
-                    $gold_impure_account = Account::find($obj['gold_impurity_account_id']);
-                    $gold_impure_amount = str_replace(',', '', $sale->gold_impure_amount ?? 0);
-                    // PKR (Debit)
-                    $this->journal_entry_service->saveJVDetail(
-                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                        $journal_entry_id, // journal entry id
-                        'Gold Impurity Amount From Sale Debit Entry', //explaination
-                        $sale->id, //bill no
-                        0, // check no or 0
-                        $sale->sale_date, //check date
-                        1, // is credit flag 0 for credit, 1 for debit
-                        $gold_impure_amount, //amount
-                        $gold_impure_account->id, // account id
-                        $gold_impure_account->code, // account code
-                        Auth::User()->id //created by id
-                    );
-                }
-
-                $credit = $sale->total - $sale->total_received;
-                // credit Amount
-                if ($credit > 0) {
-                    if ($customer->account_id == null || $customer->account_id == '') {
-                        $msg = 'Customer Account has no account but paid amount is less then total amount';
-                        return $msg;
-                    }
-                    $customer_account = Account::find($customer->account_id);
-                    $credit_amount = str_replace(',', '', $credit ?? 0);
-                    // PKR (Debit)
-                    $this->journal_entry_service->saveJVDetail(
-                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                        $journal_entry_id, // journal entry id
-                        'Credit Amount From Sale Debit Entry from ' . $sale->customer_name, //explaination
-                        $sale->id, //bill no
-                        0, // check no or 0
-                        $sale->sale_date, //check date
-                        1, // is credit flag 0 for credit, 1 for debit
-                        $credit_amount, //amount
-                        $customer_account->id, // account id
-                        $customer_account->code, // account code
-                        Auth::User()->id //created by id
-                    );
-                }
-
-                // revenue Amount
-                if ($sale->total > 0) {
-                    if ($obj['revenue_account_id'] == null || $obj['revenue_account_id'] == '') {
-                        $msg = 'Revenue Account not select!';
-                        return $msg;
-                    }
-                    $revenue_account = Account::find($obj['revenue_account_id']);
-                    $revenue_amount = str_replace(',', '', $sale->total ?? 0);
                     // PKR (Credit)
                     $this->journal_entry_service->saveJVDetail(
                         0, // currency 0 for PKR, 1 for AU, 2 for Dollar
                         $journal_entry_id, // journal entry id
-                        'Revenue From Sale Credit Entry', //explaination
-                        $sale->id, //bill no
+                        'Job Purchase PKR Supplier/Karigar Credit Entry', //explaination
+                        $job_purchase->id, //bill no
                         0, // check no or 0
-                        $sale->sale_date, //check date
+                        $job_purchase_date, //check date
                         0, // is credit flag 0 for credit, 1 for debit
-                        $revenue_amount, //amount
-                        $revenue_account->id, // account id
-                        $revenue_account->code, // account code
+                        $PKR_Amount, //amount
+                        $supplir_account->id, // account id
+                        $supplir_account->code, // account code
                         Auth::User()->id //created by id
                     );
                 }
-                $sale->posted = 1;
-                $sale->jv_id = $journal_entry_id;
-                $sale->update();
+
+                //AU Job Purchase
+                if ($job_purchase->total_au > 0) {
+                    $AU_Amount = str_replace(
+                        ',',
+                        '',
+                        $job_purchase->total_au ?? 0
+                    );
+
+                    // AU (Debit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Job Purchase Gold(AU) Debit Entry', //explaination
+                        $job_purchase->id, //bill no
+                        0, // check no or 0
+                        $job_purchase_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $AU_Amount, //amount
+                        $purchase_account->id, // account id
+                        $purchase_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+
+                    // AU (Credit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Job Purchase Gold(AU) Supplier/Karigar Credit Entry', //explaination
+                        $job_purchase->id, //bill no
+                        0, // check no or 0
+                        $job_purchase_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $AU_Amount, //amount
+                        $supplir_au_account->id, // account id
+                        $supplir_au_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                }
+
+                //Dollar Job Purchase
+                if ($job_purchase->total_dollar > 0) {
+                    $Dollar_Amount = str_replace(',', '', $job_purchase->total_dollar ?? 0);
+
+                    // AU (Debit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Job Purchase Dollar($) Debit Entry', //explaination
+                        $job_purchase->id, //bill no
+                        0, // job_purchase no or 0
+                        $job_purchase_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $Dollar_Amount, //amount
+                        $purchase_account->id, // account id
+                        $purchase_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+
+                    // Dollar (Credit)
+                    $this->journal_entry_service->saveJVDetail(
+                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Job Purchase Dollar($) Supplier/Karigar Credit Entry', //explaination
+                        $job_purchase->id, //bill no
+                        0, // check no or 0
+                        $job_purchase_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $Dollar_Amount, //amount
+                        $supplir_dollar_account->id, // account id
+                        $supplir_dollar_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                }
+
+                // AU Recieved JV
+                if ($job_purchase->total_recieved_au > 0 && $obj['recieved_au_account_id'] != null) {
+                    $Paid_Amount = str_replace(',', '', $job_purchase->total_recieved_au ?? 0);
+
+                    $recieved_au_account = Account::find($obj['recieved_au_account_id']);
+                    $recieved_jv = $this->PaidAUtoSupplier($job_purchase->job_purchase_no, $job_purchase_date, $job_purchase->id, $supplier, $recieved_au_account, $supplir_account, $Paid_Amount);
+                    // Supplier PKR payment
+                    $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                        $supplier->id,
+                        1,
+                        $obj['recieved_au_account_id'],
+                        $job_purchase_date,
+                        null,
+                        $Paid_Amount,
+                        $recieved_jv
+                    );
+                }
+
+                //Job Purchase Update
+                $job_purchase->is_posted = 1;
+                $job_purchase->jv_id = $journal_entry_id;
+                $job_purchase->jv_recieved_id = ($recieved_jv != null) ? $recieved_jv->id : null;
+                $job_purchase->supplier_au_payment_id = ($supplier_au_payment != null) ? $supplier_au_payment->id : null;
+                $job_purchase->update();
+
+                //Purchase order update
+                $purchase_order = $this->model_purchase_order->getModel()::find($job_purchase->purchase_order_id);
+                $purchase_order->is_complete = 1;
+                $purchase_order->update();
             }
             DB::commit();
         } catch (Exception $e) {
@@ -450,54 +443,171 @@ class JobPurchaseService
         }
         return true;
     }
-    public function unpost($sale_id)
+
+    // AU paid to supplier
+    public function PaidAUtoSupplier($job_purchase_no, $job_purchase_date, $bill_no, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount)
     {
-        try {
-            DB::beginTransaction();
+        $journal_type = ($paid_au_account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
+        $journal = Journal::find($journal_type);
+        $data = ["date" => $job_purchase_date, "prefix" => $journal->prefix, "journal_id" => $journal->id];
+        $entryNum = $this->journal_entry_service->generateJournalEntryNum($data);
 
-            $sale = $this->model_job_purchase->getModel()::find($sale_id);
+        $journal_entry = new JournalEntry;
+        $journal_entry->journal_id = $journal->id;
+        $journal_entry->supplier_id = $supplier->id;
+        $journal_entry->date_post = $job_purchase_date;
+        $journal_entry->reference = 'Date :' . $job_purchase_date . ' AU payment Against RK. ' . $job_purchase_no;
+        $journal_entry->entryNum = $entryNum;
+        $journal_entry->createdby_id = Auth::User()->id;
+        $journal_entry->save();
 
-            // Journal entry delete
-            $journal_entry = $this->model_journal_entry->getModel()::find($sale->jv_id);
-            $journal_entry->is_deleted = 1;
-            $journal_entry->deletedby_id = Auth::user()->id;
-            $journal_entry->update();
+        $au_jv_id = $journal_entry->id;
 
-            // sale update
-            $sale->posted = 0;
-            $sale->jv_id = Null;
-            $sale->update();
+        // Journal Entry Detail
+        $Paid_au_Amount = str_replace(',', '', $Paid_au_Amount);
 
-            DB::commit();
-        } catch (Exception $e) {
+        // Journal entry detail (Debit)
+        $this->journal_entry_service->saveJVDetail(
+            1,
+            $au_jv_id, // journal entry id
+            'Paid AU Payment Debit Against Job Purchase. ' . $job_purchase_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $job_purchase_date, //check date
+            1, // is credit flag 0 for credit, 1 for debit
+            $Paid_au_Amount, //amount
+            $supplir_au_account->id, // account id
+            $supplir_au_account->code, // account code
+            Auth::User()->id //created by id
+        );
 
-            DB::rollback();
-            throw $e;
-        }
-        return true;
+        // Journal entry detail (Credit)
+        $this->journal_entry_service->saveJVDetail(
+            1, // 0 for PKR, 1 for AU, 2 for Dollar
+            $au_jv_id, // journal entry id
+            'Paid AU Payment Credit Against Job Purchase. ' . $job_purchase_no, //explaination
+            $bill_no, //bill no
+            0, // check no or 0
+            $job_purchase_date, //check date
+            0, // is credit flag 0 for credit, 1 for debit
+            $Paid_au_Amount, //amount
+            $paid_au_account->id, // account id
+            $paid_au_account->code, // account code
+            Auth::User()->id //created by id
+        );
+
+        return $journal_entry;
     }
 
-    public function deleteById($sale_id)
+    // delete by id
+    public function unpost($job_purchase_id)
     {
         try {
             DB::beginTransaction();
+            $job_purchase = $this->model_job_purchase->find($job_purchase_id);
 
-            $sale = $this->model_job_purchase->getModel()::find($sale_id);
-
-            if ($sale->jv_id != null && $sale->jv_id != '') {
-                // Journal entry delete
-                $journal_entry = $this->model_journal_entry->getModel()::find($sale->jv_id);
+            if ($job_purchase->jv_id != null) {
+                $journal_entry = JournalEntry::find($job_purchase->jv_id);
                 $journal_entry->is_deleted = 1;
-                $journal_entry->deletedby_id = Auth::user()->id;
+                $journal_entry->deletedby_id = Auth::User()->id;
                 $journal_entry->update();
             }
 
+            if ($job_purchase->jv_au_id != null) {
+                $jv_au = JournalEntry::find($job_purchase->jv_au_id);
+                $jv_au->is_deleted = 1;
+                $jv_au->deletedby_id = Auth::User()->id;
+                $jv_au->update();
+            }
+            if ($job_purchase->jv_dollar_id != null) {
+                $jv_dollar = JournalEntry::find($job_purchase->jv_dollar_id);
+                $jv_dollar->is_deleted = 1;
+                $jv_dollar->deletedby_id = Auth::User()->id;
+                $jv_dollar->update();
+            }
+
+            if ($job_purchase->jv_recieved_id != null) {
+                $jv_recieved = JournalEntry::find($job_purchase->jv_recieved_id);
+                $jv_recieved->is_deleted = 1;
+                $jv_recieved->deletedby_id = Auth::User()->id;
+                $jv_recieved->update();
+            }
+
+            //payment delete
+            if ($job_purchase->supplier_au_payment_id != null) {
+                $supplier_au_payment = SupplierPayment::find($job_purchase->supplier_au_payment_id);
+                $supplier_au_payment->is_deleted = 1;
+                $supplier_au_payment->deletedby_id = Auth::User()->id;
+                $supplier_au_payment->update();
+            }
+            $job_purchase->is_posted = 0;
+            $job_purchase->jv_id = Null;
+            $job_purchase->jv_au_id = Null;
+            $job_purchase->jv_dollar_id = Null;
+            $job_purchase->jv_recieved_id = Null;
+            $job_purchase->supplier_au_payment_id = Null;
+            $job_purchase->update();
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return true;
+    }
+
+    public function deleteById($job_purchase_id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $job_purchase = $this->model_job_purchase->getModel()::find($job_purchase_id);
+
+            if ($job_purchase->jv_id != null) {
+                $journal_entry = JournalEntry::find($job_purchase->jv_id);
+                $journal_entry->is_deleted = 1;
+                $journal_entry->deletedby_id = Auth::User()->id;
+                $journal_entry->update();
+            }
+
+            if ($job_purchase->jv_au_id != null) {
+                $jv_au = JournalEntry::find($job_purchase->jv_au_id);
+                $jv_au->is_deleted = 1;
+                $jv_au->deletedby_id = Auth::User()->id;
+                $jv_au->update();
+            }
+            if ($job_purchase->jv_dollar_id != null) {
+                $jv_dollar = JournalEntry::find($job_purchase->jv_dollar_id);
+                $jv_dollar->is_deleted = 1;
+                $jv_dollar->deletedby_id = Auth::User()->id;
+                $jv_dollar->update();
+            }
+
+            if ($job_purchase->jv_recieved_id != null) {
+                $jv_recieved = JournalEntry::find($job_purchase->jv_recieved_id);
+                $jv_recieved->is_deleted = 1;
+                $jv_recieved->deletedby_id = Auth::User()->id;
+                $jv_recieved->update();
+            }
+
+            //payment delete
+            if ($job_purchase->supplier_au_payment_id != null) {
+                $supplier_au_payment = SupplierPayment::find($job_purchase->supplier_au_payment_id);
+                $supplier_au_payment->is_deleted = 1;
+                $supplier_au_payment->deletedby_id = Auth::User()->id;
+                $supplier_au_payment->update();
+            }
+
             // sale update
-            $sale->is_deleted = 1;
-            $sale->deletedby_id = Auth::user()->id;
-            $sale->posted = 0;
-            $sale->jv_id = Null;
-            $sale->update();
+            $job_purchase->is_deleted = 1;
+            $job_purchase->deletedby_id = Auth::user()->id;
+            $job_purchase->is_posted = 0;
+            $job_purchase->jv_id = Null;
+            $job_purchase->jv_au_id = Null;
+            $job_purchase->jv_dollar_id = Null;
+            $job_purchase->jv_recieved_id = Null;
+            $job_purchase->supplier_au_payment_id = Null;
+            $job_purchase->update();
 
             DB::commit();
         } catch (Exception $e) {
