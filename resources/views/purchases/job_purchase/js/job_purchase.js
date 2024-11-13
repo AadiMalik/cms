@@ -33,6 +33,8 @@ $("body").on("click", "#JobTaskDetail", function (event) {
     $("#product_category").val($(this).data("category"));
     $("#design_no").val($(this).data("design_no"));
     $("#recieved_weight").val($(this).data("net_weight"));
+    $("#purchase_order_id").val($(this).data("purchase_order_id"));
+    $("#sale_order_id").val($(this).data("sale_order_id"));
 });
 $("#CustomerButton").click(function () {
     $("#customerForm").trigger("reset");
@@ -72,23 +74,23 @@ function totalRecievedWeight() {
     var with_stone_weight = $("#with_stone_weight").val();
     var total_recieved_weight = 0;
     var payable_weight = 0;
-    total_recieved_weight =recieved_weight * 1 + stone_waste_weight * 1;
-    payable_weight =with_stone_weight * 1 - total_recieved_weight * 1;
+    total_recieved_weight = recieved_weight * 1 + stone_waste_weight * 1;
+    payable_weight = with_stone_weight * 1 - total_recieved_weight * 1;
     $("#total_recieved_weight").val(total_recieved_weight.toFixed(3));
     $("#payable_weight").val(payable_weight.toFixed(3));
 }
 function finalPureWeight() {
     var payable_weight = $("#payable_weight").val();
     var mail_weight = $("#mail_weight").val();
-    var stone_adjustement = 0; 
-    if($("#mail").find(":selected").val()=='Upper'){
-        stone_adjustement = (payable_weight/(96+ (1*mail_weight)))*96;
-    }else{
-        stone_adjustement = (payable_weight/96)*(96 - (1*mail_weight));
+    var stone_adjustement = 0;
+    if ($("#mail").find(":selected").val() == 'Upper') {
+        stone_adjustement = (payable_weight / (96 + (1 * mail_weight))) * 96;
+    } else {
+        stone_adjustement = (payable_weight / 96) * (96 - (1 * mail_weight));
     }
     $("#stone_adjustement").val(stone_adjustement.toFixed(3));
     var pure_weight = $("#pure_weight").val();
-    var final_pure_weight = (pure_weight * 1)+(stone_adjustement*1);
+    var final_pure_weight = (pure_weight * 1) + (stone_adjustement * 1);
     $("#final_pure_weight").val(final_pure_weight.toFixed(3));
 }
 $("#polish_weight").on("keyup", function (event) {
@@ -98,6 +100,7 @@ $("#polish_weight").on("keyup", function (event) {
     var total_weight = polish_weight * 1 + waste * 1;
     $("#waste").val(waste.toFixed(3));
     $("#total_weight").val(total_weight.toFixed(3));
+    finalPureWeight();
 });
 $("#mail").on("change", function (event) {
     $("#mail_weight").val(0);
@@ -106,14 +109,14 @@ $("#mail").on("change", function (event) {
     $("#final_pure_weight").val(0);
 });
 $("#mail_weight").on("keyup", function (event) {
-    var total_weight=$("#total_weight").val();
-    var mail_weight=$("#mail_weight").val();
-    var pure_weight=0;
+    var total_weight = $("#total_weight").val();
+    var mail_weight = $("#mail_weight").val();
+    var pure_weight = 0;
     $("#pure_weight").val(0);
-    if($("#mail").find(":selected").val()=='Upper'){
-        pure_weight = (total_weight/(96+ (1*mail_weight)))*96;
-    }else{
-        pure_weight = (total_weight/96)*(96 - (1*mail_weight));
+    if ($("#mail").find(":selected").val() == 'Upper') {
+        pure_weight = (total_weight / (96 + (1 * mail_weight))) * 96;
+    } else {
+        pure_weight = (total_weight / 96) * (96 - (1 * mail_weight));
     }
     $("#pure_weight").val(pure_weight.toFixed(3));
     totalRecievedWeight();
@@ -131,84 +134,82 @@ function TotalAmount() {
     var laker = $("#laker").val();
     var rp = $("#rp").val();
     var wax = $("#wax").val();
-    var cal =total_bead_price * 1 + total_stones_price * 1 + total_diamond_price * 1 + other_amount * 1 + laker * 1 + rp * 1 + wax * 1;
+    var cal = total_bead_price * 1 + total_stones_price * 1 + total_diamond_price * 1 + other_amount * 1 + laker * 1 + rp * 1 + wax * 1;
     $("#total_amount").val(cal.toFixed(3));
+    // GrandTotal();
+}
+function GrandTotal() {
+    var total = 0;
+    var total_dollar = 0;
+    var total_amount = $("#total_amount").val();
+    var total_amount_dollar = $("#total_diamond_dollar").val();
+    total = total * 1 + total_amount * 1;
+    total_dollar = total_dollar * 1 + total_amount_dollar * 1;
+    $("#total").val(cal.toFixed(3));
+    $("#total_dollar").val(cal.toFixed(3));
 }
 
 function addProduct() {
     $("#preloader").show();
     var product = $("#product").val();
     var product_id = $("#product_id").val();
-    var finish_product_id = $("#finish_product_id").val();
-    var ratti_kaat_id = $("#ratti_kaat_id").val();
-    var ratti_kaat_detail_id = $("#ratti_kaat_detail_id").val();
-    var product = $("#product").val();
-    var product_id = $("#product_id").val();
-    var gold_carat = $("#gold_carat").val();
-    var scale_weight = $("#scale_weight").val();
+    var purchase_order_detail_id = $("#purchase_order_detail_id").val();
+    var product_category = $("#product_category").val();
+    var design_no = $("#design_no").val();
+    var polish_weight = $("#polish_weight").val();
+    var waste_ratti = $("#waste_ratti").val();
+    var waste = $("#waste").val();
+    var total_weight = $("#total_weight").val();
+    var mail = $("#mail").find(":selected").val();
+    var mail_weight = $("#mail_weight").val();
+    var pure_weight = $("#pure_weight").val();
+    var stone_waste = $("#stone_waste").val();
+    var stone_adjustement = $("#stone_adjustement").val();
     var bead_weight = $("#bead_weight").val();
     var stones_weight = $("#stones_weight").val();
     var diamond_weight = $("#diamond_weight").val();
-    var net_weight = $("#net_weight").val();
-    var gross_weight = $("#gross_weight").val();
-    var waste = $("#waste").val();
-    var making = $("#making").val();
-    var gold_rate = $("#gold_rate").val();
-    var total_gold_price = $("#total_gold_price").val();
+    var with_stone_weight = $("#with_stone_weight").val();
+    var recieved_weight = $("#recieved_weight").val();
+    var stone_waste_weight = $("#stone_waste_weight").val();
+    var total_recieved_weight = $("#total_recieved_weight").val();
+    var payable_weight = $("#payable_weight").val();
     var total_bead_price = $("#total_bead_price").val();
     var total_stones_price = $("#total_stones_price").val();
     var total_diamond_price = $("#total_diamond_price").val();
-    var other_amount = $("#other_amount").val();
+    var laker = $("#laker").val();
+    var rp = $("#rp").val();
+    var wax = $("#wax").val();
+    var other = $("#other").val();
+    var final_pure_weight = $("#final_pure_weight").val();
+    var total_diamond_dollar = $("#total_diamond_dollar").val();
     var total_amount = $("#total_amount").val();
 
     if (
-        tag_no == "" ||
-        finish_product_id == "" ||
-        ratti_kaat_id == "" ||
-        ratti_kaat_detail_id == ""
+        product_id == "" ||
+        purchase_order_detail_id == ""
     ) {
-        error("tag is not selected!");
+        error("Product is not selected!");
         $("#preloader").hide();
         return false;
     }
-    if (product == 0 || product == "") {
+    if (product_id == 0 || product_id == "") {
         error("Please Enter product!");
         $("#preloader").hide();
         return false;
     }
-    if (gold_carat == 0 || gold_carat == "") {
-        error("Please Enter karat!");
+    if (polish_weight == 0 || polish_weight == "") {
+        error("Please enter with polish weight!");
         $("#preloader").hide();
         return false;
     }
-    if (scale_weight == 0 || scale_weight == "") {
-        error("Please Enter scale weight!");
-        $("#preloader").hide();
-        return false;
-    }
-    if (net_weight == 0 || net_weight == "") {
-        error("Please Enter net weight!");
-        $("#preloader").hide();
-        return false;
-    }
-    if (gross_weight == 0 || gross_weight == "") {
-        error("Please Enter gross weight!");
-        $("#preloader").hide();
-        return false;
-    }
-    if (waste < 10 || waste == "") {
-        error("Please Enter waste or minimum 10!");
-        $("#preloader").hide();
-        return false;
-    }
-    if (gold_rate == 0 || gold_rate == "") {
-        error("Please Enter gold rate!");
+    if (mail_weight == 0 || mail_weight == "") {
+        error("Please Enter mail weight!");
         $("#preloader").hide();
         return false;
     }
     var check = true;
     $.each(productData, function (e, val) {
-        if (val.finish_product_id == $("#finish_product_id").val()) {
+        if (val.product_id == $("#product_id").val()) {
             error("Product is already added !");
             $("#preloader").hide();
             check = false;
@@ -221,56 +222,102 @@ function addProduct() {
 
     var rows = "";
     var total = 0;
+    var total_dollar = 0;
+    var total_au=0;
+    var total_recieved_au = 0;
 
     productData.push({
         // sr: i,
-        tag_no: tag_no,
-        finish_product_id: finish_product_id,
-        ratti_kaat_id: ratti_kaat_id,
-        ratti_kaat_detail_id: ratti_kaat_detail_id,
         product: product,
         product_id: product_id,
-        gold_carat: gold_carat,
-        scale_weight: scale_weight,
+        purchase_order_detail_id: purchase_order_detail_id,
+        category: product_category,
+        design_no: design_no,
+        polish_weight: polish_weight,
+        waste_ratti: waste_ratti,
+        waste: waste,
+        total_weight: total_weight,
+        mail: mail,
+        mail_weight: mail_weight,
+        pure_weight: pure_weight,
+        stone_waste: stone_waste,
+        stone_adjustement: stone_adjustement,
         bead_weight: bead_weight,
         stones_weight: stones_weight,
-        diamond_weight: diamond_weight,
-        net_weight: net_weight,
-        gross_weight: gross_weight,
-        waste: waste,
-        making: making,
-        gold_rate: gold_rate,
-        total_gold_price: total_gold_price,
-        other_amount: other_amount,
+        diamond_carat: diamond_weight,
+        with_stone_weight: with_stone_weight,
+        recieved_weight: recieved_weight,
+        stone_waste_weight: stone_waste_weight,
+        total_recieved_weight: total_recieved_weight,
+        payable_weight: payable_weight,
         total_bead_price: total_bead_price,
         total_stones_price: total_stones_price,
         total_diamond_price: total_diamond_price,
+        laker: laker,
+        rp: rp,
+        wax: wax,
+        other: other,
+        final_pure_weight: final_pure_weight,
         total_amount: total_amount,
+        total_dollar: total_diamond_dollar,
         beadDetail: beadData,
         stonesDetail: stonesData,
         diamondDetail: diamondsData,
     });
 
     $("#total").val(total);
+    $("#total_dollar").val(total_dollar);
+    $("#total_au").val(total_au);
+    $("#total_recieved_au").val(total_recieved_au);
 
     $.each(productData, function (e, val) {
         product_sr = product_sr + 1;
         productData.sr = product_sr;
 
-        rows += `<tr id="${val.finish_product_id}"><td>${product_sr}</td><td>${val.tag_no}</td><td>${val.product}</td>
-                <td>${val.gold_carat}</td><td style="text-align: right;">${val.scale_weight}</td><td style="text-align: right;">${val.bead_weight}</td>
-                <td style="text-align: right;">${val.stones_weight}</td><td style="text-align: right;">${val.diamond_weight}
-                <td style="text-align: right;">${val.net_weight}</td><td style="text-align: right;">${val.waste}</td>
-                </td><td style="text-align: right;">${val.gross_weight}</td><td style="text-align: right;" >${val.gold_rate}</td>
-          <td style="text-align: right;" >${val.total_gold_price}</td><td style="text-align: right;" >${val.making}</td>
-          <td style="text-align: right;" >${val.other_amount}</td><td style="text-align: right;" >${val.total_amount}</td>
-          <td><a class="text-warning text-white" id="Detail" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.finish_product_id}" data-original-title="Detail"><i title="Detail" class="mr-2 fa fa-eye"></i></a>
-          <a class="text-danger text-white productr${val.finish_product_id}" onclick="ProductRemove(${val.finish_product_id})"><i class="fa fa-trash"></i></a></td></tr>`;
+        rows += `<tr id="${val.product_id}">
+            <td>${product_sr}</td>
+            <td>${val.product}</td>
+            <td>${val.category}</td>
+            <td>${val.design_no}</td>
+            <td style="text-align: right;">${val.polish_weight}</td>
+            <td style="text-align: right;">${val.waste_ratti}</td>
+            <td style="text-align: right;">${val.waste}</td>
+            <td style="text-align: right;">${val.total_weight}
+            <td>${val.mail}</td>
+            <td style="text-align: right;">${val.mail_weight}</td>
+            </td><td style="text-align: right;">${val.pure_weight}</td>
+            <td style="text-align: right;" >${val.stone_waste}</td>
+          <td style="text-align: right;" >${val.stone_adjustement}</td>
+          <td style="text-align: right;" >${val.bead_weight}</td>
+          <td style="text-align: right;" >${val.stones_weight}</td>
+          <td style="text-align: right;" >${val.diamond_carat}</td>
+          <td style="text-align: right;" >${val.with_stone_weight}</td>
+          <td style="text-align: right;" >${val.recieved_weight}</td>
+          <td style="text-align: right;" >${val.stone_waste_weight}</td>
+          <td style="text-align: right;" >${val.total_recieved_weight}</td>
+          <td style="text-align: right;" >${val.payable_weight}</td>
+          <td style="text-align: right;" >${val.total_bead_price}</td>
+          <td style="text-align: right;" >${val.total_stones_price}</td>
+          <td style="text-align: right;" >${val.total_diamond_price}</td>
+          <td style="text-align: right;" >${val.laker}</td>
+          <td style="text-align: right;" >${val.rp}</td>
+          <td style="text-align: right;" >${val.wax}</td>
+          <td style="text-align: right;" >${val.other}</td>
+          <td style="text-align: right;" >${val.final_pure_weight}</td>
+          <td style="text-align: right;" >${val.total_dollar}</td>
+          <td style="text-align: right;" >${val.total_amount}</td>
+          <td><a class="text-danger text-white productr${val.product_id}" onclick="ProductRemove(${val.product_id})"><i class="fa fa-trash"></i></a></td>
+          </tr>`;
 
         total += val.total_amount * 1;
+        total_dollar += val.total_dollar * 1;
+        total_au += val.final_pure_weight * 1;
+        total_recieved_au += val.total_recieved_weight * 1;
     });
-    $("#total").val(total);
-    $("#grand_total").val(total.toFixed(3));
+    $("#total").val(total.toFixed(3));
+    $("#total_dollar").val(total_dollar.toFixed(3));
+    $("#total_au").val(total_au.toFixed(3));
+    $("#total_recieved_au").val(total_recieved_au.toFixed(3));
     success("Product Added Successfully!");
     $("#products").empty();
     console.log(rows);
@@ -286,46 +333,41 @@ $("body").on("click", "#submit", function (e) {
 
     $("#preloader").show();
     // Validation logic
-    if ($("#sale_date").val() == "") {
-        error("Please select sale date!");
-        $("#sale_date").focus();
+    if ($("#job_purchase_date").val() == "") {
+        error("Please select job purchase date!");
+        $("#job_purchase_date").focus();
         $("#preloader").hide();
         return false;
     }
-
-    if (
-        $("#customer_id").find(":selected").val() == "" ||
-        $("#customer_id").find(":selected").val() == 0
-    ) {
-        error("Please Select customer!");
-        $("#customer_id").focus();
+    if ($("#reference").val() == "" || $("#reference").val() == 0) {
+        error("Reference field is required!");
+        $("#reference").focus();
         $("#preloader").hide();
         return false;
     }
-
-    if ($("#grand_total").val() == "" || $("#grand_total").val() == 0) {
+    if ($("#total").val() == "" || $("#total").val() == 0) {
         error("Grand total is zero!");
-        $("#grand_total").focus();
+        $("#total").focus();
         $("#preloader").hide();
         return false;
     }
 
     // Create FormData object for Ajax
     var formData = new FormData();
-    formData.append("id", $("#id").val());
-    formData.append("sale_date", $("#sale_date").val());
-    formData.append("customer_id", $("#customer_id").find(":selected").val());
-    formData.append("total", $("#grand_total").val());
-    formData.append("cash_amount", $("#cash_amount").val());
-    formData.append("bank_transfer_amount", $("#bank_transfer_amount").val());
-    formData.append("card_amount", $("#card_amount").val());
-    formData.append("advance_amount", $("#advance_amount").val());
-    formData.append("gold_impure_amount", $("#gold_impure_amount").val());
+    formData.append("job_purchase_date", $("#job_purchase_date").val());
+    formData.append("supplier_id", $("#supplier_id").val());
+    formData.append("purchase_order_id", $("#purchase_order_id").val());
+    formData.append("sale_order_id", $("#sale_order_id").val());
+    formData.append("reference", $("#reference").val());
+    formData.append("total", $("#total").val());
+    formData.append("total_dollar", $("#total_dollar").val());
+    formData.append("total_recieved_au", $("#total_recieved_au").val());
+    formData.append("total_au", $("#total_au").val());
 
     formData.append("productDetail", JSON.stringify(productData));
 
     $.ajax({
-        url: url_local + "/sale/store", // Laravel route
+        url: url_local + "/job-purchase/store", // Laravel route
         type: "POST",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -342,7 +384,7 @@ $("body").on("click", "#submit", function (e) {
 
                 setTimeout(function () {
                     $("#submit").prop("disabled", false);
-                    window.location = url_local + "/sale";
+                    window.location = url_local + "/job-task";
                 }, 1000); // Disable button for 1 second
             } else {
                 error(data.Message);
@@ -369,11 +411,17 @@ function ProductRemove(id) {
     }).then((result) => {
         var item_index = "";
         var total = 0;
+        var total_dollar = 0;
+        var total_recieved_au = 0;
         $("#preloader").show();
         $.each(productData, function (i, val) {
-            if (val.finish_product_id == id) {
-                total = $("#grand_total").val() * 1 - val.total_amount * 1;
-                $("#grand_total").val(total > 0 ? total : 0);
+            if (val.product_id == id) {
+                total = $("#total").val() * 1 - val.total_amount * 1;
+                total_dollar = $("#total_dollar").val() * 1 - val.total_dollar * 1;
+                total_recieved_au = $("#total_recieved_au").val() * 1 - val.final_pure_weight * 1;
+                $("#total").val(total > 0 ? total.toFixed(3) : 0);
+                $("#total_dollar").val(total_dollar > 0 ? total_dollar.toFixed(3) : 0);
+                $("#total_recieved_au").val(total_recieved_au > 0 ? total_recieved_au.toFixed(3) : 0);
                 $("#" + id).hide();
                 item_index = i;
                 return false;
@@ -384,38 +432,41 @@ function ProductRemove(id) {
         var check = ".productr" + id;
         $(check).closest("tr").remove();
         success("Product Deleted Successfully!");
-        // GrandTotalAmount();
         ProductShort();
         $("#preloader").hide();
     });
 }
 
 function Clear() {
-    $("#select_tag_no option[value='0']").remove();
-    $("#select_tag_no").append(
-        '<option disabled selected value="0">--Select Tag No--</option>'
-    );
-    $("#search_tag_no").val("");
-    $("#finish_product_id").val("");
-    $("#ratti_kaat_id").val("");
-    $("#ratti_kaat_detail_id").val("");
-    $("#tag_no").val("");
-    $("#product").val("");
-    $("#product_id").val("");
-    $("#gold_carat").val("");
-    $("#scale_weight").val("");
+    $("#product").val('');
+    $("#product_id").val('');
+    $("#purchase_order_detail_id").val('');
+    $("#product_category").val('');
+    $("#design_no").val('');
+    $("#polish_weight").val(0);
+    $("#waste").val(0);
+    $("#total_weight").val(0);
+    $("#mail").find(":selected").val(0);
+    $("#mail_weight").val(0);
+    $("#pure_weight").val(0);
+    $("#stone_adjustement").val(0);
     $("#bead_weight").val(0);
     $("#stones_weight").val(0);
     $("#diamond_weight").val(0);
-    $("#net_weight").val(0);
-    $("#gross_weight").val(0);
-    $("#waste").val(0);
-    $("#making").val(0);
+    $("#with_stone_weight").val(0);
+    $("#recieved_weight").val(0);
+    $("#stone_waste_weight").val(0);
+    $("#total_recieved_weight").val(0);
+    $("#payable_weight").val(0);
     $("#total_bead_price").val(0);
     $("#total_stones_price").val(0);
     $("#total_diamond_price").val(0);
-    $("#other_amount").val(0);
-    $("#total_gold_price").val(0);
+    $("#laker").val(0);
+    $("#rp").val(0);
+    $("#wax").val(0);
+    $("#other").val(0);
+    $("#final_pure_weight").val(0);
+    $("#total_diamond_dollar").val(0);
     $("#total_amount").val(0);
 }
 // Short

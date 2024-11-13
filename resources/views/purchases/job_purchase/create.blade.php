@@ -1,3 +1,6 @@
+@php
+    $dollar_rate = DollarRate();
+@endphp
 @extends('layouts.master')
 @section('css')
     <style>
@@ -78,6 +81,8 @@
                                                                         data-category="{{ $item['category'] ?? '' }}"
                                                                         data-design_no="{{ $item['design_no'] ?? '' }}"
                                                                         data-net_weight="{{ $item['net_weight'] ?? '' }}"
+                                                                        data-purchase_order_id="{{ $item['purchase_order_id'] ?? '' }}"
+                                                                        data-sale_order_id="{{ $item['sale_order_id'] ?? '' }}"
                                                                         data-original-title="Job task detail">
                                                                         <b>{{ $item['product'] ?? '' }},G:{{ $item['category'] ?? '' }},D:{{ $item['design_no'] ?? '' }}</b>
                                                                     </a>
@@ -102,7 +107,6 @@
                                     <input type="hidden" name="product_id" id="product_id" value="">
                                     <input type="hidden" name="supplier_id" id="supplier_id" value="{{$supplier->id}}">
                                     <input type="hidden" name="approvedby_id" id="approvedby_id" value="">
-                                    <input type="hidden" name="total_stone" id="total_stone" value="0">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Product:<span style="color:red;">*</span></label>
@@ -403,7 +407,7 @@
                                         <div class="form-group">
                                             <label class="form-label">Total Amount ($):<span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" id="total_dollar" name="total_dollar"
+                                            <input type="text" id="total_diamond_dollar" name="total_diamond_dollar"
                                                 class="form-control" value="0" readonly
                                                 onkeypress="return isNumberKey(event)" required />
                                         </div>
@@ -441,16 +445,30 @@
                                                     <th>Design</th>
                                                     <th>After Polish</th>
                                                     <th>Waste Ratti</th>
-                                                    <th>Stones Wt</th>
-                                                    <th>Stones Wt</th>
-                                                    <th>Diamond Carat</th>
-                                                    <th>Net Wt</th>
                                                     <th>Waste</th>
-                                                    <th>Gross Wt</th>
-                                                    <th>Gold Rate/Gram</th>
-                                                    <th>Gold Value</th>
-                                                    <th>Making</th>
-                                                    <th>Other Chargs</th>
+                                                    <th>Total Wt</th>
+                                                    <th>Mail</th>
+                                                    <th>Mail Wt</th>
+                                                    <th>Pure Wt</th>
+                                                    <th>Fitting Waste</th>
+                                                    <th>Stone Adjust.</th>
+                                                    <th>Bead Wt</th>
+                                                    <th>Stone Wt</th>
+                                                    <th>Diamond Wt</th>
+                                                    <th>With Stone Wt</th>
+                                                    <th>Recieved Wt</th>
+                                                    <th>Stone Waste</th>
+                                                    <th>Total Recieved Wt</th>
+                                                    <th>Payable/Recieved Wt</th>
+                                                    <th>Bead Amount</th>
+                                                    <th>Stone Amount</th>
+                                                    <th>Diamond Amount</th>
+                                                    <th>Laker</th>
+                                                    <th>RP</th>
+                                                    <th>Wax</th>
+                                                    <th>Other</th>
+                                                    <th>Final Pure Wt</th>
+                                                    <th>Total($)</th>
                                                     <th>Total(PKR)</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -548,6 +566,7 @@
     <script src="{{ url('job-purchase/js/diamond_carat.js') }}"></script>
     <script type="text/javascript">
         var url_local = "{{ url('/') }}";
+        var dollar_rate = "{{$dollar_rate->rate}}";
     </script>
 
     <script>

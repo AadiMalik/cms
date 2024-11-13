@@ -34,6 +34,7 @@ class JobPurchaseService
     protected $model_job_purchase_detail_stone;
     protected $model_job_purchase_detail_diamond;
     protected $model_journal_entry;
+    protected $model_purchase_order;
 
     protected $common_service;
     protected $journal_entry_service;
@@ -46,6 +47,7 @@ class JobPurchaseService
         $this->model_job_purchase_detail_stone = new Repository(new JobPurchaseDetailStone);
         $this->model_job_purchase_detail_diamond = new Repository(new JobPurchaseDetailDiamond);
         $this->model_journal_entry = new Repository(new JournalEntry);
+        $this->model_purchase_order = new Repository(new PurchaseOrder);
 
         $this->common_service = new CommonService();
         $this->journal_entry_service = new JournalEntryService();
@@ -55,7 +57,7 @@ class JobPurchaseService
     {
         $wh = [];
         if ($obj['posted'] != '') {
-            $wh[] = ['posted', $obj['posted']];
+            $wh[] = ['is_posted', $obj['posted']];
         }
         if ($obj['supplier_id'] != '') {
             $wh[] = ['supplier_id', $obj['supplier_id']];
@@ -88,8 +90,13 @@ class JobPurchaseService
                 return $item->supplier_name->name ?? '';
             })
             ->addColumn('posted', function ($item) {
-                $badge_color = $item->posted == 0 ? 'badge-danger' : 'badge-success';
-                $badge_text = $item->posted == 0 ? 'Unposted' : 'Posted';
+                $badge_color = $item->is_posted == 0 ? 'badge-danger' : 'badge-success';
+                $badge_text = $item->is_posted == 0 ? 'Unposted' : 'Posted';
+                return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
+            })
+            ->addColumn('saled', function ($item) {
+                $badge_color = $item->is_saled == 0 ? 'badge-danger' : 'badge-success';
+                $badge_text = $item->is_saled == 0 ? 'No' : 'Yes';
                 return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
             })
             ->addColumn('action', function ($item) {
@@ -119,7 +126,7 @@ class JobPurchaseService
 
                 return $action_column;
             })
-            ->rawColumns(['check_box', 'purchase_order', 'sale_order', 'customer_name', 'supplier_name', 'posted', 'action'])
+            ->rawColumns(['check_box', 'purchase_order', 'sale_order', 'customer_name', 'supplier_name', 'posted','saled', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;
@@ -142,7 +149,6 @@ class JobPurchaseService
 
         try {
             DB::beginTransaction();
-            $jobPurchaseDetail = json_decode($obj['productDetail']);
             $jobPurchaseObj = [
                 "job_purchase_no" => $obj['job_purchase_no'],
                 "job_purchase_date" => $obj['job_purchase_date'],
@@ -158,13 +164,15 @@ class JobPurchaseService
             ];
             $job_purchase = $this->model_job_purchase->create($jobPurchaseObj);
 
+
+            $jobPurchaseDetail = json_decode($obj['productDetail'], true);
             foreach ($jobPurchaseDetail as $item) {
                 $jobPurchaseDetailObj = $item;
                 $jobPurchaseDetailObj['job_purchase_id'] = $job_purchase->id;
                 $jobPurchaseDetailObj['createdby_id'] = Auth::user()->id;
                 $job_purchase_detail = $this->model_job_purchase_detail->create($jobPurchaseDetailObj);
 
-                foreach ($item->beadDetail as $item1) {
+                foreach ($item['beadDetail'] as $item1) {
                     $jobPurchaseDetailBead = $item1;
                     $jobPurchaseDetailBead['job_purchase_detail_id'] = $job_purchase_detail->id;
                     $jobPurchaseDetailBead['createdby_id'] = Auth::user()->id;
@@ -172,7 +180,7 @@ class JobPurchaseService
                 }
 
                 // Stone Detail
-                foreach ($item->stonesDetail as $item1) {
+                foreach ($item['stonesDetail'] as $item1) {
                     $jobPurchaseDetailStone = $item1;
                     $jobPurchaseDetailStone['job_purchase_detail_id'] = $job_purchase_detail->id;
                     $jobPurchaseDetailStone['createdby_id'] = Auth::user()->id;
@@ -180,7 +188,7 @@ class JobPurchaseService
                 }
 
                 // Diamond Detail
-                foreach ($item->diamondDetail as $item1) {
+                foreach ($item['diamondDetail'] as $item1) {
                     $jobPurchaseDetailDiamond = $item1;
                     $jobPurchaseDetailDiamond['job_purchase_detail_id'] = $job_purchase_detail->id;
                     $jobPurchaseDetailDiamond['createdby_id'] = Auth::user()->id;
@@ -221,9 +229,9 @@ class JobPurchaseService
             $diamond_detail = $this->model_job_purchase_detail_diamond->getModel()::where('job_purchase_detail_id', $item->id)
                 ->where('is_deleted', 0)->get();
             $data[] = $item;
-            $data[]['bead_detail']=$bead_detail;
-            $data[]['stone_detail']=$stone_detail;
-            $data[]['diamond_detail']=$diamond_detail;
+            $data[]['bead_detail'] = $bead_detail;
+            $data[]['stone_detail'] = $stone_detail;
+            $data[]['diamond_detail'] = $diamond_detail;
         }
 
         return $data;
@@ -516,5 +524,4 @@ class JobPurchaseService
 
         return false;
     }
-
 }

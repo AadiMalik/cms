@@ -108,8 +108,8 @@
                                                 <th>Sale Order No</th>
                                                 <th>Customer Name</th>
                                                 <th>Supplier Name</th>
-                                                <th>Total QTY</th>
                                                 <th>Total Amount</th>
+                                                <th>Saled</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -141,12 +141,12 @@
                             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                             {data: 'job_purchase_date', name: 'job_purchase_date', orderable: false, searchable: false},
                             {data: 'job_purchase_no', name: 'job_purchase_no', orderable: false, searchable: false},
-                            {data: 'purchase_order_no', name: 'purchase_order_no', orderable: false, searchable: false},
-                            {data: 'sale_order_no', name: 'sale_order_no', orderable: false, searchable: false},
+                            {data: 'purchase_order', name: 'purchase_order', orderable: false, searchable: false},
+                            {data: 'sale_order', name: 'sale_order', orderable: false, searchable: false},
                             {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
                             {data: 'supplier_name',name: 'supplier_name', orderable: false, searchable: false},
-                            {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
                             {data: 'total',name: 'total', orderable: false, searchable: false},
+                            {data: 'saled',name: 'saled', orderable: false, searchable: false},
                             {data: 'posted',name: 'posted', orderable: false, searchable: false},
                             {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'job-purchase/data',

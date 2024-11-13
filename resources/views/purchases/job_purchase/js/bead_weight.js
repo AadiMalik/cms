@@ -109,7 +109,6 @@ function addBead() {
     if (check == false) {
         return;
     }
-    i = i + 1;
     var tbody = $("#beadTable tbody");
     tbody.empty();
     var rows = "";
@@ -141,50 +140,16 @@ function addBead() {
     $("#total_bead_price").val(total.toFixed(3));
     $("#bead_weight").val(total_weight.toFixed(3));
     TotalAmount();
-    netWeight();
+    totalRecievedWeight();
+    finalPureWeight();
     success("Bead Added Successfully!");
     tbody.prepend(rows);
     Short();
     $("#beadWeightForm").trigger("reset");
 }
-function BeadByFinishDetail(job_purchase_detail_id) {
-    $.ajax({
-        type: "GET",
-        url: url_local + "/job-purchase/get-bead-by-id" + "/" + job_purchase_detail_id,
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
 
-        success: function (data) {
-            console.log(data);
-            i = 0;
-            beadData = data.Data;
-            var tbody = $("#beadTable tbody");
-            tbody.empty();
-            var rows = "";
-            var total = 0;
-            var total_weight = 0;
-            $.each(beadData, function (e, val) {
-                i = i + 1;
-                beadData.sr = i;
-                var type = val.type;
-                rows += `<tr id=${type.replace(/\s+/g, '') + val.product_id + Math.floor(val.beads) + Math.floor(val.gram)}><td>${i}</td><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
-          <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
-          <td><a class="text-danger text-white r${type.replace(/\s+/g, '') + val.product_id + Math.floor(val.beads) + Math.floor(val.gram)}" onclick="Remove('${type.replace(/\s+/g, '') + val.product_id + Math.floor(val.beads) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
-                total += val.total_amount * 1;
-                total_weight += val.gram * 1;
-            });
-
-            $("#total_bead_price").val(total.toFixed(3));
-            $("#bead_weight").val(total_weight.toFixed(3));
-            TotalAmount();
-            netWeight();
-            tbody.prepend(rows);
-        },
-    });
-}
 function Remove(id) {
-    
+
     console.log(id);
     Swal.fire({
         title: "Are you sure?",
@@ -215,8 +180,9 @@ function Remove(id) {
         var check = ".r" + id;
         $(check).closest("tr").remove();
         success("Bead Deleted Successfully!");
-        netWeight();
         TotalAmount();
+        totalRecievedWeight();
+        finalPureWeight();
         Short();
     });
 }

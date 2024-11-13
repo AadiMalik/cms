@@ -117,11 +117,11 @@ class JobPurchaseController extends Controller
         $validation = Validator::make(
             $request->all(),
             [
-                'id'             => 'required',
-                'sale_date'      => 'required',
-                'customer_id'    => 'required',
-                'total'          => 'required',
-                'productDetail'  => 'required'
+                'job_purchase_date'     => 'required',
+                'purchase_order_id'     => 'required',
+                'supplier_id'           => 'required',
+                'total_au'              => 'required',
+                'productDetail'         => 'required'
             ],
             $this->validationMessage()
         );
@@ -138,7 +138,13 @@ class JobPurchaseController extends Controller
 
         try {
             $obj = $request->all();
+            $obj['job_purchase_no']= $this->common_service->generateJobPurchaseNo();
             $sale = $this->job_purchase_service->save($obj);
+            if($sale!='true'){
+                return  $this->error(
+                    config("enum.error")
+                );
+            }
             return  $this->success(
                 config("enum.saved"),
                 $sale

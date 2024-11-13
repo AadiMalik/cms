@@ -161,6 +161,8 @@ class JobTaskService
                         "design_no" => $item->design_no ?? '',
                         "net_weight" => $item->net_weight ?? 0.000,
                         "description" => $item->description ?? '',
+                        "purchase_order_id" => $item->job_task->purchase_order_id ?? '',
+                        "sale_order_id" => $item->job_task->sale_order_id ?? '',
                         "supplier_id" => $item->job_task->supplier_id ?? '',
                   ];
             }

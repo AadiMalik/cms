@@ -53,6 +53,7 @@ function addDiamond() {
     var clarity = $("#clarity").val();
     var carat_rate = $("#carat_rate").val();
     var diamond_total = $("#diamond_total").val();
+    var diamond_total_dollar = $("#diamond_total_dollar").val();
     if (type == 0 || type == '') {
         error("type is not selected!");
         return false;
@@ -97,11 +98,11 @@ function addDiamond() {
     if (check == false) {
         return;
     }
-    diamond_sr = diamond_sr + 1;
     var tbody = $("#diamondsTable tbody");
     tbody.empty();
     var rows = "";
     var total = 0;
+    var total_diamond_dollar = 0;
     var total_weight = 0;
 
     diamondsData.push({
@@ -115,6 +116,7 @@ function addDiamond() {
         carat: carat,
         carat_rate: carat_rate,
         total_amount: diamond_total,
+        total_dollar: diamond_total_dollar,
     });
     $.each(diamondsData, function (e, val) {
         diamond_sr = diamond_sr + 1;
@@ -123,59 +125,24 @@ function addDiamond() {
         
         rows += `<tr id=${type.replace(/\s+/g, '')+ product_id + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
-          <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+          <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td><td style="text-align: right;" >${val.total_dollar}</td>
           <td><a class="text-danger text-white diamondr${type.replace(/\s+/g, '') + product_id + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + product_id + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
         total += val.total_amount * 1;
+        total_diamond_dollar += val.total_dollar * 1;
         total_weight += val.carat * 1;
     });
 
     $("#total_diamond_price").val(total.toFixed(3));
     $("#diamond_weight").val(total_weight.toFixed(3));
+    $("#total_diamond_dollar").val(total_diamond_dollar.toFixed(3));
     
     TotalAmount();
-    netWeight();
+    totalRecievedWeight();
+    finalPureWeight();
     success("Diamond Added Successfully!");
     tbody.prepend(rows);
     diamondshort();
     $("#diamondCaratForm").trigger("reset");
-}
-function DiamondsByFinishDetail(job_purchase_detail_id) {
-    $.ajax({
-        type: "GET",
-        url: url_local + "/job-purchase/get-diamond-by-id" + "/" + job_purchase_detail_id,
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-
-        success: function (data) {
-            console.log(data);
-            diamond_sr = 0;
-            diamondsData = data.Data;
-            var tbody = $("#diamondsTable tbody");
-            tbody.empty();
-            var rows = "";
-            var total = 0;
-            var total_weight = 0;
-            $.each(diamondsData, function (e, val) {
-                diamond_sr = diamond_sr + 1;
-                diamondsData.sr = diamond_sr;
-                
-                var type = val.type;
-                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
-                <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
-          <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
-          <td><a class="text-danger text-white diamondr${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
-                total += val.total_amount * 1;
-                total_weight += val.carat * 1;
-            });
-
-            $("#total_diamond_price").val(total.toFixed(3));
-            $("#diamond_weight").val(total_weight.toFixed(3));
-            TotalAmount();
-            netWeight();
-            tbody.prepend(rows);
-        },
-    });
 }
 function DiamondRemove(id) {
     
@@ -211,7 +178,8 @@ function DiamondRemove(id) {
         $(check).closest("tr").remove();
         success("Diamond Deleted Successfully!");
         TotalAmount();
-        netWeight();
+    totalRecievedWeight();
+    finalPureWeight();
         diamondshort();
     });
 }

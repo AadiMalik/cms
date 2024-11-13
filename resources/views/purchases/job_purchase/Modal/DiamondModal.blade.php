@@ -23,7 +23,7 @@
                                 <select name="diamond_type" class="form-control" id="diamond_type" required>
                                     <option value="" selected disabled>--Select Type--</option>
                                     @foreach ($diamond_types as $item)
-                                    <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -34,7 +34,7 @@
                                 <select name="cut" class="form-control" id="cut" required>
                                     <option value="" selected disabled>--Select Cut--</option>
                                     @foreach ($diamond_cuts as $item)
-                                        <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -45,7 +45,7 @@
                                 <select name="color" class="form-control" id="color" required>
                                     <option value="" selected disabled>--Select Color--</option>
                                     @foreach ($diamond_colors as $item)
-                                        <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -56,7 +56,7 @@
                                 <select name="clarity" class="form-control" id="clarity" required>
                                     <option value="" selected disabled>--Select Clarity--</option>
                                     @foreach ($diamond_clarities as $item)
-                                        <option value="{{ $item->name??'' }}">{{ $item->name??'' }}</option>
+                                        <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -65,32 +65,40 @@
                             <div class="form-group">
                                 <label for="name">Carat:<span style="color:red;">*</span></label>
                                 <input type="text" class="form-control" id="carat" name="carat"
-                                    placeholder="Enter diamond carat" value="0" onkeypress="return isNumberKey(event)"
-                                    maxlength="10" required>
+                                    placeholder="Enter diamond carat" value="0"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Rate/Carat:<span style="color:red;">*</span></label>
                                 <input type="text" class="form-control" id="carat_rate" name="carat_rate"
-                                    placeholder="Enter diamond carat rate" value="0" onkeypress="return isNumberKey(event)"
-                                    maxlength="10" required>
+                                    placeholder="Enter diamond carat rate" value="0"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Total PKR:<span style="color:red;">*</span></label>
                                 <input type="text" class="form-control" id="diamond_total" name="diamond_total"
-                                    placeholder="Enter diamond total" value="0" onkeypress="return isNumberKey(event)" maxlength="10"
-                                    required>
+                                    placeholder="Enter diamond total" value="0"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="name">Total $:<span style="color:red;">*</span></label>
+                                <input type="text" class="form-control" id="diamond_total_dollar"
+                                    name="diamond_total_dollar" placeholder="Enter diamond total dollar"
+                                    onkeypress="return isNumberKey(event)" maxlength="10" required>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group mt-4">
                                 <a class="btn btn-primary waves-effect text-center text-white" style="width:100%;"
-                                            onclick="addDiamond()">
-                                            <i class="fa fa-plus"></i> Add
-                                        </a>
+                                    onclick="addDiamond()">
+                                    <i class="fa fa-plus"></i> Add
+                                </a>
                             </div>
                         </div>
                     </div>
