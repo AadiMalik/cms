@@ -41,7 +41,7 @@
     <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
         <div class="sidebar-panel bg-white">
             <div class="gull-brand pr-3 text-center mt-3 mb-2 d-flex justify-content-center align-items-center">
-                {{-- <img class="pl-3" src="{{ asset('assets/images/logo.png') }}" style="width:183px;" alt="alt" /> --}}
+                <img class="pl-3" src="{{ asset('assets/images/logo.png') }}" style="width:183px;" alt="alt" />
                 <!--  <span class=" item-name text-20 text-primary font-weight-700">GULL</span> -->
                 <div class="sidebar-compact-switch ml-auto"><span></span></div>
             </div>
@@ -77,18 +77,10 @@
             <div class="app-footer">
                 <div class="row">
                     <div class="col-md-9">
-                        {{-- <p><strong>Gull - Laravel + Bootstrap 4 admin template</strong></p>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero quis beatae officia saepe
-                            perferendis voluptatum minima eveniet voluptates dolorum, temporibus nisi maxime nesciunt
-                            totam repudiandae commodi sequi dolor quibusdam
-                            <sunt></sunt>
-                        </p> --}}
                     </div>
                 </div>
                 <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
-                    {{-- <a class="btn btn-primary text-white btn-rounded"
-                        href="https://themeforest.net/item/gull-bootstrap-laravel-admin-dashboard-template/23101970"
-                        target="_blank">Buy Gull HTML</a> --}}
+                    
                     <span class="flex-grow-1"></span>
                     <div class="d-flex align-items-center">
                         <img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="">
