@@ -165,6 +165,7 @@ class JobPurchaseService
                 "purchase_order_id" => $obj['purchase_order_id'],
                 "sale_order_id" => $obj['sale_order_id'],
                 "supplier_id" => $obj['supplier_id'],
+                "warehouse_id" => $obj['warehouse_id'],
                 "reference" => $obj['reference'],
                 "total_recieved_au" => $obj['total_recieved_au'] ?? 0,
                 "total" => $obj['total'],
@@ -220,30 +221,30 @@ class JobPurchaseService
             [
                 'purchase_order',
                 'sale_order',
+                'created_by',
                 'supplier_name'
             ]
         )->find($id);
     }
 
-    public function jobPurchaseDetail($sale_id)
+    public function jobPurchaseDetail($job_purchase_id)
     {
-        $sale_detail = $this->model_job_purchase_detail->getModel()::with('product')
-            ->where('is_deleted', 0)->get();
+        $job_purchase_detail = $this->model_job_purchase_detail->getModel()::with('product')
+            ->where('job_purchase_id',$job_purchase_id)->where('is_deleted', 0)->get();
 
         $data = [];
-        foreach ($sale_detail as $item) {
+        foreach ($job_purchase_detail as $index=>$item) {
             $bead_detail = $this->model_job_purchase_detail_bead->getModel()::where('job_purchase_detail_id', $item->id)
                 ->where('is_deleted', 0)->get();
             $stone_detail = $this->model_job_purchase_detail_stone->getModel()::where('job_purchase_detail_id', $item->id)
                 ->where('is_deleted', 0)->get();
             $diamond_detail = $this->model_job_purchase_detail_diamond->getModel()::where('job_purchase_detail_id', $item->id)
                 ->where('is_deleted', 0)->get();
-            $data[] = $item;
-            $data[]['bead_detail'] = $bead_detail;
-            $data[]['stone_detail'] = $stone_detail;
-            $data[]['diamond_detail'] = $diamond_detail;
+            $data[$index] = $item->toArray();
+            $data[$index]['bead_detail'] = $bead_detail->toArray();
+            $data[$index]['stone_detail'] = $stone_detail->toArray();
+            $data[$index]['diamond_detail'] = $diamond_detail->toArray();
         }
-
         return $data;
     }
 
@@ -547,6 +548,10 @@ class JobPurchaseService
             $job_purchase->jv_recieved_id = Null;
             $job_purchase->supplier_au_payment_id = Null;
             $job_purchase->update();
+            //Purchase order update
+            $purchase_order = $this->model_purchase_order->getModel()::find($job_purchase->purchase_order_id);
+            $purchase_order->is_complete = 0;
+            $purchase_order->update();
             DB::commit();
         } catch (Exception $e) {
 
@@ -598,7 +603,7 @@ class JobPurchaseService
                 $supplier_au_payment->update();
             }
 
-            // sale update
+            // job purchase update
             $job_purchase->is_deleted = 1;
             $job_purchase->deletedby_id = Auth::user()->id;
             $job_purchase->is_posted = 0;
@@ -608,7 +613,11 @@ class JobPurchaseService
             $job_purchase->jv_recieved_id = Null;
             $job_purchase->supplier_au_payment_id = Null;
             $job_purchase->update();
-
+            
+            //Purchase order update
+            $purchase_order = $this->model_purchase_order->getModel()::find($job_purchase->purchase_order_id);
+            $purchase_order->is_complete = 0;
+            $purchase_order->update();
             DB::commit();
         } catch (Exception $e) {
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('purchase_order_id')->nullable();
             $table->integer('sale_order_id')->nullable();
             $table->integer('supplier_id')->nullable();
+            $table->integer('warehouse_id')->nullable();
             $table->integer('purchase_account_id')->nullable();
             $table->string('reference')->nullable();
             $table->decimal('total_recieved_au',18,3)->nullable();

@@ -164,6 +164,7 @@ class JobTaskService
                         "purchase_order_id" => $item->job_task->purchase_order_id ?? '',
                         "sale_order_id" => $item->job_task->sale_order_id ?? '',
                         "supplier_id" => $item->job_task->supplier_id ?? '',
+                        "warehouse_id" => $item->job_task->warehouse_id ?? '',
                   ];
             }
 

@@ -15,6 +15,7 @@ class JobPurchase extends Model
         'purchase_order_id',
         'sale_order_id',
         'supplier_id',
+        'warehouse_id',
         'reference',
         'total_recieved_au',
         'total',
@@ -58,5 +59,9 @@ class JobPurchase extends Model
     public function sale_order()
     {
         return $this->belongsTo(SaleOrder::class, 'sale_order_id');
+    }
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'createdby_id');
     }
 }

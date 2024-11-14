@@ -35,6 +35,7 @@ $("body").on("click", "#JobTaskDetail", function (event) {
     $("#recieved_weight").val($(this).data("net_weight"));
     $("#purchase_order_id").val($(this).data("purchase_order_id"));
     $("#sale_order_id").val($(this).data("sale_order_id"));
+    $("#warehouse_id").val($(this).data("warehouse_id"));
 });
 $("#CustomerButton").click(function () {
     $("#customerForm").trigger("reset");
@@ -250,9 +251,9 @@ function addProduct() {
         stone_waste_weight: stone_waste_weight,
         total_recieved_weight: total_recieved_weight,
         payable_weight: payable_weight,
-        total_bead_price: total_bead_price,
-        total_stones_price: total_stones_price,
-        total_diamond_price: total_diamond_price,
+        total_bead_amount: total_bead_price,
+        total_stones_amount: total_stones_price,
+        total_diamond_amount: total_diamond_price,
         laker: laker,
         rp: rp,
         wax: wax,
@@ -296,9 +297,9 @@ function addProduct() {
           <td style="text-align: right;" >${val.stone_waste_weight}</td>
           <td style="text-align: right;" >${val.total_recieved_weight}</td>
           <td style="text-align: right;" >${val.payable_weight}</td>
-          <td style="text-align: right;" >${val.total_bead_price}</td>
-          <td style="text-align: right;" >${val.total_stones_price}</td>
-          <td style="text-align: right;" >${val.total_diamond_price}</td>
+          <td style="text-align: right;" >${val.total_bead_amount}</td>
+          <td style="text-align: right;" >${val.total_stones_amount}</td>
+          <td style="text-align: right;" >${val.total_diamond_amount}</td>
           <td style="text-align: right;" >${val.laker}</td>
           <td style="text-align: right;" >${val.rp}</td>
           <td style="text-align: right;" >${val.wax}</td>
@@ -356,6 +357,7 @@ $("body").on("click", "#submit", function (e) {
     var formData = new FormData();
     formData.append("job_purchase_date", $("#job_purchase_date").val());
     formData.append("supplier_id", $("#supplier_id").val());
+    formData.append("warehouse_id", $("#warehouse_id").val());
     formData.append("purchase_order_id", $("#purchase_order_id").val());
     formData.append("sale_order_id", $("#sale_order_id").val());
     formData.append("reference", $("#reference").val());

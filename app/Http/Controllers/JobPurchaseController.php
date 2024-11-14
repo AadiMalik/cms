@@ -120,6 +120,7 @@ class JobPurchaseController extends Controller
                 'job_purchase_date'     => 'required',
                 'purchase_order_id'     => 'required',
                 'supplier_id'           => 'required',
+                'warehouse_id'           => 'required',
                 'total_au'              => 'required',
                 'productDetail'         => 'required'
             ],
@@ -163,7 +164,7 @@ class JobPurchaseController extends Controller
             $job_purchase_detail = $this->job_purchase_service->jobPurchaseDetail($id);
 
 
-            return view('purchases/job_purchase/partials.print', compact('sale', 'sale_detail'));
+            return view('purchases/job_purchase/partials.print', compact('job_purchase', 'job_purchase_detail'));
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }
