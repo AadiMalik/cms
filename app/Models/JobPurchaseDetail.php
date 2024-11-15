@@ -44,6 +44,7 @@ class JobPurchaseDetail extends Model
         'total_diamond_amount',
         'total_amount',
         'total_dollar',
+        'is_finish_product',
         'is_deleted',
         'createdby_id',
         'updatedby_id',

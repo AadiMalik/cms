@@ -30,6 +30,17 @@ $("#product_id").on("change", function () {
                         row += '</tr>';
                     });
 
+                }else if (data.job_purchase.length > 0) {
+                    $.each(data.job_purchase, function (k, value) {
+                        row += '<tr>';
+                        row +=
+                            '<td><a id="job_purchase_id" href="javascript:void(0)" data-toggle="tooltip"  data-id="' +
+                            value.job_purchase_detail_id +
+                            '" data-original-title="Purchase"><b>' +
+                            value.job_purchase_no + '</b></a></td>';
+                        row += '</tr>';
+                    });
+
                 } else {
                     row += '<tr>';
                     row +=

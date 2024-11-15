@@ -20,11 +20,19 @@ class CommonService
 {
       protected $model_ratti_kaat;
       protected $model_finish_product;
+
+      protected $ratti_kaat_service;
+      protected $job_purchase_service;
+      protected $gold_impurity_purchase_service;
       public function __construct()
       {
             // set the model
             $this->model_ratti_kaat = new Repository(new RattiKaat);
             $this->model_finish_product = new Repository(new FinishProduct);
+
+            //services
+            $this->ratti_kaat_service = new RattiKaatService();
+            $this->job_purchase_service = new JobPurchaseService();
       }
 
       public function generateRattiKaatNo()
@@ -245,18 +253,18 @@ class CommonService
 
       // get stock
       public function getOtherProductStockWithWarehouse($other_product_id, $warehouse_id, $start_date, $end_date)
-    {
-        $stock = 0.00;
-        $wh = [];
-        if (!empty($start_date) && !empty($end_date)) {
-            $wh[] = ['date', '>=', $start_date];
-            $wh[] = ['date', '<=', $end_date];
-        }
-        if (!empty($start_date) && empty($end_date)) {
-            $wh[] = ['date', '<=', $start_date];
-        }
-        $stock = DB::table('transactions')
-            ->select(DB::raw("SUM(
+      {
+            $stock = 0.00;
+            $wh = [];
+            if (!empty($start_date) && !empty($end_date)) {
+                  $wh[] = ['date', '>=', $start_date];
+                  $wh[] = ['date', '<=', $end_date];
+            }
+            if (!empty($start_date) && empty($end_date)) {
+                  $wh[] = ['date', '<=', $start_date];
+            }
+            $stock = DB::table('transactions')
+                  ->select(DB::raw("SUM(
             CASE
                 WHEN type IN (0) THEN qty
                 WHEN type IN (1) THEN -qty
@@ -274,20 +282,33 @@ class CommonService
             END
         ) AS stock
     "))
-            ->where('warehouse_id', $warehouse_id)
-            ->where('other_product_id', $other_product_id)
-            ->where('is_deleted', 0)
-            ->where($wh)
-            ->first();
+                  ->where('warehouse_id', $warehouse_id)
+                  ->where('other_product_id', $other_product_id)
+                  ->where('is_deleted', 0)
+                  ->where($wh)
+                  ->first();
 
-        return number_format((float)($stock->stock ?? 0), 2, '.', '');
-    }
+            return number_format((float)($stock->stock ?? 0), 2, '.', '');
+      }
 
-    public function getOtherProductUnitPrice($other_product_id, $warehouse_id, $start_date, $end_date, $restaurant_id = null)
-  {
-    
-    // Initialize the base query
-    $query = "
+      public function getPurchasesByProductId($product_id)
+      {
+            $ratti_kaats = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
+            $job_purchase = $this->job_purchase_service->getJobPurchaseByProductId($product_id);
+            $tag_no = $this->generateFinishProductTagNo($ratti_kaats[0]->prefix);
+            $data = [
+                  "ratti_kaat" => $ratti_kaats,
+                  "job_purchase"=>$job_purchase,
+                  "tag_no" => $tag_no
+            ];
+            return $data;
+      }
+
+      public function getOtherProductUnitPrice($other_product_id, $warehouse_id, $start_date, $end_date, $restaurant_id = null)
+      {
+
+            // Initialize the base query
+            $query = "
         SELECT SUM(unit_price * qty)/SUM(qty) AS unit_price
         FROM transactions
         WHERE transactions.other_product_id = $other_product_id
@@ -297,22 +318,22 @@ class CommonService
         AND transactions.qty > 0
     ";
 
-    // Date filters
-    if (!empty($start_date) && !empty($end_date)) {
-      $query .= " AND DATE(transactions.date) BETWEEN '$start_date' AND '$end_date'";
-    } elseif (!empty($start_date)) {
-      $query .= " AND DATE(transactions.date) <= '$start_date'";
-    }
+            // Date filters
+            if (!empty($start_date) && !empty($end_date)) {
+                  $query .= " AND DATE(transactions.date) BETWEEN '$start_date' AND '$end_date'";
+            } elseif (!empty($start_date)) {
+                  $query .= " AND DATE(transactions.date) <= '$start_date'";
+            }
 
-    // Warehouse filter
-    if (!empty($warehouse_id) && $warehouse_id != 0) {
-      $query .= " AND transactions.warehouse_id = $warehouse_id";
-    }
+            // Warehouse filter
+            if (!empty($warehouse_id) && $warehouse_id != 0) {
+                  $query .= " AND transactions.warehouse_id = $warehouse_id";
+            }
 
-    // Execute the raw query with bound parameters
-    $result = DB::select(DB::raw($query));
+            // Execute the raw query with bound parameters
+            $result = DB::select(DB::raw($query));
 
-    // Return the calculated average unit price or 0 if no result is found
-    return round((float)$result[0]->unit_price ?? 0, 2);
-  }
+            // Return the calculated average unit price or 0 if no result is found
+            return round((float)$result[0]->unit_price ?? 0, 2);
+      }
 }

@@ -526,21 +526,16 @@ class RattiKaatController extends Controller
 
     public function getRattiKaatByProductId($product_id)
     {
-        try {
-            $ratti_kaats = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
-            $tag_no = $this->common_service->generateFinishProductTagNo($ratti_kaats[0]->prefix);
-            $data = [
-                "ratti_kaat" => $ratti_kaats,
-                "tag_no" => $tag_no
-            ];
+        // try {
+            $purchases = $this->common_service->getPurchasesByProductId($product_id);
             return $this->success(
                 config('enum.success'),
-                $data,
+                $purchases,
                 true
             );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'),);
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'),);
+        // }
     }
 
     public function getRattiKaatDetailById($detail_id)

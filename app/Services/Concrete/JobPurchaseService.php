@@ -643,4 +643,33 @@ class JobPurchaseService
 
         return false;
     }
+
+    // get by product id
+    public function getJobPurchaseByProductId($product_id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $job_purchase = $this->model_job_purchase->getModel()::join('job_purchase_details', 'job_purchase_details.job_purchase_id', 'job_purchases.id')
+                ->join('products', 'job_purchase_details.product_id', 'products.id')
+                ->select(
+                    'job_purchases.id as job_purchase_id',
+                    'job_purchases.job_purchase_no',
+                    'job_purchase_details.id as job_purchase_detail_id',
+                    'products.prefix'
+                )
+                ->where('job_purchase_details.product_id', $product_id)
+                ->where('job_purchase_details.is_finish_product', 0)
+                ->where('job_purchases.is_posted', 1)
+                ->get();
+
+            return $job_purchase;
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return true;
+    }
 }
