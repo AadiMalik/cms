@@ -26,26 +26,30 @@ $("#product_id").on("change", function () {
                             '<td><a id="purchase_id" href="javascript:void(0)" data-toggle="tooltip"  data-id="' +
                             value.ratti_kaat_detail_id +
                             '" data-original-title="Purchase"><b>' +
-                            value.ratti_kaat_no + '</b></a></td>';
+                            value.ratti_kaat_no +
+                            '</b></a></td>';
                         row += '</tr>';
                     });
+                }
 
-                }else if (data.job_purchase.length > 0) {
+                if (data.job_purchase.length > 0) {
                     $.each(data.job_purchase, function (k, value) {
                         row += '<tr>';
                         row +=
                             '<td><a id="job_purchase_id" href="javascript:void(0)" data-toggle="tooltip"  data-id="' +
                             value.job_purchase_detail_id +
                             '" data-original-title="Purchase"><b>' +
-                            value.job_purchase_no + '</b></a></td>';
+                            value.job_purchase_no +
+                            '</b></a></td>';
                         row += '</tr>';
                     });
+                }
 
-                } else {
-                    row += '<tr>';
-                    row +=
-                        '<td>No Purchase found</td>';
-                    row += '</tr>';
+                if (
+                    data.ratti_kaat.length === 0 &&
+                    data.job_purchase.length === 0
+                ) {
+                    row += '<tr><td>No Purchase found</td></tr>';
                 }
                 $("#purchases").append(row);
                 $("#tag_no_text").val(data.tag_no);

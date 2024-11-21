@@ -14,12 +14,14 @@ use App\Services\Concrete\DiamondClarityService;
 use App\Services\Concrete\DiamondColorService;
 use App\Services\Concrete\DiamondCutService;
 use App\Services\Concrete\DiamondTypeService;
+use App\Services\Concrete\JobPurchaseService;
 use App\Services\Concrete\StoneCategoryService;
 use App\Traits\JsonResponse;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class RattiKaatController extends Controller
@@ -37,6 +39,7 @@ class RattiKaatController extends Controller
     protected $diamond_color_service;
     protected $diamond_cut_service;
     protected $diamond_clarity_service;
+    protected $job_purchase_service;
 
     public function __construct(
         SupplierService $supplier_service,
@@ -49,7 +52,8 @@ class RattiKaatController extends Controller
         DiamondTypeService $diamond_type_service,
         DiamondColorService $diamond_color_service,
         DiamondCutService $diamond_cut_service,
-        DiamondClarityService $diamond_clarity_service
+        DiamondClarityService $diamond_clarity_service,
+        JobPurchaseService $job_purchase_service
     ) {
         $this->account_service = $account_service;
         $this->supplier_service = $supplier_service;
@@ -62,6 +66,7 @@ class RattiKaatController extends Controller
         $this->diamond_color_service = $diamond_color_service;
         $this->diamond_cut_service = $diamond_cut_service;
         $this->diamond_clarity_service = $diamond_clarity_service;
+        $this->job_purchase_service = $job_purchase_service;
     }
 
     public function index()
@@ -526,16 +531,23 @@ class RattiKaatController extends Controller
 
     public function getRattiKaatByProductId($product_id)
     {
-        // try {
-            $purchases = $this->common_service->getPurchasesByProductId($product_id);
+
+        try {
+            $ratti_kaats = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
+            // $job_purchase = $this->job_purchase_service->getJobPurchaseByProductId($product_id);
+            $tag_no = $this->generateFinishProductTagNo($ratti_kaats[0]->prefix);
+            $data = [
+                "ratti_kaat" => $ratti_kaats,
+                // "job_purchase" => $job_purchase,
+                "tag_no" => $tag_no
+            ];
             return $this->success(
                 config('enum.success'),
-                $purchases,
-                true
+                $data
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'),);
-        // }
+        } catch (Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 
     public function getRattiKaatDetailById($detail_id)
