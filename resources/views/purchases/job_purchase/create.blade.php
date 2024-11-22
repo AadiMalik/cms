@@ -83,7 +83,7 @@
                                                                         data-net_weight="{{ $item['net_weight'] ?? '' }}"
                                                                         data-purchase_order_id="{{ $item['purchase_order_id'] ?? '' }}"
                                                                         data-sale_order_id="{{ $item['sale_order_id'] ?? '' }}"
-                                                                        data-warehouse_id="{{ $item['sale_order_id'] ?? '' }}"
+                                                                        data-warehouse_id="{{ $item['warehouse_id'] ?? '' }}"
                                                                         data-original-title="Job task detail">
                                                                         <b>{{ $item['product'] ?? '' }},G:{{ $item['category'] ?? '' }},D:{{ $item['design_no'] ?? '' }}</b>
                                                                     </a>

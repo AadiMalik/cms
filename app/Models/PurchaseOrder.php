@@ -19,6 +19,7 @@ class PurchaseOrder extends Model
         'warehouse_id',
         'sale_order_id',
         'total_qty',
+        'status',
         'is_complete',
         'is_deleted',
         'createdby_id',

@@ -651,12 +651,10 @@ class JobPurchaseService
             DB::beginTransaction();
 
             $job_purchase = $this->model_job_purchase->getModel()::join('job_purchase_details', 'job_purchase_details.job_purchase_id', 'job_purchases.id')
-                ->join('products', 'job_purchase_details.product_id', 'products.id')
                 ->select(
                     'job_purchases.id as job_purchase_id',
                     'job_purchases.job_purchase_no',
-                    'job_purchase_details.id as job_purchase_detail_id',
-                    'products.prefix'
+                    'job_purchase_details.id as job_purchase_detail_id'
                 )
                 ->where('job_purchase_details.product_id', $product_id)
                 ->where('job_purchase_details.is_finish_product', 0)

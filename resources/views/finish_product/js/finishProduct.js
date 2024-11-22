@@ -92,6 +92,37 @@ $("body").on("click", "#purchase_id", function (event) {
     });
 });
 
+$("body").on("click", "#job_purchase_id", function (event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    var job_purchase_id = $(this).data("id");
+    var product_id = $("#product_id").val();
+    $("td a.purchase_active").removeClass("purchase_active");
+    $(this).addClass("purchase_active");
+    $.ajax({
+        url: url_local + "/job-purchase/get-detail/" + job_purchase_id,
+        type: "GET",
+    }).done(function (data) {
+        console.log(data);
+        if (data.Success) {
+            var data = data.Data;
+            $("#ratti_kaat_id").val((data.ratti_kaat_id > 0) ? data.ratti_kaat_id : 0);
+            $("#ratti_kaat_detail_id").val((data.id > 0) ? data.id : 0);
+            $("#scale_weight").val((data.scale_weight > 0) ? data.scale_weight : 0);
+            $("#net_weight").val((data.net_weight > 0) ? data.net_weight : 0);
+            $("#bead_weight").val((data.bead_weight > 0) ? data.bead_weight : 0);
+            $("#stones_weight").val((data.stones_weight > 0) ? data.stones_weight : 0);
+            $("#diamond_weight").val((data.diamond_carat > 0) ? data.diamond_carat : 0);
+
+            BeadByPurchaseDetail(data.ratti_kaat_id, product_id);
+            StonesByPurchaseDetail(data.ratti_kaat_id, product_id);
+            DiamondsByPurchaseDetail(data.ratti_kaat_id, product_id);
+        } else {
+            error(data.Message);
+        }
+    });
+});
+
 $("#gold_carat").on("keyup", function (event) {
     var gold_carat = $("#gold_carat").val();
     var gold_carat_rate = gold_rate / 24 * (gold_carat * 1);
