@@ -534,11 +534,11 @@ class RattiKaatController extends Controller
 
         try {
             $ratti_kaats = $this->ratti_kaat_service->getRattiKaatByProductId($product_id);
-            // $job_purchase = $this->job_purchase_service->getJobPurchaseByProductId($product_id);
+            $job_purchase = $this->job_purchase_service->getJobPurchaseByProductId($product_id);
             $tag_no = $this->generateFinishProductTagNo($ratti_kaats[0]->prefix);
             $data = [
                 "ratti_kaat" => $ratti_kaats,
-                // "job_purchase" => $job_purchase,
+                "job_purchase" => $job_purchase,
                 "tag_no" => $tag_no
             ];
             return $this->success(

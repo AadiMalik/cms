@@ -31,8 +31,6 @@ class CommonService
             $this->model_finish_product = new Repository(new FinishProduct);
 
             //services
-            $this->ratti_kaat_service = new RattiKaatService();
-            $this->job_purchase_service = new JobPurchaseService();
       }
 
       public function generateRattiKaatNo()
