@@ -16,7 +16,7 @@
                                 placeholder="Enter name" required />
                         </div>
                         <div class="col-md-4 form-group mb-3">
-                            <label for="cnic">CNIC</label>
+                            <label for="cnic">CNIC<small class="text-danger">(unique)</small></label>
                             <input class="form-control" type="text" name="cnic"
                                 value="" maxlength="191"
                                 placeholder="Enter CNIC" />

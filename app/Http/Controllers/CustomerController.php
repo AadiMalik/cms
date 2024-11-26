@@ -62,6 +62,7 @@ class CustomerController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:191',
                 'contact' => 'required|string|unique:customers,contact,' . $request->id,
+                'cnic' => 'nullable|unique:customers,cnic,' . $request->id,
                 'cnic_images.*' => 'mimes:jpg,jpeg,png,bmp|max:2048'
             ]);
 
@@ -100,7 +101,8 @@ class CustomerController extends Controller
             $request->all(),
             [
                 'name' => 'required|string|max:191',
-                'contact' => 'required|string|unique:customers,contact'
+                'contact' => 'required|string|unique:customers,contact',
+                'cnic' => 'nullable|unique:customers,cnic'
             ],
             $this->validationMessage()
         );

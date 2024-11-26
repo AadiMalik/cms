@@ -56,7 +56,7 @@
                         @can('products_access')
                             <li class="item-name"><a class="{{ Request::is('finish-product*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('finish-product') }}"><i class="nav-icon fa fa-circle"></i><span
-                                        class="item-name">Finish Products</span></a></li>
+                                        class="item-name">Tagging Products</span></a></li>
                         @endcan
                         @can('products_access')
                             <li class="item-name"><a class="{{ Request::is('products*') ? 'sidebar_active' : '' }}"

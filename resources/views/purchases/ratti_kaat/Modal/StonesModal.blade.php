@@ -95,7 +95,7 @@
                                         <th>Sr.</th>
                                         <th>Category</th>
                                         <th>Type</th>
-                                        <th>Stones</th>
+                                        <th>Stone QTY</th>
                                         <th>Gram</th>
                                         <th>Carat</th>
                                         <th>Rate/Gram</th>

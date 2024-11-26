@@ -22,7 +22,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="name">Beads:<span style="color:red;">*</span></label>
+                                <label for="name">Bead QTY:<span style="color:red;">*</span></label>
 
                                 <input type="text" class="form-control" id="beads" name="beads"
                                     placeholder="Enter beads" onkeypress="return isNumberKey(event)" maxlength="10"
@@ -86,7 +86,7 @@
                                 <tr>
                                     <th>Sr.</th>
                                     <th>Type</th>
-                                    <th>Beads</th>
+                                    <th>Bead QTY</th>
                                     <th>Gram</th>
                                     <th>Carat</th>
                                     <th>Rate/Gram</th>

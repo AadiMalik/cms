@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="name">Diamond:<span style="color:red;">*</span></label>
+                                <label for="name">Diamond QTY:<span style="color:red;">*</span></label>
                                 <input type="text" class="form-control" id="diamonds" name="diamonds"
                                     placeholder="Enter diamond" onkeypress="return isNumberKey(event)" maxlength="10"
                                     required>
@@ -108,7 +108,7 @@
                                 <thead>
                                     <tr>
                                         <th>Sr.</th>
-                                        <th>Diamonds</th>
+                                        <th>Diamond QTY</th>
                                         <th>Type</th>
                                         <th>Cut</th>
                                         <th>Color</th>
