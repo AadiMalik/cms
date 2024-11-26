@@ -25,6 +25,7 @@
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Role</th>
+                                    <th scope="col">Supplier</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -48,6 +49,7 @@
          {data: 'name' , name: 'name'},
          {data: 'email' , name: 'email'},
          {data: 'role' , name: 'role'},
+         {data: 'supplier' , name: 'supplier'},
         {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
         'route' => 'users/data',
         'buttons' => false,

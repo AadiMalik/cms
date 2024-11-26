@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Concrete\RoleService;
+use App\Services\Concrete\SupplierService;
 use App\Services\Concrete\UserService;
 use Exception;
 use Illuminate\Http\Request;
@@ -15,12 +16,15 @@ class UserController extends Controller
 {
     protected $user_service;
     protected $role_service;
+    protected $supplier_service;
     public function __construct(
         UserService  $user_service,
-        RoleService $role_service
+        RoleService $role_service,
+        SupplierService $supplier_service
     ) {
         $this->user_service = $user_service;
         $this->role_service = $role_service;
+        $this->supplier_service = $supplier_service;
     }
 
     public function index()
@@ -41,7 +45,8 @@ class UserController extends Controller
     {
         abort_if(Gate::denies('users_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $roles = $this->role_service->getAll();
-        return view('users.create', compact('roles'));
+        $suppliers = $this->supplier_service->getAllActiveSupplier();
+        return view('users.create', compact('roles','suppliers'));
     }
 
     public function store(Request $request)
@@ -55,6 +60,12 @@ class UserController extends Controller
                 'role' => ['required'],
             ]);
 
+            if($request->role=='Supplier/Karigar User'){
+                $validator = Validator::make($request->all(), [
+                    'supplier_id' => ['required'],
+                ]);
+            }
+
             if ($validator->fails()) {
 
                 return redirect()->back()->withErrors($validator)->withInput();
@@ -64,7 +75,8 @@ class UserController extends Controller
                 "id"        => $request->id,
                 "name"      => $request->name,
                 "email"     => $request->email,
-                "password"  => Hash::make($request->password)
+                "password"  => Hash::make($request->password),
+                "supplier_id"=> $request->supplier_id??null,
             ];
 
             $user = $this->user_service->save($obj);
@@ -85,7 +97,8 @@ class UserController extends Controller
         abort_if(Gate::denies('users_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $user = $this->user_service->getById($id);
         $roles = $this->role_service->getAll();
-        return view('users.create', compact('user', 'roles'));
+        $suppliers = $this->supplier_service->getAllActiveSupplier();
+        return view('users.create', compact('user', 'roles','suppliers'));
     }
 
 

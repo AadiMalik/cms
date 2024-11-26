@@ -12,6 +12,7 @@ use App\Traits\JsonResponse;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class JobTaskController extends Controller
@@ -39,7 +40,7 @@ class JobTaskController extends Controller
     }
     public function index()
     {
-        $suppliers = $this->supplier_service->getAllActivesupplier();
+        $suppliers = $this->supplier_service->getAllActiveSupplier();
         return view('job_task.index', compact('suppliers'));
     }
     public function getData(Request $request)
@@ -47,7 +48,7 @@ class JobTaskController extends Controller
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
-            $supplier_id = $request['supplier_id'] ?? '';
+            $supplier_id = $request['supplier_id'] ?? Auth::user()->supplier_id;
             $obj = [
                 "supplier_id" => $supplier_id,
                 "end" => $end,

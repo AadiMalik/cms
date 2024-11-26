@@ -37,7 +37,8 @@
                                         <input type="date" id="end_date" name="end_date" class="form-control date">
                                     </div>
                                 </div>
-                                <div class="col-md-3" id="div_vendor">
+                                @if(auth()->user()->roles[0]->name!='Supplier/Karigar User')
+                                <div class="col-md-3" id="div_supplier">
                                     <div class="form-group">
                                         <label for="">Supplier</label>
                                         <select id="supplier_id" name="supplier_id" class="form-control">
@@ -48,6 +49,7 @@
                                         </select>
                                     </div>
                                 </div>
+                                @endif
                                 <div class="col-md-2">
                                     <div class="form-group mt-4">
                                         <button class="btn btn-primary waves-effect" id="search_button"

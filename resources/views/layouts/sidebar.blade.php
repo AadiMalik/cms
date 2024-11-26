@@ -141,20 +141,20 @@
                     </ul>
                 </li>
             @endcan
-            @can('purchase_access')
+            {{--@can('purchase_access') --}}
                 <li class="Ul_li--hover {{ Request::is('job-task*') ? 'mm-active' : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
                             class="item-name text-15 text-muted">Job Task</span></a>
                     <ul class="mm-collapse">
-                        @can('ratti_kaat_access')
+                    {{--@can('ratti_kaat_access')--}}
                             <li class="item-name"><a class="{{ Request::is('job-task*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('job-task') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Jobs</span></a></li>
-                        @endcan
+                                        {{--@endcan--}}
 
                     </ul>
                 </li>
-            @endcan
+                {{--@endcan--}}
             @can('accounting_access')
                 <li class="Ul_li--hover {{ Request::is('accounts*') ? 'mm-active' : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-line-chart text-20 mr-2 text-muted"></i><span
@@ -351,7 +351,7 @@
                             class="item-name text-15 text-muted">Setting</span></a>
                 </li>
             @endcan
-            @can('logout_access')
+             {{-- @can('logout_access') --}}
                 <li class="Ul_li--hover"><a href="{{ route('logout') }}"
                         onclick="event.preventDefault();
                               document.getElementById('logout-form').submit();"><i
@@ -361,7 +361,7 @@
                         @csrf
                     </form>
                 </li>
-            @endcan
+                {{-- @endcan --}}
         </ul>
     </div>
 </div>

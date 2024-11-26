@@ -69,6 +69,17 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                <div class="col-md-6 form-group mb-3" id="supplier_div">
+                                    <label for="supplier_id">Supplier/Karigar<span class="text-danger">*</span> </label>
+                                    <select class="form-control select2" name="supplier_id" id="supplier_id" required style="width: 100%;">
+                                        @foreach($suppliers as $item)
+                                            <option value="{{ $item->id }}" {{ (isset($user) && $user->supplier_id==$item->id) ? 'selected' : '' }}>{{ $item->name??'' }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('supplier_id')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
 
                             </div>
 
@@ -93,6 +104,13 @@
 <script>
     $(document).ready(function() {
             $('#role').select2();
+            $('#supplier_id').select2();
+            $("#supplier_div").hide();
         });
+    $("#role").on("change",function(e){
+        if($('#role').find(':selected').val()=='Supplier/Karigar User'){
+            $("#supplier_div").show();
+        }
+    });
 </script>
 @endsection

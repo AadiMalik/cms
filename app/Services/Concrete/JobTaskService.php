@@ -36,15 +36,12 @@ class JobTaskService
 
       public function getSource($obj)
       {
-            $wh = [];
-            if ($obj['supplier_id'] != '') {
-                  $wh[] = ['supplier_id', $obj['supplier_id']];
-            }
             $model = $this->model_job_task->getModel()::has('JobTaskDetail')
                   ->with(['sale_order', 'purchase_order', 'warehouse_name', 'supplier_name'])
                   ->where('is_deleted', 0)
                   ->whereBetween('job_task_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start'].' 00:00:00'))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'].' 23:59:59')))])
-                  ->where($wh)->get();
+                  ->where('supplier_id',$obj['supplier_id'])
+                  ->get();
             $data = DataTables::of($model)
                   ->addColumn('supplier_name', function ($item) {
                         return $item->supplier_name->name ?? '';
@@ -75,11 +72,11 @@ class JobTaskService
                         $delete_column    = "<a class='text-danger mr-2' id='deleteJobTask' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
 
-                        if (Auth::user()->can('customers_edit'))
+                        // if (Auth::user()->can('customers_edit'))
                               $action_column .= $activity_column;
-                        if (Auth::user()->can('customers_edit'))
+                        // if (Auth::user()->can('customers_edit'))
                               $action_column .= $view_column;
-                        if (Auth::user()->can('customers_edit'))
+                        // if (Auth::user()->can('customers_edit'))
                               $action_column .= $complete_column;
                         if (Auth::user()->can('customers_delete'))
                               $action_column .= $delete_column;

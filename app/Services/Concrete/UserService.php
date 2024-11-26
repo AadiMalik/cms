@@ -25,6 +25,9 @@ class UserService
         ->addColumn('role', function ($item) {
             return $item->roles[0]->name??'';
         })
+        ->addColumn('supplier', function ($item) {
+            return $item->supplier_name->name??'';
+        })
             ->addColumn('action', function ($item) {
                 $action_column = '';
                 $edit_column    = "<a class='text-success mr-2' href='users/edit/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
@@ -39,7 +42,7 @@ class UserService
 
                 return $action_column;
             })
-            ->rawColumns(['role','action'])
+            ->rawColumns(['role','supplier','action'])
             ->make(true);
         return $data;
     }
