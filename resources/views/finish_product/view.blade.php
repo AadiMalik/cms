@@ -2,7 +2,7 @@
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
-            <h1>View Finish Product</h1>
+            <h1>View Tagging</h1>
             <ul>
                 <li>View</li>
                 <li>Show</li>

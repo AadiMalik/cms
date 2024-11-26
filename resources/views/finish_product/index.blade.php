@@ -2,7 +2,7 @@
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
-            <h1>Finish Product</h1>
+            <h1>Tagging</h1>
             <ul>
                 <li>List</li>
                 <li>All</li>
@@ -20,7 +20,7 @@
                     <div class="card-header text-right bg-transparent">
                         @can('customers_create')
                             <a class="btn btn-primary btn-md m-1" href="{{ url('finish-product/create') }}"><i
-                                    class="fa fa-plus text-white mr-2"></i> Add Finish Product</a>
+                                    class="fa fa-plus text-white mr-2"></i> Add Tagging</a>
                         @endcan
                     </div>
                     <div class="card-body">

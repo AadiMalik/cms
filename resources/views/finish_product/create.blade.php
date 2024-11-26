@@ -17,7 +17,7 @@
     <div class="main-content pt-4">
         <div class="row pl-2">
             <div class="col-md-8 breadcrumb">
-                <h1>Finish Product</h1>
+                <h1>Tagging</h1>
                 <ul>
                     <li>Create</li>
                     <li>Save</li>
