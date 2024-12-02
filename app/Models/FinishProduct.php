@@ -10,8 +10,10 @@ class FinishProduct extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'job_purchase_id',
         'ratti_kaat_id',
         'ratti_kaat_detail_id',
+        'job_purchase_detail_id',
         'tag_no',
         'barcode',
         'product_id',

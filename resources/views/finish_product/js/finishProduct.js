@@ -34,14 +34,14 @@ $("#product_id").on("change", function () {
 
                 if (data.job_purchase.length > 0) {
                     $.each(data.job_purchase, function (k, value) {
-                        row += '<tr>';
-                        row +=
-                            '<td><a id="job_purchase_id" href="javascript:void(0)" data-toggle="tooltip"  data-id="' +
-                            value.job_purchase_detail_id +
-                            '" data-original-title="Purchase"><b>' +
-                            value.job_purchase_no +
-                            '</b></a></td>';
-                        row += '</tr>';
+                        row += `<tr>
+                                    <td>
+                                        <a id="job_purchase_id" href="javascript:void(0)" data-toggle="tooltip"
+                                         data-id="${value.job_purchase_detail_id}" data-original-title="Purchase">
+                                            <b>${value.job_purchase_no}</b>
+                                        </a>
+                                    </td>
+                                </tr>`;
                     });
                 }
 
@@ -106,17 +106,20 @@ $("body").on("click", "#job_purchase_id", function (event) {
         console.log(data);
         if (data.Success) {
             var data = data.Data;
-            $("#ratti_kaat_id").val((data.ratti_kaat_id > 0) ? data.ratti_kaat_id : 0);
-            $("#ratti_kaat_detail_id").val((data.id > 0) ? data.id : 0);
-            $("#scale_weight").val((data.scale_weight > 0) ? data.scale_weight : 0);
-            $("#net_weight").val((data.net_weight > 0) ? data.net_weight : 0);
+            $("#job_purchase_id").val((data.job_purchase_id > 0) ? data.job_purchase_id : 0);
+            $("#job_purchase_detail_id").val((data.id > 0) ? data.id : 0);
+            $("#scale_weight").val((data.final_pure_weight > 0) ? data.final_pure_weight : 0);
+            $("#net_weight").val((data.pure_weight > 0) ? data.pure_weight : 0);
             $("#bead_weight").val((data.bead_weight > 0) ? data.bead_weight : 0);
             $("#stones_weight").val((data.stones_weight > 0) ? data.stones_weight : 0);
             $("#diamond_weight").val((data.diamond_carat > 0) ? data.diamond_carat : 0);
+            $("#waste").val((data.waste > 0) ? data.waste : 0);
+            $("#laker").val((data.laker > 0) ? data.laker : 0);
+            $("#other_amount").val((data.other > 0) ? data.other : 0);
 
-            BeadByPurchaseDetail(data.ratti_kaat_id, product_id);
-            StonesByPurchaseDetail(data.ratti_kaat_id, product_id);
-            DiamondsByPurchaseDetail(data.ratti_kaat_id, product_id);
+            BeadByJobPurchaseDetail(data.id, product_id);
+            StonesByJobPurchaseDetail(data.id, product_id);
+            DiamondsByJobPurchaseDetail(data.id, product_id);
         } else {
             error(data.Message);
         }
@@ -238,7 +241,7 @@ $("body").on("click", "#submit", function (e) {
         $("#tag_no").focus();
         return false;
     }
-    if ($("#ratti_kaat_id").val() == "" || $("#ratti_kaat_detail_id").val() == "") {
+    if ($("#ratti_kaat_id").val() == "" && $("#ratti_kaat_detail_id").val() == ""  && $("#job_purchase_id").val() == ""  && $("#job_purchase_detail_id").val() == "") {
         error("Please select purchase!");
         return false;
     }
@@ -357,6 +360,8 @@ $("body").on("click", "#submit", function (e) {
     // Create FormData object for Ajax
     var formData = new FormData();
     formData.append("tag_no", $("#tag_no").val());
+    formData.append("job_purchase_id", $("#job_purchase_id").val());
+    formData.append("job_purchase_detail_id", $("#job_purchase_detail_id").val());
     formData.append("ratti_kaat_id", $("#ratti_kaat_id").val());
     formData.append("ratti_kaat_detail_id", $("#ratti_kaat_detail_id").val());
     formData.append("product_id", $("#product_id").find(":selected").val());

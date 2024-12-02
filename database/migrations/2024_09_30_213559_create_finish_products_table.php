@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('finish_products', function (Blueprint $table) {
             $table->id();
             $table->integer('ratti_kaat_id')->nullable();
+            $table->integer('job_purchase_id')->nullable();
             $table->integer('ratti_kaat_detail_id')->nullable();
+            $table->integer('job_purchase_detail_id')->nullable();
             $table->string('tag_no')->nullable();
             $table->string('barcode')->nullable();
             $table->integer('product_id')->nullable();

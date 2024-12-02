@@ -230,10 +230,10 @@ class JobPurchaseService
     public function jobPurchaseDetail($job_purchase_id)
     {
         $job_purchase_detail = $this->model_job_purchase_detail->getModel()::with('product')
-            ->where('job_purchase_id',$job_purchase_id)->where('is_deleted', 0)->get();
+            ->where('job_purchase_id', $job_purchase_id)->where('is_deleted', 0)->get();
 
         $data = [];
-        foreach ($job_purchase_detail as $index=>$item) {
+        foreach ($job_purchase_detail as $index => $item) {
             $bead_detail = $this->model_job_purchase_detail_bead->getModel()::where('job_purchase_detail_id', $item->id)
                 ->where('is_deleted', 0)->get();
             $stone_detail = $this->model_job_purchase_detail_stone->getModel()::where('job_purchase_detail_id', $item->id)
@@ -247,7 +247,11 @@ class JobPurchaseService
         }
         return $data;
     }
-
+    public function singleJobPurchaseDetail($job_purchase_id)
+    {
+        return $this->model_job_purchase_detail->getModel()::with('product')
+            ->where('job_purchase_id', $job_purchase_id)->where('is_deleted', 0)->first();
+    }
     // post job purchase
     public function post($obj)
     {
@@ -613,7 +617,7 @@ class JobPurchaseService
             $job_purchase->jv_recieved_id = Null;
             $job_purchase->supplier_au_payment_id = Null;
             $job_purchase->update();
-            
+
             //Purchase order update
             $purchase_order = $this->model_purchase_order->getModel()::find($job_purchase->purchase_order_id);
             $purchase_order->is_complete = 0;
@@ -669,5 +673,35 @@ class JobPurchaseService
             throw $e;
         }
         return true;
+    }
+
+    // Bead Detail
+    public function jobPurchaseBeadDetail($job_purchase_detail_id, $product_id)
+    {
+        return $this->model_job_purchase_detail_bead->getModel()::with(['job_purchase_detail', 'product_name'])
+            ->where('job_purchase_detail_id', $job_purchase_detail_id)
+            ->where('product_id', $product_id)
+            ->where('is_deleted', 0)
+            ->get();
+    }
+
+    // Stone Detail
+    public function jobPurchaseStoneDetail($job_purchase_detail_id, $product_id)
+    {
+        return $this->model_job_purchase_detail_stone->getModel()::with(['job_purchase_detail', 'product_name'])
+            ->where('job_purchase_detail_id', $job_purchase_detail_id)
+            ->where('product_id', $product_id)
+            ->where('is_deleted', 0)
+            ->get();
+    }
+
+    // Diamond Detail
+    public function jobPurchaseDiamondDetail($job_purchase_detail_id, $product_id)
+    {
+        return $this->model_job_purchase_detail_diamond->getModel()::with(['job_purchase_detail', 'product_name'])
+            ->where('job_purchase_detail_id', $job_purchase_detail_id)
+            ->where('product_id', $product_id)
+            ->where('is_deleted', 0)
+            ->get();
     }
 }

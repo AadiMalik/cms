@@ -89,8 +89,6 @@ class FinishProductController extends Controller
         $validation = Validator::make(
             $request->all(),
             [
-                'ratti_kaat_id'             => 'required',
-                'ratti_kaat_detail_id'      => 'required',
                 'tag_no'                    => 'required',
                 'product_id'                => 'required',
                 'warehouse_id'              => 'required',

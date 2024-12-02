@@ -184,6 +184,42 @@ function StonesByPurchaseDetail(ratti_kaat_id, product_id) {
         },
     });
 }
+function StonesByJobPurchaseDetail(job_purchase_detail_id, product_id) {
+    $.ajax({
+        type: "GET",
+        url: url_local + "/job-purchase/stones" + "/" + job_purchase_detail_id + "/" + product_id,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+
+        success: function (data) {
+            console.log(data);
+            stone_sr = 0;
+            stonesData = data.Data;
+            var tbody = $("#stonesTable tbody");
+            tbody.empty();
+            var rows = "";
+            var total = 0;
+            var total_weight = 0;
+            $.each(stonesData, function (e, val) {
+                stone_sr = stone_sr + 1;
+                stonesData.sr = stone_sr;
+                
+                var category = val.category;
+                rows += `<tr id=${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${i}</td><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+          <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+          <td><a class="text-danger text-white stoner${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}" onclick="StoneRemove('${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
+                total += val.total_amount * 1;
+                total_weight += val.gram * 1;
+            });
+
+            $("#total_stones_price").val(total.toFixed(3));
+            $("#stones_weight").val(total_weight.toFixed(3));
+            TotalAmount();
+            tbody.prepend(rows);
+        },
+    });
+}
 function StoneRemove(id) {
     
     console.log(id);

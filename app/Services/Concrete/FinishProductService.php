@@ -7,6 +7,7 @@ use App\Models\FinishProduct;
 use App\Models\FinishProductBead;
 use App\Models\FinishProductDiamond;
 use App\Models\FinishProductStone;
+use App\Models\JobPurchaseDetail;
 use App\Models\RattiKaatDetail;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -72,7 +73,7 @@ class FinishProductService
 
                 return $action_column;
             })
-            ->rawColumns(['product', 'warehouse','saled', 'status', 'action'])
+            ->rawColumns(['product', 'warehouse', 'saled', 'status', 'action'])
             ->make(true);
         return $data;
     }
@@ -82,7 +83,7 @@ class FinishProductService
         return $this->model_finish_product->getModel()::with(['product', 'warehouse'])
             ->where('is_deleted', 0)
             ->where('is_active', 1)
-            ->where('is_saled',0)
+            ->where('is_saled', 0)
             ->get();
     }
 
@@ -91,7 +92,7 @@ class FinishProductService
         return $this->model_finish_product->getModel()::with(['product', 'warehouse'])
             ->where('is_deleted', 0)
             ->where('is_active', 1)
-            ->where('is_saled',1)
+            ->where('is_saled', 1)
             ->get();
     }
 
@@ -101,8 +102,10 @@ class FinishProductService
             DB::beginTransaction();
             $finishProduct = [
                 "tag_no" => $obj['tag_no'],
-                "ratti_kaat_id" => $obj['ratti_kaat_id'],
-                "ratti_kaat_detail_id" => $obj['ratti_kaat_detail_id'],
+                "job_purchase_id" => $obj['job_purchase_id'] ?? null,
+                "job_purchase_detail_id" => $obj['job_purchase_detail_id'] ?? null,
+                "ratti_kaat_id" => $obj['ratti_kaat_id'] ?? null,
+                "ratti_kaat_detail_id" => $obj['ratti_kaat_detail_id'] ?? null,
                 "product_id" => $obj['product_id'],
                 "warehouse_id" => $obj['warehouse_id'],
                 "gold_carat" => $obj['gold_carat'],
@@ -179,11 +182,17 @@ class FinishProductService
                 $this->model_finish_product_diamond->create($finishProductDiamond);
             }
 
-
-            $ratti_kaat_detail = RattiKaatDetail::find($obj['ratti_kaat_detail_id']);
-            $ratti_kaat_detail->is_finish_product = 1;
-            $ratti_kaat_detail->updatedby_id = Auth::user()->id;
-            $ratti_kaat_detail->update();
+            if ($obj['ratti_kaat_detail_id'] != null) {
+                $ratti_kaat_detail = RattiKaatDetail::find($obj['ratti_kaat_detail_id']);
+                $ratti_kaat_detail->is_finish_product = 1;
+                $ratti_kaat_detail->updatedby_id = Auth::user()->id;
+                $ratti_kaat_detail->update();
+            }elseif($obj['job_purchase_detail_id'] != null){
+                $job_purchase_detail = JobPurchaseDetail::find($obj['job_purchase_detail_id']);
+                $job_purchase_detail->is_finish_product = 1;
+                $job_purchase_detail->updatedby_id = Auth::user()->id;
+                $job_purchase_detail->update();
+            }
 
             DB::commit();
         } catch (Exception $e) {
@@ -210,8 +219,8 @@ class FinishProductService
             'ratti_kaat_detail',
             'product',
             'warehouse'
-        ])->where('tag_no',$tag_no)
-        ->first();
+        ])->where('tag_no', $tag_no)
+            ->first();
     }
 
     public function getBeadByFinishProductId($finish_product_id)

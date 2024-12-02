@@ -174,6 +174,44 @@ function DiamondsByPurchaseDetail(ratti_kaat_id, product_id) {
         },
     });
 }
+function DiamondsByJobPurchaseDetail(job_purchase_detail_id, product_id) {
+    $.ajax({
+        type: "GET",
+        url: url_local + "/job-purchase/diamonds" + "/" + job_purchase_detail_id + "/" + product_id,
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+
+        success: function (data) {
+            console.log(data);
+            diamond_sr = 0;
+            diamondsData = data.Data;
+            var tbody = $("#diamondsTable tbody");
+            tbody.empty();
+            var rows = "";
+            var total = 0;
+            var total_weight = 0;
+            $.each(diamondsData, function (e, val) {
+                diamond_sr = diamond_sr + 1;
+                diamondsData.sr = diamond_sr;
+                
+                var type = val.type;
+                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
+                <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
+          <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+          <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
+                total += val.total_amount * 1;
+                total_weight += val.carat * 1;
+            });
+
+            $("#total_diamond_price").val(total.toFixed(3));
+            $("#diamond_weight").val(total_weight.toFixed(3));
+            TotalAmount();
+            netWeight();
+            tbody.prepend(rows);
+        },
+    });
+}
 function DiamondRemove(id) {
     
     console.log(id);

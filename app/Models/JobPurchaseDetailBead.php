@@ -33,5 +33,10 @@ class JobPurchaseDetailBead extends Model
         return $this->belongsTo(JobPurchaseDetail::class, 'job_purchase_detail_id');
     }
 
+    public function product_name()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
     
 }

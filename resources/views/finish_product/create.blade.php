@@ -58,6 +58,8 @@
                                 <input type="hidden" name="tag_no" id="tag_no" value="">
                                 <input type="hidden" name="ratti_kaat_id" id="ratti_kaat_id" value="">
                                 <input type="hidden" name="ratti_kaat_detail_id" id="ratti_kaat_detail_id" value="">
+                                <input type="hidden" name="job_purchase_id" id="job_purchase_id" value="">
+                                <input type="hidden" name="job_purchase_detail_id" id="job_purchase_detail_id" value="">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="card card-tabs">

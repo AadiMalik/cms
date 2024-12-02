@@ -774,6 +774,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-detail/{id}', [JobPurchaseController::class, 'jobPurchaseDetail']);
         Route::post('post', [JobPurchaseController::class, 'post']);
         Route::get('unpost/{id}', [JobPurchaseController::class, 'unpost']);
+        Route::get('beads/{detail_id}/{product_id}', [JobPurchaseController::class, 'jobPurchaseBeadDetail']);
+        Route::get('stones/{detail_id}/{product_id}', [JobPurchaseController::class, 'jobPurchaseStoneDetail']);
+        Route::get('diamonds/{detail_id}/{product_id}', [JobPurchaseController::class, 'jobPurchaseDiamondDetail']);
 
         Route::get('/js/job_purchase.js', function () {
             $path = resource_path('views/purchases/job_purchase/js/job_purchase.js');

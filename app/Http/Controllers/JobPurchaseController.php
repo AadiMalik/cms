@@ -69,7 +69,7 @@ class JobPurchaseController extends Controller
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $accounts = $this->account_service->getAllActiveChild();
         $setting = $this->company_setting_service->getSetting();
-        return view('purchases/job_purchase.index', compact('suppliers', 'accounts','setting'));
+        return view('purchases/job_purchase.index', compact('suppliers', 'accounts', 'setting'));
     }
     public function getData(Request $request)
     {
@@ -139,9 +139,9 @@ class JobPurchaseController extends Controller
 
         try {
             $obj = $request->all();
-            $obj['job_purchase_no']= $this->common_service->generateJobPurchaseNo();
+            $obj['job_purchase_no'] = $this->common_service->generateJobPurchaseNo();
             $sale = $this->job_purchase_service->save($obj);
-            if($sale!='true'){
+            if ($sale != 'true') {
                 return  $this->error(
                     config("enum.error")
                 );
@@ -212,6 +212,60 @@ class JobPurchaseController extends Controller
             );
         } catch (Exception $e) {
             return $this->error(config('enum.noDelete'),);
+        }
+    }
+
+    public function jobPurchaseDetail($job_purchase_id)
+    {
+        try {
+            $job_purchase_detail = $this->job_purchase_service->singleJobPurchaseDetail($job_purchase_id);
+            return $this->success(
+                config('enum.success'),
+                $job_purchase_detail,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('global.error'));
+        }
+    }
+
+    public function jobPurchaseBeadDetail($job_purchase_detail_id,$product_id)
+    {
+        try {
+            $job_purchase_detail_bead = $this->job_purchase_service->jobPurchaseBeadDetail($job_purchase_detail_id,$product_id);
+            return $this->success(
+                config('enum.success'),
+                $job_purchase_detail_bead,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('global.error'));
+        }
+    }
+    public function jobPurchaseStoneDetail($job_purchase_detail_id,$product_id)
+    {
+        try {
+            $job_purchase_detail_stone = $this->job_purchase_service->jobPurchaseStoneDetail($job_purchase_detail_id,$product_id);
+            return $this->success(
+                config('enum.success'),
+                $job_purchase_detail_stone,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('global.error'));
+        }
+    }
+    public function jobPurchaseDiamondDetail($job_purchase_detail_id,$product_id)
+    {
+        try {
+            $job_purchase_detail_diamond = $this->job_purchase_service->jobPurchaseDiamondDetail($job_purchase_detail_id,$product_id);
+            return $this->success(
+                config('enum.success'),
+                $job_purchase_detail_diamond,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('global.error'));
         }
     }
 }
