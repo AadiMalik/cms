@@ -8,6 +8,8 @@ use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class OtherProductController extends Controller
 {
@@ -21,12 +23,14 @@ class OtherProductController extends Controller
 
     public function index(Request $request)
     {
+        abort_if(Gate::denies('other_product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $other_product_units = $this->other_product_service->getAllActiveOtherProductUnit();
             return view('other_product.index',compact('other_product_units'));
     }
 
     public function getData()
     {
+        abort_if(Gate::denies('other_product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return $this->other_product_service->getSource();
         } catch (Exception $e) {
@@ -37,6 +41,7 @@ class OtherProductController extends Controller
     public function store(Request $request)
     {
 
+        abort_if(Gate::denies('other_product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -86,6 +91,7 @@ class OtherProductController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('other_product_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return  $this->success(
                 config('enum.success'),
@@ -99,6 +105,7 @@ class OtherProductController extends Controller
 
     public function status($id)
     {
+        abort_if(Gate::denies('other_product_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $other_product = $this->other_product_service->statusById($id);
             return $this->success(
@@ -113,6 +120,7 @@ class OtherProductController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('other_product_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $other_product = $this->other_product_service->deleteById($id);
             return $this->success(

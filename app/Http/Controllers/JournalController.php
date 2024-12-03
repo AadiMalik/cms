@@ -7,6 +7,8 @@ use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class JournalController extends Controller
 {
@@ -20,11 +22,13 @@ class JournalController extends Controller
 
     public function index(Request $request)
     {
+        abort_if(Gate::denies('journals_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
             return view('journal.index');
     }
 
     public function getData()
     {
+        abort_if(Gate::denies('journals_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return $this->journal_service->getJournalSource();
         } catch (Exception $e) {
@@ -35,6 +39,7 @@ class JournalController extends Controller
     public function store(Request $request)
     {
 
+        abort_if(Gate::denies('journals_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -83,6 +88,7 @@ class JournalController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('journals_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return  $this->success(
                 config('enum.success'),
@@ -96,6 +102,7 @@ class JournalController extends Controller
 
     public function status($id)
     {
+        abort_if(Gate::denies('journals_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $journal = $this->journal_service->statusById($id);
             return $this->success(
@@ -110,6 +117,7 @@ class JournalController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('journals_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $journal = $this->journal_service->deleteJournalById($id);
             return $this->success(

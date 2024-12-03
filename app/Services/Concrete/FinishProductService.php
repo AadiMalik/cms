@@ -51,12 +51,16 @@ class FinishProductService
                 return $saled;
             })
             ->addColumn('status', function ($item) {
-                if ($item->is_active == 1) {
-                    $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                if (Auth::user()->can('tagging_product_create')) {
+                    if ($item->is_active == 1) {
+                        $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                    } else {
+                        $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                    }
+                    return $status;
                 } else {
-                    $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                    return 'N/A';
                 }
-                return $status;
             })
 
             ->addColumn('action', function ($item) {
@@ -64,11 +68,11 @@ class FinishProductService
                 $view_column    = "<a class='text-warning mr-2' href='finish-product/view/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
                 $delete_column    = "<a class='text-danger mr-2' id='deleteFinishProduct' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
-                if (Auth::user()->can('customers_edit'))
+                if (Auth::user()->can('tagging_product_view'))
                     $action_column .= $view_column;
 
 
-                if (Auth::user()->can('customers_delete'))
+                if (Auth::user()->can('tagging_product_delete'))
                     $action_column .= $delete_column;
 
                 return $action_column;
@@ -187,7 +191,7 @@ class FinishProductService
                 $ratti_kaat_detail->is_finish_product = 1;
                 $ratti_kaat_detail->updatedby_id = Auth::user()->id;
                 $ratti_kaat_detail->update();
-            }elseif($obj['job_purchase_detail_id'] != null){
+            } elseif ($obj['job_purchase_detail_id'] != null) {
                 $job_purchase_detail = JobPurchaseDetail::find($obj['job_purchase_detail_id']);
                 $job_purchase_detail->is_finish_product = 1;
                 $job_purchase_detail->updatedby_id = Auth::user()->id;

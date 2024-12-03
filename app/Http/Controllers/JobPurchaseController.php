@@ -12,7 +12,6 @@ use App\Services\Concrete\DiamondCutService;
 use App\Services\Concrete\DiamondTypeService;
 use App\Services\Concrete\JobPurchaseService;
 use App\Services\Concrete\JobTaskService;
-use App\Services\Concrete\PurchaseOrderService;
 use App\Services\Concrete\StoneCategoryService;
 use App\Services\Concrete\SupplierService;
 use App\Traits\JsonResponse;
@@ -20,6 +19,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class JobPurchaseController extends Controller
 {
@@ -66,6 +67,7 @@ class JobPurchaseController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('job_purchase_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $accounts = $this->account_service->getAllActiveChild();
         $setting = $this->company_setting_service->getSetting();
@@ -73,6 +75,7 @@ class JobPurchaseController extends Controller
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('job_purchase_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
@@ -91,6 +94,7 @@ class JobPurchaseController extends Controller
     }
     public function create($job_task_id)
     {
+        abort_if(Gate::denies('job_purchase_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $job_purchase_no = $this->common_service->generateJobPurchaseNo();
         $job_task_detail = $this->job_task_service->JobTaskDetail($job_task_id);
         $supplier = $this->supplier_service->getById($job_task_detail[0]['supplier_id']);
@@ -114,6 +118,7 @@ class JobPurchaseController extends Controller
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('job_purchase_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -158,6 +163,7 @@ class JobPurchaseController extends Controller
 
     public function print($id)
     {
+        abort_if(Gate::denies('job_purchase_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $job_purchase =  $this->job_purchase_service->getById($id);
@@ -173,6 +179,7 @@ class JobPurchaseController extends Controller
 
     public function unpost($id)
     {
+        abort_if(Gate::denies('job_purchase_unpost'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $this->job_purchase_service->unpost($id);
             return $this->success(
@@ -185,6 +192,7 @@ class JobPurchaseController extends Controller
     }
     public function post(Request $request)
     {
+        abort_if(Gate::denies('job_purchase_post'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $sale = $this->job_purchase_service->post($request->all());
             if ($sale != 'true') {
@@ -203,6 +211,7 @@ class JobPurchaseController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('job_purchase_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $sale = $this->job_purchase_service->deleteById($id);
             return $this->success(

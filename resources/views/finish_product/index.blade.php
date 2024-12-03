@@ -18,7 +18,7 @@
             <div class="col-md-12 mb-3">
                 <div class="card text-left">
                     <div class="card-header text-right bg-transparent">
-                        @can('customers_create')
+                        @can('tagging_product_create')
                             <a class="btn btn-primary btn-md m-1" href="{{ url('finish-product/create') }}"><i
                                     class="fa fa-plus text-white mr-2"></i> Add Tagging</a>
                         @endcan

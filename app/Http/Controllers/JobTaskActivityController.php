@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JobTaskActivity;
 use App\Services\Concrete\JobTaskActivityService;
 use App\Services\Concrete\JobTaskService;
 use App\Traits\JsonResponse;
@@ -10,6 +9,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class JobTaskActivityController extends Controller
 {
@@ -26,11 +27,14 @@ class JobTaskActivityController extends Controller
     }
     public function index($job_task_id)
     {
+        
+        abort_if(Gate::denies('job_task_activity_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $job_task = $this->job_task_service->getById($job_task_id);
         return view('job_task_activity.index',compact('job_task'));
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('job_task_activity_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $obj=$request->all();
         return $this->job_task_activity_service->getSource($obj);
     }
@@ -38,6 +42,7 @@ class JobTaskActivityController extends Controller
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('job_task_activity_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -87,6 +92,7 @@ class JobTaskActivityController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('job_task_activity_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $job_task_activity = $this->job_task_activity_service->deleteById($id);
 

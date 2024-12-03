@@ -14,6 +14,8 @@ use Exception;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class OtherSaleController extends Controller
 {
@@ -42,12 +44,14 @@ class OtherSaleController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('other_sale_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $customers = $this->customer_service->getAllActiveCustomer();
         $accounts = $this->account_service->getAllActiveChild();
         return view('other_sale.index', compact('customers', 'accounts'));
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('other_sale_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
@@ -66,6 +70,7 @@ class OtherSaleController extends Controller
     }
     public function create()
     {
+        abort_if(Gate::denies('other_sale_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $other_sale = $this->other_sale_service->saveOtherSale();
         $other_products = $this->other_product_service->getAllActiveOtherProduct();
         $warehouses = $this->warehouse_service->getAll();
@@ -77,6 +82,7 @@ class OtherSaleController extends Controller
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('other_sale_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -115,6 +121,7 @@ class OtherSaleController extends Controller
 
     public function print($id)
     {
+        abort_if(Gate::denies('other_sale_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $other_sale =  $this->other_sale_service->getById($id);
@@ -130,6 +137,7 @@ class OtherSaleController extends Controller
 
     public function unpost($id)
     {
+        abort_if(Gate::denies('other_sale_unpost'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $this->other_sale_service->unpost($id);
             return $this->success(
@@ -142,6 +150,7 @@ class OtherSaleController extends Controller
     }
     public function post(Request $request)
     {
+        abort_if(Gate::denies('other_sale_post'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $other_sale = $this->other_sale_service->post($request->all());
             if ($other_sale != 'true') {
@@ -160,6 +169,7 @@ class OtherSaleController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('other_sale_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $other_sale = $this->other_sale_service->deleteById($id);
             return $this->success(

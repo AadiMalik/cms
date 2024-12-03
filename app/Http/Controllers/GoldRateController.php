@@ -8,6 +8,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class GoldRateController extends Controller
 {
@@ -23,6 +25,7 @@ class GoldRateController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('gold_chart_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $gold_rate = $this->gold_rate_service->recentGoldRate();
         $gold = 100;
         $impurity = 0;
@@ -70,15 +73,18 @@ class GoldRateController extends Controller
 
     public function logs()
     {
+        abort_if(Gate::denies('gold_rate_log_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('gold_rate.logs');
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('gold_rate_log_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->gold_rate_service->getGoldRateSource();
     }
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('gold_rate_log_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validator = Validator::make(
             $request->all(),
             [
@@ -111,16 +117,19 @@ class GoldRateController extends Controller
 
     // Dollar Rate
     public function dollarLog() {
+        abort_if(Gate::denies('dollar_rate_log_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('dollar_rate.logs');
     }
 
     public function getDollarData(Request $request)
     {
+        abort_if(Gate::denies('dollar_rate_log_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->gold_rate_service->getDollarRateSource();
     }
 
     public function storeDollar(Request $request)
     {
+        abort_if(Gate::denies('dollar_rate_log_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validator = Validator::make(
             $request->all(),
             [

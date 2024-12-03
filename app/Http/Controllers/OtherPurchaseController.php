@@ -14,6 +14,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use PDF;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class OtherPurchaseController extends Controller
 {
@@ -42,11 +44,13 @@ class OtherPurchaseController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('other_purchase_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         return view('purchases/other_purchase.index', compact('suppliers'));
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('other_purchase_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
@@ -65,6 +69,7 @@ class OtherPurchaseController extends Controller
     }
     public function create()
     {
+        abort_if(Gate::denies('other_purchase_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $other_purchase = $this->other_purchase_service->saveOtherPurchase();
         $other_products = $this->other_product_service->getAllActiveOtherProduct();
         $accounts = $this->account_service->getAllActiveChild();
@@ -80,6 +85,7 @@ class OtherPurchaseController extends Controller
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('other_purchase_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -119,6 +125,7 @@ class OtherPurchaseController extends Controller
 
     public function print($id)
     {
+        abort_if(Gate::denies('other_purchase_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $other_purchase =  $this->other_purchase_service->getById($id);
@@ -134,6 +141,7 @@ class OtherPurchaseController extends Controller
 
     public function unpost($id)
     {
+        abort_if(Gate::denies('other_purchase_unpost'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $this->other_purchase_service->unpost($id);
             return $this->success(
@@ -146,24 +154,26 @@ class OtherPurchaseController extends Controller
     }
     public function post(Request $request)
     {
-        // try {
-        $other_sale = $this->other_purchase_service->post($request->all());
-        if ($other_sale != 'true') {
-            return $this->error(
-                $other_sale
+        abort_if(Gate::denies('other_purchase_post'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
+            $other_sale = $this->other_purchase_service->post($request->all());
+            if ($other_sale != 'true') {
+                return $this->error(
+                    $other_sale
+                );
+            }
+            return $this->success(
+                config('enum.posted'),
+                []
             );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
         }
-        return $this->success(
-            config('enum.posted'),
-            []
-        );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
     }
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('other_purchase_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $other_purchase = $this->other_purchase_service->deleteById($id);
             return $this->success(

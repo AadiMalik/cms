@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PDF;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class JournalEntryController extends Controller
 {
@@ -39,6 +41,7 @@ class JournalEntryController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('journal_entries_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $login_user = Auth::user()->id;
         $journals = $this->journal_service->getAllJournal();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
@@ -48,6 +51,7 @@ class JournalEntryController extends Controller
 
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('journal_entries_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return $this->journal_entry_service->getJournalEntrySource($request->all());
         } catch (Exception $e) {
@@ -57,6 +61,7 @@ class JournalEntryController extends Controller
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('journal_entries_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         // dd($request->all());
         $data = json_decode($request->items, true);
 
@@ -167,6 +172,7 @@ class JournalEntryController extends Controller
     
     public function create()
     {
+        abort_if(Gate::denies('journal_entries_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $journals = $this->journal_service->getAllJournal();
             $accounts = $this->account_service->getAllActiveChild();
@@ -179,19 +185,22 @@ class JournalEntryController extends Controller
 
     public function edit($id)
     {
-        // try {
+        abort_if(Gate::denies('journal_entries_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
             $journals = $this->journal_service->getAllJournal();
             $accounts = $this->account_service->getAllActiveChild();
             $journal_entry = $this->journal_entry_service->getJournalEntryById($id);
             $suppliers = $this->supplier_service->getAllActiveSupplier();
             return view('journal_entries.create', compact('journal_entry', 'journals', 'accounts', 'suppliers'));
-        // } catch (Exception $e) {
-        //     return back()->with('errors', config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return back()->with('errors', config('enum.error'));
+        }
     }
 
     public function grid_journal_edit($id)
     {
+        
+        abort_if(Gate::denies('journal_entries_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $entry = $this->journal_entry_service->gridJournalEdit($id);
 
         $recordsarray = [];
@@ -205,6 +214,7 @@ class JournalEntryController extends Controller
     public function print($id)
     {
 
+        abort_if(Gate::denies('journal_entries_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $journal_entry = $this->journal_entry_service->getJournalEntryById($id);
         $journal_entry_detail = $this->journal_entry_service->getJournalEntryDetailByJournalEntryId($id);
 
@@ -215,6 +225,7 @@ class JournalEntryController extends Controller
     
     public function destroy($id)
     {
+        abort_if(Gate::denies('journal_entries_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         try {
             $journal_entry = $this->journal_entry_service->deleteJournalEntryById($id);

@@ -16,6 +16,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
 class FinishProductController extends Controller
@@ -54,15 +56,18 @@ class FinishProductController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('tagging_product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('finish_product.index');
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('tagging_product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return $this->finish_product_service->getFinishProductSource();
     }
 
     public function create()
     {
+        abort_if(Gate::denies('tagging_product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $products = $this->product_service->getAllActiveProduct();
         $warehouses = $this->warehouse_service->getAll();
         $bead_types = $this->bead_type_service->getAllActive();
@@ -86,6 +91,7 @@ class FinishProductController extends Controller
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('tagging_product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -164,6 +170,7 @@ class FinishProductController extends Controller
 
     public function show($id)
     {
+        abort_if(Gate::denies('tagging_product_view'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $finish_product = $this->finish_product_service->getById($id);
         $finish_product_bead = $this->finish_product_service->getBeadByFinishProductId($id);
         $finish_product_stone = $this->finish_product_service->getStoneByFinishProductId($id);
@@ -226,6 +233,7 @@ class FinishProductController extends Controller
 
     public function status($id)
     {
+        abort_if(Gate::denies('tagging_product_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $finish_product = $this->finish_product_service->statusById($id);
 
@@ -241,6 +249,7 @@ class FinishProductController extends Controller
     }
     public function destroy($id)
     {
+        abort_if(Gate::denies('tagging_product_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $finish_product = $this->finish_product_service->deleteById($id);
 

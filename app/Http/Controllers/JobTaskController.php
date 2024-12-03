@@ -14,6 +14,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class JobTaskController extends Controller
 {
@@ -40,11 +42,15 @@ class JobTaskController extends Controller
     }
     public function index()
     {
+        
+        abort_if(Gate::denies('job_task_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         return view('job_task.index', compact('suppliers'));
     }
     public function getData(Request $request)
     {
+        
+        abort_if(Gate::denies('job_task_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
@@ -61,6 +67,7 @@ class JobTaskController extends Controller
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('job_task_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -100,6 +107,7 @@ class JobTaskController extends Controller
 
     public function print($id)
     {
+        abort_if(Gate::denies('job_task_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $job_task =  $this->job_task_service->getById($id);
@@ -115,6 +123,7 @@ class JobTaskController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('job_task_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $job_task = $this->job_task_service->deleteById($id);
             return $this->success(

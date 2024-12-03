@@ -124,14 +124,14 @@ class JobPurchaseService
                 // if (Auth::user()->can('customers_edit'))
                 //     $action_column .= $edit_column;
 
-                if (Auth::user()->can('customers_edit'))
+                if (Auth::user()->can('job_purchase_print'))
                     $action_column .= $print_column;
-                if (Auth::user()->can('customers_edit') && $item->is_posted == 1)
+                if (Auth::user()->can('job_purchase_unpost') && $item->is_posted == 1)
                     $action_column .= $unpost;
-                if (Auth::user()->can('ratti_kaat_access') && $item->is_posted == 1)
+                if (Auth::user()->can('job_purchase_jvs') && $item->is_posted == 1)
                     $action_column .= $all_print_column;
 
-                if (Auth::user()->can('customers_delete'))
+                if (Auth::user()->can('job_purchase_delete'))
                     $action_column .= $delete_column;
 
                 return $action_column;

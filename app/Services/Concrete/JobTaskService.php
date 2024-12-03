@@ -72,13 +72,13 @@ class JobTaskService
                         $delete_column    = "<a class='text-danger mr-2' id='deleteJobTask' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
 
-                        // if (Auth::user()->can('customers_edit'))
+                        if (Auth::user()->can('job_task_activity_access'))
                               $action_column .= $activity_column;
-                        // if (Auth::user()->can('customers_edit'))
+                        if (Auth::user()->can('job_task_print'))
                               $action_column .= $view_column;
-                        // if (Auth::user()->can('customers_edit'))
+                        if (Auth::user()->can('job_task_complete'))
                               $action_column .= $complete_column;
-                        if (Auth::user()->can('customers_delete'))
+                        if (Auth::user()->can('job_task_delete'))
                               $action_column .= $delete_column;
 
                         return $action_column;
