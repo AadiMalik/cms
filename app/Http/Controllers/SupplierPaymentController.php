@@ -8,6 +8,8 @@ use App\Services\Concrete\SupplierService;
 use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class SupplierPaymentController extends Controller
 {
@@ -33,6 +35,7 @@ class SupplierPaymentController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('supplier_payment_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $suppliers = $this->supplier_service->getAllActiveSupplier();
             $accounts = $this->account_service->getAllActiveChild();
@@ -43,6 +46,7 @@ class SupplierPaymentController extends Controller
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('supplier_payment_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $obj = $request->all();
         return $this->supplier_payment_service->getSupplierPaymentSource($obj);
     }
@@ -50,6 +54,7 @@ class SupplierPaymentController extends Controller
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('supplier_payment_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         // dd($request->all());
         $this->validate($request, [
             'supplier_id' => 'required',
@@ -83,6 +88,7 @@ class SupplierPaymentController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('supplier_payment_view'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $supplier_payment = $this->supplier_payment_service->getSupplierPaymentById($id);
             return $this->success(
@@ -96,6 +102,7 @@ class SupplierPaymentController extends Controller
     }
     public function destroy($id)
     {
+        abort_if(Gate::denies('supplier_payment_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $response = $this->supplier_payment_service->deleteSupplierPaymentById($id);
             return $this->success(

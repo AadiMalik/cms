@@ -79,10 +79,10 @@ class SaleOrderService
                 $delete_column    = "<a class='text-danger mr-2' id='deleteSaleOrder' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
 
-                if (Auth::user()->can('customers_edit'))
+                if (Auth::user()->can('sale_order_print'))
                     $action_column .= $print_column;
 
-                if (Auth::user()->can('customers_delete'))
+                if (Auth::user()->can('sale_order_delete'))
                     $action_column .= $delete_column;
 
                 return $action_column;

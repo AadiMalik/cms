@@ -20,8 +20,10 @@
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
+                            @can('ratti_kaat_create')
                                 <a class="btn btn-primary btn-md m-1" href="{{ url('ratti-kaats/create') }}"><i
                                         class="fa fa-plus text-white mr-2"></i> Add Ratti Kaat</a>
+                            @endcan
                         </div>
                         <div class="card-body">
                             <h4 class="card-inside-title mt-2">Filters</h4>
@@ -44,7 +46,7 @@
                                         <select id="supplier_id" name="supplier_id" class="form-control">
                                             <option value="">--Select Supplier/Karigar--</option>
                                             @foreach ($suppliers as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name??'' }}</option>
+                                                <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -71,14 +73,16 @@
                                 <div class="col-md-12">
                                     <hr class="mt-2 mb-2">
                                 </div>
-                                    <div class="col-md-8" id="div_post_ratti_kaat">
-                                        <a class="btn btn-info" style="color:#fff;" type="button" id="selectAll">Check
-                                            All</a>
-                                        <a class="btn btn-danger" style="color:#fff;" type="button"
-                                            id="unselectAll">Uncheck All</a>
+                                <div class="col-md-8" id="div_post_ratti_kaat">
+                                    <a class="btn btn-info" style="color:#fff;" type="button" id="selectAll">Check
+                                        All</a>
+                                    <a class="btn btn-danger" style="color:#fff;" type="button" id="unselectAll">Uncheck
+                                        All</a>
+                                    @can('ratti_kaat_post')
                                         <a class="btn btn-primary" style="color:#fff;" type="button"
                                             id="post_ratti_kaat">Post</a>
-                                    </div>
+                                    @endcan
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -116,18 +120,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/momenttimezone/0.5.31/moment-timezone-with-data-2012-2022.min.js">
     </script>
-    <script src="{{ asset('js/common-methods/toasters.js') }}"  type="module"></script>
+    <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-    {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
-    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-    {data: 'purchase_date', name: 'purchase_date', orderable: false, searchable: false},
-    {data: 'ratti_kaat_no', name: 'ratti_kaat_no', orderable: false, searchable: false},
-    {data: 'supplier',name: 'supplier', orderable: false, searchable: false},
-    {data: 'purchase_account',name: 'purchase_account', orderable: false, searchable: false},
-    {data: 'total',name: 'total', orderable: false, searchable: false},
-    {data: 'posted',name: 'posted', orderable: false, searchable: false},
-    {data: 'action',name: 'action','sortable': false,searchable: false}",
+            {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {data: 'purchase_date', name: 'purchase_date', orderable: false, searchable: false},
+            {data: 'ratti_kaat_no', name: 'ratti_kaat_no', orderable: false, searchable: false},
+            {data: 'supplier',name: 'supplier', orderable: false, searchable: false},
+            {data: 'purchase_account',name: 'purchase_account', orderable: false, searchable: false},
+            {data: 'total',name: 'total', orderable: false, searchable: false},
+            {data: 'posted',name: 'posted', orderable: false, searchable: false},
+            {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'ratti-kaats/data',
         'buttons' => false,
         'pageLength' => 50,
@@ -136,9 +140,9 @@
         'datefilter' => true,
         'params' => "supplier_id:$('#supplier_id').val(),posted:$('#posted').val()",
         'rowCallback' => ' rowCallback: function (row, data) {
-    if(data.posted.includes("Unposted"))
-    $(row).css("background-color", "Pink");
-    }',
+            if(data.posted.includes("Unposted"))
+            $(row).css("background-color", "Pink");
+            }',
     ])
     <script>
         $(document).ready(function() {
@@ -209,7 +213,7 @@
                 timeOut: 2e3,
             });
         }
-        
+
         $("body").on("keyup", "#search", function(event) {
             var url = $('#form_search').attr('action');
             var data = $('#form_search').serializeArray();

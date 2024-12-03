@@ -100,7 +100,7 @@ class RattiKaatService
                 $delete_column    = "<a class='text-danger mr-2' id='deleteRattiKaat' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
                 if (Auth::user()->can('ratti_kaat_edit') && $item->is_posted == 0)
                     $action_column .= $edit_column;
-                if (Auth::user()->can('ratti_kaat_access') && $item->is_posted == 1)
+                if (Auth::user()->can('ratti_kaat_jvs') && $item->is_posted == 1)
                     $action_column .= $all_print_column;
                 if (Auth::user()->can('ratti_kaat_delete'))
                     $action_column .= $delete_column;

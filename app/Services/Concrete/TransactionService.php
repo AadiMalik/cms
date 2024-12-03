@@ -76,7 +76,8 @@ class TransactionService
                   ->addColumn('action', function ($item) {
                         $action_column = '';
                         $delete_column = "<a class='text-danger mr-2' id='deleteTransaction' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
-                        $action_column .= $delete_column;
+                        if (Auth::user()->can('transaction_log_delete'))
+                              $action_column .= $delete_column;
                         return $action_column;
                   })
                   ->rawColumns(['warehouse', 'other_product', 'type', 'other_sale', 'stock_taking', 'other_purchase', 'action'])

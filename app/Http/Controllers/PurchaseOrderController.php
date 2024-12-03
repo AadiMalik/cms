@@ -13,6 +13,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class PurchaseOrderController extends Controller
 {
@@ -42,11 +44,13 @@ class PurchaseOrderController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('purchase_order_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $suppliers = $this->supplier_service->getAllActivesupplier();
         return view('purchase_order.index', compact('suppliers'));
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('purchase_order_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
@@ -63,6 +67,7 @@ class PurchaseOrderController extends Controller
     }
     public function create()
     {
+        abort_if(Gate::denies('purchase_order_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $purchase_order = $this->purchase_order_service->savePurchaseOrder();
         $warehouses = $this->warehouse_service->getAll();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
@@ -76,6 +81,7 @@ class PurchaseOrderController extends Controller
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('purchase_order_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -115,6 +121,7 @@ class PurchaseOrderController extends Controller
 
     public function print($id)
     {
+        abort_if(Gate::denies('purchase_order_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $purchase_order =  $this->purchase_order_service->getById($id);
@@ -130,6 +137,7 @@ class PurchaseOrderController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('purchase_order_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $purchase_order = $this->purchase_order_service->deleteById($id);
             return $this->success(
@@ -145,6 +153,7 @@ class PurchaseOrderController extends Controller
     //approve
     public function approve($purchase_order_id)
     {
+        abort_if(Gate::denies('purchase_order_approve'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $purchase_order = $this->purchase_order_service->approved($purchase_order_id);
             if ($purchase_order == true)
@@ -163,6 +172,7 @@ class PurchaseOrderController extends Controller
     //reject
     public function reject($purchase_order_id)
     {
+        abort_if(Gate::denies('purchase_order_reject'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $purchase_order = $this->purchase_order_service->rejected($purchase_order_id);
             if ($purchase_order == true)

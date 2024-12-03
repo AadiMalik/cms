@@ -75,9 +75,10 @@ class StockTakingService
                 $action_column = '';
                 $view_column    = "<a class='text-warning mr-2' target='_blank' href='" . url('/') . "/stock-taking/view/" . $item->id . "' ><i title='view' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
                 $delete_column    = "<a class='text-danger mr-2' id='deleteStockTaking' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
-
-                $action_column .= $view_column;
-                $action_column .= $delete_column;
+                if (Auth::user()->can('stock_taking_view'))
+                    $action_column .= $view_column;
+                if (Auth::user()->can('stock_taking_delete'))
+                    $action_column .= $delete_column;
 
                 return $action_column;
             })

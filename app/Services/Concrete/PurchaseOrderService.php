@@ -90,15 +90,15 @@ class PurchaseOrderService
                         $reject_column    = "<a class='text-danger mr-2' id='rejectPurchaseOrder' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Reject'><i title='Reject' class='nav-icon mr-2 fa fa-close'></i>Reject</a>";
 
 
-                        if (Auth::user()->can('customers_edit'))
+                        if (Auth::user()->can('purchase_order_print'))
                               $action_column .= $print_column;
 
-                        if (Auth::user()->can('customers_delete') && $item->status == 'Pending')
+                        if (Auth::user()->can('purchase_order_delete') && $item->status == 'Pending')
                               $action_column .= $delete_column;
-                        if (Auth::user()->can('customers_delete') && $item->status == 'Pending')
+                        if (Auth::user()->can('purchase_order_approve') && $item->status == 'Pending')
                               $action_column .= $approve_column;
 
-                        if (Auth::user()->can('customers_delete') && $item->status == 'Pending')
+                        if (Auth::user()->can('purchase_order_reject') && $item->status == 'Pending')
                               $action_column .= $reject_column;
 
                         return $action_column;

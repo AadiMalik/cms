@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Services\Concrete\StockService;
 use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class StockController extends Controller
 {
@@ -25,12 +26,14 @@ class StockController extends Controller
 
     public function index(Request $request)
     {
+        abort_if(Gate::denies('stock_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $warehouses = $this->warehouse_service->getAll();
         return view('stock.index', compact('warehouses'));
     }
 
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('stock_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $warehouse_id = $request['warehouse_id'] ?? '';
             $obj = [

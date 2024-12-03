@@ -73,14 +73,14 @@ class SupplierPaymentService
                 // if (Auth::user()->can('supplier_payment_edit')) {
                 //     $action_column .= $edit_column;
                 // }
-                if (Auth::user()->can('supplier_payment_edit')) {
+                if (Auth::user()->can('supplier_payment_view')) {
 
                     $action_column .= $view_column;
                 }
                 if (Auth::user()->can('supplier_payment_delete')) {
                     $action_column .= $delete_column;
                 }
-                if (Auth::user()->can('supplier_payment_print')) {
+                if (Auth::user()->can('supplier_payment_jvs')) {
                     $action_column .= $all_print_column;
                 }
 

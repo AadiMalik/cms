@@ -7,6 +7,8 @@ use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class TransactionController extends Controller
 {
@@ -24,12 +26,14 @@ class TransactionController extends Controller
 
     public function index(Request $request)
     {
+        abort_if(Gate::denies('transaction_log_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $warehouses = $this->warehouse_service->getAll();
         return view('transaction.index', compact('warehouses'));
     }
 
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('transaction_log_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             
             return $this->transaction_service->getSource($request->all());
@@ -40,6 +44,7 @@ class TransactionController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('transaction_log_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $transaction = $this->transaction_service->deleteById($id);
             return $this->success(

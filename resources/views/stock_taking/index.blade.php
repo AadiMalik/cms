@@ -20,8 +20,10 @@
 
                 <div class="card text-left">
                     <div class="card-header text-right bg-transparent">
-                        <a class="btn btn-primary btn-md m-1" href="{{ url('stock-taking/create') }}"><i
-                                class="i-Add text-white mr-2"></i> Stock Taking</a>
+                        @can('stock_taking_create')
+                            <a class="btn btn-primary btn-md m-1" href="{{ url('stock-taking/create') }}"><i
+                                    class="i-Add text-white mr-2"></i> Stock Taking</a>
+                        @endcan
                     </div>
                     <div class="card-body">
                         <h4 class="card-inside-title mt-2">Filters</h4>
@@ -93,11 +95,11 @@
     <script src="{{ asset('/assets/js/vendor/datatables.min.js') }}"></script>
     @include('includes.datatable', [
         'columns' => "
-    {data: 'stock_date' , name: 'stock_date'},
-    {data: 'warehouse' , name: 'warehouse' , 'sortable': false , searchable: false},
-    {data: 'type' , name: 'type' , 'sortable': false , searchable: false},
-    {data: 'created_at' , name: 'created_at', 'sortable': false , searchable: false},
-    {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
+        {data: 'stock_date' , name: 'stock_date'},
+        {data: 'warehouse' , name: 'warehouse' , 'sortable': false , searchable: false},
+        {data: 'type' , name: 'type' , 'sortable': false , searchable: false},
+        {data: 'created_at' , name: 'created_at', 'sortable': false , searchable: false},
+        {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
         'route' => 'stock-taking/data',
         'buttons' => false,
         'pageLength' => 10,

@@ -18,6 +18,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReportController extends Controller
 {
@@ -64,6 +66,7 @@ class ReportController extends Controller
     // Ledger Report
     public function ledgerReport()
     {
+        abort_if(Gate::denies('ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $accounts = $this->account_service->getAllActiveChild();
             $suppliers = $this->supplier_service->getAllActiveSupplier();
@@ -75,6 +78,7 @@ class ReportController extends Controller
     }
     public function getPreviewLedgerReport(Request $request)
     {
+        abort_if(Gate::denies('ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -115,6 +119,7 @@ class ReportController extends Controller
     }
     public function getLedgerReport(Request $request)
     {
+        abort_if(Gate::denies('ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
             $parms['data'] = $this->report_service->ledgerReport($obj);
@@ -145,6 +150,7 @@ class ReportController extends Controller
     // Tag History Report
     public function tagHistoryReport()
     {
+        abort_if(Gate::denies('tag_history_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $finish_products = $this->finish_product_service->getAllSaledFinishProduct();
             $products = $this->product_service->getAllProduct();
@@ -156,6 +162,7 @@ class ReportController extends Controller
     }
     public function getPreviewTagHistoryReport(Request $request)
     {
+        abort_if(Gate::denies('tag_history_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -198,6 +205,7 @@ class ReportController extends Controller
     }
     public function getTagHistoryReport(Request $request)
     {
+        abort_if(Gate::denies('tag_history_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
             $parms['data'] = $this->report_service->tagHistoryReport($obj);
@@ -230,6 +238,7 @@ class ReportController extends Controller
     // Profit Loss
     public function profitLossReport()
     {
+        abort_if(Gate::denies('profit_loss_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return view('reports/profit_loss/index');
         } catch (Exception $e) {
@@ -238,6 +247,7 @@ class ReportController extends Controller
     }
     public function getProfitLossReport(Request $request)
     {
+        abort_if(Gate::denies('profit_loss_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
             $parms['data'] = $this->report_service->getProfitLossReport($obj);
@@ -259,18 +269,19 @@ class ReportController extends Controller
 
     public function getPreviewProfitLossReport(Request $request)
     {
-        // try {
-        $obj = $request->all();
+        abort_if(Gate::denies('profit_loss_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
+            $obj = $request->all();
 
-        $parms['data'] = $this->report_service->getProfitLossReport($obj);
-        $parms = (object)$parms;
-        $parms->start_date = $request->get('start_date');
-        $parms->end_date = $request->get('end_date');
-        $parms->report_name = "profit_loss_report";
-        return view('/reports/profit_loss/partials.report', compact('parms'));
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+            $parms['data'] = $this->report_service->getProfitLossReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->get('start_date');
+            $parms->end_date = $request->get('end_date');
+            $parms->report_name = "profit_loss_report";
+            return view('/reports/profit_loss/partials.report', compact('parms'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
     public function goToLedgerReport($parent_id)
@@ -291,6 +302,7 @@ class ReportController extends Controller
     // Stock Ledger Report
     public function stockLedger()
     {
+        abort_if(Gate::denies('stock_ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $warehouses = $this->warehouse_service->getAll();
             return view('reports/stock_ledger/index', compact('warehouses'));
@@ -300,6 +312,7 @@ class ReportController extends Controller
     }
     public function getStockLedgerReport(Request $request)
     {
+        abort_if(Gate::denies('stock_ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
 
@@ -329,6 +342,7 @@ class ReportController extends Controller
 
     public function getPreviewStockLedgerReport(Request $request)
     {
+        abort_if(Gate::denies('stock_ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
 
@@ -355,6 +369,7 @@ class ReportController extends Controller
     //Product Ledger
     public function productLedger()
     {
+        abort_if(Gate::denies('product_ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $other_products = $this->other_product_service->getAllActiveOtherProduct();
             $warehouses = $this->warehouse_service->getAll();
@@ -365,19 +380,21 @@ class ReportController extends Controller
     }
     public function getPreviewProductLedgerReport(Request $request)
     {
-        // try {
-        $obj = $request->all();
-        $start = $request->start_date;
-        $end = $request->end_date;
-        $data = $this->report_service->getProductLedgerReport($obj);
-        $warehouse = $this->warehouse_service->getById($request->warehouse_id);
-        return view('/reports/product_ledger/partials.report', compact('start', 'end', 'data', 'warehouse'));
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        abort_if(Gate::denies('product_ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
+            $obj = $request->all();
+            $start = $request->start_date;
+            $end = $request->end_date;
+            $data = $this->report_service->getProductLedgerReport($obj);
+            $warehouse = $this->warehouse_service->getById($request->warehouse_id);
+            return view('/reports/product_ledger/partials.report', compact('start', 'end', 'data', 'warehouse'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
     public function getProductLedgerReport(Request $request)
     {
+        abort_if(Gate::denies('product_ledger_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
             $start = $request->start_date;
@@ -394,6 +411,7 @@ class ReportController extends Controller
     //customer List
     public function customerList()
     {
+        abort_if(Gate::denies('customer_list_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $customers = $this->customer_service->getAllActiveCustomer();
             return view('reports/customer_list/index', compact('customers'));
@@ -404,6 +422,7 @@ class ReportController extends Controller
 
     public function getCustomerListReport(Request $request)
     {
+        abort_if(Gate::denies('customer_list_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $parms['data'] = $this->customer_service->getAllActiveCustomer($request->all());
 
@@ -429,6 +448,7 @@ class ReportController extends Controller
 
     public function getPreviewCustomerListReport(Request $request)
     {
+        abort_if(Gate::denies('customer_list_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $parms['data'] = $this->customer_service->getAllActiveCustomer($request->all());
@@ -449,6 +469,7 @@ class ReportController extends Controller
     // Product Consumption
     public function productConsumption()
     {
+        abort_if(Gate::denies('product_consumption_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $warehouses = $this->warehouse_service->getAll();
             return view('reports/product_consumption/index', compact('warehouses'));
@@ -459,6 +480,7 @@ class ReportController extends Controller
 
     public function getProductConsumptionReport(Request $request)
     {
+        abort_if(Gate::denies('product_consumption_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             ini_set("memory_limit", "800M");
             ini_set("max_execution_time", "800");
@@ -489,6 +511,7 @@ class ReportController extends Controller
 
     public function getPreviewProductConsumptionReport(Request $request)
     {
+        abort_if(Gate::denies('product_consumption_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
 
@@ -513,6 +536,7 @@ class ReportController extends Controller
     // Financial Report
     public function financialReport()
     {
+        abort_if(Gate::denies('financial_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $accounts = $this->account_service->getAllActiveChild();
             $suppliers = $this->supplier_service->getAllActiveSupplier();
@@ -524,6 +548,7 @@ class ReportController extends Controller
     }
     public function getPreviewFinancialReport(Request $request)
     {
+        abort_if(Gate::denies('financial_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -564,6 +589,7 @@ class ReportController extends Controller
     }
     public function getFinancialReport(Request $request)
     {
+        abort_if(Gate::denies('financial_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
             $parms['data'] = $this->report_service->financialReport($obj);

@@ -21,8 +21,9 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class RattiKaatController extends Controller
 {
@@ -71,11 +72,13 @@ class RattiKaatController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('ratti_kaat_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         return view('purchases.ratti_kaat.index', compact('suppliers'));
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('ratti_kaat_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? Carbon::now()->addDay(1);
             $start = $request['start_date'] ?? Carbon::now()->subDay(1);
@@ -94,6 +97,7 @@ class RattiKaatController extends Controller
     }
     public function create()
     {
+        abort_if(Gate::denies('ratti_kaat_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $accounts = $this->account_service->getAllActiveChild();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $products = $this->product_service->getAllActiveProduct();
@@ -355,6 +359,7 @@ class RattiKaatController extends Controller
     // Ratti Kaat Purchase Store
     public function store(Request $request)
     {
+        abort_if(Gate::denies('ratti_kaat_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -418,6 +423,7 @@ class RattiKaatController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('ratti_kaat_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $accounts = $this->account_service->getAllActiveChild();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $products = $this->product_service->getAllActiveProduct();
@@ -498,6 +504,7 @@ class RattiKaatController extends Controller
     // Ratti Kaat Post
     public function postRattiKaat(Request $request)
     {
+        abort_if(Gate::denies('ratti_kaat_post'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $ratti_kaat_post = $this->ratti_kaat_service->postRattiKaat($request->all());
             if ($ratti_kaat_post != 'true') {
@@ -517,6 +524,7 @@ class RattiKaatController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('ratti_kaat_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $response = $this->ratti_kaat_service->deleteRattiKaatById($id);
             return $this->success(

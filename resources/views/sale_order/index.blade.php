@@ -20,8 +20,10 @@
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
-                            <a class="btn btn-primary btn-md m-1" href="{{ url('sale-order/create') }}"><i
-                                    class="fa fa-plus text-white mr-2"></i> Add Sale Order</a>
+                            @can('sale_order_create')
+                                <a class="btn btn-primary btn-md m-1" href="{{ url('sale-order/create') }}"><i
+                                        class="fa fa-plus text-white mr-2"></i> Add Sale Order</a>
+                            @endcan
                         </div>
                         <div class="card-body">
 
@@ -58,7 +60,7 @@
                                 </div>
 
                             </div>
-                            
+
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="sale_order_table" class="display table" style="width:100%">
@@ -98,16 +100,16 @@
     <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-                            {data: 'sale_order_date', name: 'sale_order_date'},
-                            {data: 'sale_order_no', name: 'sale_order_no', orderable: false, searchable: false},
-                            {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
-                            {data: 'gold_rate',name: 'gold_rate'},
-                            {data: 'gold_rate_type',name: 'gold_rate_type', orderable: false, searchable: false},
-                            {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
-                            {data: 'total_qty',name: 'total_qty'},
-                            {data: 'is_purchased',name: 'is_purchased', orderable: false, searchable: false},
-                            {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
-                            {data: 'action',name: 'action','sortable': false,searchable: false}",
+                                {data: 'sale_order_date', name: 'sale_order_date'},
+                                {data: 'sale_order_no', name: 'sale_order_no', orderable: false, searchable: false},
+                                {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
+                                {data: 'gold_rate',name: 'gold_rate'},
+                                {data: 'gold_rate_type',name: 'gold_rate_type', orderable: false, searchable: false},
+                                {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
+                                {data: 'total_qty',name: 'total_qty'},
+                                {data: 'is_purchased',name: 'is_purchased', orderable: false, searchable: false},
+                                {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
+                                {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'sale-order/data',
         'buttons' => false,
         'pageLength' => 50,

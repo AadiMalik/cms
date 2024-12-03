@@ -19,8 +19,9 @@ use App\Traits\JsonResponse;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
-use PDF;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class SaleController extends Controller
 {
@@ -70,6 +71,7 @@ class SaleController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('sale_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $customers = $this->customer_service->getAllActiveCustomer();
         $accounts = $this->account_service->getAllActiveChild();
         $setting = $this->company_setting_service->getSetting();
@@ -77,6 +79,7 @@ class SaleController extends Controller
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('sale_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
@@ -95,6 +98,7 @@ class SaleController extends Controller
     }
     public function create()
     {
+        abort_if(Gate::denies('sale_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $sale = $this->sale_service->saveSale();
         $finish_product = $this->finish_product_service->getAllActiveFinishProduct();
         $bead_types = $this->bead_type_service->getAllActive();
@@ -116,6 +120,7 @@ class SaleController extends Controller
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('sale_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -153,6 +158,7 @@ class SaleController extends Controller
 
     public function print($id)
     {
+        abort_if(Gate::denies('sale_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $sale =  $this->sale_service->getById($id);
@@ -168,6 +174,7 @@ class SaleController extends Controller
 
     public function unpostSale($id)
     {
+        abort_if(Gate::denies('sale_unpost'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $this->sale_service->unpostSale($id);
             return $this->success(
@@ -180,6 +187,7 @@ class SaleController extends Controller
     }
     public function postSale(Request $request)
     {
+        abort_if(Gate::denies('sale_post'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $sale = $this->sale_service->postSale($request->all());
             if ($sale != 'true') {
@@ -198,6 +206,7 @@ class SaleController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('sale_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $sale = $this->sale_service->deleteSaleById($id);
             return $this->success(

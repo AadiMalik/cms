@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SaleOrder;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CommonService;
 use App\Services\Concrete\CustomerService;
@@ -14,6 +13,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class SaleOrderController extends Controller
 {
@@ -43,11 +44,13 @@ class SaleOrderController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('sale_order_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $customers = $this->customer_service->getAllActiveCustomer();
         return view('sale_order.index', compact('customers'));
     }
     public function getData(Request $request)
     {
+        abort_if(Gate::denies('sale_order_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $end = $request['end_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
             $start = $request['start_date'] ?? date('Y-m-d ', strtotime(Carbon::now()));
@@ -64,6 +67,7 @@ class SaleOrderController extends Controller
     }
     public function create()
     {
+        abort_if(Gate::denies('sale_order_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $sale_order = $this->sale_order_service->saveSaleOrder();
         $warehouses = $this->warehouse_service->getAll();
         $gold_rate_type = $this->sale_order_service->getGoldRateType();
@@ -79,6 +83,7 @@ class SaleOrderController extends Controller
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('sale_order_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -118,6 +123,7 @@ class SaleOrderController extends Controller
 
     public function print($id)
     {
+        abort_if(Gate::denies('sale_order_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
 
             $sale_order =  $this->sale_order_service->getById($id);
@@ -133,6 +139,7 @@ class SaleOrderController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('sale_order_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $sale_order = $this->sale_order_service->deleteById($id);
             return $this->success(

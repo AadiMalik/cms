@@ -20,8 +20,10 @@
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
-                            <a class="btn btn-primary btn-md m-1" href="{{ url('purchase-order/create') }}"><i
-                                    class="fa fa-plus text-white mr-2"></i> Add Purchase Order</a>
+                            @can('purchase_order_create')
+                                <a class="btn btn-primary btn-md m-1" href="{{ url('purchase-order/create') }}"><i
+                                        class="fa fa-plus text-white mr-2"></i> Add Purchase Order</a>
+                            @endcan
                         </div>
                         <div class="card-body">
 
@@ -99,17 +101,17 @@
     <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-                                    {data: 'purchase_order_date', name: 'purchase_order_date'},
-                                    {data: 'purchase_order_no', name: 'purchase_order_no', orderable: false, searchable: false},
-                                    {data: 'delivery_date', name: 'delivery_date'},
-                                    {data: 'reference_no', name: 'reference_no'},
-                                    {data: 'supplier_name',name: 'supplier_name', orderable: false, searchable: false},
-                                    {data: 'sale_order',name: 'sale_order', orderable: false, searchable: false},
-                                    {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
-                                    {data: 'total_qty',name: 'total_qty'},
-                                    {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
-                                    {data: 'status',name: 'status', orderable: false, searchable: false},
-                                    {data: 'action',name: 'action','sortable': false,searchable: false}",
+                                        {data: 'purchase_order_date', name: 'purchase_order_date'},
+                                        {data: 'purchase_order_no', name: 'purchase_order_no', orderable: false, searchable: false},
+                                        {data: 'delivery_date', name: 'delivery_date'},
+                                        {data: 'reference_no', name: 'reference_no'},
+                                        {data: 'supplier_name',name: 'supplier_name', orderable: false, searchable: false},
+                                        {data: 'sale_order',name: 'sale_order', orderable: false, searchable: false},
+                                        {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
+                                        {data: 'total_qty',name: 'total_qty'},
+                                        {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
+                                        {data: 'status',name: 'status', orderable: false, searchable: false},
+                                        {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'purchase-order/data',
         'buttons' => false,
         'pageLength' => 50,

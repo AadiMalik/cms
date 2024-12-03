@@ -7,6 +7,8 @@ use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class StoneCategoryController extends Controller
 {
@@ -20,11 +22,13 @@ class StoneCategoryController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('stone_category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('stone_category.index');
     }
 
     public function getData()
     {
+        abort_if(Gate::denies('stone_category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return $this->stone_category_service->getSource();
         } catch (Exception $e) {
@@ -35,6 +39,7 @@ class StoneCategoryController extends Controller
     public function store(Request $request)
     {
 
+        abort_if(Gate::denies('stone_category_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -80,6 +85,7 @@ class StoneCategoryController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('stone_category_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return  $this->success(
                 config('enum.success'),
@@ -93,6 +99,7 @@ class StoneCategoryController extends Controller
 
     public function status($id)
     {
+        abort_if(Gate::denies('stone_category_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $bead_type = $this->stone_category_service->statusById($id);
             return $this->success(
@@ -107,6 +114,7 @@ class StoneCategoryController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('stone_category_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $bead_type = $this->stone_category_service->deleteById($id);
             return $this->success(

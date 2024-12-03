@@ -20,8 +20,10 @@
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
-                            <a class="btn btn-primary btn-md m-1" href="{{ url('sale/create') }}"><i
-                                    class="fa fa-plus text-white mr-2"></i> Add Sale</a>
+                            @can('sale_create')
+                                <a class="btn btn-primary btn-md m-1" href="{{ url('sale/create') }}"><i
+                                        class="fa fa-plus text-white mr-2"></i> Add Sale</a>
+                            @endcan
                         </div>
                         <div class="card-body">
 
@@ -77,18 +79,23 @@
                                         All</a>
                                     <a class="btn btn-danger" style="color:#fff;" type="button" id="unselectAll">Uncheck
                                         All</a>
-                                    <a class="btn btn-primary" style="color:#fff;" type="button" id="post_sale">Post</a>
+                                    @can('sale_post')
+                                        <a class="btn btn-primary" style="color:#fff;" type="button" id="post_sale">Post</a>
+                                    @endcan
                                 </div>
                             </div>
                             <div class="row mt-2" id="sale_account" style="display: none;">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Cash Account<span style="color: red;">*</span> </label>
-                                        <select id="cash_account_id" name="cash_account_id" class="form-control" style="width:100%;">
+                                        <select id="cash_account_id" name="cash_account_id" class="form-control"
+                                            style="width:100%;">
                                             <option value="0" disabled selected="selected">--Select Cash
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}" {{($setting->cash_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}"
+                                                    {{ $setting->cash_account_id == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -98,11 +105,14 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Revenue Account<span style="color: red;">*</span> </label>
-                                        <select id="revenue_account_id" name="revenue_account_id" class="form-control" style="width:100%;">
+                                        <select id="revenue_account_id" name="revenue_account_id" class="form-control"
+                                            style="width:100%;">
                                             <option value="0" disabled selected="selected">--Select Revenue
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}" {{($setting->revenue_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}"
+                                                    {{ $setting->revenue_account_id == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -119,7 +129,9 @@
                                                 Bank Transfer
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}" {{($setting->bank_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}"
+                                                    {{ $setting->bank_account_id == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -136,7 +148,9 @@
                                                 Card
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}" {{($setting->card_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}"
+                                                    {{ $setting->card_account_id == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -153,7 +167,9 @@
                                                 Advance
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}" {{($setting->advance_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}"
+                                                    {{ $setting->advance_account_id == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -170,7 +186,9 @@
                                                 Gold Impurity
                                                 Account--</option>
                                             @foreach ($accounts as $item)
-                                                <option value="{{ $item->id }}" {{($setting->gold_impurity_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                                <option value="{{ $item->id }}"
+                                                    {{ $setting->gold_impurity_account_id == $item->id ? 'selected' : '' }}>
+                                                    {{ $item->code ?? '' }} -
                                                     {{ $item->name ?? '' }}
                                                 </option>
                                             @endforeach
@@ -217,15 +235,15 @@
     <script src="{{ asset('js/common-methods/toasters.js') }}" type="module"></script>
     @include('includes.datatable', [
         'columns' => "
-                            {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
-                            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                            {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
-                            {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
-                            {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
-                            {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
-                            {data: 'total',name: 'total', orderable: false, searchable: false},
-                            {data: 'posted',name: 'posted', orderable: false, searchable: false},
-                            {data: 'action',name: 'action','sortable': false,searchable: false}",
+                                    {data: 'check_box', name: 'check_box', name: 'DT_RowIndex', orderable: false, searchable: false},
+                                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                                    {data: 'sale_date', name: 'sale_date', orderable: false, searchable: false},
+                                    {data: 'sale_no', name: 'sale_no', orderable: false, searchable: false},
+                                    {data: 'customer_name',name: 'customer_name', orderable: false, searchable: false},
+                                    {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
+                                    {data: 'total',name: 'total', orderable: false, searchable: false},
+                                    {data: 'posted',name: 'posted', orderable: false, searchable: false},
+                                    {data: 'action',name: 'action','sortable': false,searchable: false}",
         'route' => 'sale/data',
         'buttons' => false,
         'pageLength' => 50,
@@ -234,9 +252,9 @@
         'datefilter' => true,
         'params' => "customer_id:$('#customer_id').val(),posted:$('#posted').val()",
         'rowCallback' => ' rowCallback: function (row, data) {
-                            if(data.posted.includes("Unposted"))
-                            $(row).css("background-color", "Pink");
-                            }',
+                                    if(data.posted.includes("Unposted"))
+                                    $(row).css("background-color", "Pink");
+                                    }',
     ])
     <script>
         $(document).ready(function() {
@@ -335,7 +353,8 @@
                 $("#preloader").hide();
                 return false;
             }
-            if ($("#bank_transfer_account_id").find(":selected").val() == "" || $("#bank_transfer_account_id").find(":selected")
+            if ($("#bank_transfer_account_id").find(":selected").val() == "" || $("#bank_transfer_account_id").find(
+                    ":selected")
                 .val() == 0) {
                 error("Please select bank transfer account!");
                 $("#bank_transfer_account_id").focus();
@@ -356,7 +375,8 @@
                 $("#preloader").hide();
                 return false;
             }
-            if ($("#gold_impurity_account_id").find(":selected").val() == "" || $("#gold_impurity_account_id").find(":selected")
+            if ($("#gold_impurity_account_id").find(":selected").val() == "" || $("#gold_impurity_account_id").find(
+                    ":selected")
                 .val() == 0) {
                 error("Please select gold impurity account!");
                 $("#gold_impurity_account_id").focus();
@@ -394,7 +414,7 @@
                             $("#preloader").hide();
                             success(data.Message)
                             initDataTablesale_table();
-                        }else{
+                        } else {
                             error(data.Message);
                             $("#preloader").hide();
                         }
