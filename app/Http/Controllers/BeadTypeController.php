@@ -6,6 +6,8 @@ use App\Services\Concrete\BeadTypeService;
 use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 
 class BeadTypeController extends Controller
@@ -20,11 +22,13 @@ class BeadTypeController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('bead_type_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('bead_type.index');
     }
 
     public function getData()
     {
+        abort_if(Gate::denies('bead_type_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return $this->bead_type_service->getSource();
         } catch (Exception $e) {
@@ -34,7 +38,7 @@ class BeadTypeController extends Controller
 
     public function store(Request $request)
     {
-
+        abort_if(Gate::denies('bead_type_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -80,6 +84,7 @@ class BeadTypeController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('bead_type_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return  $this->success(
                 config('enum.success'),
@@ -93,6 +98,7 @@ class BeadTypeController extends Controller
 
     public function status($id)
     {
+        abort_if(Gate::denies('bead_type_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $bead_type = $this->bead_type_service->statusById($id);
             return $this->success(
@@ -107,6 +113,7 @@ class BeadTypeController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('bead_type_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $bead_type = $this->bead_type_service->deleteById($id);
             return $this->success(

@@ -7,6 +7,8 @@ use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class DiamondCutController extends Controller
 {
@@ -20,11 +22,13 @@ class DiamondCutController extends Controller
 
     public function index()
     {
+        abort_if(Gate::denies('diamond_cut_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('diamond_cut.index');
     }
 
     public function getData()
     {
+        abort_if(Gate::denies('diamond_cut_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return $this->diamond_cut_service->getSource();
         } catch (Exception $e) {
@@ -35,6 +39,7 @@ class DiamondCutController extends Controller
     public function store(Request $request)
     {
 
+        abort_if(Gate::denies('diamond_cut_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $validation = Validator::make(
             $request->all(),
             [
@@ -80,6 +85,7 @@ class DiamondCutController extends Controller
 
     public function edit($id)
     {
+        abort_if(Gate::denies('diamond_cut_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             return  $this->success(
                 config('enum.success'),
@@ -93,6 +99,7 @@ class DiamondCutController extends Controller
 
     public function status($id)
     {
+        abort_if(Gate::denies('diamond_cut_status'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $diamond_cut = $this->diamond_cut_service->statusById($id);
             return $this->success(
@@ -107,6 +114,7 @@ class DiamondCutController extends Controller
 
     public function destroy($id)
     {
+        abort_if(Gate::denies('diamond_cut_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $diamond_cut = $this->diamond_cut_service->deleteById($id);
             return $this->success(

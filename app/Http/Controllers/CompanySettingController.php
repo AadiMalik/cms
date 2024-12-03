@@ -6,7 +6,8 @@ use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CompanySettingService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class CompanySettingController extends Controller
 {
@@ -22,12 +23,14 @@ class CompanySettingController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('setting_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $company_setting = $this->company_setting_service->getSetting();
         $accounts = $this->account_service->getAllActiveChild();
-        return view('company.setting', compact('company_setting','accounts'));
+        return view('company.setting', compact('company_setting', 'accounts'));
     }
     public function store(Request $request)
     {
+        abort_if(Gate::denies('setting_update'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $obj = $request->all();
             $company_setting = $this->company_setting_service->save($obj);

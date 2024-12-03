@@ -21,7 +21,7 @@ class DiamondCutService
             $model = $this->model_diamond_cut->getModel()::where('is_deleted', 0);
             $data = DataTables::of($model)
                   ->addColumn('status', function ($item) {
-                        if (Auth::user()->can('journals_status')) {
+                        if (Auth::user()->can('diamond_cut_status')) {
                               if ($item->is_active == 1) {
                                     $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
                               } else {
@@ -36,9 +36,9 @@ class DiamondCutService
                         $action_column = '';
                         $edit_column    = "<a class='text-success mr-2' id='editDiamondCut' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Edit'><i title='Add' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
                         $delete_column    = "<a class='text-danger mr-2' id='deleteDiamondCut' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
-                        if (Auth::user()->can('journals_edit'))
+                        if (Auth::user()->can('diamond_cut_edit'))
                               $action_column .= $edit_column;
-                        if (Auth::user()->can('journals_delete'))
+                        if (Auth::user()->can('diamond_cut_delete'))
                               $action_column .= $delete_column;
 
                         return $action_column;

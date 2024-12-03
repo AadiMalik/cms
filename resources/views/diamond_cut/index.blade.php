@@ -15,7 +15,7 @@
                 <div class="col-md-12 mb-4">
                     <div class="card text-left">
                         <div class="card-header text-right bg-transparent">
-                            @can('journals_create')
+                            @can('diamond_cut_create')
                                 <a class="btn btn-primary btn-md m-1" href="javascript:void(0)" id="createNewDiamondCut"><i
                                         class="fa fa-plus text-white mr-2"></i> Add Diamond Cut</a>
                             @endcan
