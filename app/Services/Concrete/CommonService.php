@@ -3,6 +3,7 @@
 namespace App\Services\Concrete;
 
 use App\Models\FinishProduct;
+use App\Models\GoldImpurityPurchase;
 use App\Models\JobPurchase;
 use App\Models\JobTask;
 use App\Models\OtherPurchase;
@@ -247,6 +248,32 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "JP-" . date('dmY') . "-" . $mystring;
+      }
+
+      // gold impurity
+      public function generateGoldImpurityNo()
+      {
+            $gold_impurity = GoldImpurityPurchase::orderby('id', 'desc')->first();
+
+            if (!$gold_impurity) {
+                  return "GIP-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $gold_impurity->gold_impurity_purchase_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "GIP-" . date('dmY') . "-" . $mystring;
       }
 
       // get stock

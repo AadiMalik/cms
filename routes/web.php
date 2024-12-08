@@ -10,6 +10,7 @@ use App\Http\Controllers\DiamondCutController;
 use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinishProductController;
+use App\Http\Controllers\GoldImpurityPurchaseController;
 use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\JobPurchaseController;
 use App\Http\Controllers\JobTaskActivityController;
@@ -642,6 +643,29 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/other_sale.js', function () {
             $path = resource_path('views/other_sale/js/other_sale.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Gold Impurity
+    Route::group(['prefix' => 'gold-impurity'], function () {
+        Route::get('/', [GoldImpurityPurchaseController::class, 'index']);
+        Route::get('create', [GoldImpurityPurchaseController::class, 'create']);
+        Route::post('data', [GoldImpurityPurchaseController::class, 'getData'])->name('gold-impurity.data');
+        Route::post('store', [GoldImpurityPurchaseController::class, 'store']);
+        Route::get('print/{id}', [GoldImpurityPurchaseController::class, 'print']);
+        Route::get('destroy/{id}', [GoldImpurityPurchaseController::class, 'destroy']);
+        Route::get('status/{id}', [GoldImpurityPurchaseController::class, 'status']);
+        Route::post('post', [GoldImpurityPurchaseController::class, 'post']);
+        Route::get('unpost/{id}', [GoldImpurityPurchaseController::class, 'unpost']);
+
+        Route::get('/js/gold_impurity.js', function () {
+            $path = resource_path('views/purchases/gold_impurity/js/gold_impurity.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',
