@@ -81,7 +81,7 @@ $("body").on("click", "#SaleOrder", function (event) {
             purchaseOrderData.push({
                 // sr: i,
                 product_id:value.product_id,
-                product:value.product,
+                product:value.product_name,
                 category: value.category,
                 design_no: value.design_no,
                 net_weight: value.net_weight,
