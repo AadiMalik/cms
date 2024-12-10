@@ -113,7 +113,8 @@ class JobPurchaseController extends Controller
             'diamond_colors',
             'diamond_cuts',
             'diamond_clarities',
-            'supplier'
+            'supplier',
+            'job_task_id'
         ));
     }
     public function store(Request $request)

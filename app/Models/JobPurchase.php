@@ -10,6 +10,7 @@ class JobPurchase extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'job_task_id',
         'job_purchase_no',
         'job_purchase_date',
         'purchase_order_id',

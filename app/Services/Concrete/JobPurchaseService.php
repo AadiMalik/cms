@@ -10,6 +10,7 @@ use App\Models\JobPurchaseDetail;
 use App\Models\JobPurchaseDetailBead;
 use App\Models\JobPurchaseDetailDiamond;
 use App\Models\JobPurchaseDetailStone;
+use App\Models\JobTask;
 use App\Models\Journal;
 use App\Models\JournalEntry;
 use App\Models\PurchaseOrder;
@@ -37,6 +38,7 @@ class JobPurchaseService
     protected $model_job_purchase_detail_diamond;
     protected $model_journal_entry;
     protected $model_purchase_order;
+    protected $model_job_task;
 
     protected $common_service;
     protected $supplier_payment_service;
@@ -51,6 +53,7 @@ class JobPurchaseService
         $this->model_job_purchase_detail_diamond = new Repository(new JobPurchaseDetailDiamond);
         $this->model_journal_entry = new Repository(new JournalEntry);
         $this->model_purchase_order = new Repository(new PurchaseOrder);
+        $this->model_job_task = new Repository(new JobTask);
 
         $this->common_service = new CommonService();
         $this->supplier_payment_service = new SupplierPaymentService();
@@ -162,6 +165,7 @@ class JobPurchaseService
             $jobPurchaseObj = [
                 "job_purchase_no" => $obj['job_purchase_no'],
                 "job_purchase_date" => $obj['job_purchase_date'],
+                "job_task_id" => $obj['job_task_id'],
                 "purchase_order_id" => $obj['purchase_order_id'],
                 "sale_order_id" => $obj['sale_order_id'],
                 "supplier_id" => $obj['supplier_id'],
@@ -206,6 +210,12 @@ class JobPurchaseService
                     $this->model_job_purchase_detail_diamond->create($jobPurchaseDetailDiamond);
                 }
             }
+
+            $job_task = $this->model_job_task->find($obj['job_task_id']);
+            $job_task->is_complete = 1;
+            $job_task->updatedby_id = Auth::user()->id;
+            $job_task->update();
+
 
             DB::commit();
         } catch (Exception $e) {

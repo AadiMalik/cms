@@ -85,7 +85,7 @@
                                                                         data-sale_order_id="{{ $item['sale_order_id'] ?? '' }}"
                                                                         data-warehouse_id="{{ $item['warehouse_id'] ?? '' }}"
                                                                         data-original-title="Job task detail">
-                                                                        <b>{{ $item['product'] ?? '' }},G:{{ $item['category'] ?? '' }},D:{{ $item['design_no'] ?? '' }}</b>
+                                                                        <b>{{ $item['product'] ?? '' }},C:{{ $item['category'] ?? '' }},D:{{ $item['design_no'] ?? '' }}</b>
                                                                     </a>
                                                                 </td>
                                                             </tr>
@@ -103,6 +103,7 @@
                                     </div>
                                     <input type="hidden" name="purchase_order_detail_id" id="purchase_order_detail_id"
                                         value="">
+                                        <input type="hidden" name="job_task_id" id="job_task_id" value="{{$job_task_id}}">
                                     <input type="hidden" name="purchase_order_id" id="purchase_order_id" value="">
                                     <input type="hidden" name="warehouse_id" id="warehouse_id" value="">
                                     <input type="hidden" name="sale_order_id" id="sale_order_id" value="">

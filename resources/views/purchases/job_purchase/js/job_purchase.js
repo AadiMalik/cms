@@ -358,6 +358,7 @@ $("body").on("click", "#submit", function (e) {
     formData.append("job_purchase_date", $("#job_purchase_date").val());
     formData.append("supplier_id", $("#supplier_id").val());
     formData.append("warehouse_id", $("#warehouse_id").val());
+    formData.append("job_task_id", $("#job_task_id").val());
     formData.append("purchase_order_id", $("#purchase_order_id").val());
     formData.append("sale_order_id", $("#sale_order_id").val());
     formData.append("reference", $("#reference").val());

@@ -12,6 +12,7 @@ class JobTask extends Model
         'id',
         'job_task_no',
         'job_task_date',
+        'delivery_date',
         'purchase_order_id',
         'sale_order_id',
         'supplier_id',
