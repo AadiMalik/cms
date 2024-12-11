@@ -76,7 +76,7 @@ class JobTaskService
                               $action_column .= $activity_column;
                         if (Auth::user()->can('job_task_print'))
                               $action_column .= $view_column;
-                        if (Auth::user()->can('job_task_complete'))
+                        if (Auth::user()->can('job_task_complete') && $item->is_complete==0)
                               $action_column .= $complete_column;
                         if (Auth::user()->can('job_task_delete'))
                               $action_column .= $delete_column;

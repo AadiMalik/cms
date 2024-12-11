@@ -103,8 +103,8 @@
         'columns' => "
                                         {data: 'purchase_order_date', name: 'purchase_order_date'},
                                         {data: 'purchase_order_no', name: 'purchase_order_no', orderable: false, searchable: false},
-                                        {data: 'delivery_date', name: 'delivery_date'},
                                         {data: 'reference_no', name: 'reference_no'},
+                                        {data: 'delivery_date', name: 'delivery_date'},
                                         {data: 'supplier_name',name: 'supplier_name', orderable: false, searchable: false},
                                         {data: 'sale_order',name: 'sale_order', orderable: false, searchable: false},
                                         {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
