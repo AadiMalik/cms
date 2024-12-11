@@ -12,6 +12,7 @@ class SaleDetail extends Model
         'id',
         'sale_id',
         'finish_product_id',
+        'job_purchase_detail_id',
         'ratti_kaat_id',
         'ratti_kaat_detail_id',
         'product_id',

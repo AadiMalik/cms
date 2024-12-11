@@ -164,6 +164,9 @@ function getFinishProduct(tag_no) {
             $("#ratti_kaat_detail_id").val(
                 data.ratti_kaat_detail_id > 0 ? data.ratti_kaat_detail_id : ""
             );
+            $("#job_purchase_detail_id").val(
+                data.job_purchase_detail_id > 0 ? data.job_purchase_detail_id : ""
+            );
             $("#product").val(data.product.name != "" ? data.product.name : "");
             $("#product_id").val(data.product_id > 0 ? data.product_id : 0);
             $("#tag_no").val(data.tag_no != "" ? data.tag_no : 0);
@@ -303,6 +306,7 @@ function addProduct() {
     var finish_product_id = $("#finish_product_id").val();
     var ratti_kaat_id = $("#ratti_kaat_id").val();
     var ratti_kaat_detail_id = $("#ratti_kaat_detail_id").val();
+    var job_purchase_detail_id = $("#job_purchase_detail_id").val();
     var product = $("#product").val();
     var product_id = $("#product_id").val();
     var gold_carat = $("#gold_carat").val();
@@ -324,9 +328,7 @@ function addProduct() {
 
     if (
         tag_no == "" ||
-        finish_product_id == "" ||
-        ratti_kaat_id == "" ||
-        ratti_kaat_detail_id == ""
+        finish_product_id == ""
     ) {
         error("tag is not selected!");
         $("#preloader").hide();
@@ -389,6 +391,7 @@ function addProduct() {
         finish_product_id: finish_product_id,
         ratti_kaat_id: ratti_kaat_id,
         ratti_kaat_detail_id: ratti_kaat_detail_id,
+        job_purchase_detail_id: job_purchase_detail_id,
         product: product,
         product_id: product_id,
         gold_carat: gold_carat,
