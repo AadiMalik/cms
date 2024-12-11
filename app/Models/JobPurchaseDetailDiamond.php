@@ -11,6 +11,7 @@ class JobPurchaseDetailDiamond extends Model
     protected $fillable = [
         'id',
         'job_purchase_detail_id',
+        'product_id',
         'diamonds',
         'type',
         'cut',

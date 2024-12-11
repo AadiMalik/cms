@@ -235,7 +235,7 @@ class JobPurchaseController extends Controller
                 false
             );
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
 
@@ -249,21 +249,21 @@ class JobPurchaseController extends Controller
                 false
             );
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
     public function jobPurchaseStoneDetail($job_purchase_detail_id,$product_id)
     {
-        try {
+        // try {
             $job_purchase_detail_stone = $this->job_purchase_service->jobPurchaseStoneDetail($job_purchase_detail_id,$product_id);
             return $this->success(
                 config('enum.success'),
                 $job_purchase_detail_stone,
                 false
             );
-        } catch (Exception $e) {
-            return $this->error(config('global.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
     public function jobPurchaseDiamondDetail($job_purchase_detail_id,$product_id)
     {
@@ -275,7 +275,7 @@ class JobPurchaseController extends Controller
                 false
             );
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
 }

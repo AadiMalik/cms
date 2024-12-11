@@ -133,7 +133,7 @@ class RattiKaatController extends Controller
                 false
             );
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
     public function storeBeadWeight(Request $request)
@@ -209,7 +209,7 @@ class RattiKaatController extends Controller
                 false
             );
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
     public function storeStoneWeight(Request $request)
@@ -287,7 +287,7 @@ class RattiKaatController extends Controller
                 false
             );
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
     public function storeDiamondCarat(Request $request)
@@ -459,7 +459,7 @@ class RattiKaatController extends Controller
                 false
             );
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
 

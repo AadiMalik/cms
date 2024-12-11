@@ -529,7 +529,7 @@ class ReportController extends Controller
 
             return view('/reports/product_consumption/partials.report', compact('parms'));
         } catch (Exception $e) {
-            return $this->error(config('global.error'));
+            return $this->error(config('enum.error'));
         }
     }
 

@@ -12,6 +12,7 @@ class JobPurchaseDetailBead extends Model
         'id',
         'type',
         'job_purchase_detail_id',
+        'product_id',
         'beads',
         'gram',
         'carat',

@@ -688,9 +688,9 @@ class JobPurchaseService
     // Bead Detail
     public function jobPurchaseBeadDetail($job_purchase_detail_id, $product_id)
     {
-        return $this->model_job_purchase_detail_bead->getModel()::with(['job_purchase_detail', 'product_name'])
+        return $this->model_job_purchase_detail_bead->getModel()::with(['job_purchase_detail'])
             ->where('job_purchase_detail_id', $job_purchase_detail_id)
-            ->where('product_id', $product_id)
+            // ->where('product_id', $product_id)
             ->where('is_deleted', 0)
             ->get();
     }
@@ -698,9 +698,9 @@ class JobPurchaseService
     // Stone Detail
     public function jobPurchaseStoneDetail($job_purchase_detail_id, $product_id)
     {
-        return $this->model_job_purchase_detail_stone->getModel()::with(['job_purchase_detail', 'product_name'])
+        return $this->model_job_purchase_detail_stone->getModel()::with(['job_purchase_detail'])
             ->where('job_purchase_detail_id', $job_purchase_detail_id)
-            ->where('product_id', $product_id)
+            // ->where('product_id', $product_id)
             ->where('is_deleted', 0)
             ->get();
     }
@@ -708,9 +708,9 @@ class JobPurchaseService
     // Diamond Detail
     public function jobPurchaseDiamondDetail($job_purchase_detail_id, $product_id)
     {
-        return $this->model_job_purchase_detail_diamond->getModel()::with(['job_purchase_detail', 'product_name'])
+        return $this->model_job_purchase_detail_diamond->getModel()::with(['job_purchase_detail'])
             ->where('job_purchase_detail_id', $job_purchase_detail_id)
-            ->where('product_id', $product_id)
+            // ->where('product_id', $product_id)
             ->where('is_deleted', 0)
             ->get();
     }
