@@ -154,10 +154,11 @@ class SaleService
             foreach ($saleDetail as $item) {
                 $saleDetailObj = [
                     "sale_id" => $obj['id'],
-                    "finish_product_id" => $item->finish_product_id ?? '',
-                    "ratti_kaat_id" => $item->ratti_kaat_id ?? '',
-                    "ratti_kaat_detail_id" => $item->ratti_kaat_detail_id ?? '',
-                    "product_id" => $item->product_id ?? '',
+                    "finish_product_id" => ($item->finish_product_id!='')?$item->finish_product_id:null,
+                    "ratti_kaat_id" => ($item->ratti_kaat_id!='')?$item->ratti_kaat_id:null,
+                    "ratti_kaat_detail_id" => ($item->ratti_kaat_detail_id!='')?$item->ratti_kaat_detail_id:null,
+                    "job_purchase_detail_id" => ($item->job_purchase_detail_id!='')?$item->job_purchase_detail_id:null,
+                    "product_id" => ($item->product_id!='')?$item->product_id:null,
                     "gold_carat" => $item->gold_carat,
                     "scale_weight" => $item->scale_weight,
                     "bead_weight" => $item->bead_weight,
