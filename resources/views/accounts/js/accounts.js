@@ -105,23 +105,35 @@ $("#appendMainAccounts").on(
     event.stopImmediatePropagation();
     ajaxGetRequest($(this).attr("href"))
       .then(function (data) {
-        console.log(data);
+        console.log(data.parent_id);
 
-        $("#id").val(data.id);
-        $("#parent_id").val(data.parent_id);
-        $("#account_type_id").val(data.account_type_id);
-        $("#code").val(data.code);
-        $("#name").val(data.name);
-        $("#opening_balance").val(data.opening_balance);
-        $("#modelHeading").html("Edit Account");
-        if (data.is_cash_account == 1) {
-          $("#is_cash_account").prop("checked", true);
-        } else {
-          $("#is_cash_account").prop("checked", false);
-        }
         if (data.parent_id == 0) {
+          $("#accountForm #id").val(data.id);
+          $("#accountForm #parent_id").val(data.parent_id);
+          $("#accountForm #account_type_id").val(data.account_type_id);
+          $("#accountForm #code").val(data.code);
+          $("#accountForm #name").val(data.name);
+          $("#accountForm #opening_balance").val(data.opening_balance);
+          $("#addEditAccountModal #modelHeading").html("Edit Account");
+          if (data.is_cash_account == 1) {
+            $("#accountForm #is_cash_account").prop("checked", true);
+          } else {
+            $("#accountForm #is_cash_account").prop("checked", false);
+          }
           $("#addEditAccountModal").modal("show");
         } else {
+          $("#accountChildForm #id").val(data.id);
+          $("#accountChildForm #parent_id").val(data.parent_id);
+          $("#accountChildForm #account_type_id").val(data.account_type_id);
+          $("#accountChildForm #code").val(data.code);
+          $("#accountChildForm #name").val(data.name);
+          $("#accountChildForm #opening_balance").val(data.opening_balance);
+          $("#addEditAccountChildModal #modelHeading").html("Edit Account");
+          if (data.is_cash_account == 1) {
+            $("#accountChildForm #is_cash_account").prop("checked", true);
+          } else {
+            $("#accountChildForm #is_cash_account").prop("checked", false);
+          }
           $("#addEditAccountChildModal").modal("show");
         }
       })
@@ -146,11 +158,11 @@ $("body").on("click", "#is_active", function () {
   $("#preloader").show();
   ajaxGetRequest("accounts/statusAccounts/" + account_id)
     .then(function (data) {
-      if(data){
-      $("#preloader").hide();
-      successMessage(data.Message);
-      loadMainAccount();
-      }else{
+      if (data) {
+        $("#preloader").hide();
+        successMessage(data.Message);
+        loadMainAccount();
+      } else {
 
       }
     })
@@ -162,26 +174,26 @@ $("body").on("click", "#is_active", function () {
 
 // Delete Account Code
 
-  $("body").on("click", "#deleteChartAccount", function () {
-    var account_id = $(this).data("id");
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        ajaxGetRequest("accounts/deleteAccounts" + "/" + account_id)
-          .then(function (data) {
-            successMessage(data.Message);
-            loadMainAccount();
-          })
-          .catch(function (err) {
-            errorMessage(err.Message);
-          });
-      }
-    });
+$("body").on("click", "#deleteChartAccount", function () {
+  var account_id = $(this).data("id");
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      ajaxGetRequest("accounts/deleteAccounts" + "/" + account_id)
+        .then(function (data) {
+          successMessage(data.Message);
+          loadMainAccount();
+        })
+        .catch(function (err) {
+          errorMessage(err.Message);
+        });
+    }
   });
+});

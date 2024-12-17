@@ -29,7 +29,7 @@
                     </div>
 
                     <div class="card-body" id="appendMainAccounts">
-                        {{-- @include('accounting.account-head.partials.account-head-accordion') --}}
+                        
                     </div>
 
                 </div>
