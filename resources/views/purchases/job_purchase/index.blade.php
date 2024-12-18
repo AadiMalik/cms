@@ -89,7 +89,7 @@
                                         <option value="0" disabled selected="selected">--Select Purchase
                                             Account--</option>
                                         @foreach ($accounts as $item)
-                                        <option value="{{ $item->id }}" {{($setting->purchase_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                        <option value="{{ $item->id }}" {{(isset($setting) && $setting->purchase_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                             {{ $item->name ?? '' }}
                                         </option>
                                         @endforeach
@@ -103,7 +103,7 @@
                                         <option value="0" disabled selected="selected">--Select Recieved
                                             Account--</option>
                                         @foreach ($accounts as $item)
-                                        <option value="{{ $item->id }}" {{($setting->recieved_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
+                                        <option value="{{ $item->id }}" {{(isset($setting) && $setting->recieved_account_id==$item->id)?'selected':''}}>{{ $item->code ?? '' }} -
                                             {{ $item->name ?? '' }}
                                         </option>
                                         @endforeach

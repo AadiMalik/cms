@@ -446,7 +446,7 @@ $(document).ready(function () {
                 errorMessage("Please Add a Journal Entries!");
                 return;
             }
-            if ($("#currency").val() == "" || $("#currency").val() == 0) {
+            if ($("#currency").find(':selected').val() == "") {
                 errorMessage("Currency filed required!");
                 $("#currency").focus();
                 return;
@@ -461,10 +461,10 @@ $(document).ready(function () {
                 return;
             }
             id = $("#id").val();
-            var journal_id = $("#journal_id").val();
-            var supplier_id = $("#supplier_id").val();
+            var journal_id = $("#journal_id").find(':selected').val();
+            var supplier_id = $("#supplier_id").find(':selected').val();
             var reference = $("#reference").val();
-            var currency = $("#currency").val();
+            var currency = $("#currency").find(':selected').val();
             if (obj.item.length > 0) {
                 var load_func = function () {
                     $("#preloader").show();
