@@ -96,10 +96,13 @@ class RattiKaatService
 
                 $action_column = '';
                 $edit_column    = "<a class='text-success mr-2' href='ratti-kaats/edit/" . $item->id . "' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Edit'><i title='Edit' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
+                $unpost_column    = "<a class='text-primary mr-2' id='unpost' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Unpost'><i title='Unpost' class='nav-icon mr-2 fa fa-refresh'></i>Unpost</a>";
                 $all_print_column    = "<a class='text-info mr-2' id='Ref' href='javascript:void(0)' data-toggle='tooltip'  data-filter='" . $jvs . "' data-original-title='Accounting'><i title='Accounting' class='nav-icon mr-2 fa fa-eye'></i>Accounting</a>";
                 $delete_column    = "<a class='text-danger mr-2' id='deleteRattiKaat' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
                 if (Auth::user()->can('ratti_kaat_edit') && $item->is_posted == 0)
                     $action_column .= $edit_column;
+                if (Auth::user()->can('ratti_kaat_post') && $item->is_posted == 1)
+                    $action_column .= $unpost_column;
                 if (Auth::user()->can('ratti_kaat_jvs') && $item->is_posted == 1)
                     $action_column .= $all_print_column;
                 if (Auth::user()->can('ratti_kaat_delete'))
@@ -204,6 +207,12 @@ class RattiKaatService
             $supplier_payment = null;
             $supplier_au_payment = null;
             $supplier_dollar_payment = null;
+
+            $purchase_account_id = $obj['purchase_account'];
+            $paid_account_id = $obj['paid_account'];
+            $paid_account_au_id = $obj['paid_account_au'];
+            $paid_account_dollar_id = $obj['paid_account_dollar'];
+
             foreach ($obj['ratti_kaat'] as $item) {
                 $ratti_kaat = RattiKaat::with('supplier_name')->find($item);
                 $supplier = Supplier::find($ratti_kaat->supplier_id);
@@ -234,7 +243,7 @@ class RattiKaatService
                     return $message;
                 }
 
-                $purchase_account = Account::find($ratti_kaat->purchase_account);
+                $purchase_account = Account::find($purchase_account_id);
                 $supplir_account = Account::find($supplier->account_id);
                 $supplir_au_account = Account::find($supplier->account_au_id);
                 $supplir_dollar_account = Account::find($supplier->account_dollar_id);
@@ -345,16 +354,16 @@ class RattiKaatService
                 }
 
 
-                if ($ratti_kaat->paid > 0 && $ratti_kaat->paid_account != null) {
+                if ($ratti_kaat->paid > 0 && $paid_account_id != null) {
                     $Paid_Amount = str_replace(',', '', $ratti_kaat->paid ?? 0);
 
-                    $paid_account = Account::find($ratti_kaat->paid_account);
+                    $paid_account = Account::find($paid_account_id);
                     $paid_jv = $this->PaidtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_account, $supplir_account, $Paid_Amount);
                     // Supplier PKR payment
                     $supplier_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
                         $supplier->id,
                         0,
-                        $ratti_kaat->paid_account,
+                        $paid_account_id,
                         $ratti_kaat->purchase_date,
                         null,
                         $Paid_Amount,
@@ -363,17 +372,17 @@ class RattiKaatService
                 }
 
                 // AU Payment JV
-                if ($ratti_kaat->paid_au > 0  && $ratti_kaat->paid_au_account != null) {
+                if ($ratti_kaat->paid_au > 0  && $paid_account_au_id != null) {
                     $Paid_au_Amount = str_replace(',', '', $ratti_kaat->paid_au ?? 0);
 
-                    $paid_au_account = Account::find($ratti_kaat->paid_au_account);
+                    $paid_au_account = Account::find($paid_account_au_id);
                     $paid_au_jv = $this->PaidAUtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount);
 
                     // Supplier AU payment
                     $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
                         $supplier->id,
                         1,
-                        $ratti_kaat->paid_au_account,
+                        $paid_account_au_id,
                         $ratti_kaat->purchase_date,
                         null,
                         $Paid_au_Amount,
@@ -382,16 +391,16 @@ class RattiKaatService
                 }
 
                 // Dollar Payment JV
-                if ($ratti_kaat->paid_dollar > 0  && $ratti_kaat->paid_dollar_account != null) {
+                if ($ratti_kaat->paid_dollar > 0  && $paid_account_dollar_id != null) {
                     $Paid_dollar_Amount = str_replace(',', '', $ratti_kaat->paid_dollar ?? 0);
 
-                    $paid_dollar_account = Account::find($ratti_kaat->paid_dollar_account);
+                    $paid_dollar_account = Account::find($paid_account_dollar_id);
                     $paid_dollar_jv = $this->PaidDollartoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_dollar_account, $supplir_dollar_account, $Paid_dollar_Amount);
                     // Supplier Dollar payment
                     $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
                         $supplier->id,
                         2,
-                        $ratti_kaat->paid_dollar_account,
+                        $paid_account_dollar_id,
                         $ratti_kaat->purchase_date,
                         null,
                         $Paid_dollar_Amount,
@@ -400,6 +409,10 @@ class RattiKaatService
                 }
 
                 // Purchase Update
+                $ratti_kaat->purchase_account = $purchase_account_id;
+                $ratti_kaat->paid_account = $paid_account_id;
+                $ratti_kaat->paid_account_au = $paid_account_au_id;
+                $ratti_kaat->paid_account_dollar = $paid_account_dollar_id;
                 $ratti_kaat->is_posted = 1;
                 $ratti_kaat->jv_id = $journal_entry_id;
                 $ratti_kaat->paid_jv_id = ($paid_jv != null) ? $paid_jv->id : null;
@@ -617,6 +630,70 @@ class RattiKaatService
             return true;
 
         return false;
+    }
+    // unpost by id
+    public function unpostRattiKaatById($id)
+    {
+        try {
+            DB::beginTransaction();
+            $ratti_kaat = $this->model_ratti_kaat->find($id);
+            $ratti_kaat->is_posted = 0;
+            $ratti_kaat->updatedby_id = Auth::User()->id;
+            $ratti_kaat->update();
+
+            if ($ratti_kaat->jv_id != null) {
+                $journal_entry = JournalEntry::find($ratti_kaat->jv_id);
+                $journal_entry->is_deleted = 1;
+                $journal_entry->deletedby_id = Auth::User()->id;
+                $journal_entry->update();
+            }
+
+            if ($ratti_kaat->paid_jv_id != null) {
+                $paid_jv = JournalEntry::find($ratti_kaat->paid_jv_id);
+                $paid_jv->is_deleted = 1;
+                $paid_jv->deletedby_id = Auth::User()->id;
+                $paid_jv->update();
+            }
+            if ($ratti_kaat->paid_au_jv_id != null) {
+                $paid_au_jv = JournalEntry::find($ratti_kaat->paid_au_jv_id);
+                $paid_au_jv->is_deleted = 1;
+                $paid_au_jv->deletedby_id = Auth::User()->id;
+                $paid_au_jv->update();
+            }
+            if ($ratti_kaat->paid_dollar_jv_id != null) {
+                $paid_dollar_jv = JournalEntry::find($ratti_kaat->paid_dollar_jv_id);
+                $paid_dollar_jv->is_deleted = 1;
+                $paid_dollar_jv->deletedby_id = Auth::User()->id;
+                $paid_dollar_jv->update();
+            }
+
+            //payment delete
+            if ($ratti_kaat->supplier_payment_id != null) {
+                $supplier_payment = SupplierPayment::find($ratti_kaat->supplier_payment_id);
+                $supplier_payment->is_deleted = 1;
+                $supplier_payment->deletedby_id = Auth::User()->id;
+                $supplier_payment->update();
+            }
+            if ($ratti_kaat->supplier_au_payment_id != null) {
+                $supplier_au_payment = SupplierPayment::find($ratti_kaat->supplier_au_payment_id);
+                $supplier_au_payment->is_deleted = 1;
+                $supplier_au_payment->deletedby_id = Auth::User()->id;
+                $supplier_au_payment->update();
+            }
+            if ($ratti_kaat->supplier_dollar_payment_id != null) {
+                $supplier_dollar_payment = SupplierPayment::find($ratti_kaat->supplier_dollar_payment_id);
+                $supplier_dollar_payment->is_deleted = 1;
+                $supplier_dollar_payment->deletedby_id = Auth::User()->id;
+                $supplier_dollar_payment->update();
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return true;
     }
     // delete by id
     public function deleteRattiKaatById($id)

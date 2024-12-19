@@ -96,7 +96,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            {{--<div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Recieved AU Account<span style="color: red;">*</span> </label>
                                     <select id="recieved_au_account_id" name="recieved_au_account_id" class="form-control" style="width:100%;">
@@ -109,7 +109,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div>--}}
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -263,13 +263,13 @@ $(row).css("background-color", "Pink");
             $("#preloader").hide();
             return false;
         }
-        if ($("#recieved_au_account_id").find(":selected").val() == "" || $("#recieved_au_account_id").find(":selected")
-            .val() == 0) {
-            error("Please select recieved account!");
-            $("#recieved_au_account_id").focus();
-            $("#preloader").hide();
-            return false;
-        }
+        // if ($("#recieved_au_account_id").find(":selected").val() == "" || $("#recieved_au_account_id").find(":selected")
+        //     .val() == 0) {
+        //     error("Please select recieved account!");
+        //     $("#recieved_au_account_id").focus();
+        //     $("#preloader").hide();
+        //     return false;
+        // }
 
         var job_purchases = [];
         $(".sub_chk:checked").each(function() {
@@ -279,7 +279,7 @@ $(row).css("background-color", "Pink");
         var data = {};
         data.job_purchase = job_purchases;
         data.purchase_account_id = $("#purchase_account_id").find(":selected").val();
-        data.recieved_au_account_id = $("#recieved_au_account_id").find(":selected").val();
+        // data.recieved_au_account_id = $("#recieved_au_account_id").find(":selected").val();
         if (job_purchases.length <= 0) {
             $("#preloader").hide();
             error("Please select Rows!");

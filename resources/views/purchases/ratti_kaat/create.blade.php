@@ -41,7 +41,7 @@
                                 {{-- Edit Form  --}}
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Purchase Date:<span
                                                     style="color:red;">*</span></label>
@@ -52,7 +52,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Supplier/Karigar:</label>
                                             <select id="supplier_id" name="supplier_id" class="form-control show-tick"
@@ -69,22 +69,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="">Purchase Account:<span style="color:red;">*</span></label>
-                                            <select id="purchase_account" name="purchase_account"
-                                                class="form-control show-tick" data-live-search="true" required>
-                                                <option value="0" selected>--Select Account--</option>
-                                                @foreach ($accounts as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        @if (isset($ratti_kaat)) {{ $ratti_kaat->purchase_account == $item->id ? 'selected' : '' }} @endif>
-                                                        {{ $item->code }} {{ $item->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-6">
                                         <div class="form-group form-float">
                                             <div class="form-group">
                                                 <label class="form-label">Reference:<span
@@ -95,7 +80,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="form-group form-float">
                                             <div class="form-group">
                                                 <label class="form-label">Pictures:</label>
@@ -458,61 +443,6 @@
                                                         id="paid" class="form-control font-weight-bold"
                                                         onkeypress="return isNumberKey(event)" maxlength="10">
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-2 offset-md-1 text-right">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid Account($):</label>
-                                            <div class="form-group form-float">
-                                                <select id="paid_account_dollar" name="paid_account_dollar"
-                                                    class="form-control show-tick" data-live-search="true">
-                                                    <option value="" selected>--Select Account--</option>
-                                                    @foreach ($accounts as $item)
-                                                        <option value="{{ $item->id }}"
-                                                            @if (isset($ratti_kaat)) {{ $ratti_kaat->paid_account_dollar == $item->id ? 'selected' : '' }} @endif>
-                                                            {{ $item->code }} {{ $item->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid Account(AU):</label>
-                                            <div class="form-group form-float">
-                                                <select id="paid_account_au" name="paid_account_au"
-                                                    class="form-control show-tick" data-live-search="true">
-                                                    <option value="" selected>--Select Account--</option>
-                                                    @foreach ($accounts as $item)
-                                                        <option value="{{ $item->id }}"
-                                                            @if (isset($ratti_kaat)) {{ $ratti_kaat->paid_account_au == $item->id ? 'selected' : '' }} @endif>
-                                                            {{ $item->code }} {{ $item->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-label font-weight-bold">Paid Account(PKR):</label>
-                                            <div class="form-group form-float">
-                                                <select id="paid_account" name="paid_account"
-                                                    class="form-control show-tick" data-live-search="true">
-                                                    <option value="" selected>--Select Account--</option>
-                                                    @foreach ($accounts as $item)
-                                                        <option value="{{ $item->id }}"
-                                                            @if (isset($ratti_kaat)) {{ $ratti_kaat->paid_account == $item->id ? 'selected' : '' }} @endif>
-                                                            {{ $item->code }} {{ $item->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
                                             </div>
                                         </div>
                                     </div>

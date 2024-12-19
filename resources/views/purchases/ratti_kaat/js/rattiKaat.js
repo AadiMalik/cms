@@ -169,31 +169,12 @@ $("body").on("click", "#submit", function (e) {
         $("#supplier_id").focus();
         return false;
     }
-    if ($("#purchase_account").find(":selected").val() == 0 || $("#purchase_account").find(":selected").val() == '') {
-        error("Please Select Purchase Account!");
-        $("#purchase_account").focus();
-        return false;
-    }
     if ($("#reference").val() == '') {
         error("Please Enter Reference!");
         $("#reference").focus();
         return false;
     }
-    if ($("#paid_account_au").val() === '' && $("#paid_au").val() > 0) {
-        error("Please select paid (AU) account!");
-        $("#paid_account_au").focus();
-        return false;
-    }
-    if ($("#paid_account_dollar").val() === '' && $("#paid_dollar").val() > 0) {
-        error("Please select paid ($) account!");
-        $("#paid_account_dollar").focus();
-        return false;
-    }
-    if ($("#paid_account").val() === '' && $("#paid").val() > 0) {
-        error("Please select paid (PKR) account!");
-        $("#paid_account").focus();
-        return false;
-    }
+    
 
     var rowCount = $("table tbody tr").length;
     if (rowCount < 1) {
@@ -206,13 +187,9 @@ $("body").on("click", "#submit", function (e) {
     formData.append("id", $("#id").val());
     formData.append("purchase_date", $("#purchase_date").val());
     formData.append("supplier_id", $("#supplier_id").find(":selected").val());
-    formData.append("purchase_account", $("#purchase_account").find(":selected").val());
     formData.append("paid", $("#paid").val());
-    formData.append("paid_account", $("#paid_account").find(":selected").val());
     formData.append("paid_au", $("#paid_au").val());
-    formData.append("paid_account_au", $("#paid_account_au").find(":selected").val());
     formData.append("paid_dollar", $("#paid_dollar").val());
-    formData.append("paid_account_dollar", $("#paid_account_dollar").find(":selected").val());
     formData.append("reference", $("#reference").val());
     formData.append("total", $("#total").val());
     formData.append("total_au", $("#total_au").val());
@@ -378,8 +355,6 @@ function addProductRequest(id = null) {
     Short();
     Clear();
 }
-
-
 
 
 id = $("#id").val() != null ? $("#id").val() : null;

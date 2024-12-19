@@ -32,7 +32,7 @@ $("body").on("click", "#JobTaskDetail", function (event) {
     $("#product").val($(this).data("product"));
     $("#product_category").val($(this).data("category"));
     $("#design_no").val($(this).data("design_no"));
-    $("#recieved_weight").val($(this).data("net_weight"));
+    // $("#recieved_weight").val($(this).data("net_weight"));
     $("#purchase_order_id").val($(this).data("purchase_order_id"));
     $("#sale_order_id").val($(this).data("sale_order_id"));
     $("#warehouse_id").val($(this).data("warehouse_id"));
@@ -83,13 +83,16 @@ function totalRecievedWeight() {
 function finalPureWeight() {
     var payable_weight = $("#payable_weight").val();
     var mail_weight = $("#mail_weight").val();
+    var stones_weight = $("#stones_weight").val();
     var stone_adjustement = 0;
-    if ($("#mail").find(":selected").val() == 'Upper') {
-        stone_adjustement = (payable_weight / (96 + (1 * mail_weight))) * 96;
-    } else {
-        stone_adjustement = (payable_weight / 96) * (96 - (1 * mail_weight));
+    if (stones_weight > 0) {
+        if ($("#mail").find(":selected").val() == 'Upper') {
+            stone_adjustement = (payable_weight / (96 + (1 * mail_weight))) * 96;
+        } else {
+            stone_adjustement = (payable_weight / 96) * (96 - (1 * mail_weight));
+        }
+        $("#stone_adjustement").val(stone_adjustement.toFixed(3));
     }
-    $("#stone_adjustement").val(stone_adjustement.toFixed(3));
     var pure_weight = $("#pure_weight").val();
     var final_pure_weight = (pure_weight * 1) + (stone_adjustement * 1);
     $("#final_pure_weight").val(final_pure_weight.toFixed(3));
@@ -101,6 +104,10 @@ $("#polish_weight").on("keyup", function (event) {
     var total_weight = polish_weight * 1 + waste * 1;
     $("#waste").val(waste.toFixed(3));
     $("#total_weight").val(total_weight.toFixed(3));
+
+    var stones_weight = $("#stones_weight").val();
+    var with_stone_weight = (polish_weight*1)+(stones_weight*1);
+    $("#with_stone_weight").val(with_stone_weight.toFixed(3));
     finalPureWeight();
 });
 $("#mail").on("change", function (event) {
@@ -123,7 +130,10 @@ $("#mail_weight").on("keyup", function (event) {
     totalRecievedWeight();
     finalPureWeight();
 });
+$("#recieved_weight").on("keyup", function (event) {
 
+    totalRecievedWeight();
+});
 $("#other,#laker,#rp,#wax").on("keyup", function (event) {
     TotalAmount();
 });
@@ -224,7 +234,7 @@ function addProduct() {
     var rows = "";
     var total = 0;
     var total_dollar = 0;
-    var total_au=0;
+    var total_au = 0;
     var total_recieved_au = 0;
 
     productData.push({

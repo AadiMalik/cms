@@ -12,6 +12,7 @@ use App\Services\Concrete\DiamondCutService;
 use App\Services\Concrete\DiamondTypeService;
 use App\Services\Concrete\JobPurchaseService;
 use App\Services\Concrete\JobTaskService;
+use App\Services\Concrete\PurchaseOrderService;
 use App\Services\Concrete\StoneCategoryService;
 use App\Services\Concrete\SupplierService;
 use App\Traits\JsonResponse;
@@ -37,6 +38,7 @@ class JobPurchaseController extends Controller
     protected $diamond_cut_service;
     protected $diamond_clarity_service;
     protected $company_setting_service;
+    protected $purchase_order_service;
 
     public function __construct(
         JobPurchaseService $job_purchase_service,
@@ -50,7 +52,8 @@ class JobPurchaseController extends Controller
         DiamondColorService $diamond_color_service,
         DiamondCutService $diamond_cut_service,
         DiamondClarityService $diamond_clarity_service,
-        CompanySettingService $company_setting_service
+        CompanySettingService $company_setting_service,
+        PurchaseOrderService $purchase_order_service
     ) {
         $this->job_purchase_service = $job_purchase_service;
         $this->account_service = $account_service;
@@ -64,6 +67,7 @@ class JobPurchaseController extends Controller
         $this->diamond_cut_service = $diamond_cut_service;
         $this->diamond_clarity_service = $diamond_clarity_service;
         $this->company_setting_service = $company_setting_service;
+        $this->purchase_order_service = $purchase_order_service;
     }
     public function index()
     {
@@ -104,6 +108,7 @@ class JobPurchaseController extends Controller
         $diamond_colors = $this->diamond_color_service->getAllActive();
         $diamond_cuts = $this->diamond_cut_service->getAllActive();
         $diamond_clarities = $this->diamond_clarity_service->getAllActive();
+        $purchase_order = $this->purchase_order_service->getById($job_task_detail[0]['purchase_order_id']);
         return view('purchases/job_purchase.create', compact(
             'job_purchase_no',
             'job_task_detail',
@@ -114,7 +119,8 @@ class JobPurchaseController extends Controller
             'diamond_cuts',
             'diamond_clarities',
             'supplier',
-            'job_task_id'
+            'job_task_id',
+            'purchase_order'
         ));
     }
     public function store(Request $request)

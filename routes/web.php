@@ -367,6 +367,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [RattiKaatController::class, 'update']);
         Route::get('destroy/{id}', [RattiKaatController::class, 'destroy']);
         Route::post('post-ratti_kaat', [RattiKaatController::class, 'postRattiKaat']);
+        Route::get('unpost-ratti_kaat/{id}', [RattiKaatController::class, 'unpostRattiKaat']);
         Route::get('ratti-kaat-by-product-id/{product_id}', [RattiKaatController::class, 'getRattiKaatByProductId']);
         Route::get('get-detail-by-id/{id}', [RattiKaatController::class, 'getRattiKaatDetailById']);
 

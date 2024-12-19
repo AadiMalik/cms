@@ -14,12 +14,18 @@
 @section('content')
     <div class="main-content pt-4">
         <div class="row pl-2">
-            <div class="col-md-8 breadcrumb">
+            <div class="col-md-4 breadcrumb">
                 <h1>Job Purchase</h1>
                 <ul>
                     <li>Create</li>
                     <li>Save</li>
                 </ul>
+            </div>
+            <div class="col-md-4">
+                <input type="text" name="job_purchase_no" id="job_purchase_no"
+                    value="{{ isset($purchase_order) ? $purchase_order->purchase_order_no : 'POO-05102024-0001' }}"
+                    style="border:none; background:none; font-size:20px; font-weight:bold;"
+                    class="form-control text-center bg-light">
             </div>
             <div class="col-md-4">
                 <input type="text" name="job_purchase_no" id="job_purchase_no"
@@ -306,7 +312,7 @@
                                             <label class="form-label">Recieved Weight:<span
                                                     class="text-danger">*</span></label>
                                             <input type="text" id="recieved_weight" name="recieved_weight"
-                                                class="form-control" readonly value="0"
+                                                class="form-control" value="0"
                                                 onkeypress="return isNumberKey(event)" required />
                                         </div>
                                     </div>

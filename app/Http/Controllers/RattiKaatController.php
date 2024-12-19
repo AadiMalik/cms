@@ -10,6 +10,7 @@ use App\Services\Concrete\ProductService;
 use App\Services\Concrete\RattiKaatService;
 use App\Services\Concrete\SupplierService;
 use App\Services\Concrete\BeadTypeService;
+use App\Services\Concrete\CompanySettingService;
 use App\Services\Concrete\DiamondClarityService;
 use App\Services\Concrete\DiamondColorService;
 use App\Services\Concrete\DiamondCutService;
@@ -41,6 +42,7 @@ class RattiKaatController extends Controller
     protected $diamond_cut_service;
     protected $diamond_clarity_service;
     protected $job_purchase_service;
+    protected $company_setting_service;
 
     public function __construct(
         SupplierService $supplier_service,
@@ -54,7 +56,8 @@ class RattiKaatController extends Controller
         DiamondColorService $diamond_color_service,
         DiamondCutService $diamond_cut_service,
         DiamondClarityService $diamond_clarity_service,
-        JobPurchaseService $job_purchase_service
+        JobPurchaseService $job_purchase_service,
+        CompanySettingService $company_setting_service
     ) {
         $this->account_service = $account_service;
         $this->supplier_service = $supplier_service;
@@ -68,13 +71,16 @@ class RattiKaatController extends Controller
         $this->diamond_cut_service = $diamond_cut_service;
         $this->diamond_clarity_service = $diamond_clarity_service;
         $this->job_purchase_service = $job_purchase_service;
+        $this->company_setting_service = $company_setting_service;
     }
 
     public function index()
     {
         abort_if(Gate::denies('ratti_kaat_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $suppliers = $this->supplier_service->getAllActiveSupplier();
-        return view('purchases.ratti_kaat.index', compact('suppliers'));
+        $setting = $this->company_setting_service->getSetting();
+        $accounts = $this->account_service->getAllActiveChild();
+        return view('purchases.ratti_kaat.index', compact('suppliers','setting','accounts'));
     }
     public function getData(Request $request)
     {
@@ -98,7 +104,6 @@ class RattiKaatController extends Controller
     public function create()
     {
         abort_if(Gate::denies('ratti_kaat_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $accounts = $this->account_service->getAllActiveChild();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $products = $this->product_service->getAllActiveProduct();
         $ratti_kaat = $this->ratti_kaat_service->saveRattiKaat();
@@ -109,7 +114,6 @@ class RattiKaatController extends Controller
         $diamond_cuts = $this->diamond_cut_service->getAllActive();
         $diamond_clarities = $this->diamond_clarity_service->getAllActive();
         return view('purchases.ratti_kaat.create', compact(
-            'accounts',
             'suppliers',
             'products',
             'ratti_kaat',
@@ -366,7 +370,6 @@ class RattiKaatController extends Controller
                 'id'                => 'required',
                 'purchase_date'     => 'required',
                 'supplier_id'       => 'required',
-                'purchase_account'  => 'required',
                 'reference'         => 'required',
                 'pictures.*'        => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'purchaseDetail'    => 'required',
@@ -397,13 +400,13 @@ class RattiKaatController extends Controller
                 "id" => $request->id,
                 "purchase_date" => $request->purchase_date ?? Null,
                 "supplier_id" => $request->supplier_id ?? Null,
-                "purchase_account" => $request->purchase_account ?? Null,
+                // "purchase_account" => $request->purchase_account ?? Null,
                 "paid" => ($request->paid != '') ? $request->paid : 0,
-                "paid_account" => $request->paid_account ?? Null,
+                // "paid_account" => $request->paid_account ?? Null,
                 "paid_au" => ($request->paid_au != '') ? $request->paid_au : 0,
-                "paid_account_au" => $request->paid_account_au ?? Null,
+                // "paid_account_au" => $request->paid_account_au ?? Null,
                 "paid_dollar" => ($request->paid_dollar != '') ? $request->paid_dollar : 0,
-                "paid_account_dollar" => $request->paid_account_dollar ?? Null,
+                // "paid_account_dollar" => $request->paid_account_dollar ?? Null,
                 "reference" => $request->reference ?? Null,
                 "pictures" => $filenames ?? Null,
                 "purchaseDetail" => $request->purchaseDetail
@@ -424,7 +427,6 @@ class RattiKaatController extends Controller
     public function edit($id)
     {
         abort_if(Gate::denies('ratti_kaat_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $accounts = $this->account_service->getAllActiveChild();
         $suppliers = $this->supplier_service->getAllActiveSupplier();
         $products = $this->product_service->getAllActiveProduct();
         $bead_types = $this->bead_type_service->getAllActive();
@@ -435,7 +437,6 @@ class RattiKaatController extends Controller
         $diamond_clarities = $this->diamond_clarity_service->getAllActive();
         $ratti_kaat = $this->ratti_kaat_service->getRattiKaatById($id);
         return view('purchases.ratti_kaat.create', compact(
-            'accounts',
             'suppliers',
             'products',
             'ratti_kaat',
@@ -521,7 +522,20 @@ class RattiKaatController extends Controller
             return $this->error(config('anum.error'));
         }
     }
-
+    public function unpostRattiKaat($id)
+    {
+        abort_if(Gate::denies('ratti_kaat_post'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
+            $response = $this->ratti_kaat_service->unpostRattiKaatById($id);
+            return $this->success(
+                config('enum.unposted'),
+                $response,
+                true
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'),);
+        }
+    }
     public function destroy($id)
     {
         abort_if(Gate::denies('ratti_kaat_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');

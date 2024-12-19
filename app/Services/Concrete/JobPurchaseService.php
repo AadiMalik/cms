@@ -421,28 +421,28 @@ class JobPurchaseService
                 }
 
                 // AU Recieved JV
-                if ($job_purchase->total_recieved_au > 0 && $obj['recieved_au_account_id'] != null) {
-                    $Paid_Amount = str_replace(',', '', $job_purchase->total_recieved_au ?? 0);
+                // if ($job_purchase->total_recieved_au > 0 && $obj['recieved_au_account_id'] != null) {
+                //     $Paid_Amount = str_replace(',', '', $job_purchase->total_recieved_au ?? 0);
 
-                    $recieved_au_account = Account::find($obj['recieved_au_account_id']);
-                    $recieved_jv = $this->PaidAUtoSupplier($job_purchase->job_purchase_no, $job_purchase_date, $job_purchase->id, $supplier, $recieved_au_account, $supplir_account, $Paid_Amount);
-                    // Supplier PKR payment
-                    $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
-                        $supplier->id,
-                        1,
-                        $obj['recieved_au_account_id'],
-                        $job_purchase_date,
-                        null,
-                        $Paid_Amount,
-                        $recieved_jv
-                    );
-                }
+                //     $recieved_au_account = Account::find($obj['recieved_au_account_id']);
+                //     $recieved_jv = $this->PaidAUtoSupplier($job_purchase->job_purchase_no, $job_purchase_date, $job_purchase->id, $supplier, $recieved_au_account, $supplir_account, $Paid_Amount);
+                //     // Supplier PKR payment
+                //     $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                //         $supplier->id,
+                //         1,
+                //         $obj['recieved_au_account_id'],
+                //         $job_purchase_date,
+                //         null,
+                //         $Paid_Amount,
+                //         $recieved_jv
+                //     );
+                // }
 
                 //Job Purchase Update
                 $job_purchase->is_posted = 1;
                 $job_purchase->jv_id = $journal_entry_id;
-                $job_purchase->jv_recieved_id = ($recieved_jv != null) ? $recieved_jv->id : null;
-                $job_purchase->supplier_au_payment_id = ($supplier_au_payment != null) ? $supplier_au_payment->id : null;
+                // $job_purchase->jv_recieved_id = ($recieved_jv != null) ? $recieved_jv->id : null;
+                // $job_purchase->supplier_au_payment_id = ($supplier_au_payment != null) ? $supplier_au_payment->id : null;
                 $job_purchase->update();
 
                 //Purchase order update

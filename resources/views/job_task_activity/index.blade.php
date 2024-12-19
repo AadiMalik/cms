@@ -22,7 +22,7 @@
                             <div class="col-md-4">
                                 <div class="card">
                                     <form id="job_task_activityForm" action="#" method="POST"
-                                        enctype="multipart/form-data">
+                                    enctype="multipart/form-data">
                                         <div class="card-body" style="font-size: 14px;">
                                             @csrf
                                             <input type="hidden" name="job_task_id" id="job_task_id"
@@ -54,8 +54,7 @@
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="form-label">Picture:<span
-                                                                class="text-danger">*</span></label>
+                                                        <label class="form-label">Picture:</label>
                                                         <input type="file" class="form-control" name="picture"
                                                             id="picture" required>
                                                     </div>
