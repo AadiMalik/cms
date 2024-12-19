@@ -304,7 +304,7 @@ function addProductRequest(id = null) {
     }
     var check = true;
     $.each(productData, function (e, val) {
-        if (val.product_id == $("#product_id option:selected").val()) {
+        if (val.description.replace(/\s+/g, '') + val.product_id.toString() ==  description.replace(/\s+/g, '') + productId.toString()) {
             error("Product is already added !");
             check = false;
             return false;
@@ -319,7 +319,7 @@ function addProductRequest(id = null) {
     rows += `<tr id=${productId}><td>${i}</td><td>${productName}</td><td>${description}</td><td style="text-align: right;">${scale_weight}</td><td style="text-align: right;" >${bead_weight}</td>
           <td style="text-align: right;" >${stones_weight}</td><td style="text-align: right;" >${diamond_carat}</td><td style="text-align: right;" >${net_weight}</td><td style="text-align: right;" >${supplier_kaat}</td>
           <td style="text-align: right;" >${kaat}</td><td style="text-align: right;" >${pure_payable}</td><td style="text-align: right;" >${other_charge}</td><td style="text-align: right;" >${total_dollar}</td><td style="text-align: right;" >${total_amount}</td><td>
-          <a class="text-danger text-white r${productId}" onclick="Remove(${productId})"><i class="fa fa-trash"></i></a></td></tr>`;
+          <a class="text-danger text-white r${description.replace(/\s+/g, '') + productId.toString()}" onclick="Remove('${description.replace(/\s+/g, '') + productId.toString()}')"><i class="fa fa-trash"></i></a></td></tr>`;
     total = $("#total").val() * 1 + total_amount * 1;
     $("#total").val(total.toFixed(3));
     total_dollar = $("#grand_total_dollar").val() * 1 + total_dollar * 1;
@@ -399,11 +399,14 @@ function Remove(id) {
     }).then((result) => {
         var item_index = "";
         var total = 0;
+        var total_au = 0;
         var grand_total_dollar = 0;
         $.each(productData, function (i, val) {
-            if (val.product_id == id) {
+            if (val.description.replace(/\s+/g, '') + val.product_id.toString() == id) {
                 total = $("#total").val() * 1 - val.total_amount * 1;
+                total_au = $("#total_au").val() * 1 - val.pure_payable * 1;
                 grand_total_dollar = $("#grand_total_dollar").val() * 1 - val.total_dollar * 1;
+                $("#total_au").val(total_au > 0 ? total_au : 0);
                 $("#total").val(total > 0 ? total : 0);
                 $("#grand_total_dollar").val(grand_total_dollar > 0 ? grand_total_dollar : 0);
                 $("#" + id).hide();
