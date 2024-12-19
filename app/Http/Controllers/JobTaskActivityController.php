@@ -49,7 +49,6 @@ class JobTaskActivityController extends Controller
                 'job_task_id'   => 'required',
                 'category'      => 'required',
                 'weight'        => 'required',
-                'picture'       => 'required|image|mimes:jpeg,png,jpg,gif',
                 'description'   => 'required'
                 
             ],
@@ -65,6 +64,7 @@ class JobTaskActivityController extends Controller
                 $validation_error
             );
         }
+
 
         try {
             DB::beginTransaction();

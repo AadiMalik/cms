@@ -359,8 +359,8 @@ function addProduct() {
         $("#preloader").hide();
         return false;
     }
-    if (waste < 10 || waste == "") {
-        error("Please Enter waste or minimum 10!");
+    if (waste == 0 || waste == "") {
+        error("Please Enter waste!");
         $("#preloader").hide();
         return false;
     }

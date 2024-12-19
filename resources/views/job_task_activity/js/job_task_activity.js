@@ -36,11 +36,11 @@ $("body").on("click", "#submit", function (e) {
         return false;
     }
     
-    if ($("#picture").val() == '') {
-        error("Please add picture!");
-        $("#picture").focus();
-        return false;
-    }
+    // if ($("#picture").val() == '') {
+    //     error("Please add picture!");
+    //     $("#picture").focus();
+    //     return false;
+    // }
     if ($("#description").val() == "") {
         error("Please enter description!");
         $("#description").focus();

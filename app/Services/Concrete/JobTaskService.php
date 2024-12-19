@@ -138,7 +138,7 @@ class JobTaskService
 
       public function getById($id)
       {
-            return $this->model_job_task->getModel()::with(['supplier_name', 'warehouse_name'])->find($id);
+            return $this->model_job_task->getModel()::with(['supplier_name','purchase_order', 'warehouse_name'])->find($id);
       }
 
       public function JobTaskDetail($job_task_id)
