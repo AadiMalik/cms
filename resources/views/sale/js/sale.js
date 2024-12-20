@@ -170,7 +170,7 @@ function getFinishProduct(tag_no) {
             $("#product").val(data.product.name != "" ? data.product.name : "");
             $("#product_id").val(data.product_id > 0 ? data.product_id : 0);
             $("#tag_no").val(data.tag_no != "" ? data.tag_no : 0);
-            $("#gold_carat").val(data.gold_carat > 0 ? data.gold_carat : 0);
+            $("#gold_carat").val(data.gold_carat > 0 ? data.gold_carat : 0).trigger("keyup");
             $("#scale_weight").val(
                 data.scale_weight > 0 ? data.scale_weight : 0
             );
