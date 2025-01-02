@@ -22,6 +22,38 @@ function isNumberKey(evt) {
 
     return true;
 }
+$("#CustomerButton").click(function () {
+    $("#customerForm").trigger("reset");
+    $("#customerModel").modal("show");
+});
+function getCustomer() {
+    $("#preloader").show();
+    $.ajax({
+        url: url_local + "/customers/json",
+        type: "GET",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (data) {
+            console.log(data);
+            var data = data.Data;
+            $("#customer_id").empty();
+            $("#customer").empty();
+            var customer =
+                '<option value="0" selected disabled>--Select Customer--</option>';
+            $.each(data, function (key, value) {
+                customer +=
+                    '<option value="' +
+                    value.id +
+                    '">' +
+                    value.name +
+                    " </option>";
+            });
+            $("#customer_id").append(customer);
+            $("#preloader").hide();
+        },
+    });
+}
 $("#customer_id").on("change", function () {
     var customer_id = $("#customer_id").val();
     $("#preloader").show();
@@ -66,6 +98,47 @@ $("#customer_id").on("change", function () {
         },
     });
 });
+
+$("#customerForm").submit(function (e) {
+    e.preventDefault();
+    $("#preloader").show();
+    if ($("#name").val() == "" && $("#name").val() == 0) {
+        error("Please enter name!");
+        $("#name").focus();
+        $("#preloader").hide();
+        return false;
+    }
+    if ($("#contact").val() == "" && $("#contact").val() == 0) {
+        error("Please enter contact and unique!");
+        $("#contact").focus();
+        $("#preloader").hide();
+        return false;
+    }
+
+    $.ajax({
+        url: url_local + "/customers/json-store",
+        type: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: $("#customerForm").serialize(),
+        dataType: "json",
+
+        success: function (data) {
+            if (data.Success) {
+                success(data.Message);
+                $("#customerForm").trigger("reset");
+                $("#customerModel").modal("hide");
+                getCustomer();
+                $("#preloader").hide();
+            } else {
+                error(data.Message);
+                $("#preloader").hide();
+            }
+        },
+    });
+});
+
 $("#net_weight,#waste").on("keyup", function (event) {
     var net_weight = $("#net_weight").val();
     var waste = $("#waste").val();
@@ -181,6 +254,13 @@ $("body").on("click", "#submit", function (e) {
         return false;
     }
 
+    if ($("#delivery_date").val() == "") {
+        error("Please select delivery date!");
+        $("#delivery_date").focus();
+        $("#preloader").hide();
+        return false;
+    }
+
     if (
         $("#customer_id").find(":selected").val() == "" ||
         $("#customer_id").find(":selected").val() == 0
@@ -222,6 +302,7 @@ $("body").on("click", "#submit", function (e) {
     var formData = new FormData();
     formData.append("id", $("#id").val());
     formData.append("sale_order_date", $("#sale_order_date").val());
+    formData.append("delivery_date", $("#delivery_date").val());
     formData.append("customer_id", $("#customer_id").find(":selected").val());
     formData.append("warehouse_id", $("#warehouse_id").find(":selected").val());
     formData.append("gold_rate_type_id", $("#gold_rate_type_id").find(":selected").val());

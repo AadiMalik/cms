@@ -43,7 +43,7 @@
                                 <div class="row">
                                     <div class="col-md-7">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label">Sale Order Date:<span
                                                             style="color:red;">*</span></label>
@@ -53,24 +53,36 @@
                                                         required>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-label">Delivery Date:<span
+                                                            style="color:red;">*</span></label>
+                                                    <input type="date" name="delivery_date" id="delivery_date"
+                                                        class="form-control"
+                                                        value="{{ isset($sale_order) ? $sale_order->delivery_date : old('delivery_date') }}"
+                                                        required>
+                                                </div>
+                                            </div>
 
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label">Customer: <span
-                                                            class="text-danger">*</span></label>
+                                                            class="text-danger">*</span><a href="javascript:void(0)" id="CustomerButton"
+                                                            style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                            class="btn-primary"><i class="fa fa-plus text-white"></i></a></label>
                                                     <select id="customer_id" name="customer_id"
                                                         class="form-control show-tick">
-                                                        <option value="" selected disabled>--Select Customer--
+                                                        <!-- <option value="" selected disabled>--Select Customer--
                                                         </option>
                                                         @foreach ($customers as $item)
                                                             <option value="{{ $item->id }}">{{ $item->name ?? '' }}
                                                             </option>
-                                                        @endforeach
+                                                        @endforeach -->
 
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label class="form-label">Warehouse:<span
                                                             class="text-danger">*</span></label>
@@ -273,6 +285,7 @@
         </section>
 
     </div>
+    @include('sale_order/Modal/CustomerModal')
 @endsection
 @section('js')
     <script src="{{ url('sale-order/js/sale_order.js') }}"></script>
@@ -286,10 +299,13 @@
             $('#warehouse_id').select2();
             $('#gold_rate_type_id').select2();
             $('#product_id').select2();
+            getCustomer();
             const sale_order_date = document.getElementById("sale_order_date");
+            const delivery_date = document.getElementById("delivery_date");
 
             // ✅ Using the visitor's timezone
             sale_order_date.value = formatDate();
+            delivery_date.value = formatDate();
 
             console.log(formatDate());
 
@@ -305,6 +321,7 @@
                 ].join("/");
             }
             sale_order_date.value = new Date().toISOString().split("T")[0];
+            delivery_date.value = new Date().toISOString().split("T")[0];
         });
     </script>
 @endsection

@@ -89,6 +89,7 @@ class SaleOrderController extends Controller
             [
                 'id'                => 'required',
                 'sale_order_date'   => 'required',
+                'delivery_date'   => 'required',
                 'customer_id'       => 'required',
                 'warehouse_id'      => 'required',
                 'gold_rate'         => 'required',

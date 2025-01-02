@@ -125,6 +125,7 @@ class SaleOrderService
             $saleOrderDetail = json_decode($obj['saleOrderDetail'], true);
             $saleOrderObj = [
                 "sale_order_date" => $obj['sale_order_date'],
+                "delivery_date" => $obj['delivery_date'],
                 "customer_id" => $obj['customer_id'],
                 "warehouse_id" => $obj['warehouse_id'],
                 "total_qty" => count($saleOrderDetail) ?? 0,

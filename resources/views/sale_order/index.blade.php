@@ -73,6 +73,7 @@
                                                 <th>Rate Type</th>
                                                 <th>Warehouse</th>
                                                 <th>Total QTY</th>
+                                                <th>Delivery Date</th>
                                                 <th>Purchase</th>
                                                 <th>Complete</th>
                                                 <th>Action</th>
@@ -107,6 +108,7 @@
                                 {data: 'gold_rate_type',name: 'gold_rate_type', orderable: false, searchable: false},
                                 {data: 'warehouse_name',name: 'warehouse_name', orderable: false, searchable: false},
                                 {data: 'total_qty',name: 'total_qty'},
+                                {data: 'delivery_date',name: 'delivery_date'},
                                 {data: 'is_purchased',name: 'is_purchased', orderable: false, searchable: false},
                                 {data: 'is_complete',name: 'is_complete', orderable: false, searchable: false},
                                 {data: 'action',name: 'action','sortable': false,searchable: false}",

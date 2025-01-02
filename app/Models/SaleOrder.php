@@ -12,6 +12,7 @@ class SaleOrder extends Model
         'id',
         'sale_order_no',
         'sale_order_date',
+        'delivery_date',
         'customer_id',
         'warehouse_id',
         'total_qty',
