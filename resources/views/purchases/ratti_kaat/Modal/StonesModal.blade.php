@@ -6,16 +6,13 @@
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">×</span></button>
             </div>
-            <form id="stoneWeightForm" name="stoneWeightForm" class="form-horizontal">
+            <!-- <form id="stoneWeightForm" name="stoneWeightForm" class="form-horizontal"> -->
                 <div class="modal-body">
-                    <input type="hidden" name="stone_weight_product_id" id="stone_weight_product_id">
-                    <input type="hidden" name="stone_weight_ratti_kaat_id" id="stone_weight_ratti_kaat_id"
-                        value="{{ isset($ratti_kaat) ? $ratti_kaat->id : '' }}">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Category:<span style="color:red;">*</span></label>
-                                <select name="category" class="form-control" name="category" id="category" required>
+                                <select class="form-control" name="category" id="category" required>
                                     <option value="" selected disabled>--Select Category--</option>
                                     @foreach ($stone_categories as $item)
                                         <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
@@ -27,7 +24,7 @@
                             <div class="form-group">
                                 <label for="name">Type:<span style="color:red;">*</span></label>
 
-                                <input type="text" class="form-control" id="type" name="type"
+                                <input type="text" class="form-control" id="stone_type" name="stone_type"
                                     placeholder="Enter type" maxlength="255" required>
                             </div>
                         </div>
@@ -82,7 +79,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group mt-4">
-                                <button id="stoneSave" style="width: 100%;" class="btn btn-primary"
+                                <button onclick="addStoneProduct()" style="width: 100%;" class="btn btn-primary"
                                     value="create">Add</button>
                             </div>
                         </div>
@@ -92,7 +89,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Sr.</th>
+                                        <!-- <th>Sr.</th> -->
                                         <th>Category</th>
                                         <th>Type</th>
                                         <th>Stone QTY</th>
@@ -104,7 +101,7 @@
                                         <th>Delete</th>
                                     </tr>
                                 </thead>
-                                <tbody id="stoneTable">
+                                <tbody id="stones_products">
 
                                 </tbody>
                             </table>
@@ -114,7 +111,7 @@
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-            </form>
+            <!-- </form> -->
         </div>
     </div>
 </div>

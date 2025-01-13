@@ -85,7 +85,7 @@ $("#net_weight").on("keyup", function (event) {
 });
 
 //Kaat function
-function KaatCal(){
+function KaatCal() {
     var net_weight = $("#net_weight").val();
     var supplier_kaat = $("#supplier_kaat").val();
     var kaat = (net_weight / 96) * supplier_kaat;
@@ -142,7 +142,7 @@ $("#changeKaatForm").submit(function (e) {
 
         success: function (data) {
             console.log(data);
-            if (data.Success==true) {
+            if (data.Success == true) {
                 $("#supplier_kaat").val(data.Data.kaat);
                 KaatCal();
                 $("#approved_by").val(data.Data.approved_by);
@@ -174,7 +174,7 @@ $("body").on("click", "#submit", function (e) {
         $("#reference").focus();
         return false;
     }
-    
+
 
     var rowCount = $("table tbody tr").length;
     if (rowCount < 1) {
@@ -226,9 +226,6 @@ $("body").on("click", "#submit", function (e) {
             } else {
                 error(data.Message);
             }
-        },
-        error: function(xhr, status, error) {
-            error("An error occurred:");
         }
     });
 });
@@ -304,7 +301,7 @@ function addProductRequest(id = null) {
     }
     var check = true;
     $.each(productData, function (e, val) {
-        if (val.description.replace(/\s+/g, '') + val.product_id.toString() ==  description.replace(/\s+/g, '') + productId.toString()) {
+        if (val.description.replace(/\s+/g, '') + val.product_id.toString() == description.replace(/\s+/g, '') + productId.toString()) {
             error("Product is already added !");
             check = false;
             return false;
@@ -351,6 +348,9 @@ function addProductRequest(id = null) {
         total_dollar: total_dollar,
         total_amount: total_amount,
         approved_by: approved_by,
+        beadData: beadData,
+        stoneData: stoneData,
+        diamondData: diamondData,
     });
     Short();
     Clear();
@@ -366,12 +366,12 @@ $.ajax({
     },
 
     success: function (data) {
-          console.log(data);
+        console.log(data);
         i = 0;
         productData = data.Data;
 
         var rows = "";
-        var total=0;
+        var total = 0;
         $.each(productData, function (e, val) {
             i = i + 1;
             productData.sr = i;
@@ -443,4 +443,10 @@ function Clear() {
     $("#total_dollar").val(0);
     $("#total_amount").val(0);
     $("#approved_by").val('');
+    beadData = [];
+    stoneData = [];
+    diamondData = [];
+    $("#beads_products").empty();
+    $("#stones_products").empty();
+    $("#diamonds_products").empty();
 }

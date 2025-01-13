@@ -127,238 +127,238 @@ class RattiKaatController extends Controller
     }
 
     // Bead Weight
-    public function getBeadWeight($ratti_kaat_id, $product_id)
-    {
-        try {
-            $ratti_kaat_beads = $this->ratti_kaat_service->getBeadWeight($ratti_kaat_id, $product_id);
-            return $this->success(
-                config('enum.success'),
-                $ratti_kaat_beads,
-                false
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
-    public function storeBeadWeight(Request $request)
-    {
-        $validation = Validator::make(
-            $request->all(),
-            [
-                'type'                      => 'required',
-                'bead_weight_product_id'    => 'required',
-                'bead_weight_ratti_kaat_id' => 'required',
-                'beads'                     => 'required',
-                'bead_gram'                 => 'required',
-                'bead_carat'                => 'required',
-                'bead_gram_rate'            => 'required',
-                'bead_carat_rate'           => 'required',
-                'bead_total'                => 'required'
-            ],
-            $this->validationMessage()
-        );
+    // public function getBeadWeight($ratti_kaat_id, $product_id)
+    // {
+    //     try {
+    //         $ratti_kaat_beads = $this->ratti_kaat_service->getBeadWeight($ratti_kaat_id, $product_id);
+    //         return $this->success(
+    //             config('enum.success'),
+    //             $ratti_kaat_beads,
+    //             false
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
+    // public function storeBeadWeight(Request $request)
+    // {
+    //     $validation = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'type'                      => 'required',
+    //             'bead_weight_product_id'    => 'required',
+    //             'bead_weight_ratti_kaat_id' => 'required',
+    //             'beads'                     => 'required',
+    //             'bead_gram'                 => 'required',
+    //             'bead_carat'                => 'required',
+    //             'bead_gram_rate'            => 'required',
+    //             'bead_carat_rate'           => 'required',
+    //             'bead_total'                => 'required'
+    //         ],
+    //         $this->validationMessage()
+    //     );
 
-        if ($validation->fails()) {
-            $validation_error = "";
-            foreach ($validation->errors()->all() as $message) {
-                $validation_error .= $message;
-            }
-            return $this->validationResponse(
-                $validation_error
-            );
-        }
-        try {
-            $obj = [
-                'product_id'        => $request->bead_weight_product_id,
-                'ratti_kaat_id'     => $request->bead_weight_ratti_kaat_id,
-                'type'              => $request->type,
-                'beads'             => $request->beads,
-                'gram'              => $request->bead_gram,
-                'carat'             => $request->bead_carat,
-                'gram_rate'         => $request->bead_gram_rate,
-                'carat_rate'        => $request->bead_carat_rate,
-                'total_amount'      => $request->bead_total
-            ];
-            $response = $this->ratti_kaat_service->saveBeadWeight($obj);
-            return  $this->success(
-                config("enum.saved"),
-                $response
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
-    public function destroyBeadWeight($id)
-    {
-        try {
-            $beads = $this->ratti_kaat_service->deleteBeadWeightById($id);
-            return $this->success(
-                config("enum.delete"),
-                $beads,
-                true
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
+    //     if ($validation->fails()) {
+    //         $validation_error = "";
+    //         foreach ($validation->errors()->all() as $message) {
+    //             $validation_error .= $message;
+    //         }
+    //         return $this->validationResponse(
+    //             $validation_error
+    //         );
+    //     }
+    //     try {
+    //         $obj = [
+    //             'product_id'        => $request->bead_weight_product_id,
+    //             'ratti_kaat_id'     => $request->bead_weight_ratti_kaat_id,
+    //             'type'              => $request->type,
+    //             'beads'             => $request->beads,
+    //             'gram'              => $request->bead_gram,
+    //             'carat'             => $request->bead_carat,
+    //             'gram_rate'         => $request->bead_gram_rate,
+    //             'carat_rate'        => $request->bead_carat_rate,
+    //             'total_amount'      => $request->bead_total
+    //         ];
+    //         $response = $this->ratti_kaat_service->saveBeadWeight($obj);
+    //         return  $this->success(
+    //             config("enum.saved"),
+    //             $response
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
+    // public function destroyBeadWeight($id)
+    // {
+    //     try {
+    //         $beads = $this->ratti_kaat_service->deleteBeadWeightById($id);
+    //         return $this->success(
+    //             config("enum.delete"),
+    //             $beads,
+    //             true
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
 
     // Stone Weight
-    public function getStoneWeight($ratti_kaat_id, $product_id)
-    {
-        try {
-            $ratti_kaat_stones = $this->ratti_kaat_service->getStoneWeight($ratti_kaat_id, $product_id);
-            return $this->success(
-                config('enum.success'),
-                $ratti_kaat_stones,
-                false
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
-    public function storeStoneWeight(Request $request)
-    {
-        $validation = Validator::make(
-            $request->all(),
-            [
-                'stone_weight_product_id'    => 'required',
-                'stone_weight_ratti_kaat_id' => 'required',
-                'category'                   => 'required',
-                'type'                       => 'required',
-                'stones'                     => 'required',
-                'stone_gram'                 => 'required',
-                'stone_carat'                => 'required',
-                'stone_gram_rate'            => 'required',
-                'stone_carat_rate'           => 'required',
-                'stone_total'                => 'required'
-            ],
-            $this->validationMessage()
-        );
+    // public function getStoneWeight($ratti_kaat_id, $product_id)
+    // {
+    //     try {
+    //         $ratti_kaat_stones = $this->ratti_kaat_service->getStoneWeight($ratti_kaat_id, $product_id);
+    //         return $this->success(
+    //             config('enum.success'),
+    //             $ratti_kaat_stones,
+    //             false
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
+    // public function storeStoneWeight(Request $request)
+    // {
+    //     $validation = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'stone_weight_product_id'    => 'required',
+    //             'stone_weight_ratti_kaat_id' => 'required',
+    //             'category'                   => 'required',
+    //             'type'                       => 'required',
+    //             'stones'                     => 'required',
+    //             'stone_gram'                 => 'required',
+    //             'stone_carat'                => 'required',
+    //             'stone_gram_rate'            => 'required',
+    //             'stone_carat_rate'           => 'required',
+    //             'stone_total'                => 'required'
+    //         ],
+    //         $this->validationMessage()
+    //     );
 
-        if ($validation->fails()) {
-            $validation_error = "";
-            foreach ($validation->errors()->all() as $message) {
-                $validation_error .= $message;
-            }
-            return $this->validationResponse(
-                $validation_error
-            );
-        }
-        try {
-            $obj = [
-                'product_id'        => $request->stone_weight_product_id,
-                'ratti_kaat_id'     => $request->stone_weight_ratti_kaat_id,
-                'category'          => $request->category,
-                'type'              => $request->type,
-                'stones'            => $request->stones,
-                'gram'              => $request->stone_gram,
-                'carat'             => $request->stone_carat,
-                'gram_rate'         => $request->stone_gram_rate,
-                'carat_rate'        => $request->stone_carat_rate,
-                'total_amount'      => $request->stone_total
-            ];
-            $response = $this->ratti_kaat_service->saveStoneWeight($obj);
-            return  $this->success(
-                config("enum.saved"),
-                $response
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
-    public function destroyStoneWeight($id)
-    {
-        try {
-            $stones = $this->ratti_kaat_service->deleteStoneWeightById($id);
-            return $this->success(
-                config("enum.delete"),
-                $stones,
-                true
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
+    //     if ($validation->fails()) {
+    //         $validation_error = "";
+    //         foreach ($validation->errors()->all() as $message) {
+    //             $validation_error .= $message;
+    //         }
+    //         return $this->validationResponse(
+    //             $validation_error
+    //         );
+    //     }
+    //     try {
+    //         $obj = [
+    //             'product_id'        => $request->stone_weight_product_id,
+    //             'ratti_kaat_id'     => $request->stone_weight_ratti_kaat_id,
+    //             'category'          => $request->category,
+    //             'type'              => $request->type,
+    //             'stones'            => $request->stones,
+    //             'gram'              => $request->stone_gram,
+    //             'carat'             => $request->stone_carat,
+    //             'gram_rate'         => $request->stone_gram_rate,
+    //             'carat_rate'        => $request->stone_carat_rate,
+    //             'total_amount'      => $request->stone_total
+    //         ];
+    //         $response = $this->ratti_kaat_service->saveStoneWeight($obj);
+    //         return  $this->success(
+    //             config("enum.saved"),
+    //             $response
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
+    // public function destroyStoneWeight($id)
+    // {
+    //     try {
+    //         $stones = $this->ratti_kaat_service->deleteStoneWeightById($id);
+    //         return $this->success(
+    //             config("enum.delete"),
+    //             $stones,
+    //             true
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
 
     // Diamond Carat
-    public function getDiamondCarat($ratti_kaat_id, $product_id)
-    {
-        try {
-            $ratti_kaat_diamonds = $this->ratti_kaat_service->getDiamondCarat($ratti_kaat_id, $product_id);
-            return $this->success(
-                config('enum.success'),
-                $ratti_kaat_diamonds,
-                false
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
-    public function storeDiamondCarat(Request $request)
-    {
-        $validation = Validator::make(
-            $request->all(),
-            [
-                'diamond_carat_product_id'      => 'required',
-                'diamond_carat_ratti_kaat_id'   => 'required',
-                'diamonds'                      => 'required',
-                'type'                          => 'required',
-                'color'                         => 'required',
-                'clarity'                       => 'required',
-                'cut'                           => 'required',
-                'carat'                         => 'required',
-                'carat_rate'                    => 'required',
-                'diamond_total'                 => 'required',
-                'diamond_total_dollar'          => 'required'
-            ],
-            $this->validationMessage()
-        );
+    // public function getDiamondCarat($ratti_kaat_id, $product_id)
+    // {
+    //     try {
+    //         $ratti_kaat_diamonds = $this->ratti_kaat_service->getDiamondCarat($ratti_kaat_id, $product_id);
+    //         return $this->success(
+    //             config('enum.success'),
+    //             $ratti_kaat_diamonds,
+    //             false
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
+    // public function storeDiamondCarat(Request $request)
+    // {
+    //     $validation = Validator::make(
+    //         $request->all(),
+    //         [
+    //             'diamond_carat_product_id'      => 'required',
+    //             'diamond_carat_ratti_kaat_id'   => 'required',
+    //             'diamonds'                      => 'required',
+    //             'type'                          => 'required',
+    //             'color'                         => 'required',
+    //             'clarity'                       => 'required',
+    //             'cut'                           => 'required',
+    //             'carat'                         => 'required',
+    //             'carat_rate'                    => 'required',
+    //             'diamond_total'                 => 'required',
+    //             'diamond_total_dollar'          => 'required'
+    //         ],
+    //         $this->validationMessage()
+    //     );
 
-        if ($validation->fails()) {
-            $validation_error = "";
-            foreach ($validation->errors()->all() as $message) {
-                $validation_error .= $message;
-            }
-            return $this->validationResponse(
-                $validation_error
-            );
-        }
-        try {
-            $obj = [
-                'product_id'        => $request->diamond_carat_product_id,
-                'ratti_kaat_id'     => $request->diamond_carat_ratti_kaat_id,
-                'diamonds'          => $request->diamonds,
-                'type'              => $request->type,
-                'cut'               => $request->cut,
-                'color'             => $request->color,
-                'clarity'           => $request->clarity,
-                'carat'             => $request->carat,
-                'carat_rate'        => $request->carat_rate,
-                'total_amount'      => $request->diamond_total,
-                'total_dollar'      => $request->diamond_total_dollar,
-            ];
-            $response = $this->ratti_kaat_service->saveDiamondCarat($obj);
-            return  $this->success(
-                config("enum.saved"),
-                $response
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
-    public function destroyDiamondCarat($id)
-    {
-        try {
-            $diamond = $this->ratti_kaat_service->deleteDiamondCaratById($id);
-            return $this->success(
-                config("enum.delete"),
-                $diamond,
-                true
-            );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
-    }
+    //     if ($validation->fails()) {
+    //         $validation_error = "";
+    //         foreach ($validation->errors()->all() as $message) {
+    //             $validation_error .= $message;
+    //         }
+    //         return $this->validationResponse(
+    //             $validation_error
+    //         );
+    //     }
+    //     try {
+    //         $obj = [
+    //             'product_id'        => $request->diamond_carat_product_id,
+    //             'ratti_kaat_id'     => $request->diamond_carat_ratti_kaat_id,
+    //             'diamonds'          => $request->diamonds,
+    //             'type'              => $request->type,
+    //             'cut'               => $request->cut,
+    //             'color'             => $request->color,
+    //             'clarity'           => $request->clarity,
+    //             'carat'             => $request->carat,
+    //             'carat_rate'        => $request->carat_rate,
+    //             'total_amount'      => $request->diamond_total,
+    //             'total_dollar'      => $request->diamond_total_dollar,
+    //         ];
+    //         $response = $this->ratti_kaat_service->saveDiamondCarat($obj);
+    //         return  $this->success(
+    //             config("enum.saved"),
+    //             $response
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
+    // public function destroyDiamondCarat($id)
+    // {
+    //     try {
+    //         $diamond = $this->ratti_kaat_service->deleteDiamondCaratById($id);
+    //         return $this->success(
+    //             config("enum.delete"),
+    //             $diamond,
+    //             true
+    //         );
+    //     } catch (Exception $e) {
+    //         return $this->error(config('enum.error'));
+    //     }
+    // }
 
     // Ratti Kaat Purchase Store
     public function store(Request $request)
@@ -387,7 +387,7 @@ class RattiKaatController extends Controller
             );
         }
 
-        try {
+        // try {
             $filenames = [];
             if ($request->hasFile('pictures')) {
                 foreach ($request->file('pictures') as $file) {
@@ -418,9 +418,9 @@ class RattiKaatController extends Controller
                 config('enum.saved'),
                 []
             );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 
 

@@ -7,10 +7,7 @@
                         aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-                <form id="beadWeightForm" name="beadWeightForm" class="form-horizontal">
-                    <input type="hidden" name="bead_weight_product_id" id="bead_weight_product_id">
-                    <input type="hidden" name="bead_weight_ratti_kaat_id" id="bead_weight_ratti_kaat_id"
-                        value="{{ isset($ratti_kaat) ? $ratti_kaat->id : '' }}">
+                <!-- <form id="beadWeightForm" name="beadWeightForm" class="form-horizontal"> -->
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -74,18 +71,18 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group mt-4">
-                                <button id="beadSave" style="width: 100%;" class="btn btn-primary"
+                                <button onclick="addBeadProduct()" style="width: 100%;" class="btn btn-primary"
                                     value="create">Add</button>
                             </div>
                         </div>
                     </div>
-                </form>
+                <!-- </form> -->
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Sr.</th>
+                                    <!-- <th>Sr.</th> -->
                                     <th>Type</th>
                                     <th>Bead QTY</th>
                                     <th>Gram</th>
@@ -96,7 +93,7 @@
                                     <th>Delete</th>
                                 </tr>
                             </thead>
-                            <tbody id="beadTable">
+                            <tbody id="beads_products">
 
                             </tbody>
                         </table>

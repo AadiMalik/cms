@@ -6,11 +6,8 @@
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">×</span></button>
             </div>
-            <form id="diamondCaratForm" name="diamondCaratForm" class="form-horizontal">
+            <!-- <form id="diamondCaratForm" name="diamondCaratForm" class="form-horizontal"> -->
                 <div class="modal-body">
-                    <input type="hidden" name="diamond_carat_product_id" id="diamond_carat_product_id">
-                    <input type="hidden" name="diamond_carat_ratti_kaat_id" id="diamond_carat_ratti_kaat_id"
-                        value="{{ isset($ratti_kaat) ? $ratti_kaat->id : '' }}">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -23,7 +20,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Type:<span style="color:red;">*</span></label>
-                                <select name="type" class="form-control" name="type" id="type" required>
+                                <select class="form-control" name="diamond_type" id="diamond_type" required>
                                     <option value="" selected disabled>--Select Type--</option>
                                     @foreach ($diamond_types as $item)
                                         <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
@@ -34,7 +31,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Cut:<span style="color:red;">*</span></label>
-                                <select name="cut" class="form-control" name="cut" id="cut" required>
+                                <select class="form-control" name="cut" id="cut" required>
                                     <option value="" selected disabled>--Select Cut--</option>
                                     @foreach ($diamond_cuts as $item)
                                         <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
@@ -45,7 +42,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Color:<span style="color:red;">*</span></label>
-                                <select name="color" class="form-control" name="color" id="color" required>
+                                <select class="form-control" name="color" id="color" required>
                                     <option value="" selected disabled>--Select Color--</option>
                                     @foreach ($diamond_colors as $item)
                                         <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
@@ -56,7 +53,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="name">Clarity:<span style="color:red;">*</span></label>
-                                <select name="clarity" class="form-control" name="clarity" id="clarity" required>
+                                <select class="form-control" name="clarity" id="clarity" required>
                                     <option value="" selected disabled>--Select Clarity--</option>
                                     @foreach ($diamond_clarities as $item)
                                         <option value="{{ $item->name ?? '' }}">{{ $item->name ?? '' }}</option>
@@ -98,7 +95,7 @@
                         </div>
                         <div class="col-md-3">
                             <div class="form-group mt-4">
-                                <button id="beadSave" style="width: 100%;" class="btn btn-primary"
+                                <button onclick="addDiamondProduct()" style="width: 100%;" class="btn btn-primary"
                                     value="create">Add</button>
                             </div>
                         </div>
@@ -108,7 +105,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Sr.</th>
+                                        <!-- <th>Sr.</th> -->
                                         <th>Diamond QTY</th>
                                         <th>Type</th>
                                         <th>Cut</th>
@@ -121,7 +118,7 @@
                                         <th>Delete</th>
                                     </tr>
                                 </thead>
-                                <tbody id="diamondTable">
+                                <tbody id="diamonds_products">
 
                                 </tbody>
                             </table>
@@ -131,7 +128,7 @@
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
                     </div>
                 </div>
-            </form>
+            <!-- </form> -->
         </div>
     </div>
 </div>

@@ -10,6 +10,7 @@ class RattiKaatStone extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'ratti_kaat_detail_id',
         'category',
         'type',
         'ratti_kaat_id',
@@ -33,6 +34,10 @@ class RattiKaatStone extends Model
     public function ratti_kaat_name()
     {
         return $this->belongsTo(RattiKaat::class, 'ratti_kaat_id');
+    }
+    public function ratti_kaat_detail_name()
+    {
+        return $this->belongsTo(RattiKaatDetail::class, 'ratti_kaat_detail_id');
     }
     public function product_name()
     {

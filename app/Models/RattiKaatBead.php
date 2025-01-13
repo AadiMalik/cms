@@ -10,6 +10,7 @@ class RattiKaatBead extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'ratti_kaat_detail_id',
         'type',
         'ratti_kaat_id',
         'product_id',
@@ -32,6 +33,10 @@ class RattiKaatBead extends Model
     public function ratti_kaat_name()
     {
         return $this->belongsTo(RattiKaat::class, 'ratti_kaat_id');
+    }
+    public function ratti_kaat_detail_name()
+    {
+        return $this->belongsTo(RattiKaatDetail::class, 'ratti_kaat_detail_id');
     }
     public function product_name()
     {
