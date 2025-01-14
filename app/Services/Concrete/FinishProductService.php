@@ -33,7 +33,7 @@ class FinishProductService
 
     public function getFinishProductSource()
     {
-        $model = $this->model_finish_product->getModel()::with(['product', 'warehouse'])->where('is_deleted', 0);
+        $model = $this->model_finish_product->getModel()::with(['product', 'warehouse', 'parent_name'])->where('is_deleted', 0);
 
         $data = DataTables::of($model)
             ->addColumn('product', function ($item) {
@@ -41,6 +41,10 @@ class FinishProductService
             })
             ->addColumn('warehouse', function ($item) {
                 return $item->warehouse->name ?? '';
+            })
+            ->addColumn('parent', function ($item) {
+
+                return $item->parent_name->tag_no ?? '';
             })
             ->addColumn('is_parent', function ($item) {
                 if ($item->is_parent == 1) {
@@ -85,7 +89,7 @@ class FinishProductService
 
                 return $action_column;
             })
-            ->rawColumns(['product', 'warehouse', 'is_parent', 'saled', 'status', 'action'])
+            ->rawColumns(['product', 'warehouse', 'parent', 'is_parent', 'saled', 'status', 'action'])
             ->make(true);
         return $data;
     }
@@ -125,7 +129,7 @@ class FinishProductService
             $finishProduct = [
                 "tag_no" => $obj['tag_no'],
                 "parent_id" => $obj['parent_id'] ?? 0,
-                "is_parent" => ($obj['is_parent'] == 'on') ? 1 : 0,
+                "is_parent" => $obj['is_parent'],
                 "job_purchase_id" => $obj['job_purchase_id'] ?? null,
                 "job_purchase_detail_id" => $obj['job_purchase_detail_id'] ?? null,
                 "ratti_kaat_id" => $obj['ratti_kaat_id'] ?? null,
@@ -238,13 +242,66 @@ class FinishProductService
 
     public function getByTagNo($tag_no)
     {
-        return $this->model_finish_product->getModel()::with([
+        $finish_product = $this->model_finish_product->getModel()::with([
             'ratti_kaat',
             'ratti_kaat_detail',
             'product',
             'warehouse'
         ])->where('tag_no', $tag_no)
             ->first();
+        if ($finish_product->is_parent == 1) {
+            $finish_products = $this->model_finish_product->getModel()::with([
+                'ratti_kaat',
+                'ratti_kaat_detail',
+                'product',
+                'warehouse'
+            ])->where('parent_id', $finish_product->id)->get();
+            $data = [];
+            foreach ($finish_products as $item) {
+                $beadDetail = $this->model_finish_product_bead->getModel()::
+                select('type', 'finish_product_id', 'beads', 'gram', 'carat', 'gram_rate', 'carat_rate', 'total_amount')
+                    ->where('finish_product_id', $item->id)
+                    ->where('is_deleted', 0)->get();
+                $stonesDetail = $this->model_finish_product_stone->getModel()::
+                select('category','type', 'finish_product_id', 'stones', 'gram', 'carat', 'gram_rate', 'carat_rate', 'total_amount')
+                    ->where('finish_product_id', $item->id)
+                    ->where('is_deleted', 0)->get();
+                $diamondDetail = $this->model_finish_product_diamond->getModel()::
+                select('diamonds','type', 'finish_product_id', 'color', 'cut','clarity', 'carat', 'carat_rate', 'total_amount','total_dollar')
+                ->where('finish_product_id', $item->id)
+                    ->where('is_deleted', 0)->get();
+                $data[] = [
+                    "tag_no" => $item->tag_no ?? '',
+                    "finish_product_id" => $item->id,
+                    "ratti_kaat_id" => $item->ratti_kaat_id ?? '',
+                    "ratti_kaat_detail_id" => $item->ratti_kaat_detail_id ?? '',
+                    "job_purchase_detail_id" => $item->job_purchase_detail_id ?? '',
+                    "product" => $item->product->name ?? '',
+                    "product_id" => $item->product_id ?? '',
+                    "gold_carat" => $item->gold_carat ?? 0,
+                    "scale_weight" => $item->scale_weight ?? 0,
+                    "bead_weight" => $item->bead_weight ?? 0,
+                    "stones_weight" => $item->stones_weight ?? 0,
+                    "diamond_weight" => $item->diamond_weight ?? 0,
+                    "net_weight" => $item->net_weight ?? 0,
+                    "gross_weight" => $item->gross_weight ?? 0,
+                    "waste" => $item->waste ?? 0,
+                    "making" => $item->making ?? 0,
+                    "gold_rate" => $item->gold_rate ?? 0,
+                    "total_gold_price" => $item->total_gold_price ?? 0,
+                    "other_amount" => $item->other_amount ?? 0,
+                    "total_bead_price" => $item->total_bead_price ?? 0,
+                    "total_stones_price" => $item->total_stones_price ?? 0,
+                    "total_diamond_price" => $item->total_diamond_price ?? 0,
+                    "total_amount" => $item->total_amount ?? 0,
+                    "beadDetail" => $beadDetail,
+                    "stonesDetail" => $stonesDetail,
+                    "diamondDetail" => $diamondDetail
+                ];
+            }
+            return $data;
+        }
+        return $finish_product;
     }
 
     public function getBeadByFinishProductId($finish_product_id)

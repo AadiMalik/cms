@@ -100,7 +100,7 @@ class FinishProductController extends Controller
     public function store(Request $request)
     {
         abort_if(Gate::denies('tagging_product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        if ($request->is_parent != 'on') {
+        if ($request->is_parent != 1) {
             $validation = Validator::make(
                 $request->all(),
                 [

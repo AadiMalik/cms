@@ -59,6 +59,10 @@ class FinishProduct extends Model
     {
         return $this->belongsToMany(FinishProduct::class);
     }
+    public function parent_name()
+    {
+        return $this->belongsTo(FinishProduct::class, 'parent_id');
+    }
     public function ratti_kaat()
     {
         return $this->belongsTo(RattiKaat::class, 'ratti_kaat_id');

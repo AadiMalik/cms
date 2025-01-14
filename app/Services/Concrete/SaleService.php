@@ -154,11 +154,11 @@ class SaleService
             foreach ($saleDetail as $item) {
                 $saleDetailObj = [
                     "sale_id" => $obj['id'],
-                    "finish_product_id" => ($item->finish_product_id!='')?$item->finish_product_id:null,
-                    "ratti_kaat_id" => ($item->ratti_kaat_id!='')?$item->ratti_kaat_id:null,
-                    "ratti_kaat_detail_id" => ($item->ratti_kaat_detail_id!='')?$item->ratti_kaat_detail_id:null,
-                    "job_purchase_detail_id" => ($item->job_purchase_detail_id!='')?$item->job_purchase_detail_id:null,
-                    "product_id" => ($item->product_id!='')?$item->product_id:null,
+                    "finish_product_id" => ($item->finish_product_id != '') ? $item->finish_product_id : null,
+                    "ratti_kaat_id" => ($item->ratti_kaat_id != '') ? $item->ratti_kaat_id : null,
+                    "ratti_kaat_detail_id" => ($item->ratti_kaat_detail_id != '') ? $item->ratti_kaat_detail_id : null,
+                    "job_purchase_detail_id" => ($item->job_purchase_detail_id != '') ? $item->job_purchase_detail_id : null,
+                    "product_id" => ($item->product_id != '') ? $item->product_id : null,
                     "gold_carat" => $item->gold_carat,
                     "scale_weight" => $item->scale_weight,
                     "bead_weight" => $item->bead_weight,
@@ -226,6 +226,16 @@ class SaleService
                 }
 
                 $finish_product = FinishProduct::find($item->finish_product_id);
+                if ($finish_product->parent_id > 0) {
+                    $parent = FinishProduct::where('parent_id', $finish_product->parent_id)
+                        ->where('is_saled', 0)->get();
+                    if (count($parent)==1) {
+                        $parent_update = FinishProduct::find($finish_product->parent_id);
+                        $parent_update->is_saled = 1;
+                        $parent_update->updatedby_id = Auth::user()->id;
+                        $parent_update->update();
+                    }
+                }
                 $finish_product->is_saled = 1;
                 $finish_product->updatedby_id = Auth::user()->id;
                 $finish_product->update();

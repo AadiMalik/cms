@@ -259,7 +259,9 @@ function TotalAmount() {
 
 $("body").on("click", "#submit", function (e) {
     e.preventDefault();
+    var is_parent=1;
     if (!$("#is_parent").is(":checked")) {
+        is_parent=0;
         // Validation logic
         if ($("#tag_no").val() == "") {
             error("Please generat tag no!");
@@ -400,7 +402,7 @@ $("body").on("click", "#submit", function (e) {
 
     // Create FormData object for Ajax
     var formData = new FormData();
-    formData.append("is_parent", $("#is_parent").val());
+    formData.append("is_parent", is_parent);
     formData.append("parent_id", $("#parent_id").find(":selected").val());
     formData.append("tag_no", $("#tag_no").val());
     formData.append("job_purchase_id", $("#job_purchase_id").val());
