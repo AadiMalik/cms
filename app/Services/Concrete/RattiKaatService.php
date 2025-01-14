@@ -842,6 +842,7 @@ class RattiKaatService
                 ->where('ratti_kaat_details.product_id', $product_id)
                 ->where('ratti_kaat_details.is_finish_product', 0)
                 ->where('ratti_kaats.is_posted', 1)
+                ->where('ratti_kaat_details.is_deleted', 0)
                 ->get();
 
             return $ratti_kaat;
@@ -873,11 +874,10 @@ class RattiKaatService
     }
 
     // get beads weight
-    public function getBeadWeight($ratti_kaat_id, $product_id)
+    public function getBeadWeight($ratti_kaat_id)
     {
         return $this->model_ratti_kaat_bead->getModel()::with(['ratti_kaat_name', 'product_name'])
-            ->where('ratti_kaat_id', $ratti_kaat_id)
-            ->where('product_id', $product_id)
+            ->where('ratti_kaat_detail_id', $ratti_kaat_id)
             ->where('is_deleted', 0)
             ->get();
     }
@@ -914,11 +914,10 @@ class RattiKaatService
     }
 
     // get stones weight
-    public function getStoneWeight($ratti_kaat_id, $product_id)
+    public function getStoneWeight($ratti_kaat_detail_id)
     {
         return $this->model_ratti_kaat_stone->getModel()::with(['ratti_kaat_name', 'product_name'])
-            ->where('ratti_kaat_id', $ratti_kaat_id)
-            ->where('product_id', $product_id)
+            ->where('ratti_kaat_detail_id', $ratti_kaat_detail_id)
             ->where('is_deleted', 0)
             ->get();
     }
@@ -956,31 +955,30 @@ class RattiKaatService
 
 
     // get diamonds Carat
-    public function getDiamondCarat($ratti_kaat_id, $product_id)
+    public function getDiamondCarat($ratti_kaat_detail_id)
     {
         return $this->model_ratti_kaat_diamond->getModel()::with(['ratti_kaat_name', 'product_name'])
-            ->where('ratti_kaat_id', $ratti_kaat_id)
-            ->where('product_id', $product_id)
+            ->where('ratti_kaat_detail_id', $ratti_kaat_detail_id)
             ->where('is_deleted', 0)
             ->get();
     }
-    public function saveDiamondCarat($obj)
-    {
-        try {
-            DB::beginTransaction();
-            $obj['createdby_id'] = Auth::User()->id;
+    // public function saveDiamondCarat($obj)
+    // {
+    //     try {
+    //         DB::beginTransaction();
+    //         $obj['createdby_id'] = Auth::User()->id;
 
-            $saved_obj = $this->model_ratti_kaat_diamond->create($obj);
+    //         $saved_obj = $this->model_ratti_kaat_diamond->create($obj);
 
-            DB::commit();
-        } catch (Exception $e) {
+    //         DB::commit();
+    //     } catch (Exception $e) {
 
-            DB::rollback();
-            throw $e;
-        }
+    //         DB::rollback();
+    //         throw $e;
+    //     }
 
-        return $saved_obj;
-    }
+    //     return $saved_obj;
+    // }
 
     // delete diamond by id
     public function deleteDiamondCaratById($id)

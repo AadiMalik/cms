@@ -55,7 +55,6 @@ function stone_total() {
 }
 
 var stonesData = [];
-var stone_sr = 0;
 function addStones() {
     var category = $("#category option:selected").val();
     var type = $("#stone_type").val();
@@ -108,7 +107,6 @@ function addStones() {
     if (check == false) {
         return;
     }
-    stone_sr = stone_sr + 1;
     var tbody = $("#stonesTable tbody");
     tbody.empty();
     var rows = "";
@@ -127,11 +125,9 @@ function addStones() {
         total_amount: stone_total,
     });
     $.each(stonesData, function (e, val) {
-        stone_sr = stone_sr + 1;
-        stonesData.sr = stone_sr;
         var category = val.category;
         
-        rows += `<tr id=${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${i}</td><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+        rows += `<tr id=${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
             <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
             <td><a class="text-danger text-white stoner${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}" onclick="StoneRemove('${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
         total += val.total_amount * 1;
@@ -148,17 +144,16 @@ function addStones() {
     StoneShort();
     $("#stoneWeightForm").trigger("reset");
 }
-function StonesByPurchaseDetail(ratti_kaat_id, product_id) {
+function StonesByPurchaseDetail(ratti_kaat_detail_id) {
     $.ajax({
         type: "GET",
-        url: url_local + "/ratti-kaats/stones" + "/" + ratti_kaat_id + "/" + product_id,
+        url: url_local + "/ratti-kaats/stones" + "/" + ratti_kaat_detail_id,
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
 
         success: function (data) {
             console.log(data);
-            stone_sr = 0;
             stonesData = data.Data;
             var tbody = $("#stonesTable tbody");
             tbody.empty();
@@ -166,11 +161,9 @@ function StonesByPurchaseDetail(ratti_kaat_id, product_id) {
             var total = 0;
             var total_weight = 0;
             $.each(stonesData, function (e, val) {
-                stone_sr = stone_sr + 1;
-                stonesData.sr = stone_sr;
                 
                 var category = val.category;
-                rows += `<tr id=${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${i}</td><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+                rows += `<tr id=${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
           <td><a class="text-danger text-white stoner${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}" onclick="StoneRemove('${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;
@@ -194,7 +187,6 @@ function StonesByJobPurchaseDetail(job_purchase_detail_id, product_id) {
 
         success: function (data) {
             console.log(data);
-            stone_sr = 0;
             stonesData = data.Data;
             var tbody = $("#stonesTable tbody");
             tbody.empty();
@@ -202,11 +194,9 @@ function StonesByJobPurchaseDetail(job_purchase_detail_id, product_id) {
             var total = 0;
             var total_weight = 0;
             $.each(stonesData, function (e, val) {
-                stone_sr = stone_sr + 1;
-                stonesData.sr = stone_sr;
                 
                 var category = val.category;
-                rows += `<tr id=${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${i}</td><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+                rows += `<tr id=${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
           <td><a class="text-danger text-white stoner${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}" onclick="StoneRemove('${category.replace(/\s+/g, '') + Math.floor(val.stones) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;

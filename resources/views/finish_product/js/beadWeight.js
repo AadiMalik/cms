@@ -56,7 +56,6 @@ function bead_total() {
 
 
 var beadData = [];
-var i = 0;
 function addBead() {
     var type = $("#type option:selected").val();
     var beads = $("#beads").val();
@@ -104,7 +103,6 @@ function addBead() {
     if (check == false) {
         return;
     }
-    i = i + 1;
     var tbody = $("#beadTable tbody");
     tbody.empty();
     var rows = "";
@@ -132,10 +130,8 @@ function addBead() {
         total_amount: bead_total,
     });
     $.each(beadData, function (e, val) {
-        i = i + 1;
-        beadData.sr = i;
         var type = val.type;
-        rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}><td>${i}</td><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+        rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
             <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
             <td><a class="text-danger text-white r${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}" onclick="Remove('${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
         total += val.total_amount * 1;
@@ -151,17 +147,16 @@ function addBead() {
     Short();
     $("#beadWeightForm").trigger("reset");
 }
-function BeadByPurchaseDetail(ratti_kaat_id, product_id) {
+function BeadByPurchaseDetail(ratti_kaat_detail_id) {
     $.ajax({
         type: "GET",
-        url: url_local + "/ratti-kaats/beads" + "/" + ratti_kaat_id + "/" + product_id,
+        url: url_local + "/ratti-kaats/beads" + "/" + ratti_kaat_detail_id,
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
 
         success: function (data) {
             console.log(data);
-            i = 0;
             beadData = data.Data;
             var tbody = $("#beadTable tbody");
             tbody.empty();
@@ -169,10 +164,8 @@ function BeadByPurchaseDetail(ratti_kaat_id, product_id) {
             var total = 0;
             var total_weight = 0;
             $.each(beadData, function (e, val) {
-                i = i + 1;
-                beadData.sr = i;
                 var type = val.type;
-                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}><td>${i}</td><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
           <td><a class="text-danger text-white r${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}" onclick="Remove('${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;
@@ -197,7 +190,7 @@ function BeadByJobPurchaseDetail(job_purchase_detail_id, product_id) {
 
         success: function (data) {
             console.log(data);
-            i = 0;
+            
             beadData = data.Data;
             var tbody = $("#beadTable tbody");
             tbody.empty();
@@ -205,10 +198,8 @@ function BeadByJobPurchaseDetail(job_purchase_detail_id, product_id) {
             var total = 0;
             var total_weight = 0;
             $.each(beadData, function (e, val) {
-                i = i + 1;
-                beadData.sr = i;
                 var type = val.type;
-                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}><td>${i}</td><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
+                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}><td>${val.type}</td><td>${val.beads}</td><td style="text-align: right;">${val.gram}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.gram_rate}</td><td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
           <td><a class="text-danger text-white r${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}" onclick="Remove('${type.replace(/\s+/g, '') + Math.floor(val.beads) + Math.floor(val.gram)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;

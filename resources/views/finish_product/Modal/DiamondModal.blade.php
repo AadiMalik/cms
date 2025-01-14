@@ -99,7 +99,7 @@
                             <table class="table" id="diamondsTable">
                                 <thead>
                                     <tr>
-                                        <th>Sr.</th>
+                                        <!-- <th>Sr.</th> -->
                                         <th>Diamond QTY</th>
                                         <th>Type</th>
                                         <th>Cut</th>

@@ -91,7 +91,7 @@
                             <table class="table" id="stonesTable">
                                 <thead>
                                     <tr>
-                                        <th>Sr.</th>
+                                        <!-- <th>Sr.</th> -->
                                         <th>Category</th>
                                         <th>Type</th>
                                         <th>Stone QTY</th>

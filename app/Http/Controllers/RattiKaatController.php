@@ -127,19 +127,19 @@ class RattiKaatController extends Controller
     }
 
     // Bead Weight
-    // public function getBeadWeight($ratti_kaat_id, $product_id)
-    // {
-    //     try {
-    //         $ratti_kaat_beads = $this->ratti_kaat_service->getBeadWeight($ratti_kaat_id, $product_id);
-    //         return $this->success(
-    //             config('enum.success'),
-    //             $ratti_kaat_beads,
-    //             false
-    //         );
-    //     } catch (Exception $e) {
-    //         return $this->error(config('enum.error'));
-    //     }
-    // }
+    public function getBeadWeight($ratti_kaat_detail_id)
+    {
+        try {
+            $ratti_kaat_beads = $this->ratti_kaat_service->getBeadWeight($ratti_kaat_detail_id);
+            return $this->success(
+                config('enum.success'),
+                $ratti_kaat_beads,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
     // public function storeBeadWeight(Request $request)
     // {
     //     $validation = Validator::make(
@@ -203,19 +203,19 @@ class RattiKaatController extends Controller
     // }
 
     // Stone Weight
-    // public function getStoneWeight($ratti_kaat_id, $product_id)
-    // {
-    //     try {
-    //         $ratti_kaat_stones = $this->ratti_kaat_service->getStoneWeight($ratti_kaat_id, $product_id);
-    //         return $this->success(
-    //             config('enum.success'),
-    //             $ratti_kaat_stones,
-    //             false
-    //         );
-    //     } catch (Exception $e) {
-    //         return $this->error(config('enum.error'));
-    //     }
-    // }
+    public function getStoneWeight($ratti_kaat_detail_id)
+    {
+        try {
+            $ratti_kaat_stones = $this->ratti_kaat_service->getStoneWeight($ratti_kaat_detail_id);
+            return $this->success(
+                config('enum.success'),
+                $ratti_kaat_stones,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
     // public function storeStoneWeight(Request $request)
     // {
     //     $validation = Validator::make(
@@ -281,19 +281,19 @@ class RattiKaatController extends Controller
     // }
 
     // Diamond Carat
-    // public function getDiamondCarat($ratti_kaat_id, $product_id)
-    // {
-    //     try {
-    //         $ratti_kaat_diamonds = $this->ratti_kaat_service->getDiamondCarat($ratti_kaat_id, $product_id);
-    //         return $this->success(
-    //             config('enum.success'),
-    //             $ratti_kaat_diamonds,
-    //             false
-    //         );
-    //     } catch (Exception $e) {
-    //         return $this->error(config('enum.error'));
-    //     }
-    // }
+    public function getDiamondCarat($ratti_kaat_detail_id)
+    {
+        try {
+            $ratti_kaat_diamonds = $this->ratti_kaat_service->getDiamondCarat($ratti_kaat_detail_id);
+            return $this->success(
+                config('enum.success'),
+                $ratti_kaat_diamonds,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
     // public function storeDiamondCarat(Request $request)
     // {
     //     $validation = Validator::make(

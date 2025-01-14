@@ -84,7 +84,7 @@
                         <table class="table" id="beadTable">
                             <thead>
                                 <tr>
-                                    <th>Sr.</th>
+                                    <!-- <th>Sr.</th> -->
                                     <th>Type</th>
                                     <th>Bead QTY</th>
                                     <th>Gram</th>

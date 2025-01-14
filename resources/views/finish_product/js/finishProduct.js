@@ -83,9 +83,9 @@ $("body").on("click", "#purchase_id", function (event) {
             $("#stones_weight").val((data.stones_weight > 0) ? data.stones_weight : 0);
             $("#diamond_weight").val((data.diamond_carat > 0) ? data.diamond_carat : 0);
 
-            BeadByPurchaseDetail(data.ratti_kaat_id, product_id);
-            StonesByPurchaseDetail(data.ratti_kaat_id, product_id);
-            DiamondsByPurchaseDetail(data.ratti_kaat_id, product_id);
+            BeadByPurchaseDetail(data.id);
+            StonesByPurchaseDetail(data.id);
+            DiamondsByPurchaseDetail(data.id);
         } else {
             error(data.Message);
         }

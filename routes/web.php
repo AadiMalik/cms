@@ -382,9 +382,9 @@ Route::group(['middleware' => ['auth']], function () {
         });
 
         // Bead weight
-        Route::get('beads/{ratti_kaat_id}/{product_id}', [RattiKaatController::class, 'getBeadWeight']);
-        Route::post('bead-store', [RattiKaatController::class, 'storeBeadWeight']);
-        Route::get('bead-destroy/{id}', [RattiKaatController::class, 'destroyBeadWeight']);
+        Route::get('beads/{ratti_kaat_detail_id}', [RattiKaatController::class, 'getBeadWeight']);
+        // Route::post('bead-store', [RattiKaatController::class, 'storeBeadWeight']);
+        // Route::get('bead-destroy/{id}', [RattiKaatController::class, 'destroyBeadWeight']);
 
         Route::get('/js/beadWeight.js', function () {
             $path = resource_path('views/purchases/ratti_kaat/js/beadWeight.js');
@@ -397,9 +397,9 @@ Route::group(['middleware' => ['auth']], function () {
         });
 
         // Stone weight
-        Route::get('stones/{ratti_kaat_id}/{product_id}', [RattiKaatController::class, 'getStoneWeight']);
-        Route::post('stone-store', [RattiKaatController::class, 'storeStoneWeight']);
-        Route::get('stone-destroy/{id}', [RattiKaatController::class, 'destroyStoneWeight']);
+        Route::get('stones/{ratti_kaat_detail_id}', [RattiKaatController::class, 'getStoneWeight']);
+        // Route::post('stone-store', [RattiKaatController::class, 'storeStoneWeight']);
+        // Route::get('stone-destroy/{id}', [RattiKaatController::class, 'destroyStoneWeight']);
 
         Route::get('/js/stoneWeight.js', function () {
             $path = resource_path('views/purchases/ratti_kaat/js/stoneWeight.js');
@@ -412,9 +412,9 @@ Route::group(['middleware' => ['auth']], function () {
         });
 
         // diamond carat
-        Route::get('diamonds/{ratti_kaat_id}/{product_id}', [RattiKaatController::class, 'getDiamondCarat']);
-        Route::post('diamond-store', [RattiKaatController::class, 'storeDiamondCarat']);
-        Route::get('diamond-destroy/{id}', [RattiKaatController::class, 'destroyDiamondCarat']);
+        Route::get('diamonds/{ratti_kaat_detail_id}', [RattiKaatController::class, 'getDiamondCarat']);
+        // Route::post('diamond-store', [RattiKaatController::class, 'storeDiamondCarat']);
+        // Route::get('diamond-destroy/{id}', [RattiKaatController::class, 'destroyDiamondCarat']);
 
         Route::get('/js/diamondCarat.js', function () {
             $path = resource_path('views/purchases/ratti_kaat/js/diamondCarat.js');

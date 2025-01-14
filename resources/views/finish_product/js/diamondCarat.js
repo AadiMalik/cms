@@ -40,7 +40,6 @@ $("#carat_rate").on("keyup", function (event) {
     $("#diamond_total_dollar").val(dollars.toFixed(3));
 });
 var diamondsData = [];
-var diamond_sr = 0;
 
 function addDiamond() {
     var type = $("#diamond_type option:selected").val();
@@ -95,7 +94,6 @@ function addDiamond() {
     if (check == false) {
         return;
     }
-    diamond_sr = diamond_sr + 1;
     var tbody = $("#diamondsTable tbody");
     tbody.empty();
     var rows = "";
@@ -114,11 +112,9 @@ function addDiamond() {
         total_amount: diamond_total,
     });
     $.each(diamondsData, function (e, val) {
-        diamond_sr = diamond_sr + 1;
-        diamondsData.sr = diamond_sr;
         var type = val.type;
         
-        rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
+        rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
           <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
@@ -136,17 +132,16 @@ function addDiamond() {
     diamondshort();
     $("#stoneWeightForm").trigger("reset");
 }
-function DiamondsByPurchaseDetail(ratti_kaat_id, product_id) {
+function DiamondsByPurchaseDetail(ratti_kaat_detail_id) {
     $.ajax({
         type: "GET",
-        url: url_local + "/ratti-kaats/diamonds" + "/" + ratti_kaat_id + "/" + product_id,
+        url: url_local + "/ratti-kaats/diamonds" + "/" + ratti_kaat_detail_id,
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
 
         success: function (data) {
             console.log(data);
-            diamond_sr = 0;
             diamondsData = data.Data;
             var tbody = $("#diamondsTable tbody");
             tbody.empty();
@@ -154,11 +149,9 @@ function DiamondsByPurchaseDetail(ratti_kaat_id, product_id) {
             var total = 0;
             var total_weight = 0;
             $.each(diamondsData, function (e, val) {
-                diamond_sr = diamond_sr + 1;
-                diamondsData.sr = diamond_sr;
                 
                 var type = val.type;
-                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
+                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
           <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
@@ -184,7 +177,6 @@ function DiamondsByJobPurchaseDetail(job_purchase_detail_id, product_id) {
 
         success: function (data) {
             console.log(data);
-            diamond_sr = 0;
             diamondsData = data.Data;
             var tbody = $("#diamondsTable tbody");
             tbody.empty();
@@ -192,11 +184,9 @@ function DiamondsByJobPurchaseDetail(job_purchase_detail_id, product_id) {
             var total = 0;
             var total_weight = 0;
             $.each(diamondsData, function (e, val) {
-                diamond_sr = diamond_sr + 1;
-                diamondsData.sr = diamond_sr;
                 
                 var type = val.type;
-                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${i}</td><td>${val.diamonds}</td><td>${val.type}</td>
+                rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
           <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
           <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
