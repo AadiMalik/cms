@@ -26,6 +26,8 @@
             <div class="col-md-4">
                 <input type="text" id="tag_no_text" style="border:none; background:none; font-size:20px; font-weight:bold;"
                     class="form-control text-center bg-light">
+                <input type="text" id="parent_tag_no_text" value="{{$parent_tag}}" style="display:none; border:none; background:none; font-size:20px; font-weight:bold;"
+                    class="form-control text-center bg-light">
             </div>
         </div>
         <div class="separator-breadcrumb border-top"></div>
@@ -59,10 +61,17 @@
                                 <input type="hidden" name="ratti_kaat_id" id="ratti_kaat_id" value="">
                                 <input type="hidden" name="ratti_kaat_detail_id" id="ratti_kaat_detail_id" value="">
                                 <input type="hidden" name="job_purchase_id" id="job_purchase_id" value="">
-                                <input type="hidden" name="job_purchase_detail_id" id="job_purchase_detail_id" value="">
+                                <input type="hidden" name="job_purchase_detail_id" id="job_purchase_detail_id"
+                                    value="">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <div class="card card-tabs">
+                                        <div class="form-group">
+                                            <label class="switch pr-5 switch-primary mr-3"><span>Is Parent</span>
+                                                <input type="checkbox" name="is_parent" id="is_parent"><span
+                                                    class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <div class="card card-tabs" id="purchase_div">
                                             <div class="card-content" style="padding: 8px;">
                                                 <div class="card-title">
                                                     <b>Purchases</b>
@@ -81,7 +90,7 @@
                                     </div>
                                     <div class="col-md-9">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-6" id="product_div">
                                                 <div class="form-group">
                                                     <label class="form-label">Product:<span
                                                             class="text-danger">*</span></label>
@@ -123,7 +132,7 @@
                                                         required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-6" id="gold_carat_div">
                                                 <div class="form-group">
                                                     <label class="form-label">Gold Karat:<span
                                                             class="text-danger">*</span></label>
@@ -132,7 +141,23 @@
                                                         required />
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4" id="parent_div">
+                                                <div class="form-group">
+                                                    <label class="form-label">Parent:</label>
+                                                    <select id="parent_id" name="parent_id"
+                                                        class="form-control show-tick" required>
+                                                        <option value="0" selected="selected" disabled>--Select
+                                                            Parent--
+                                                        </option>
+                                                        @foreach ($parents as $item)
+                                                            <option value="{{ $item->id }}">
+                                                                {{ $item->tag_no ?? '' }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4" id="scale_div">
                                                 <div class="form-group">
                                                     <label class="form-label">Scale Weight:<span
                                                             class="text-danger">*</span></label>
@@ -141,7 +166,7 @@
                                                         onkeypress="return isNumberKey(event)" required readonly />
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4" id="net_weight_div">
                                                 <div class="form-group">
                                                     <label class="form-label">Net Weight:<span
                                                             class="text-danger">*</span></label>
@@ -153,7 +178,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mt-2">
+                                <div class="row mt-2" id="product_detail_div">
                                     <div class="col-md-12">
                                         <h6 class="font-weight-bold">Purchase Detail:</h6>
                                     </div>
@@ -185,8 +210,8 @@
                                         <div class="form-group">
                                             <label class="form-label">Diamond Weight:<span class="text-danger">*</span>
                                                 <a href="javascript:void(0)" id="DiamondCaratButton"
-                                                style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
-                                                class="btn-primary"><i class="fa fa-eye text-white"></i></a>
+                                                    style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                    class="btn-primary"><i class="fa fa-eye text-white"></i></a>
                                             </label>
                                             <input type="text" id="diamond_weight" name="diamond_weight"
                                                 class="form-control" readonly value="0"
@@ -216,7 +241,7 @@
                                                 onkeypress="return isNumberKey(event)" required />
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-label">Laker:<span class="text-danger">*</span></label>
@@ -336,11 +361,33 @@
         $(document).ready(function() {
             $('#warehouse_id').select2();
             $('#product_id').select2();
+            $('#parent_id').select2();
             $('#supplier_id').select2();
-            $('#paid_account').select2();
-            $('#paid_account_dollar').select2();
-            $('#paid_account_au').select2();
-
+            $('#is_parent').change(function() {
+                if ($(this).is(':checked')) {
+                    $("#purchase_div").hide();
+                    $("#parent_div").hide();
+                    $("#product_div").hide();
+                    $("#gold_carat_div").hide();
+                    $("#scale_div").hide();
+                    $("#net_weight_div").hide();
+                    $("#product_detail_div").hide();
+                    $("#tag_no").val('{{$parent_tag}}');
+                    $("#tag_no_text").hide();
+                    $("#parent_tag_no_text").show();
+                } else {
+                    $("#purchase_div").show();
+                    $("#parent_div").show();
+                    $("#product_div").show();
+                    $("#gold_carat_div").show();
+                    $("#scale_div").show();
+                    $("#net_weight_div").show();
+                    $("#product_detail_div").show();
+                    $("#tag_no").val();
+                    $("#tag_no_text").show();
+                    $("#parent_tag_no_text").hide();
+                }
+            });
         });
     </script>
 @endsection

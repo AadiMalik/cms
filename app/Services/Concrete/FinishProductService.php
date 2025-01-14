@@ -42,6 +42,14 @@ class FinishProductService
             ->addColumn('warehouse', function ($item) {
                 return $item->warehouse->name ?? '';
             })
+            ->addColumn('is_parent', function ($item) {
+                if ($item->is_parent == 1) {
+                    $parent = '<span class=" badge badge-success mr-3">Yes</span>';
+                } else {
+                    $parent = '<span class=" badge badge-danger mr-3">No</span>';
+                }
+                return $parent;
+            })
             ->addColumn('saled', function ($item) {
                 if ($item->is_saled == 1) {
                     $saled = '<span class=" badge badge-success mr-3">Yes</span>';
@@ -77,7 +85,7 @@ class FinishProductService
 
                 return $action_column;
             })
-            ->rawColumns(['product', 'warehouse', 'saled', 'status', 'action'])
+            ->rawColumns(['product', 'warehouse', 'is_parent', 'saled', 'status', 'action'])
             ->make(true);
         return $data;
     }
@@ -88,6 +96,16 @@ class FinishProductService
             ->where('is_deleted', 0)
             ->where('is_active', 1)
             ->where('is_saled', 0)
+            ->get();
+    }
+
+    public function getAllActiveParentFinishProduct()
+    {
+        return $this->model_finish_product->getModel()::with(['product', 'warehouse'])
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->where('is_saled', 0)
+            ->where('is_parent', 1)
             ->get();
     }
 
@@ -106,33 +124,35 @@ class FinishProductService
             DB::beginTransaction();
             $finishProduct = [
                 "tag_no" => $obj['tag_no'],
+                "parent_id" => $obj['parent_id'] ?? 0,
+                "is_parent" => ($obj['is_parent'] == 'on') ? 1 : 0,
                 "job_purchase_id" => $obj['job_purchase_id'] ?? null,
                 "job_purchase_detail_id" => $obj['job_purchase_detail_id'] ?? null,
                 "ratti_kaat_id" => $obj['ratti_kaat_id'] ?? null,
                 "ratti_kaat_detail_id" => $obj['ratti_kaat_detail_id'] ?? null,
-                "product_id" => $obj['product_id'],
-                "warehouse_id" => $obj['warehouse_id'],
-                "gold_carat" => $obj['gold_carat'],
-                "scale_weight" => $obj['scale_weight'],
-                "net_weight" => $obj['net_weight'],
-                "bead_weight" => $obj['bead_weight'],
-                "stones_weight" => $obj['stones_weight'],
-                "diamond_weight" => $obj['diamond_weight'],
-                "waste_per" => $obj['waste_per'],
-                "waste" => $obj['waste'],
-                "gross_weight" => $obj['gross_weight'],
-                "laker" => $obj['laker'],
-                "making_gram" => $obj['making_gram'],
-                "making" => $obj['making'],
-                "total_bead_price" => $obj['total_bead_price'],
-                "total_stones_price" => $obj['total_stones_price'],
-                "total_diamond_price" => $obj['total_diamond_price'],
-                "other_amount" => $obj['other_amount'],
-                "gold_rate" => $obj['gold_rate'],
-                "total_gold_price" => $obj['total_gold_price'],
-                "total_amount" => $obj['total_amount'],
-                "picture" => $obj['picture'],
-                "barcode" => $obj['barcode'],
+                "product_id" => $obj['product_id'] ?? null,
+                "warehouse_id" => $obj['warehouse_id'] ?? null,
+                "gold_carat" => $obj['gold_carat'] ?? 0,
+                "scale_weight" => $obj['scale_weight'] ?? 0,
+                "net_weight" => $obj['net_weight'] ?? 0,
+                "bead_weight" => $obj['bead_weight'] ?? 0,
+                "stones_weight" => $obj['stones_weight'] ?? 0,
+                "diamond_weight" => $obj['diamond_weight'] ?? 0,
+                "waste_per" => $obj['waste_per'] ?? 0,
+                "waste" => $obj['waste'] ?? 0,
+                "gross_weight" => $obj['gross_weight'] ?? 0,
+                "laker" => $obj['laker'] ?? 0,
+                "making_gram" => $obj['making_gram'] ?? 0,
+                "making" => $obj['making'] ?? 0,
+                "total_bead_price" => $obj['total_bead_price'] ?? 0,
+                "total_stones_price" => $obj['total_stones_price'] ?? 0,
+                "total_diamond_price" => $obj['total_diamond_price'] ?? 0,
+                "other_amount" => $obj['other_amount'] ?? 0,
+                "gold_rate" => $obj['gold_rate'] ?? 0,
+                "total_gold_price" => $obj['total_gold_price'] ?? 0,
+                "total_amount" => $obj['total_amount'] ?? 0,
+                "picture" => $obj['picture'] ?? null,
+                "barcode" => $obj['barcode'] ?? null,
                 "createdby_id" => Auth::user()->id
             ];
             $saved_obj = $this->model_finish_product->create($finishProduct);
@@ -272,10 +292,11 @@ class FinishProductService
             DB::beginTransaction();
             $finish_product = $this->model_finish_product->getModel()::find($id);
 
-            $ratti_kaat_detail = RattiKaatDetail::find($finish_product->ratti_kaat_detail_id);
-            $ratti_kaat_detail->is_finish_product = 0;
-            $ratti_kaat_detail->update();
-
+            if ($finish_product->is_parent != 1) {
+                $ratti_kaat_detail = RattiKaatDetail::find($finish_product->ratti_kaat_detail_id);
+                $ratti_kaat_detail->is_finish_product = 0;
+                $ratti_kaat_detail->update();
+            }
             $finish_product->is_deleted = 1;
             $finish_product->deletedby_id = Auth::user()->id;
             $finish_product->update();

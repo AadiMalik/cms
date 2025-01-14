@@ -37,6 +37,7 @@
                                         <th scope="col">Net Wt</th>
                                         <th scope="col">Gross Wt</th>
                                         <th scope="col">Total Amount</th>
+                                        <th scope="col">Is Parent</th>
                                         <th scope="col">Saled</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Action</th>
@@ -67,6 +68,7 @@
                                     {data: 'net_weight' , name: 'net_weight'},
                                     {data: 'gross_weight' , name: 'gross_weight'},
                                     {data: 'total_amount' , name: 'total_amount'},
+                                    {data: 'is_parent' , name: 'is_parent' , 'sortable': false , searchable: false},
                                     {data: 'saled' , name: 'saled' , 'sortable': false , searchable: false},
                                     {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
                                     {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",

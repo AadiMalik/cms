@@ -8,7 +8,7 @@ function isNumberKey(evt) {
 $("#product_id").on("change", function () {
     var product_id = $("#product_id").val();
     $.ajax({
-        url: url_local + '/ratti-kaats/ratti-kaat-by-product-id/' + product_id,
+        url: url_local + "/ratti-kaats/ratti-kaat-by-product-id/" + product_id,
         type: "GET",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -21,14 +21,14 @@ $("#product_id").on("change", function () {
                 $("#purchases").empty();
                 if (data.ratti_kaat.length > 0) {
                     $.each(data.ratti_kaat, function (k, value) {
-                        row += '<tr>';
+                        row += "<tr>";
                         row +=
                             '<td><a id="purchase_id" href="javascript:void(0)" data-toggle="tooltip"  data-id="' +
                             value.ratti_kaat_detail_id +
                             '" data-original-title="Purchase"><b>' +
                             value.ratti_kaat_no +
-                            '</b></a></td>';
-                        row += '</tr>';
+                            "</b></a></td>";
+                        row += "</tr>";
                     });
                 }
 
@@ -49,7 +49,7 @@ $("#product_id").on("change", function () {
                     data.ratti_kaat.length === 0 &&
                     data.job_purchase.length === 0
                 ) {
-                    row += '<tr><td>No Purchase found</td></tr>';
+                    row += "<tr><td>No Purchase found</td></tr>";
                 }
                 $("#purchases").append(row);
                 $("#tag_no_text").val(data.tag_no);
@@ -75,13 +75,21 @@ $("body").on("click", "#purchase_id", function (event) {
         console.log(data);
         if (data.Success) {
             var data = data.Data;
-            $("#ratti_kaat_id").val((data.ratti_kaat_id > 0) ? data.ratti_kaat_id : 0);
-            $("#ratti_kaat_detail_id").val((data.id > 0) ? data.id : 0);
-            $("#scale_weight").val((data.scale_weight > 0) ? data.scale_weight : 0);
-            $("#net_weight").val((data.net_weight > 0) ? data.net_weight : 0);
-            $("#bead_weight").val((data.bead_weight > 0) ? data.bead_weight : 0);
-            $("#stones_weight").val((data.stones_weight > 0) ? data.stones_weight : 0);
-            $("#diamond_weight").val((data.diamond_carat > 0) ? data.diamond_carat : 0);
+            $("#ratti_kaat_id").val(
+                data.ratti_kaat_id > 0 ? data.ratti_kaat_id : 0
+            );
+            $("#ratti_kaat_detail_id").val(data.id > 0 ? data.id : 0);
+            $("#scale_weight").val(
+                data.scale_weight > 0 ? data.scale_weight : 0
+            );
+            $("#net_weight").val(data.net_weight > 0 ? data.net_weight : 0);
+            $("#bead_weight").val(data.bead_weight > 0 ? data.bead_weight : 0);
+            $("#stones_weight").val(
+                data.stones_weight > 0 ? data.stones_weight : 0
+            );
+            $("#diamond_weight").val(
+                data.diamond_carat > 0 ? data.diamond_carat : 0
+            );
 
             BeadByPurchaseDetail(data.id);
             StonesByPurchaseDetail(data.id);
@@ -106,16 +114,24 @@ $("body").on("click", "#job_purchase_id", function (event) {
         console.log(data);
         if (data.Success) {
             var data = data.Data;
-            $("#job_purchase_id").val((data.job_purchase_id > 0) ? data.job_purchase_id : 0);
-            $("#job_purchase_detail_id").val((data.id > 0) ? data.id : 0);
-            $("#scale_weight").val((data.final_pure_weight > 0) ? data.final_pure_weight : 0);
-            $("#net_weight").val((data.pure_weight > 0) ? data.pure_weight : 0);
-            $("#bead_weight").val((data.bead_weight > 0) ? data.bead_weight : 0);
-            $("#stones_weight").val((data.stones_weight > 0) ? data.stones_weight : 0);
-            $("#diamond_weight").val((data.diamond_carat > 0) ? data.diamond_carat : 0);
-            $("#waste").val((data.waste > 0) ? data.waste : 0);
-            $("#laker").val((data.laker > 0) ? data.laker : 0);
-            $("#other_amount").val((data.other > 0) ? data.other : 0);
+            $("#job_purchase_id").val(
+                data.job_purchase_id > 0 ? data.job_purchase_id : 0
+            );
+            $("#job_purchase_detail_id").val(data.id > 0 ? data.id : 0);
+            $("#scale_weight").val(
+                data.final_pure_weight > 0 ? data.final_pure_weight : 0
+            );
+            $("#net_weight").val(data.pure_weight > 0 ? data.pure_weight : 0);
+            $("#bead_weight").val(data.bead_weight > 0 ? data.bead_weight : 0);
+            $("#stones_weight").val(
+                data.stones_weight > 0 ? data.stones_weight : 0
+            );
+            $("#diamond_weight").val(
+                data.diamond_carat > 0 ? data.diamond_carat : 0
+            );
+            $("#waste").val(data.waste > 0 ? data.waste : 0);
+            $("#laker").val(data.laker > 0 ? data.laker : 0);
+            $("#other_amount").val(data.other > 0 ? data.other : 0);
 
             BeadByJobPurchaseDetail(data.id, product_id);
             StonesByJobPurchaseDetail(data.id, product_id);
@@ -128,7 +144,7 @@ $("body").on("click", "#job_purchase_id", function (event) {
 
 $("#gold_carat").on("keyup", function (event) {
     var gold_carat = $("#gold_carat").val();
-    var gold_carat_rate = gold_rate / 24 * (gold_carat * 1);
+    var gold_carat_rate = (gold_rate / 24) * (gold_carat * 1);
     var gold_rate_gram = gold_carat_rate / 11.664;
     $("#gold_rate").val(gold_rate_gram.toFixed(3));
     TotalGoldAmount();
@@ -165,14 +181,16 @@ function netWeight() {
     var stones_weight = $("#stones_weight").val();
     var diamond_weight = $("#diamond_weight").val();
     var net_weight = 0;
-    net_weight = scale_weight * 1 - (bead_weight * 1 + stones_weight * 1 + diamond_weight * 1);
+    net_weight =
+        scale_weight * 1 -
+        (bead_weight * 1 + stones_weight * 1 + diamond_weight * 1);
     $("#net_weight").val(net_weight.toFixed(3));
 }
 $("#waste_per").on("keyup", function (event) {
     var waste_per = $("#waste_per").val();
     var net_weight = $("#net_weight").val();
-    var cal = net_weight * waste_per / 100;
-    var gross_wt = (net_weight * 1) + (cal * 1);
+    var cal = (net_weight * waste_per) / 100;
+    var gross_wt = net_weight * 1 + cal * 1;
     $("#waste").val(cal.toFixed(3));
     $("#gross_weight").val(gross_wt.toFixed(3));
     TotalGoldAmount();
@@ -181,8 +199,8 @@ $("#waste_per").on("keyup", function (event) {
 $("#waste").on("keyup", function (event) {
     var waste = $("#waste").val();
     var net_weight = $("#net_weight").val();
-    var cal = waste / net_weight * 100;
-    var gross_wt = (net_weight * 1) + (waste * 1);
+    var cal = (waste / net_weight) * 100;
+    var gross_wt = net_weight * 1 + waste * 1;
     $("#waste_per").val(cal.toFixed(3));
     $("#gross_weight").val(gross_wt.toFixed(3));
     TotalGoldAmount();
@@ -191,7 +209,7 @@ $("#waste").on("keyup", function (event) {
 $("#making_gram").on("keyup", function (event) {
     var making_gram = $("#making_gram").val();
     var gross_weight = $("#gross_weight").val();
-    var making = (making_gram * 1) * (gross_weight * 1);
+    var making = making_gram * 1 * (gross_weight * 1);
     $("#making").val(making.toFixed(3));
     TotalAmount();
 });
@@ -216,7 +234,7 @@ $("#gold_rate").on("keyup", function (event) {
 function TotalGoldAmount() {
     var gross_wt = $("#gross_weight").val();
     var gold_rate = $("#gold_rate").val();
-    var total_gold_price = (gold_rate * 1) * (gross_wt * 1);
+    var total_gold_price = gold_rate * 1 * (gross_wt * 1);
     $("#total_gold_price").val(total_gold_price.toFixed(3));
 }
 function TotalAmount() {
@@ -227,141 +245,169 @@ function TotalAmount() {
     var making = $("#making").val();
     var laker = $("#laker").val();
     var total_gold_price = $("#total_gold_price").val();
-    var cal = (total_bead_price * 1) + (total_stones_price * 1) + (total_diamond_price * 1) + (other_amount * 1) + (making * 1) + (laker * 1) + (total_gold_price * 1);
+    var cal =
+        total_bead_price * 1 +
+        total_stones_price * 1 +
+        total_diamond_price * 1 +
+        other_amount * 1 +
+        making * 1 +
+        laker * 1 +
+        total_gold_price * 1;
 
     $("#total_amount").val(cal.toFixed(3));
 }
 
 $("body").on("click", "#submit", function (e) {
     e.preventDefault();
-
-    // Validation logic
-    if ($("#tag_no").val() == "") {
-        error("Please generat tag no!");
-        $("#tag_no").focus();
-        return false;
+    if (!$("#is_parent").is(":checked")) {
+        // Validation logic
+        if ($("#tag_no").val() == "") {
+            error("Please generat tag no!");
+            $("#tag_no").focus();
+            return false;
+        }
+        if (
+            $("#ratti_kaat_id").val() == "" &&
+            $("#ratti_kaat_detail_id").val() == "" &&
+            $("#job_purchase_id").val() == "" &&
+            $("#job_purchase_detail_id").val() == ""
+        ) {
+            error("Please select purchase!");
+            return false;
+        }
+        if (
+            $("#product_id").find(":selected").val() == "" ||
+            $("#product_id").find(":selected").val() == 0
+        ) {
+            error("Please Select product!");
+            $("#product_id").focus();
+            return false;
+        }
     }
-    if ($("#ratti_kaat_id").val() == "" && $("#ratti_kaat_detail_id").val() == ""  && $("#job_purchase_id").val() == ""  && $("#job_purchase_detail_id").val() == "") {
-        error("Please select purchase!");
-        return false;
-    }
-    if ($("#product_id").find(":selected").val() == "" || $("#product_id").find(":selected").val() == 0) {
-        error("Please Select product!");
-        $("#product_id").focus();
-        return false;
-    }
-    if ($("#warehouse_id").find(":selected").val() == 0 || $("#warehouse_id").find(":selected").val() == '') {
+    if (
+        $("#warehouse_id").find(":selected").val() == 0 ||
+        $("#warehouse_id").find(":selected").val() == ""
+    ) {
         error("Please Select warehouse!");
         $("#warehouse_id").focus();
         return false;
     }
-    if ($("#picture").val() == '') {
+    if ($("#picture").val() == "") {
         error("Please add picture!");
         $("#picture").focus();
         return false;
     }
-    if ($("#gold_carat").val() == '' || $("#gold_carat").val() == 0) {
-        error("Please enter gold carat!");
-        $("#gold_carat").focus();
-        return false;
+    if (!$("#is_parent").is(":checked")) {
+        if ($("#gold_carat").val() == "" || $("#gold_carat").val() == 0) {
+            error("Please enter gold carat!");
+            $("#gold_carat").focus();
+            return false;
+        }
+        if ($("#scale_weight").val() == "" || $("#scale_weight").val() == 0) {
+            error("Please enter scale weight!");
+            $("#scale_weight").focus();
+            return false;
+        }
+        if ($("#net_weight").val() == "" || $("#net_weight").val() == 0) {
+            error("Please enter net weight!");
+            $("#net_weight").focus();
+            return false;
+        }
+        if ($("#bead_weight").val() == "") {
+            error("Please enter bead weight minimum 0!");
+            $("#bead_weight").focus();
+            return false;
+        }
+        if ($("#stones_weight").val() == "") {
+            error("Please enter stone weight minimum 0!");
+            $("#stones_weight").focus();
+            return false;
+        }
+        if ($("#diamond_weight").val() == "") {
+            error("Please enter diamond weight minimum 0!");
+            $("#diamond_weight").focus();
+            return false;
+        }
+        if ($("#waste_per").val() == "" || $("#waste_per").val() < 10) {
+            error("Please enter waste (%) minimum 10!");
+            $("#waste_per").focus();
+            return false;
+        }
+        if ($("#waste").val() == "" || $("#waste").val() == 0) {
+            error("Please enter waste!");
+            $("#waste").focus();
+            return false;
+        }
+        if ($("#gross_weight").val() == "" || $("#gross_weight").val() == 0) {
+            error("Please enter gross weight!");
+            $("#gross_weight").focus();
+            return false;
+        }
+        if ($("#laker").val() == "" || $("#laker").val() < 0) {
+            error("Please enter laker!");
+            $("#laker").focus();
+            return false;
+        }
+        if ($("#making_gram").val() == "" || $("#making_gram").val() == 0) {
+            error("Please enter making/gram!");
+            $("#making_gram").focus();
+            return false;
+        }
+        if ($("#making").val() == "" || $("#making").val() == 0) {
+            error("Please enter making!");
+            $("#making").focus();
+            return false;
+        }
+        if ($("#total_bead_price").val() == "") {
+            error("Please enter total bead amount, minimum 0!");
+            $("#total_bead_price").focus();
+            return false;
+        }
+        if ($("#total_stones_price").val() == "") {
+            error("Please enter total stones amount, minimum 0!");
+            $("#total_stones_price").focus();
+            return false;
+        }
+        if ($("#total_diamond_price").val() == "") {
+            error("Please enter total diamond amount, minimum 0!");
+            $("#total_diamond_price").focus();
+            return false;
+        }
+        if ($("#other_amount").val() == "") {
+            error("Please enter other amount, minimum 0!");
+            $("#other_amount").focus();
+            return false;
+        }
+        if ($("#gold_rate").val() == "" || $("#gold_rate").val() == 0) {
+            error("Please enter gold rate!");
+            $("#gold_rate").focus();
+            return false;
+        }
+        if (
+            $("#total_gold_price").val() == "" ||
+            $("#total_gold_price").val() == 0
+        ) {
+            error("Please enter total gold amount!");
+            $("#total_gold_price").focus();
+            return false;
+        }
+        if ($("#total_amount").val() == "" || $("#total_amount").val() == 0) {
+            error("Please enter total amount!");
+            $("#total_amount").focus();
+            return false;
+        }
     }
-    if ($("#scale_weight").val() == '' || $("#scale_weight").val() == 0) {
-        error("Please enter scale weight!");
-        $("#scale_weight").focus();
-        return false;
-    }
-    if ($("#net_weight").val() == '' || $("#net_weight").val() == 0) {
-        error("Please enter net weight!");
-        $("#net_weight").focus();
-        return false;
-    }
-    if ($("#bead_weight").val() == '') {
-        error("Please enter bead weight minimum 0!");
-        $("#bead_weight").focus();
-        return false;
-    }
-    if ($("#stones_weight").val() == '') {
-        error("Please enter stone weight minimum 0!");
-        $("#stones_weight").focus();
-        return false;
-    }
-    if ($("#diamond_weight").val() == '') {
-        error("Please enter diamond weight minimum 0!");
-        $("#diamond_weight").focus();
-        return false;
-    }
-    if ($("#waste_per").val() == '' || $("#waste_per").val() < 10) {
-        error("Please enter waste (%) minimum 10!");
-        $("#waste_per").focus();
-        return false;
-    }
-    if ($("#waste").val() == '' || $("#waste").val() == 0) {
-        error("Please enter waste!");
-        $("#waste").focus();
-        return false;
-    }
-    if ($("#gross_weight").val() == '' || $("#gross_weight").val() == 0) {
-        error("Please enter gross weight!");
-        $("#gross_weight").focus();
-        return false;
-    }
-    if ($("#laker").val() == '' || $("#laker").val() < 0) {
-        error("Please enter laker!");
-        $("#laker").focus();
-        return false;
-    }
-    if ($("#making_gram").val() == '' || $("#making_gram").val() == 0) {
-        error("Please enter making/gram!");
-        $("#making_gram").focus();
-        return false;
-    }
-    if ($("#making").val() == '' || $("#making").val() == 0) {
-        error("Please enter making!");
-        $("#making").focus();
-        return false;
-    }
-    if ($("#total_bead_price").val() == '') {
-        error("Please enter total bead amount, minimum 0!");
-        $("#total_bead_price").focus();
-        return false;
-    }
-    if ($("#total_stones_price").val() == '') {
-        error("Please enter total stones amount, minimum 0!");
-        $("#total_stones_price").focus();
-        return false;
-    }
-    if ($("#total_diamond_price").val() == '') {
-        error("Please enter total diamond amount, minimum 0!");
-        $("#total_diamond_price").focus();
-        return false;
-    }
-    if ($("#other_amount").val() == '') {
-        error("Please enter other amount, minimum 0!");
-        $("#other_amount").focus();
-        return false;
-    }
-    if ($("#gold_rate").val() == '' || $("#gold_rate").val() == 0) {
-        error("Please enter gold rate!");
-        $("#gold_rate").focus();
-        return false;
-    }
-    if ($("#total_gold_price").val() == '' || $("#total_gold_price").val() == 0) {
-        error("Please enter total gold amount!");
-        $("#total_gold_price").focus();
-        return false;
-    }
-    if ($("#total_amount").val() == '' || $("#total_amount").val() == 0) {
-        error("Please enter total amount!");
-        $("#total_amount").focus();
-        return false;
-    }
-
 
     // Create FormData object for Ajax
     var formData = new FormData();
+    formData.append("is_parent", $("#is_parent").val());
+    formData.append("parent_id", $("#parent_id").find(":selected").val());
     formData.append("tag_no", $("#tag_no").val());
     formData.append("job_purchase_id", $("#job_purchase_id").val());
-    formData.append("job_purchase_detail_id", $("#job_purchase_detail_id").val());
+    formData.append(
+        "job_purchase_detail_id",
+        $("#job_purchase_detail_id").val()
+    );
     formData.append("ratti_kaat_id", $("#ratti_kaat_id").val());
     formData.append("ratti_kaat_detail_id", $("#ratti_kaat_detail_id").val());
     formData.append("product_id", $("#product_id").find(":selected").val());
@@ -388,7 +434,7 @@ $("body").on("click", "#submit", function (e) {
     // Append files (multiple images)
     var picture = $("#picture")[0].files;
     for (var i = 0; i < picture.length; i++) {
-        formData.append('picture', picture[i]); // Add files to the form data
+        formData.append("picture", picture[i]); // Add files to the form data
     }
 
     // Append product data (assuming productData is already a JSON string)
@@ -397,14 +443,14 @@ $("body").on("click", "#submit", function (e) {
     formData.append("diamondDetail", JSON.stringify(diamondsData));
 
     $.ajax({
-        url: url_local + "/finish-product/store",  // Laravel route
+        url: url_local + "/finish-product/store", // Laravel route
         type: "POST",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         data: formData,
-        processData: false,  // Important for file uploads
-        contentType: false,  // Important for file uploads
+        processData: false, // Important for file uploads
+        contentType: false, // Important for file uploads
         dataType: "json",
         success: function (data) {
             if (data.Success) {
@@ -421,6 +467,6 @@ $("body").on("click", "#submit", function (e) {
         },
         error: function (xhr, status, e) {
             error("An error occurred:");
-        }
+        },
     });
 });

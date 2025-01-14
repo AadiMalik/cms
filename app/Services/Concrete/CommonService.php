@@ -145,6 +145,16 @@ class CommonService
 
             return $randomNumber;
       }
+      public function generateParentFinishProductTagNo()
+      {
+            do {
+                  $randomNumber = 'PT' . mt_rand(10000, 99999);
+
+                  $exists = DB::table('finish_products')->where('tag_no', $randomNumber)->exists();
+            } while ($exists);
+
+            return $randomNumber;
+      }
 
       //Sale Order
       public function generateSaleOrderNo()

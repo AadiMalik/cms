@@ -15,6 +15,8 @@ class FinishProduct extends Model
         'ratti_kaat_detail_id',
         'job_purchase_detail_id',
         'tag_no',
+        'parent_id',
+        'is_parent',
         'barcode',
         'product_id',
         'warehouse_id',
@@ -53,7 +55,10 @@ class FinishProduct extends Model
         'updated_at',
         'created_at'
     ];
-
+    public function FinishProduct()
+    {
+        return $this->belongsToMany(FinishProduct::class);
+    }
     public function ratti_kaat()
     {
         return $this->belongsTo(RattiKaat::class, 'ratti_kaat_id');

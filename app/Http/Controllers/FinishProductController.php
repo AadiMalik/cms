@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Concrete\BeadTypeService;
+use App\Services\Concrete\CommonService;
 use App\Services\Concrete\DiamondClarityService;
 use App\Services\Concrete\DiamondColorService;
 use App\Services\Concrete\DiamondCutService;
@@ -32,6 +33,7 @@ class FinishProductController extends Controller
     protected $diamond_color_service;
     protected $diamond_cut_service;
     protected $diamond_clarity_service;
+    protected $common_service;
 
     public function __construct(
         FinishProductService $finish_product_service,
@@ -42,7 +44,8 @@ class FinishProductController extends Controller
         DiamondTypeService $diamond_type_service,
         DiamondColorService $diamond_color_service,
         DiamondCutService $diamond_cut_service,
-        DiamondClarityService $diamond_clarity_service
+        DiamondClarityService $diamond_clarity_service,
+        CommonService $common_service
     ) {
         $this->finish_product_service = $finish_product_service;
         $this->product_service = $product_service;
@@ -53,6 +56,7 @@ class FinishProductController extends Controller
         $this->diamond_color_service = $diamond_color_service;
         $this->diamond_cut_service = $diamond_cut_service;
         $this->diamond_clarity_service = $diamond_clarity_service;
+        $this->common_service = $common_service;
     }
     public function index()
     {
@@ -76,6 +80,8 @@ class FinishProductController extends Controller
         $diamond_colors = $this->diamond_color_service->getAllActive();
         $diamond_cuts = $this->diamond_cut_service->getAllActive();
         $diamond_clarities = $this->diamond_clarity_service->getAllActive();
+        $parent_tag = $this->common_service->generateParentFinishProductTagNo();
+        $parents = $this->finish_product_service->getAllActiveParentFinishProduct();
         return view('finish_product.create', compact(
             'products',
             'warehouses',
@@ -84,7 +90,9 @@ class FinishProductController extends Controller
             'diamond_types',
             'diamond_colors',
             'diamond_cuts',
-            'diamond_clarities'
+            'diamond_clarities',
+            'parent_tag',
+            'parents'
         ));
     }
 
@@ -92,39 +100,50 @@ class FinishProductController extends Controller
     public function store(Request $request)
     {
         abort_if(Gate::denies('tagging_product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $validation = Validator::make(
-            $request->all(),
-            [
-                'tag_no'                    => 'required',
-                'product_id'                => 'required',
-                'warehouse_id'              => 'required',
-                'picture'                   => 'required|image|mimes:jpeg,png,jpg,gif',
-                'gold_carat'                => 'required',
-                'scale_weight'              => 'required',
-                'bead_weight'               => 'required',
-                'stones_weight'             => 'required',
-                'diamond_weight'            => 'required',
-                'net_weight'                => 'required',
-                'waste_per'                 => 'required',
-                'waste'                     => 'required',
-                'gross_weight'              => 'required',
-                'making_gram'               => 'required',
-                'making'                    => 'required',
-                'laker'                     => 'required',
-                'total_bead_price'          => 'required',
-                'total_stones_price'        => 'required',
-                'total_diamond_price'       => 'required',
-                'other_amount'              => 'required',
-                'gold_rate'                 => 'required',
-                'total_gold_price'          => 'required',
-                'total_amount'              => 'required',
-                'beadDetail'                => 'required',
-                'stonesDetail'               => 'required',
-                'diamondDetail'             => 'required'
-            ],
-            $this->validationMessage()
-        );
-
+        if ($request->is_parent != 'on') {
+            $validation = Validator::make(
+                $request->all(),
+                [
+                    'tag_no'                    => 'required',
+                    'product_id'                => 'required',
+                    'warehouse_id'              => 'required',
+                    'picture'                   => 'required|image|mimes:jpeg,png,jpg,gif',
+                    'gold_carat'                => 'required',
+                    'scale_weight'              => 'required',
+                    'bead_weight'               => 'required',
+                    'stones_weight'             => 'required',
+                    'diamond_weight'            => 'required',
+                    'net_weight'                => 'required',
+                    'waste_per'                 => 'required',
+                    'waste'                     => 'required',
+                    'gross_weight'              => 'required',
+                    'making_gram'               => 'required',
+                    'making'                    => 'required',
+                    'laker'                     => 'required',
+                    'total_bead_price'          => 'required',
+                    'total_stones_price'        => 'required',
+                    'total_diamond_price'       => 'required',
+                    'other_amount'              => 'required',
+                    'gold_rate'                 => 'required',
+                    'total_gold_price'          => 'required',
+                    'total_amount'              => 'required',
+                    'beadDetail'                => 'required',
+                    'stonesDetail'               => 'required',
+                    'diamondDetail'             => 'required'
+                ],
+                $this->validationMessage()
+            );
+        } else {
+            $validation = Validator::make(
+                $request->all(),
+                [
+                    'tag_no'                    => 'required',
+                    'warehouse_id'              => 'required',
+                    'picture'                   => 'required|image|mimes:jpeg,png,jpg,gif'
+                ],
+                $this->validationMessage()
+            );
+        }
         if ($validation->fails()) {
             $validation_error = "";
             foreach ($validation->errors()->all() as $message) {
