@@ -145,6 +145,7 @@ class ReportService
                   ->where('created_at', '>=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
                   ->where('created_at', '<=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date']))))
                   ->where('is_deleted', 0)
+                  ->where('is_parent', 0)
                   ->where($wh)
                   ->orderBy('created_at', 'ASC')
                   ->get();
@@ -478,7 +479,7 @@ class ReportService
                         ->whereIn('journal_entry_details.account_id', $obj['account_id'])
                         ->where($wh)
                         ->where('journal_entries.is_deleted', 0)
-                        ->groupBy('journal_entry_details.account_id','accounts.name','accounts.code')
+                        ->groupBy('journal_entry_details.account_id', 'accounts.name', 'accounts.code')
                         ->selectRaw('
                               journal_entry_details.account_id,
                               accounts.code,

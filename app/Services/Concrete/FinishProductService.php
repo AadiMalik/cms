@@ -119,6 +119,7 @@ class FinishProductService
             ->where('is_deleted', 0)
             ->where('is_active', 1)
             ->where('is_saled', 1)
+            ->where('is_parent', 0)
             ->get();
     }
 
