@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
     <div class="breadcrumb mt-4">
-        <h1>Purchase Order Print</h1>
+        <h1>Job Task Print</h1>
 
         <ul>
             <li>View</li>
@@ -22,7 +22,7 @@
                     </div>
                     <div class="card-body" id="printData">
                         <center style="float:none; margin-top:20px;">
-                            <h3>Purchase Order</h3>
+                            <h3>Job Task</h3>
                         </center>
                         <div>
                             <div style="float:left;">
@@ -31,11 +31,11 @@
                                 <b>Phone No: </b>{{config('enum.company_phone')}}<br>
                             </div>
                             <div style="float: right;">
-                                <b>Purchase No: </b>{{ $purchase_order->purchase_order_no??'' }} <br>
-                                <b>Purchase Date: </b>{{ date('d-M-Y', strtotime($purchase_order->purchase_order_date)) }}  <br>
-                                <b>Supplier: </b>{{ $purchase_order->supplier_name->name??'' }} <br>
-                                <b>Warehouse: </b>{{ $purchase_order->warehouse_name->name??'' }} <br>
-                                <b>Sale Order: </b>{{ $purchase_order->sale_order->sale_order_no??'' }} <br>
+                                <b>Job Task No: </b>{{ $job_task->job_task_no??'' }} <br>
+                                <b>Job Task Date: </b>{{ date('d M Y', strtotime($job_task->job_task_date)) }}  <br>
+                                <b>Supplier: </b>{{ $job_task->supplier_name->name??'' }} <br>
+                                <b>Warehouse: </b>{{ $job_task->warehouse_name->name??'' }} <br>
+                                <b>Delivery Date: </b>{{ date('d M Y H:i:s', strtotime($job_task->delivery_date??'')) }}<br>
                             </div>
                         </div>
                         <br><br><br><br><br>
@@ -51,11 +51,11 @@
                             </thead>
                     
                             <tbody>
-                                @foreach ($purchase_order_detail as $index=>$item)
+                                @foreach ($job_task_detail as $index=>$item)
                                 <tr>
                                     <td style="text-align:center;">{{ $index+1 }}</td>
-                                    <td style="text-align:left;">{{ $item['category']??'' }}</td>
-                                    <td style="text-align:left;">{{ $item['design_no']??'' }}</td>
+                                    <td style="text-align:center;">{{ $item['category']??'' }}</td>
+                                    <td style="text-align:center;">{{ $item['design_no']??'' }}</td>
                                     <td style="text-align:right;">{{ number_format($item['net_weight']??0.000,3) }}</td>
                                     <td style="text-align:left;">{{ $item['description']??'' }}</td>
                                 </tr>
@@ -65,7 +65,7 @@
                     
                         </table>
                         <br>
-                        <b>Generate By:</b> {{ $purchase_order->created_by->name ?? '' }}
+                        <b>Generate By:</b> {{ $job_task->created_by->name ?? '' }}
                     </div>
                 </div>
             </div>

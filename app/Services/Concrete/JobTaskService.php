@@ -66,16 +66,16 @@ class JobTaskService
                   ->addColumn('action', function ($item) {
 
                         $action_column = '';
-                        $activity_column    = "<a class='text-info mr-2' href='job-task-activity/" . $item->id . "'><i title='Activity' class='nav-icon mr-2 fa fa-star'></i>Activity</a>";
-                        $view_column    = "<a class='text-warning mr-2' href='job-task/view/" . $item->id . "'><i title='View' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
-                        $complete_column    = "<a class='text-success mr-2' href='job-purchase/create/" . $item->id . "'><i title='View' class='nav-icon mr-2 fa fa-check'></i>Complete</a>";
+                        $activity_column    = "<a class='text-primary mr-2' href='job-task-activity/" . $item->id . "'><i title='Activity' class='nav-icon mr-2 fa fa-star'></i>Activity</a>";
+                        $print_column    = "<a class='text-info mr-2' href='job-task/print/" . $item->id . "'><i title='Print' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
+                        $complete_column    = "<a class='text-success mr-2' href='job-purchase/create/" . $item->id . "'><i title='Complete' class='nav-icon mr-2 fa fa-check'></i>Complete</a>";
                         $delete_column    = "<a class='text-danger mr-2' id='deleteJobTask' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
 
                         if (Auth::user()->can('job_task_activity_access'))
                               $action_column .= $activity_column;
                         if (Auth::user()->can('job_task_print'))
-                              $action_column .= $view_column;
+                              $action_column .= $print_column;
                         if (Auth::user()->can('job_task_complete') && $item->is_complete==0)
                               $action_column .= $complete_column;
                         if (Auth::user()->can('job_task_delete'))

@@ -257,10 +257,10 @@ class JobPurchaseService
         }
         return $data;
     }
-    public function singleJobPurchaseDetail($job_purchase_id)
+    public function singleJobPurchaseDetail($job_purchase_detail_id)
     {
         return $this->model_job_purchase_detail->getModel()::with('product')
-            ->where('job_purchase_id', $job_purchase_id)->where('is_deleted', 0)->first();
+            ->where('id', $job_purchase_detail_id)->where('is_deleted', 0)->first();
     }
     // post job purchase
     public function post($obj)
