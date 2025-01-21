@@ -24,6 +24,7 @@ function isNumberKey(evt) {
 $("body").on("click", "#submit", function (e) {
     e.preventDefault();
 
+    $("#submit").hide();
     // Validation logic
     if ($("#category").val() == "") {
         error("Please enter category!");
@@ -35,7 +36,7 @@ $("body").on("click", "#submit", function (e) {
         $("#weight").focus();
         return false;
     }
-    
+
     // if ($("#picture").val() == '') {
     //     error("Please add picture!");
     //     $("#picture").focus();
@@ -53,7 +54,7 @@ $("body").on("click", "#submit", function (e) {
     formData.append("design_no", $("#design_no").val());
     formData.append("weight", $("#weight").val());
     formData.append("description", $("#description").val());
-    formData.append('picture', $("#picture")[0].files[0]); 
+    formData.append('picture', $("#picture")[0].files[0]);
 
     $.ajax({
         url: url_local + "/job-task-activity/store",  // Laravel route
@@ -68,15 +69,18 @@ $("body").on("click", "#submit", function (e) {
         success: function (data) {
             if (data.Success) {
                 success(data.Message);
-                $("#submit").prop("disabled", true);
+                $("#submit").show();
                 initDataTablejob_task_activity_table();
                 Clear();
             } else {
                 error(data.Message);
+                $("#submit").show();
             }
         },
         error: function (xhr, status, e) {
             error("An error occurred:");
+
+            $("#submit").show();
         }
     });
 });

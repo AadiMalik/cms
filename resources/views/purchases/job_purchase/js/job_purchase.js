@@ -86,7 +86,7 @@ function finalPureWeight() {
     var stones_weight = $("#stones_weight").val();
     var stone_adjustement = 0;
     if (stones_weight > 0) {
-        if ($("#mail").find(":selected").val() == 'Upper') {
+        if ($("#mail").val() == 'Upper') {
             stone_adjustement = (payable_weight / (96 + (1 * mail_weight))) * 96;
         } else {
             stone_adjustement = (payable_weight / 96) * (96 - (1 * mail_weight));
@@ -121,10 +121,15 @@ $("#mail_weight").on("keyup", function (event) {
     var mail_weight = $("#mail_weight").val();
     var pure_weight = 0;
     $("#pure_weight").val(0);
-    if ($("#mail").find(":selected").val() == 'Upper') {
-        pure_weight = (total_weight / (96 + (1 * mail_weight))) * 96;
+    console.log($("#mail").val());
+    if ($("#mail").val() == 'Upper') {
+        let devid = 96 + (1 * mail_weight);
+        console.log(devid);
+        pure_weight = (total_weight/ devid) * 96;
     } else {
-        pure_weight = (total_weight / 96) * (96 - (1 * mail_weight));
+        
+        console.log('else');
+        pure_weight = ((1 * total_weight) / 96) * (96 - (1 * mail_weight));
     }
     $("#pure_weight").val(pure_weight.toFixed(3));
     totalRecievedWeight();
@@ -171,7 +176,7 @@ function addProduct() {
     var waste_ratti = $("#waste_ratti").val();
     var waste = $("#waste").val();
     var total_weight = $("#total_weight").val();
-    var mail = $("#mail").find(":selected").val();
+    var mail = $("#mail").val();
     var mail_weight = $("#mail_weight").val();
     var pure_weight = $("#pure_weight").val();
     var stone_waste = $("#stone_waste").val();
@@ -459,7 +464,7 @@ function Clear() {
     $("#polish_weight").val(0);
     $("#waste").val(0);
     $("#total_weight").val(0);
-    $("#mail").find(":selected").val(0);
+    $("#mail").val(0);
     $("#mail_weight").val(0);
     $("#pure_weight").val(0);
     $("#stone_adjustement").val(0);

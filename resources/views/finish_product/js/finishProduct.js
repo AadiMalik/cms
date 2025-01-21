@@ -119,9 +119,9 @@ $("body").on("click", "#job_purchase_id", function (event) {
             );
             $("#job_purchase_detail_id").val(data.id > 0 ? data.id : 0);
             $("#scale_weight").val(
-                data.final_pure_weight > 0 ? data.final_pure_weight : 0
+                data.polish_weight > 0 ? data.polish_weight : 0
             );
-            $("#net_weight").val(data.pure_weight > 0 ? data.pure_weight : 0);
+            $("#net_weight").val(data.final_pure_weight > 0 ? data.final_pure_weight : 0);
             $("#bead_weight").val(data.bead_weight > 0 ? data.bead_weight : 0);
             $("#stones_weight").val(
                 data.stones_weight > 0 ? data.stones_weight : 0

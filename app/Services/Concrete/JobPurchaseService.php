@@ -81,7 +81,7 @@ class JobPurchaseService
 
         $data = DataTables::of($model)
             ->addColumn('check_box', function ($item) {
-                if ($item->posted != 1)
+                if ($item->is_posted != 1)
                     return '<input type="checkbox" class="sub_chk" value="' . $item->id . '" data-id="' . $item->id . '" >';
             })
             ->addColumn('purchase_order', function ($item) {

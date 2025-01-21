@@ -205,7 +205,7 @@
                                             <label class="form-label">Mail:<span style="color:red;">*</span></label>
                                             <div class="form-group form-float">
                                                 <select name="mail" id="mail" class="form-control">
-                                                    <option value="Upper">Upper Mail</option>
+                                                    <option value="Upper" selected>Upper Mail</option>
                                                     <option value="Inner">Inner Mail</option>
                                                 </select>
                                             </div>
