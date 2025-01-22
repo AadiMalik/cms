@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BeadTypeController;
 use App\Http\Controllers\CompanySettingController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\DiamondClarityController;
 use App\Http\Controllers\DiamondColorController;
 use App\Http\Controllers\DiamondCutController;
@@ -322,6 +323,27 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [CustomerController::class, 'update']);
         Route::get('destroy/{id}', [CustomerController::class, 'destroy']);
         Route::get('status/{id}', [CustomerController::class, 'status']);
+    });
+
+    // Customer Payment
+    Route::group(['prefix' => 'customer-payment'], function () {
+        Route::get('/', [CustomerPaymentController::class, 'index']);
+        Route::post('data', [CustomerPaymentController::class, 'getData'])->name('customer-payment.data');
+        Route::get('create', [CustomerPaymentController::class, 'create']);
+        Route::post('store', [CustomerPaymentController::class, 'store']);
+        Route::get('edit/{id}', [CustomerPaymentController::class, 'edit']);
+        Route::post('update', [CustomerPaymentController::class, 'update']);
+        Route::get('destroy/{id}', [CustomerPaymentController::class, 'destroy']);
+        Route::get('status/{id}', [CustomerPaymentController::class, 'status']);
+        Route::get('/js/CustomerPaymentForm.js', function () {
+            $path = resource_path('views/customer_payment/js/CustomerPaymentForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 
     Route::group(['prefix' => 'products'], function () {

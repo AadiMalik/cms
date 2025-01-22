@@ -8,10 +8,10 @@ import {
 } from "../../../../../js/common-methods/toasters.js";
 
 $(document).ready(function () {
-    $("#supplier").select2();
+    $("#customer").select2();
     $("#account_id").select2();
     $("#tax_account_id").select2();
-    $("#supplier_id").select2();
+    $("#customer_id").select2();
 });
 
 $("body").on("change", "#tax,#sub_total", function (event) {
@@ -39,15 +39,15 @@ $(function () {
   $("#createNewPayment").click(function () {
     $("#saveBtn").val("creating..");
     $("#saveBtn").show();
-    $("#supplier_id").removeAttr("disabled");
+    $("#customer_id").removeAttr("disabled");
     $("#account_id").removeAttr("disabled");
     $("#payment_date").removeAttr("disabled");
-    $("#cheque_ref").removeAttr("disabled");
+    $("#refernce").removeAttr("disabled");
     $("#sub_total").removeAttr("disabled");
     $("#tax").removeAttr("disabled");
     $("#tax_account_id").removeAttr("disabled");
-    $("#SupplierPaymentForm").trigger("reset");
-    $("#modelHeading").html("Create New Supplier Payment");
+    $("#CustomerPaymentForm").trigger("reset");
+    $("#modelHeading").html("Create New Customer Payment");
     $("#saveBtn").removeAttr("disabled");
     $("#close").removeAttr("disabled");
     $("#ajaxModel").modal("show");
@@ -55,13 +55,13 @@ $(function () {
 
   // Click to Edit Button
 
-  $("body").on("click", "#editSupplierPayment", function () {
-    var supplier_id = $(this).data("id");
+  $("body").on("click", "#editCustomerPayment", function () {
+    var customer_payment_id = $(this).data("id");
     ajaxGetRequest(
-      url_local + "/supplier-payment/edit" + "/" + supplier_id
+      url_local + "/customer-payment/edit" + "/" + customer_payment_id
     )
       .then(function (data) {
-        const form = document.getElementById("SupplierPaymentForm");
+        const form = document.getElementById("customerPaymentForm");
         for (let index = 0; index < form.length; index++) {
           const element = form[index];
           if (element && element.value != "Save" && element.name != "id")
@@ -80,13 +80,13 @@ $(function () {
 
   // Click to View Button
 
-  $("body").on("click", "#viewSupplierPayment", function () {
-    var supplier_id = $(this).data("id");
+  $("body").on("click", "#viewCustomerPayment", function () {
+    var customer_payment_id = $(this).data("id");
     ajaxGetRequest(
-      url_local + "/supplier-payment/edit" + "/" + supplier_id
+      url_local + "/customer-payment/edit" + "/" + customer_payment_id
     )
       .then(function (data) {
-        const form = document.getElementById("SupplierPaymentForm");
+        const form = document.getElementById("customerPaymentForm");
         for (let index = 0; index < form.length; index++) {
           const element = form[index];
           if (element && element.value != "Save" && element.name != "id")
@@ -105,27 +105,27 @@ $(function () {
 
   // Create Code
 
-  $("#supplierPaymentForm").submit(function (e) {
+  $("#customerPaymentForm").submit(function (e) {
     e.preventDefault();
 
     ajaxPostRequest(
-      url_local + "/supplier-payment/store",
-      $("#supplierPaymentForm").serialize()
+      url_local + "/customer-payment/store",
+      $("#customerPaymentForm").serialize()
     )
       .then(function (data) {
-        $("#supplierPaymentForm").trigger("reset");
+        $("#customerPaymentForm").trigger("reset");
         $("#ajaxModel").modal("hide");
-        initDataTablesupplier_payment_table();
+        initDataTablecustomer_payment_table();
       })
       .catch(function (err) {
         errorMessage(err.Message);
       });
   });
 
-  // Delete Supplier Payment Code
+  // Delete Customer Payment Code
 
-  $("body").on("click", "#DeleteSupplierPayment", function () {
-    var supplier_payment_id = $(this).data("id");
+  $("body").on("click", "#DeleteCustomerPayment", function () {
+    var customer_payment_id = $(this).data("id");
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -137,11 +137,11 @@ $(function () {
     }).then((result) => {
       if (result) {
         ajaxGetRequest(
-          url_local + "/supplier-payment/destroy" + "/" + supplier_payment_id
+          url_local + "/customer-payment/destroy" + "/" + customer_payment_id
         )
           .then(function (data) {
             successMessage(data.Message);
-            initDataTablesupplier_payment_table();
+            initDataTablecustomer_payment_table();
           })
           .catch(function (err) {
             errorMessage(err.Message);

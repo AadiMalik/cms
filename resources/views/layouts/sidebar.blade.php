@@ -44,6 +44,11 @@
                             href="{{ url('customers') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Customers</span></a></li>
                     @endcan
+                    @can('customer_payment_access')
+                    <li class="item-name"><a class="{{ Request::is('customer-payment*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('customer-payment') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Customer Payment</span></a></li>
+                    @endcan
 
                 </ul>
             </li>

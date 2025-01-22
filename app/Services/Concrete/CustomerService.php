@@ -70,6 +70,15 @@ class CustomerService
             ->get();
     }
 
+    public function getAllActiveAccountCustomer()
+    {
+        return $this->model_customer->getModel()::with('account_name')
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->where('account_id','!=',null)
+            ->get();
+    }
+
     public function save($obj)
     {
         if ($obj['id'] != null && $obj['id'] != '') {
