@@ -12,10 +12,14 @@ class CustomerService
     // initialize protected model variables
     protected $model_customer;
 
+    protected $journal_entry_service;
+
     public function __construct()
     {
         // set the model
         $this->model_customer = new Repository(new Customer);
+
+        $this->journal_entry_service = new JournalEntryService;
     }
 
     public function getCustomerSource()
@@ -27,6 +31,14 @@ class CustomerService
                 $name = $item->account_name->name ?? '';
                 $code = $item->account_name->code ?? '';
                 return $code . ' ' . $name;
+            })
+            ->addColumn('balance', function ($item) {
+                if($item->account_id!=null){
+                    $balance = $this->journal_entry_service->getBalanceByAccountId($item->account_id,0);
+                    return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
+                }else{
+                    return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";
+                }
             })
             ->addColumn('status', function ($item) {
                 if ($item->is_active == 1) {
@@ -52,7 +64,7 @@ class CustomerService
 
                 return $action_column;
             })
-            ->rawColumns(['account', 'status', 'action'])
+            ->rawColumns(['account', 'status','balance', 'action'])
             ->make(true);
         return $data;
     }

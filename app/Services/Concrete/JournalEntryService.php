@@ -15,14 +15,14 @@ class JournalEntryService
 {
       protected $model_journal_entry;
       protected $model_journal_entry_detail;
-      
+
       public function __construct()
       {
             // set the model
             $this->model_journal_entry = new Repository(new JournalEntry);
             $this->model_journal_entry_detail = new Repository(new JournalEntryDetail);
       }
-      
+
       //Journal
       public function getJournalEntrySource($obj)
       {
@@ -98,7 +98,7 @@ class JournalEntryService
 
             return $journal->id;
       }
-      
+
       // save Journal
       public function saveJournalEntry($obj)
       {
@@ -177,12 +177,12 @@ class JournalEntryService
       public function gridJournalEdit($id)
       {
             $grid_journal = DB::table('journals')
-            ->leftjoin('journal_entries', 'journals.id', 'journal_entries.journal_id')
-            ->leftjoin('journal_entry_details', 'journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
-            ->leftjoin('accounts', 'journal_entry_details.account_id', '=', 'accounts.id')
-            ->where('journal_entries.id', $id)
-            ->select('*', 'journals.name', 'journal_entries.journal_id as jentries_id', 'journal_entries.id as j_id', 'journal_entries.date_post as Date', 'journal_entry_details.id as tbl_id', 'journal_entry_details.debit as Debit', 'journal_entry_details.credit as Credit', 'journal_entry_details.bill_no as BillNo', 'journal_entry_details.check_no as CheckNo', 'accounts.code as Code', 'accounts.name as Account', 'journal_entry_details.explanation as Explanation', 'accounts.id as account_id')
-            ->get();
+                  ->leftjoin('journal_entries', 'journals.id', 'journal_entries.journal_id')
+                  ->leftjoin('journal_entry_details', 'journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
+                  ->leftjoin('accounts', 'journal_entry_details.account_id', '=', 'accounts.id')
+                  ->where('journal_entries.id', $id)
+                  ->select('*', 'journals.name', 'journal_entries.journal_id as jentries_id', 'journal_entries.id as j_id', 'journal_entries.date_post as Date', 'journal_entry_details.id as tbl_id', 'journal_entry_details.debit as Debit', 'journal_entry_details.credit as Credit', 'journal_entry_details.bill_no as BillNo', 'journal_entry_details.check_no as CheckNo', 'accounts.code as Code', 'accounts.name as Account', 'journal_entry_details.explanation as Explanation', 'accounts.id as account_id')
+                  ->get();
             return $grid_journal;
       }
       // update Journal
@@ -198,7 +198,7 @@ class JournalEntryService
             return $saved_obj;
       }
 
-      
+
       // get by id
       public function getJournalEntryById($id)
       {
@@ -209,8 +209,8 @@ class JournalEntryService
 
             return $journal_entry;
       }
-      
-      
+
+
       public function deleteDetailByJournalEntry($id)
       {
 
@@ -266,6 +266,18 @@ class JournalEntryService
                   return false;
 
             return $data;
+      }
+      public function getBalanceByAccountId($account_id,$currency)
+      {
+            $balance = $this->model_journal_entry->getModel()::where('journal_entries.date_post', '<=', Carbon::now()->format('Y-m-d'))
+                  ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
+                  ->where('journal_entry_details.account_id', $account_id)
+                  ->where('journal_entry_details.currency', $currency)
+                  ->where('journal_entries.is_deleted', 0)
+                  ->selectRaw('SUM(journal_entry_details.debit) - SUM(journal_entry_details.credit) AS balance')
+                  ->value('balance');
+
+            return $balance;
       }
       public function numberToWord($num = '')
       {

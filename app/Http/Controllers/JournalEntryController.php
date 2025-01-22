@@ -246,4 +246,19 @@ class JournalEntryController extends Controller
         $view = view('journal_entries/partials.ref', compact('journal_entries'));
         return response($view);
     }
+
+    public function balanceByAccount($account_id,$currency){
+        
+        try {
+            $balance = $this->journal_entry_service->getBalanceByAccountId($account_id,$currency);
+
+            return $this->success(
+                config("enum.success"),
+                $balance,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
 }

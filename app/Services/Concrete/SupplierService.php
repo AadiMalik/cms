@@ -12,10 +12,14 @@ class SupplierService
     // initialize protected model variables
     protected $model_supplier;
 
+    protected $journal_entry_service;
+
     public function __construct()
     {
         // set the model
         $this->model_supplier = new Repository(new Supplier);
+
+        $this->journal_entry_service = new JournalEntryService;
     }
 
     public function getSupplierSource()
@@ -50,6 +54,30 @@ class SupplierService
                 $code = $item->account_dollar_name->code ?? '';
                 return $code . ' ' . $name;
             })
+            ->addColumn('balance', function ($item) {
+                if($item->account_id!=null){
+                    $balance = $this->journal_entry_service->getBalanceByAccountId($item->account_id,0);
+                    return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
+                }else{
+                    return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";
+                }
+            })
+            ->addColumn('balance_au', function ($item) {
+                if($item->account_au_id!=null){
+                    $balance = $this->journal_entry_service->getBalanceByAccountId($item->account_au_id,1);
+                    return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
+                }else{
+                    return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";
+                }
+            })
+            ->addColumn('balance_dollar', function ($item) {
+                if($item->account_dollar_id!=null){
+                    $balance = $this->journal_entry_service->getBalanceByAccountId($item->account_dollar_id,2);
+                    return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
+                }else{
+                    return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";
+                }
+            })
             ->addColumn('status', function ($item) {
                 if ($item->is_active == 1) {
                     $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
@@ -74,7 +102,7 @@ class SupplierService
 
                 return $action_column;
             })
-            ->rawColumns(['type', 'account', 'status', 'action'])
+            ->rawColumns(['type', 'account', 'status','balance','balance_au','balance_dollar', 'action'])
             ->make(true);
         return $data;
     }

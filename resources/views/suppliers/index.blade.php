@@ -37,6 +37,9 @@
                                         <th scope="col">Account(AU)</th>
                                         <th scope="col">Account($)</th>
                                         <th scope="col">Status</th>
+                                        <th scope="col">Balance(PKR)</th>
+                                        <th scope="col">Balance(AU)</th>
+                                        <th scope="col">Balance($)</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -65,6 +68,9 @@
                                     {data: 'account_au' , name: 'account_au' , 'sortable': false , searchable: false},
                                     {data: 'account_dollar' , name: 'account_dollar' , 'sortable': false , searchable: false},
                                     {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
+                                    {data: 'balance' , name: 'balance' , 'sortable': false , searchable: false},
+                                    {data: 'balance_au' , name: 'balance_au' , 'sortable': false , searchable: false},
+                                    {data: 'balance_dollar' , name: 'balance_dollar' , 'sortable': false , searchable: false},
                                     {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
         'route' => 'suppliers/data',
         'buttons' => false,

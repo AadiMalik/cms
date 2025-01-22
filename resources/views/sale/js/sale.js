@@ -90,6 +90,12 @@ $("#customer_id").on("change", function () {
                 row += "</tbody>";
                 row += "</table>";
                 $("#customer").html(row);
+                if(data.account_id!=null){
+                    getCustomerBalance(data.account_id);
+                }else{
+                    // error('This customer has no COA.');
+                    $("#advance_amount").val(0);
+                }
                 $("#preloader").hide();
             } else {
                 error(data.Message);
@@ -98,6 +104,23 @@ $("#customer_id").on("change", function () {
         },
     });
 });
+function getCustomerBalance(account_id) {
+    $("#preloader").show();
+    $.ajax({
+        url: url_local + "/journal-entries/get-balance-by-account/"+account_id+'/0',
+        type: "GET",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (data) {
+            console.log(data);
+            var data = data.Data;
+            $("#advance_amount").val(0);
+            $("#advance_amount").val((data>0)?data:0);
+            $("#preloader").hide();
+        },
+    });
+}
 $("#customerForm").submit(function (e) {
     e.preventDefault();
     $("#preloader").show();

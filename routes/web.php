@@ -291,6 +291,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('print/{id}', [JournalEntryController::class, 'print']);
         Route::get('all-jvs', [JournalEntryController::class, 'allJvs']);
         Route::get('grid-edit/{id}', [JournalEntryController::class, 'grid_journal_edit']);
+        Route::get('get-balance-by-account/{account_id}/{currency}',[JournalEntryController::class,'balanceByAccount']);
         Route::get('/js/JournalEntryForm.js', function () {
             $path = resource_path('views/journal_entries/js/JournalEntryForm.js');
             if (file_exists($path)) {
