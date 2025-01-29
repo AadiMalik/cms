@@ -90,6 +90,12 @@
                                                 <td><b>Rate Type</b></td>
                                                 <td style="text-align: right;"><b>{{$sale_order->gold_rate_type->name??''}}</b></td>
                                             </tr>
+                                            @foreach($advance as $item)
+                                            <tr>
+                                                <td><b>Receipt -{{$item->date_post??''}}</b></td>
+                                                <td style="text-align: right;"><b>{{number_format($item->credit??0,2)}}</b></td>
+                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>

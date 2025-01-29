@@ -56,6 +56,10 @@ class SaleOrderService
             ->addColumn('warehouse_name', function ($item) {
                 return $item->warehouse_name->name ?? '';
             })
+            ->addColumn('advance', function ($item) {
+                $balance = $this->journal_entry_service->getSaleOrderAdvanceById($item->id);
+                return $balance ?? 0;
+            })
             ->addColumn('is_purchased', function ($item) {
                 if ($item->is_purchased == 1) {
                     $saled = '<span class=" badge badge-success mr-3">Yes</span>';
@@ -77,7 +81,10 @@ class SaleOrderService
                 $action_column = '';
                 $print_column    = "<a class='text-info mr-2' href='sale-order/print/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
                 $delete_column    = "<a class='text-danger mr-2' id='deleteSaleOrder' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
-
+                $payment_column    = "<a class='text-primary mr-2' href='javascript:void(0)' id='createNewPayment' data-toggle='tooltip'  data-sale_order_id='" . $item->id . "' data-customer_id='" . $item->customer_id . "'><i title='Add Payment' class='nav-icon mr-2 fa fa-dollar'></i>Add Payment</a>";
+                
+                if (Auth::user()->can('customer_payment_create'))
+                $action_column .= $payment_column;
 
                 if (Auth::user()->can('sale_order_print'))
                     $action_column .= $print_column;
@@ -87,7 +94,7 @@ class SaleOrderService
 
                 return $action_column;
             })
-            ->rawColumns(['customer_name', 'warehouse_name', 'gold_rate_type','is_purchased','is_complete', 'action'])
+            ->rawColumns(['customer_name', 'warehouse_name', 'gold_rate_type','advance','is_purchased','is_complete', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;

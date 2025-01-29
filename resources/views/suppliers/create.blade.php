@@ -80,7 +80,7 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-md-4 form-group mb-3">
+                                <!-- <div class="col-md-4 form-group mb-3">
                                     <label for="account_id">Account(PKR)<span class="text-danger">*</span> </label>
                                     <select class="form-control select2" name="account_id" id="account_id" required
                                         style="width: 100%;">
@@ -94,8 +94,8 @@
                                     @error('account_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
-                                <div class="col-md-4 form-group mb-3">
+                                </div> -->
+                                <!-- <div class="col-md-4 form-group mb-3">
                                     <label for="account_au_id">Account(AU)</label>
                                     <select class="form-control select2" name="account_au_id" id="account_au_id"
                                         style="width: 100%;">
@@ -106,8 +106,8 @@
                                                 {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                                <div class="col-md-4 form-group mb-3">
+                                </div> -->
+                                <!-- <div class="col-md-4 form-group mb-3">
                                     <label for="account_dollar_id">Account($)</label>
                                     <select class="form-control select2" name="account_dollar_id" id="account_dollar_id"
                                         style="width: 100%;">
@@ -121,7 +121,7 @@
                                     @error('account_dollar_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div> -->
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="gold_waste">Waste/Tola<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="gold_waste" onkeypress="return isNumberKey(event)"

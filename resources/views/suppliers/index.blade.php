@@ -33,9 +33,6 @@
                                         <th scope="col">Contact</th>
                                         <th scope="col">Company</th>
                                         <th scope="col">Type</th>
-                                        <th scope="col">Account(PKR)</th>
-                                        <th scope="col">Account(AU)</th>
-                                        <th scope="col">Account($)</th>
                                         <th scope="col">Status</th>
                                         <th scope="col">Balance(PKR)</th>
                                         <th scope="col">Balance(AU)</th>
@@ -64,9 +61,6 @@
                                      {data: 'contact' , name: 'contact'},
                                      {data: 'company' , name: 'company'},
                                     {data: 'type' , name: 'type' , 'sortable': false , searchable: false},
-                                    {data: 'account' , name: 'account' , 'sortable': false , searchable: false},
-                                    {data: 'account_au' , name: 'account_au' , 'sortable': false , searchable: false},
-                                    {data: 'account_dollar' , name: 'account_dollar' , 'sortable': false , searchable: false},
                                     {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
                                     {data: 'balance' , name: 'balance' , 'sortable': false , searchable: false},
                                     {data: 'balance_au' , name: 'balance_au' , 'sortable': false , searchable: false},

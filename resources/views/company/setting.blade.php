@@ -59,6 +59,18 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
+                                    <label for="card_account_id">Card Account <span class="text-danger">*</span> </label>
+                                    <select class="form-control" name="card_account_id" id="card_account_id"
+                                        style="width: 100%;">
+                                        <option value="">--Select Account--</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}"
+                                                {{ isset($company_setting) && $company_setting->card_account_id == $account->id ? 'selected' : '' }}>
+                                                {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 form-group mb-3">
                                     <label for="revenue_account_id">Revenue Account <span class="text-danger">*</span> </label>
                                     <select class="form-control" name="revenue_account_id" id="revenue_account_id"
                                         style="width: 100%;">
@@ -82,38 +94,51 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="card_account_id">Purchase Account <span class="text-danger">*</span> </label>
-                                    <select class="form-control" name="card_account_id" id="card_account_id"
+                                    <label for="customer_account_id">Customer Account <span class="text-danger">*</span> </label>
+                                    <select class="form-control" name="customer_account_id" id="customer_account_id"
                                         style="width: 100%;">
                                         <option value="">--Select Account--</option>
                                         @foreach ($accounts as $account)
                                             <option value="{{ $account->id }}"
-                                                {{ isset($company_setting) && $company_setting->card_account_id == $account->id ? 'selected' : '' }}>
+                                                {{ isset($company_setting) && $company_setting->customer_account_id == $account->id ? 'selected' : '' }}>
                                                 {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="advance_account_id">Advance Account <span class="text-danger">*</span> </label>
-                                    <select class="form-control" name="advance_account_id" id="advance_account_id"
+                                    <label for="supplier_account_id">Supplier/Karigar Account <span class="text-danger">*</span> </label>
+                                    <select class="form-control" name="supplier_account_id" id="supplier_account_id"
                                         style="width: 100%;">
                                         <option value="">--Select Account--</option>
                                         @foreach ($accounts as $account)
                                             <option value="{{ $account->id }}"
-                                                {{ isset($company_setting) && $company_setting->advance_account_id == $account->id ? 'selected' : '' }}>
+                                                {{ isset($company_setting) && $company_setting->supplier_account_id == $account->id ? 'selected' : '' }}>
                                                 {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="gold_impurity_account_id">Gold Impurity Account <span class="text-danger">*</span> </label>
-                                    <select class="form-control" name="gold_impurity_account_id" id="gold_impurity_account_id"
+                                    <label for="recieving_account_id">Recieving Account <span class="text-danger">*</span> </label>
+                                    <select class="form-control" name="recieving_account_id" id="recieving_account_id"
                                         style="width: 100%;">
                                         <option value="">--Select Account--</option>
                                         @foreach ($accounts as $account)
                                             <option value="{{ $account->id }}"
-                                                {{ isset($company_setting) && $company_setting->gold_impurity_account_id == $account->id ? 'selected' : '' }}>
+                                                {{ isset($company_setting) && $company_setting->recieving_account_id == $account->id ? 'selected' : '' }}>
+                                                {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="discount_account_id">Discount Account <span class="text-danger">*</span> </label>
+                                    <select class="form-control" name="discount_account_id" id="discount_account_id"
+                                        style="width: 100%;">
+                                        <option value="">--Select Account--</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}"
+                                                {{ isset($company_setting) && $company_setting->discount_account_id == $account->id ? 'selected' : '' }}>
                                                 {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
                                         @endforeach
                                     </select>
@@ -144,8 +169,10 @@
             $('#revenue_account_id').select2();
             $('#bank_account_id').select2();
             $('#card_account_id').select2();
-            $('#advance_account_id').select2();
-            $('#gold_impurity_account_id').select2();
+            $('#customer_account_id').select2();
+            $('#supplier_account_id').select2();
+            $('#recieving_account_id').select2();
+            $('#discount_account_id').select2();
         });
     </script>
 @endsection

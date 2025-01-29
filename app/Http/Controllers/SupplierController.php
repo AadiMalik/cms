@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanySetting;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\SupplierService;
 use App\Traits\JsonResponse;
@@ -67,6 +68,12 @@ class SupplierController extends Controller
             }
 
             $obj = $request->all();
+            $company = CompanySetting::find(1);
+            if ($company->supplier_account_id != null) {
+                $obj['account_id'] = $company->supplier_account_id;
+            } else {
+                return redirect()->back()->with('error', 'Please first update supplier/karigar account in setting!');
+            }
             $supplier = $this->supplier_service->save($obj);
 
             if (!$supplier)

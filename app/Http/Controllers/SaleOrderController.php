@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CommonService;
+use App\Services\Concrete\CompanySettingService;
 use App\Services\Concrete\CustomerService;
+use App\Services\Concrete\JournalEntryService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\SaleOrderService;
 use App\Services\Concrete\WarehouseService;
@@ -26,6 +28,8 @@ class SaleOrderController extends Controller
     protected $warehouse_service;
     protected $product_service;
     protected $common_service;
+    protected $company_setting_service;
+    protected $journal_entry_service;
 
     public function __construct(
         SaleOrderService $sale_order_service,
@@ -33,7 +37,9 @@ class SaleOrderController extends Controller
         AccountService $account_service,
         WarehouseService $warehouse_service,
         ProductService $product_service,
-        CommonService $common_service
+        CommonService $common_service,
+        CompanySettingService $company_setting_service,
+        JournalEntryService $journal_entry_service
     ) {
         $this->sale_order_service = $sale_order_service;
         $this->account_service = $account_service;
@@ -41,12 +47,16 @@ class SaleOrderController extends Controller
         $this->warehouse_service = $warehouse_service;
         $this->product_service = $product_service;
         $this->common_service = $common_service;
+        $this->company_setting_service = $company_setting_service;
+        $this->journal_entry_service = $journal_entry_service;
     }
     public function index()
     {
         abort_if(Gate::denies('sale_order_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $customers = $this->customer_service->getAllActiveCustomer();
-        return view('sale_order.index', compact('customers'));
+        $accounts = $this->account_service->getAllActiveChild();
+        $setting = $this->company_setting_service->getSetting();
+        return view('sale_order.index', compact('customers','accounts','setting'));
     }
     public function getData(Request $request)
     {
@@ -125,16 +135,16 @@ class SaleOrderController extends Controller
     public function print($id)
     {
         abort_if(Gate::denies('sale_order_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        try {
+        // try {
 
             $sale_order =  $this->sale_order_service->getById($id);
             $sale_order_detail = $this->sale_order_service->saleOrderDetail($id);
+            $advance = $this->journal_entry_service->getSaleOrderPayments($id);
 
-
-            return view('sale_order/partials.print', compact('sale_order', 'sale_order_detail'));
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+            return view('sale_order/partials.print', compact('sale_order', 'sale_order_detail','advance'));
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CompanySetting;
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\CustomerService;
 use App\Traits\JsonResponse;
@@ -72,6 +73,12 @@ class CustomerController extends Controller
             }
 
             $obj = $request->all();
+            $company = CompanySetting::find(1);
+            if ($company->customer_account_id != null) {
+                $obj['account_id'] = $company->customer_account_id;
+            } else {
+                return redirect()->back()->with('error', 'Please first update customer account in setting!');
+            }
             $imagePaths = [];
 
             if ($request->hasFile('cnic_images')) {
@@ -116,9 +123,18 @@ class CustomerController extends Controller
                 $validation_error
             );
         }
+
         try {
             $obj = $request->all();
-            $obj['id']='';
+            $company = CompanySetting::find(1);
+            if ($company->customer_account_id != null) {
+                $obj['account_id'] = $company->customer_account_id;
+            } else {
+                return $this->validationResponse(
+                    'Please first update customer account in setting!'
+                );
+            }
+            $obj['id'] = '';
             $customer = $this->customer_service->save($obj);
 
             return  $this->success(

@@ -336,6 +336,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('update', [CustomerPaymentController::class, 'update']);
         Route::get('destroy/{id}', [CustomerPaymentController::class, 'destroy']);
         Route::get('status/{id}', [CustomerPaymentController::class, 'status']);
+        Route::post('advance', [CustomerPaymentController::class, 'advance']);
         Route::get('/js/CustomerPaymentForm.js', function () {
             $path = resource_path('views/customer_payment/js/CustomerPaymentForm.js');
             if (file_exists($path)) {

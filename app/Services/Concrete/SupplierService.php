@@ -56,23 +56,23 @@ class SupplierService
             })
             ->addColumn('balance', function ($item) {
                 if($item->account_id!=null){
-                    $balance = $this->journal_entry_service->getBalanceByAccountId($item->account_id,0);
+                    $balance = $this->journal_entry_service->getSupplierBalanceByAccountId($item->id,$item->account_id,0);
                     return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
                 }else{
                     return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";
                 }
             })
             ->addColumn('balance_au', function ($item) {
-                if($item->account_au_id!=null){
-                    $balance = $this->journal_entry_service->getBalanceByAccountId($item->account_au_id,1);
+                if($item->account_id!=null){
+                    $balance = $this->journal_entry_service->getSupplierBalanceByAccountId($item->id,$item->account_id,1);
                     return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
                 }else{
                     return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";
                 }
             })
             ->addColumn('balance_dollar', function ($item) {
-                if($item->account_dollar_id!=null){
-                    $balance = $this->journal_entry_service->getBalanceByAccountId($item->account_dollar_id,2);
+                if($item->account_id!=null){
+                    $balance = $this->journal_entry_service->getSupplierBalanceByAccountId($item->id,$item->account_id,2);
                     return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
                 }else{
                     return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";

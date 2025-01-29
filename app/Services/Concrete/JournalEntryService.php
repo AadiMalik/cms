@@ -4,6 +4,7 @@ namespace App\Services\Concrete;
 
 use App\Models\JournalEntry;
 use App\Models\JournalEntryDetail;
+use App\Models\SaleOrder;
 use App\Repository\Repository;
 use Carbon\Carbon;
 use Exception;
@@ -267,17 +268,56 @@ class JournalEntryService
 
             return $data;
       }
-      public function getBalanceByAccountId($account_id,$currency)
+      public function getCustomerBalanceByAccountId($customer_id,$account_id,$currency)
       {
             $balance = $this->model_journal_entry->getModel()::where('journal_entries.date_post', '<=', Carbon::now()->format('Y-m-d'))
                   ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
+                  ->where('journal_entries.customer_id', $customer_id)
                   ->where('journal_entry_details.account_id', $account_id)
                   ->where('journal_entry_details.currency', $currency)
                   ->where('journal_entries.is_deleted', 0)
-                  ->selectRaw('SUM(journal_entry_details.debit) - SUM(journal_entry_details.credit) AS balance')
+                  ->selectRaw('SUM(journal_entry_details.credit) - SUM(journal_entry_details.debit) AS balance')
                   ->value('balance');
 
             return $balance;
+      }
+      public function getSupplierBalanceByAccountId($supplier_id,$account_id,$currency)
+      {
+            $balance = $this->model_journal_entry->getModel()::where('journal_entries.date_post', '<=', Carbon::now()->format('Y-m-d'))
+                  ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
+                  ->where('journal_entries.supplier_id', $supplier_id)
+                  ->where('journal_entry_details.account_id', $account_id)
+                  ->where('journal_entry_details.currency', $currency)
+                  ->where('journal_entries.is_deleted', 0)
+                  ->selectRaw('SUM(journal_entry_details.credit) - SUM(journal_entry_details.debit) AS balance')
+                  ->value('balance');
+
+            return $balance;
+      }
+      public function getSaleOrderAdvanceById($sale_order_id)
+      {
+            $sale_order = SaleOrder::find($sale_order_id);
+            $balance = $this->model_journal_entry->getModel()::join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
+                  ->where('journal_entries.sale_order_id', $sale_order_id)
+                  ->where('journal_entry_details.account_id', $sale_order->customer_name->account_id)
+                  ->where('journal_entry_details.currency', 0)
+                  ->where('journal_entries.is_deleted', 0)
+                  ->selectRaw('SUM(journal_entry_details.credit) - SUM(journal_entry_details.debit) AS balance')
+                  ->value('balance');
+
+            return $balance;
+      }
+      public function getSaleOrderPayments($sale_order_id)
+      {
+            $sale_order = SaleOrder::find($sale_order_id);
+            $payments = $this->model_journal_entry->getModel()::join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
+                  ->where('journal_entries.sale_order_id', $sale_order_id)
+                  ->where('journal_entry_details.account_id', $sale_order->customer_name->account_id)
+                  ->where('journal_entry_details.currency', 0)
+                  ->where('journal_entries.is_deleted', 0)
+                  ->select('journal_entry_details.credit',DB::raw("DATE_FORMAT(journal_entries.date_post, '%d %b %Y') AS date_post"))->get();
+
+            return $payments;
       }
       public function numberToWord($num = '')
       {

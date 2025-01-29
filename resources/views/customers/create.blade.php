@@ -68,7 +68,7 @@
                                     value="{{ isset($customer) ? $customer->address : old('address') }}" maxlength="191"
                                     placeholder="Enter address" />
                             </div>
-                            <div class="col-md-6 form-group mb-3">
+                            <!-- <div class="col-md-6 form-group mb-3">
                                 <label for="account_id">Account (COA)</label>
                                 <select class="form-control select2" name="account_id" id="account_id"
                                     style="width: 100%;">
@@ -80,7 +80,7 @@
                                     </option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="col-md-3 form-group mb-3">
                                 <label for="date_of_birth">Date of Birth</label>
                                 <input class="form-control" type="date" name="date_of_birth"
@@ -91,13 +91,13 @@
                                 <input class="form-control" type="date" name="anniversary_date"
                                     value="{{ isset($customer) ? $customer->anniversary_date : old('anniversary_date') }}" />
                             </div>
-                            <div class="col-md-3 form-group mb-3">
+                            <div class="col-md-6 form-group mb-3">
                                 <label for="ring_size">Ring Size</label>
                                 <input class="form-control" type="text" name="ring_size"
                                     value="{{ isset($customer) ? $customer->ring_size : old('ring_size') }}" maxlength="191"
                                     placeholder="Enter ring size" />
                             </div>
-                            <div class="col-md-3 form-group mb-3">
+                            <div class="col-md-6 form-group mb-3">
                                 <label for="bangle_size">Bangle Size</label>
                                 <input class="form-control" type="text" name="bangle_size"
                                     value="{{ isset($customer) ? $customer->bangle_size : old('bangle_size') }}" maxlength="191"

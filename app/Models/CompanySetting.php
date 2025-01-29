@@ -17,8 +17,10 @@ class CompanySetting extends Model
         'revenue_account_id',
         'bank_account_id',
         'card_account_id',
-        'advance_account_id',
-        'gold_impurity_account_id',
+        'customer_account_id',
+        'supplier_account_id',
+        'recieving_account_id',
+        'discount_account_id',
         'createdby_id',
         'updatedby_id',
     ];
