@@ -114,7 +114,8 @@ class CustomerPaymentService
             $journal_entry = new JournalEntry;
             $journal_entry->journal_id = $journal->id;
             $journal_entry->customer_id = $obj['customer_id'];
-            $journal_entry->sale_order_id = $obj['sale_order_id'];
+            $journal_entry->sale_order_id = isset($obj['sale_order_id'])?$obj['sale_order_id']:null;
+            $journal_entry->sale_id = isset($obj['sale_id'])?$obj['sale_id']:null;
             $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $obj['payment_date'])));
             $journal_entry->reference = 'Date :' . $obj['payment_date'] . ' Against Customer. ' . $customer->name ?? '';
             $journal_entry->entryNum = $entryNum;

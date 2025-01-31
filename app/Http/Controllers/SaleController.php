@@ -14,6 +14,7 @@ use App\Services\Concrete\DiamondClarityService;
 use App\Services\Concrete\DiamondColorService;
 use App\Services\Concrete\DiamondCutService;
 use App\Services\Concrete\DiamondTypeService;
+use App\Services\Concrete\SaleOrderService;
 use App\Services\Concrete\StoneCategoryService;
 use App\Traits\JsonResponse;
 use Carbon\Carbon;
@@ -127,6 +128,7 @@ class SaleController extends Controller
                 'id'             => 'required',
                 'sale_date'      => 'required',
                 'customer_id'    => 'required',
+                'sub_total'          => 'required',
                 'total'          => 'required',
                 'productDetail'  => 'required'
             ],
@@ -155,6 +157,38 @@ class SaleController extends Controller
         }
     }
 
+    public function salePayment(Request $request){
+        abort_if(Gate::denies('customer_payment_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'sale_id'             => 'required',
+                'customer_id'      => 'required'
+            ],
+            $this->validationMessage()
+        );
+
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->validationResponse(
+                $validation_error
+            );
+        }
+
+        // try {
+            $obj = $request->all();
+            $sale = $this->sale_service->salePayment($obj);
+            return  $this->success(
+                'Sale Payment Added!',
+                $sale
+            );
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
+    }
 
     public function print($id)
     {

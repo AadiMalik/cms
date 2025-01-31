@@ -90,9 +90,9 @@ $("#customer_id").on("change", function () {
                 row += "</tbody>";
                 row += "</table>";
                 $("#customer").html(row);
-                if(data.account_id!=null){
+                if (data.account_id != null) {
                     getCustomerBalance(data.account_id);
-                }else{
+                } else {
                     // error('This customer has no COA.');
                     $("#advance_amount").val(0);
                 }
@@ -104,23 +104,6 @@ $("#customer_id").on("change", function () {
         },
     });
 });
-function getCustomerBalance(account_id) {
-    $("#preloader").show();
-    $.ajax({
-        url: url_local + "/journal-entries/get-balance-by-account/"+account_id+'/0',
-        type: "GET",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        success: function (data) {
-            console.log(data);
-            var data = data.Data;
-            $("#advance_amount").val(0);
-            $("#advance_amount").val((data>0)?data:0);
-            $("#preloader").hide();
-        },
-    });
-}
 $("#customerForm").submit(function (e) {
     e.preventDefault();
     $("#preloader").show();
@@ -160,7 +143,12 @@ $("#customerForm").submit(function (e) {
         },
     });
 });
-
+$("#discount_amount").on("keyup", function () {
+    var discount_amount = $("#discount_amount").val();
+    var sub_total = $("#grand_total").val();
+    var total = (sub_total * 1) - (discount_amount * 1);
+    $("#grand_total_total").val(total.toFixed(3));
+});
 $("#select_tag_no").on("change", function () {
     var select_tag_no = $("#select_tag_no").val();
     getFinishProduct(select_tag_no);
@@ -610,8 +598,14 @@ $("body").on("click", "#submit", function (e) {
     }
 
     if ($("#grand_total").val() == "" || $("#grand_total").val() == 0) {
-        error("Grand total is zero!");
+        error("Subtotal is zero!");
         $("#grand_total").focus();
+        $("#preloader").hide();
+        return false;
+    }
+    if ($("#grand_total_total").val() == "" || $("#grand_total_total").val() == 0) {
+        error("Total is zero!");
+        $("#grand_total_total").focus();
         $("#preloader").hide();
         return false;
     }
@@ -621,12 +615,9 @@ $("body").on("click", "#submit", function (e) {
     formData.append("id", $("#id").val());
     formData.append("sale_date", $("#sale_date").val());
     formData.append("customer_id", $("#customer_id").find(":selected").val());
-    formData.append("total", $("#grand_total").val());
-    formData.append("cash_amount", $("#cash_amount").val());
-    formData.append("bank_transfer_amount", $("#bank_transfer_amount").val());
-    formData.append("card_amount", $("#card_amount").val());
-    formData.append("advance_amount", $("#advance_amount").val());
-    formData.append("gold_impure_amount", $("#gold_impure_amount").val());
+    formData.append("sub_total", $("#grand_total").val());
+    formData.append("total", $("#grand_total_total").val());
+    formData.append("discount_amount", $("#discount_amount").val());
 
     formData.append("productDetail", JSON.stringify(productData));
 

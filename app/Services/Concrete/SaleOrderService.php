@@ -169,7 +169,14 @@ class SaleOrderService
     {
         return $this->model_sale_order->getModel()::with(['customer_name', 'gold_rate_type'])->find($id);
     }
-
+    public function getSaleOrderByCustomerId($customer_id)
+    {
+        return $this->model_sale_order->getModel()::with('customer_name')
+            ->where('is_deleted', 0)
+            ->where('customer_id',$customer_id)
+            ->where('is_completed',0)
+            ->get();
+    }
     public function saleOrderDetail($sale_order_id)
     {
         $sale_order_detail = $this->model_sale_order_detail->getModel()::with('product')

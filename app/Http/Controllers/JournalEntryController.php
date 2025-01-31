@@ -247,14 +247,14 @@ class JournalEntryController extends Controller
         return response($view);
     }
 
-    public function balanceByAccount($account_id,$currency){
+    public function saleOrderAdvance($sale_order_id){
         
         try {
-            $balance = $this->journal_entry_service->getBalanceByAccountId($account_id,$currency);
+            $advance = $this->journal_entry_service->getSaleOrderAdvanceById($sale_order_id);
 
             return $this->success(
                 config("enum.success"),
-                $balance,
+                $advance,
                 false
             );
         } catch (Exception $e) {

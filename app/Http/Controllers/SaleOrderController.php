@@ -135,16 +135,16 @@ class SaleOrderController extends Controller
     public function print($id)
     {
         abort_if(Gate::denies('sale_order_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        // try {
+        try {
 
             $sale_order =  $this->sale_order_service->getById($id);
             $sale_order_detail = $this->sale_order_service->saleOrderDetail($id);
             $advance = $this->journal_entry_service->getSaleOrderPayments($id);
 
             return view('sale_order/partials.print', compact('sale_order', 'sale_order_detail','advance'));
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
 
@@ -167,6 +167,20 @@ class SaleOrderController extends Controller
     {
         try {
             $sale_order = $this->sale_order_service->getByWarehouseId($warehouse_id);
+            return $this->success(
+                config("enum.success"),
+                $sale_order,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'),);
+        }
+    }
+
+    public function byCustomer($customer_id)
+    {
+        try {
+            $sale_order = $this->sale_order_service->getSaleOrderByCustomerId($customer_id);
             return $this->success(
                 config("enum.success"),
                 $sale_order,

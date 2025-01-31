@@ -291,7 +291,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('print/{id}', [JournalEntryController::class, 'print']);
         Route::get('all-jvs', [JournalEntryController::class, 'allJvs']);
         Route::get('grid-edit/{id}', [JournalEntryController::class, 'grid_journal_edit']);
-        Route::get('get-balance-by-account/{account_id}/{currency}',[JournalEntryController::class,'balanceByAccount']);
+        Route::get('get-sale-order-advance/{sale_order_id}',[JournalEntryController::class,'saleOrderAdvance']);
         Route::get('/js/JournalEntryForm.js', function () {
             $path = resource_path('views/journal_entries/js/JournalEntryForm.js');
             if (file_exists($path)) {
@@ -558,6 +558,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('unpost-sale/{id}', [SaleController::class, 'unpostSale']);
         Route::get('sale-by-product-id/{product_id}', [SaleController::class, 'getSaleByProductId']);
         Route::get('get-sale-detail-by-id/{id}', [SaleController::class, 'getSaleDetailById']);
+        Route::post('sale-payment', [SaleController::class, 'salePayment']);
 
         Route::get('/js/sale.js', function () {
             $path = resource_path('views/sale/js/sale.js');
@@ -738,6 +739,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('print/{id}', [SaleOrderController::class, 'print']);
         Route::get('destroy/{id}', [SaleOrderController::class, 'destroy']);
         Route::get('by-warehouse/{warehouse_id}', [SaleOrderController::class, 'byWarehouse']);
+        Route::get('by-customer/{customer_id}', [SaleOrderController::class, 'byCustomer']);
         Route::get('get-detail/{id}', [SaleOrderController::class, 'getDetail']);
 
         Route::get('/js/sale_order.js', function () {

@@ -77,7 +77,7 @@
                                                 @foreach ($item['stone_detail'] as $item1)
                                                 <b>Category:</b>{{$item1['category']??''}},<b>Type:</b>{{$item1['type']??''}}, <b>QTY:</b>{{$item1['stones']}}, <b>Stone Wt:</b>{{$item1['gram']}}, <b>Amount:</b>{{number_format($item1['total_amount'],3)}} <br>
                                                 @endforeach
-                                                
+
                                                 @endif
                                                 @if(count($item['diamond_detail'])>0)
                                                 <b>Diamonds:</b><br>
@@ -102,6 +102,14 @@
                                 @endphp
                                 <table style="width: 300px; line-height: 30px;">
                                     <tbody>
+                                        <tr>
+                                            <td><b>Subtotal:</b></td>
+                                            <td style="text-align: right;"><b>{{number_format($sale->sub_total,2)}} PKR</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Discount:</b></td>
+                                            <td style="text-align: right;"><b>{{number_format($sale->discount_amount,2)}} PKR</b></td>
+                                        </tr>
                                         <tr>
                                             <td><b>Total:</b></td>
                                             <td style="text-align: right;"><b>{{number_format($sale->total,2)}} PKR</b></td>

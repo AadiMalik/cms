@@ -35,7 +35,8 @@ class Sale extends Model
         'is_deleted',
         'createdby_id',
         'updatedby_id',
-        'deletedby_id'
+        'deletedby_id',
+        'discount_amount'
     ];
     protected $dates = [
         'updated_at',
