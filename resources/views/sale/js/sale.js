@@ -90,12 +90,6 @@ $("#customer_id").on("change", function () {
                 row += "</tbody>";
                 row += "</table>";
                 $("#customer").html(row);
-                if (data.account_id != null) {
-                    getCustomerBalance(data.account_id);
-                } else {
-                    // error('This customer has no COA.');
-                    $("#advance_amount").val(0);
-                }
                 $("#preloader").hide();
             } else {
                 error(data.Message);
