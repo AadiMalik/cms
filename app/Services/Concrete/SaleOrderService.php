@@ -174,7 +174,7 @@ class SaleOrderService
         return $this->model_sale_order->getModel()::with('customer_name')
             ->where('is_deleted', 0)
             ->where('customer_id',$customer_id)
-            ->where('is_completed',0)
+            ->where('is_complete',0)
             ->get();
     }
     public function saleOrderDetail($sale_order_id)
