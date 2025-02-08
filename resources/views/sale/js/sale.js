@@ -199,7 +199,7 @@ function getFinishProduct(tag_no) {
                     data.other_amount > 0 ? data.other_amount : 0
                 );
                 $("#waste").val(data.waste > 0 ? data.waste : 0);
-
+                GoldRate();
                 BeadByFinishDetail(data.id);
                 StonesByFinishDetail(data.id);
                 DiamondsByFinishDetail(data.id);
@@ -281,6 +281,14 @@ $("#making").on("keyup", function (event) {
 $("#other_amount").on("keyup", function (event) {
     TotalAmount();
 });
+function GoldRate() {
+    var gold_carat = $("#gold_carat").val();
+    var gold_carat_rate = (gold_rate / 24) * (gold_carat * 1);
+    var gold_rate_gram = gold_carat_rate / 11.664;
+    $("#gold_rate").val(gold_rate_gram.toFixed(3));
+    TotalGoldAmount();
+    TotalAmount();
+};
 $("#gold_rate").on("keyup", function (event) {
     TotalGoldAmount();
     TotalAmount();

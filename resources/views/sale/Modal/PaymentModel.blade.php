@@ -139,6 +139,20 @@
                                                 placeholder="Enter Reference" />
                                     </div>
                               </div>
+                              <div class="row">
+                                    <div class="col-md-4 form-group">
+                                          <label for="">Total Amount</label>
+                                          <input type="text" id="total_amount" name="total_amount" readonly value="0" class="form-control" style="width:100%;" />
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                          <label for="">Total Paid Amount</label>
+                                          <input type="text" id="total_paid" name="total_paid" readonly value="0" class="form-control" style="width:100%;" />
+                                    </div>
+                                    <div class="col-md-4 form-group">
+                                          <label for="">Balance</label>
+                                          <input type="text" id="balance" name="balance" readonly value="0" class="form-control" style="width:100%;" />
+                                    </div>
+                              </div>
                         </div>
                         <div class="modal-footer">
                               <button id="paymentSave" class="btn btn-primary"

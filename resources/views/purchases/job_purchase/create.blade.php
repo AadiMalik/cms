@@ -213,7 +213,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Mail Weight:<span
+                                            <label class="form-label">Mail Ratti:<span
                                                     style="color:red;">*</span></label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
@@ -309,7 +309,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Recieved Weight:<span
+                                            <label class="form-label">Actual Recieved Weight:<span
                                                     class="text-danger">*</span></label>
                                             <input type="text" id="recieved_weight" name="recieved_weight"
                                                 class="form-control" value="0"
@@ -465,7 +465,7 @@
                                                     <th>Stone Wt</th>
                                                     <th>Diamond Wt</th>
                                                     <th>With Stone Wt</th>
-                                                    <th>Recieved Wt</th>
+                                                    <th>Actual Recieved Wt</th>
                                                     <th>Stone Waste</th>
                                                     <th>Total Recieved Wt</th>
                                                     <th>Payable/Recieved Wt</th>

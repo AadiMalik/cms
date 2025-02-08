@@ -73,7 +73,7 @@
                                             <tr>
                                                 <td><b>Mail:</b></td>
                                                 <td>{{$item['mail']??''}} Mail</td>
-                                                <td><b>Mail Wt:</b></td>
+                                                <td><b>Mail Ratti:</b></td>
                                                 <td style="text-align: right;">{{$item['mail_weight']??''}}</td>
                                             </tr>
                                             <tr>
@@ -97,7 +97,7 @@
                                             <tr>
                                                 <td><b>With Stone Wt:</b></td>
                                                 <td style="text-align: right;">{{$item['with_stone_weight']??''}}</td>
-                                                <td><b>Recieved Wt:</b></td>
+                                                <td><b>Actual Recieved Wt:</b></td>
                                                 <td style="text-align: right;">{{$item['recieved_weight']??''}}</td>
                                             </tr>
                                             <tr>

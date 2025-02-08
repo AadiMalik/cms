@@ -304,8 +304,6 @@ class JobPurchaseService
 
                 $purchase_account = Account::find($obj['purchase_account_id']);
                 $supplir_account = Account::find($supplier->account_id);
-                $supplir_au_account = Account::find($supplier->account_au_id);
-                $supplir_dollar_account = Account::find($supplier->account_dollar_id);
 
                 // Journal Entry Detail
 
@@ -379,8 +377,8 @@ class JobPurchaseService
                         $job_purchase_date, //check date
                         0, // is credit flag 0 for credit, 1 for debit
                         $AU_Amount, //amount
-                        $supplir_au_account->id, // account id
-                        $supplir_au_account->code, // account code
+                        $supplir_account->id, // account id
+                        $supplir_account->code, // account code
                         Auth::User()->id //created by id
                     );
                 }
@@ -414,8 +412,8 @@ class JobPurchaseService
                         $job_purchase_date, //check date
                         0, // is credit flag 0 for credit, 1 for debit
                         $Dollar_Amount, //amount
-                        $supplir_dollar_account->id, // account id
-                        $supplir_dollar_account->code, // account code
+                        $supplir_account->id, // account id
+                        $supplir_account->code, // account code
                         Auth::User()->id //created by id
                     );
                 }

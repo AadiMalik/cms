@@ -25,7 +25,7 @@
                   <tr style="background: #87CEFA;color: #000;">
                         <th style="text-align:center; font-size:12px;">Sr. No.</th>
                         <th style="text-align:center; font-size:12px;">Bill No.</th>
-                        <th style="text-align:center; font-size:12px;">Check No.</th>
+                        <th style="text-align:center; font-size:12px;">Currency</th>
                         <th style="text-align:center; font-size:12px;">Account</th>
                         <th style="text-align:center; font-size:12px;">Explanation</th>
                         <th style="text-align:right; font-size:12px;">Debit</th>
@@ -46,7 +46,7 @@
                   <tr>
                         <td style="text-align:center; font-size:12px;">{{ $index+1 }}</td>
                         <td style="text-align:center; font-size:12px;">{{ $item->bill_no??'' }}</td>
-                        <td style="text-align:center; font-size:12px;">{{ $item->check_no??'' }}</td>
+                        <td style="text-align:center; font-size:12px;">{{ Currency($item->currency??'') }}</td>
                         <td style="text-align:left; font-size:12px;">{{$item->account_code??''}} {{ $item->account_name->name??'' }}</td>
                         <td style="text-align:left; font-size:12px;">{{ $item->explanation??'' }}</td>
                         <td style="text-align:right; font-size:12px;">{{ number_format($item->debit??0.000,3) }}</td>

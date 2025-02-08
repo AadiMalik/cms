@@ -36,9 +36,9 @@ class CustomerService
             ->addColumn('balance', function ($item) {
                 if($item->account_id!=null){
                     $balance = $this->journal_entry_service->getCustomerBalanceByAccountId($item->id,$item->account_id,0);
-                    return ($balance>0)?"<span class='btn-success pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-primary pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
+                    return ($balance>0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-primary pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
                 }else{
-                    return "<span class='btn-danger pl-1'> <i class='fa fa-arrows'></i>0</span>";
+                    return "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>0</span>";
                 }
             })
             ->addColumn('status', function ($item) {

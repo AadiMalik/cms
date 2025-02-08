@@ -417,7 +417,7 @@ $gold_rate = GoldRate();
 <script type="text/javascript">
     var url_local = "{{ url('/') }}";
     var sale_id = "{{ isset($sale) ? $sale->id : '' }}";
-    var gold_rate = "{{ $gold_rate->rate_gram }}";
+    var gold_rate = "{{ $gold_rate->rate_tola ?? 0 }}";
 </script>
 
 <script>

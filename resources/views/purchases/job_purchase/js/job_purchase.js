@@ -94,7 +94,7 @@ function finalPureWeight() {
         $("#stone_adjustement").val(stone_adjustement.toFixed(3));
     }
     var pure_weight = $("#pure_weight").val();
-    var final_pure_weight = (pure_weight * 1) + (stone_adjustement * 1);
+    var final_pure_weight = ((pure_weight * 1) + (stone_adjustement * 1)) - payable_weight;
     $("#final_pure_weight").val(final_pure_weight.toFixed(3));
 }
 $("#polish_weight").on("keyup", function (event) {
@@ -138,6 +138,7 @@ $("#mail_weight").on("keyup", function (event) {
 $("#recieved_weight").on("keyup", function (event) {
 
     totalRecievedWeight();
+    finalPureWeight();
 });
 $("#other,#laker,#rp,#wax").on("keyup", function (event) {
     TotalAmount();

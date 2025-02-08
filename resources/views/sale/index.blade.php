@@ -332,16 +332,48 @@ $(row).css("background-color", "Pink");
         $("#modelHeading").html("Sale Payment");
         $("#paymentModel").modal("show");
         getCustomerSaleOrders($(this).data("customer_id"));
+        GetSaleDetailById($(this).data("sale_id"));
+    });
+
+    function GetSaleDetailById(sale_id) {
+        $("#preloader").show();
+        $.ajax({
+            url: "{{url('sale/get-sale-detail-by-id')}}/" + sale_id,
+            type: "GET",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function(data) {
+                console.log(data);
+                var data = data.Data;
+                $("#total_amount").val(data.total);
+                $("#preloader").hide();
+            },
+        });
+    }
+    $("body").on("keyup", "#advance_amount,#cash_amount,#bank_transfer_amount,#card_amount,#gold_impurity_amount", function(event) {
+        var advance_amount = $("#advance_amount").val();
+        var cash_amount = $("#cash_amount").val();
+        var bank_transfer_amount = $("#bank_transfer_amount").val();
+        var card_amount = $("#card_amount").val();
+        var gold_impurity_amount = $("#gold_impurity_amount").val();
+        var total_paid = (advance_amount * 1) + (cash_amount * 1) + (bank_transfer_amount * 1) + (card_amount * 1) + (gold_impurity_amount * 1);
+        var total_amount = $("#total_amount").val();
+        var balance = (total_amount*1) - (total_paid*1);
+        $("#total_paid").val(total_paid.toFixed(3));
+        $("#balance").val(balance.toFixed(3));
     });
     $("body").on("click", "#paymentSave", function(e) {
         e.preventDefault();
 
+        $("#paymentSave").hide();
         $("#preloader").show();
         // Validation logic
         if ($("#sale_id").val() == "") {
             error("Please select sale!");
             $("#sale_id").focus();
             $("#preloader").hide();
+            $("#paymentSave").show();
             return false;
         }
 
@@ -349,17 +381,19 @@ $(row).css("background-color", "Pink");
             error("Please select customer!");
             $("#sale_customer_id").focus();
             $("#preloader").hide();
+            $("#paymentSave").show();
             return false;
         }
         if (
-            $("#advance_amount").val() == 0 && 
+            $("#advance_amount").val() == 0 &&
             $("#cash_amount").val() == 0 &&
-            $("#bank_transfer_amount").val() == 0 && 
-            $("#card_amount").val() == 0 && 
+            $("#bank_transfer_amount").val() == 0 &&
+            $("#card_amount").val() == 0 &&
             $("#gold_impurity_amount").val() == 0
         ) {
             error("Please add amount!");
             $("#preloader").hide();
+            $("#paymentSave").show();
             return false;
         }
         if (
@@ -369,6 +403,7 @@ $(row).css("background-color", "Pink");
             error("Please select cash account!");
             $("#cash_account_id").focus();
             $("#preloader").hide();
+            $("#paymentSave").show();
             return false;
         }
         if (
@@ -378,6 +413,7 @@ $(row).css("background-color", "Pink");
             error("Please select bank transfer account!");
             $("#bank_transfer_account_id").focus();
             $("#preloader").hide();
+            $("#paymentSave").show();
             return false;
         }
         if (
@@ -387,6 +423,7 @@ $(row).css("background-color", "Pink");
             error("Please select card account!");
             $("#card_account_id").focus();
             $("#preloader").hide();
+            $("#paymentSave").show();
             return false;
         }
 
@@ -397,6 +434,17 @@ $(row).css("background-color", "Pink");
             error("Please select gold impurity account!");
             $("#gold_impurity_account_id").focus();
             $("#preloader").hide();
+            $("#paymentSave").show();
+            return false;
+        }
+
+        if (
+            $("#balance").val() != 0 &&
+            $("#total_amount").val() != $("#total_paid").val()
+        ) {
+            error("Paid Amount not equal to total amount!");
+            $("#preloader").hide();
+            $("#paymentSave").show();
             return false;
         }
 
@@ -419,6 +467,7 @@ $(row).css("background-color", "Pink");
         formData.append("gold_impurity_account_id", $("#gold_impurity_account_id").find(':selected').val());
         formData.append("gold_impurity_amount", $("#gold_impurity_amount").val());
         formData.append("gold_impurity_reference", $("#gold_impurity_reference").val());
+        formData.append("total_received", $("#total_paid").val());
 
         $.ajax({
             url: "{{ url('sale/sale-payment')}}",
@@ -434,23 +483,25 @@ $(row).css("background-color", "Pink");
                 if (data.Success) {
                     success(data.Message);
                     $("#preloader").hide();
-                    $("#paymentSave").prop("disabled", true);
+                    $("#paymentSave").show();
                     $("#paymentModel").modal("hide");
-                    initDataTablesale_order_table();
+                    initDataTablesale_table();
                 } else {
                     error(data.Message);
                     $("#preloader").hide();
+                    $("#paymentSave").show();
                 }
             },
             error: function(xhr, status, e) {
                 error("An error occurred:");
                 $("#preloader").hide();
+                $("#paymentSave").show();
             },
         });
     });
     $("#post_sale").click(function() {
         $("#preloader").show();
-        
+
         if ($("#revenue_account_id").find(":selected").val() == "" || $("#revenue_account_id").find(":selected")
             .val() == 0) {
             error("Please select revenue account!");
@@ -465,7 +516,7 @@ $(row).css("background-color", "Pink");
             $("#preloader").hide();
             return false;
         }
-        
+
         var sales = [];
         $(".sub_chk:checked").each(function() {
 

@@ -2,6 +2,7 @@
 
 namespace App\Services\Concrete;
 
+use App\Models\Customer;
 use App\Models\FinishProduct;
 use App\Models\FinishProductBead;
 use App\Models\FinishProductDiamond;
@@ -15,6 +16,7 @@ use App\Models\SaleDetail;
 use App\Models\SaleDetailBead;
 use App\Models\SaleDetailDiamond;
 use App\Models\SaleDetailStone;
+use App\Models\Supplier;
 use App\Models\Transaction;
 use App\Models\Warehouse;
 use App\Repository\Repository;
@@ -64,9 +66,13 @@ class ReportService
             $whIn = [];
             if (isset($obj['supplier_id']) && $obj['supplier_id'] != 0 && $obj['supplier_id'] != "") {
                   $wh[] = ['journal_entries.supplier_id', '=', $obj['supplier_id']];
+                  $supplier = Supplier::find($obj['supplier_id']);
+                  $wh[] = ['journal_entry_details.account_id', '=', $supplier->account_id];
             }
             if (isset($obj['customer_id']) && $obj['customer_id'] != 0 && $obj['customer_id'] != "") {
                   $wh[] = ['journal_entries.customer_id', '=', $obj['customer_id']];
+                  $customer = Customer::find($obj['customer_id']);
+                  $wh[] = ['journal_entry_details.account_id', '=', $customer->account_id];
             }
             if (isset($obj['currency']) && $obj['currency'] != "") {
                   $wh[] = ['journal_entry_details.currency', '=', $obj['currency']];

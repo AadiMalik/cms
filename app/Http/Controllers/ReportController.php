@@ -96,7 +96,7 @@ class ReportController extends Controller
                 $validation_error
             );
         }
-        try {
+        // try {
             $obj = $request->all();
             $parms['data'] = $this->report_service->ledgerReport($obj);
             $parms = (object)$parms;
@@ -113,9 +113,9 @@ class ReportController extends Controller
             $parms->currency = ($request->currency == 0) ? 'PKR (Rs)' : (($request->currency == 1) ? 'Gold (AU)' : 'Dollar ($)');
             $parms->report_name = "ledger_report";
             return view('/reports/ledger/partials.report', compact('parms'));
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
     public function getLedgerReport(Request $request)
     {

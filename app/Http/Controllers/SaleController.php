@@ -162,8 +162,9 @@ class SaleController extends Controller
         $validation = Validator::make(
             $request->all(),
             [
-                'sale_id'             => 'required',
-                'customer_id'      => 'required'
+                'sale_id'               => 'required',
+                'customer_id'           => 'required',
+                'total_received'        => 'required',
             ],
             $this->validationMessage()
         );
@@ -178,16 +179,16 @@ class SaleController extends Controller
             );
         }
 
-        // try {
+        try {
             $obj = $request->all();
             $sale = $this->sale_service->salePayment($obj);
             return  $this->success(
                 'Sale Payment Added!',
                 $sale
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
     public function print($id)
@@ -204,7 +205,22 @@ class SaleController extends Controller
             return $this->error(config('enum.error'));
         }
     }
+    public function getSaleDetailById($id)
+    {
+        abort_if(Gate::denies('sale_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
 
+            $sale =  $this->sale_service->getById($id);
+
+            return $this->success(
+                config('enum.success'),
+                $sale,
+                false
+            );
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
 
     public function unpostSale($id)
     {

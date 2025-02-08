@@ -87,7 +87,7 @@ class SaleService
                 $payment_column    = "<a class='text-primary mr-2' href='javascript:void(0)' id='createNewPayment' data-toggle='tooltip'  data-sale_id='" . $item->id . "' data-customer_id='" . $item->customer_id . "'><i title='Add Payment' class='nav-icon mr-2 fa fa-dollar'></i>Add Payment</a>";
                 // if (Auth::user()->can('customers_edit'))
                 //     $action_column .= $edit_column;
-                if (Auth::user()->can('customer_payment_create'))
+                if (Auth::user()->can('customer_payment_create') && $item->total_received!=$item->total)
                     $action_column .= $payment_column;
                 if (Auth::user()->can('sale_print'))
                     $action_column .= $print_column;
@@ -703,7 +703,7 @@ class SaleService
             $sale->bank_transfer_amount = $sale->bank_transfer_amount + $obj['bank_transfer_amount'] ?? 0;
             $sale->card_amount = $sale->card_amount + $obj['card_amount'] ?? 0;
             $sale->gold_impure_amount = $sale->gold_impure_amount + $obj['gold_impurity_amount'] ?? 0;
-            $sale->total_received = $sale->total_received + $obj['cash_amount'] + $obj['advance_amount'] + $obj['bank_transfer_amount'] + $obj['card_amount'] + $obj['gold_impurity_amount'];
+            $sale->total_received = $obj['total_received'];
             $sale->update();
             if ($obj['sale_order_id'] != '' && $obj['sale_order_id'] != 0) {
                 $sale_order = SaleOrder::find($obj['sale_order_id']);
