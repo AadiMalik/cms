@@ -282,4 +282,13 @@ class FinishProductController extends Controller
             return $this->error($e->getMessage());
         }
     }
+
+    public function print($id)
+    {
+        abort_if(Gate::denies('tagging_product_view'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $finish_product = $this->finish_product_service->getById($id);
+        return view('finish_product.print', compact(
+            'finish_product'
+        ));
+    }
 }

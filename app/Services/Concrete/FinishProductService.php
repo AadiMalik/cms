@@ -78,6 +78,7 @@ class FinishProductService
             ->addColumn('action', function ($item) {
                 $action_column = '';
                 $view_column    = "<a class='text-warning mr-2' href='finish-product/view/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
+                $print_column    = "<a class='text-info mr-2' href='finish-product/print/" . $item->id . "'><i title='Print' class='nav-icon mr-2 fa fa-print'></i>Tag Print</a>";
                 $delete_column    = "<a class='text-danger mr-2' id='deleteFinishProduct' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
                 if (Auth::user()->can('tagging_product_view'))
@@ -86,6 +87,9 @@ class FinishProductService
 
                 if (Auth::user()->can('tagging_product_delete'))
                     $action_column .= $delete_column;
+
+                if (Auth::user()->can('tagging_product_view'))
+                    $action_column .= $print_column;
 
                 return $action_column;
             })
@@ -259,17 +263,14 @@ class FinishProductService
             ])->where('parent_id', $finish_product->id)->get();
             $data = [];
             foreach ($finish_products as $item) {
-                $beadDetail = $this->model_finish_product_bead->getModel()::
-                select('type', 'finish_product_id', 'beads', 'gram', 'carat', 'gram_rate', 'carat_rate', 'total_amount')
+                $beadDetail = $this->model_finish_product_bead->getModel()::select('type', 'finish_product_id', 'beads', 'gram', 'carat', 'gram_rate', 'carat_rate', 'total_amount')
                     ->where('finish_product_id', $item->id)
                     ->where('is_deleted', 0)->get();
-                $stonesDetail = $this->model_finish_product_stone->getModel()::
-                select('category','type', 'finish_product_id', 'stones', 'gram', 'carat', 'gram_rate', 'carat_rate', 'total_amount')
+                $stonesDetail = $this->model_finish_product_stone->getModel()::select('category', 'type', 'finish_product_id', 'stones', 'gram', 'carat', 'gram_rate', 'carat_rate', 'total_amount')
                     ->where('finish_product_id', $item->id)
                     ->where('is_deleted', 0)->get();
-                $diamondDetail = $this->model_finish_product_diamond->getModel()::
-                select('diamonds','type', 'finish_product_id', 'color', 'cut','clarity', 'carat', 'carat_rate', 'total_amount','total_dollar')
-                ->where('finish_product_id', $item->id)
+                $diamondDetail = $this->model_finish_product_diamond->getModel()::select('diamonds', 'type', 'finish_product_id', 'color', 'cut', 'clarity', 'carat', 'carat_rate', 'total_amount', 'total_dollar')
+                    ->where('finish_product_id', $item->id)
                     ->where('is_deleted', 0)->get();
                 $data[] = [
                     "tag_no" => $item->tag_no ?? '',
