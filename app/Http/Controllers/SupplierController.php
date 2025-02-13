@@ -56,7 +56,6 @@ class SupplierController extends Controller
                 'name' => ['required', 'string', 'max:191'],
                 'contact' => ['required', 'string'],
                 'type' => ['required'],
-                'account_id' => ['required'],
                 'gold_waste' => ['required'],
                 'stone_waste' => ['required'],
                 'kaat' => ['required'],
