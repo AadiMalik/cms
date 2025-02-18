@@ -295,15 +295,13 @@ class RattiKaatService
 
                 $journal_entry_id = $journal_entry->id ?? null;
 
-                if ($supplier->account_id == null || $supplier->account_au_id == null || $supplier->account_dollar_id == null) {
-                    $message = "This Supplier/Karigar have  not 3 accounts. please update then post again.!";
+                if ($supplier->account_id == null) {
+                    $message = "This Supplier/Karigar have  not COA account. please update then post again.!";
                     return $message;
                 }
 
                 $purchase_account = Account::find($purchase_account_id);
                 $supplir_account = Account::find($supplier->account_id);
-                $supplir_au_account = Account::find($supplier->account_au_id);
-                $supplir_dollar_account = Account::find($supplier->account_dollar_id);
 
                 // Journal Entry Detail
 
@@ -369,8 +367,8 @@ class RattiKaatService
                         $ratti_kaat->purchase_date, //check date
                         0, // is credit flag 0 for credit, 1 for debit
                         $AU_Amount, //amount
-                        $supplir_au_account->id, // account id
-                        $supplir_au_account->code, // account code
+                        $supplir_account->id, // account id
+                        $supplir_account->code, // account code
                         Auth::User()->id //created by id
                     );
                 }
@@ -379,9 +377,9 @@ class RattiKaatService
                 if ($ratti_kaat->total_dollar > 0) {
                     $Dollar_Amount = str_replace(',', '', $ratti_kaat->total_dollar ?? 0);
 
-                    // AU (Debit)
+                    // Dollar (Debit)
                     $this->journal_entry_service->saveJVDetail(
-                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        2, // currency 0 for PKR, 1 for AU, 2 for Dollar
                         $journal_entry_id, // journal entry id
                         'Ratti Kaat Dollar($) Debit Entry', //explaination
                         $ratti_kaat->id, //bill no
@@ -396,7 +394,7 @@ class RattiKaatService
 
                     // Dollar (Credit)
                     $this->journal_entry_service->saveJVDetail(
-                        1, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        2, // currency 0 for PKR, 1 for AU, 2 for Dollar
                         $journal_entry_id, // journal entry id
                         'Ratti Kaat Dollar($) Supplier/Karigar Credit Entry', //explaination
                         $ratti_kaat->id, //bill no
@@ -404,8 +402,8 @@ class RattiKaatService
                         $ratti_kaat->purchase_date, //check date
                         0, // is credit flag 0 for credit, 1 for debit
                         $Dollar_Amount, //amount
-                        $supplir_dollar_account->id, // account id
-                        $supplir_dollar_account->code, // account code
+                        $supplir_account->id, // account id
+                        $supplir_account->code, // account code
                         Auth::User()->id //created by id
                     );
                 }
@@ -433,7 +431,7 @@ class RattiKaatService
                     $Paid_au_Amount = str_replace(',', '', $ratti_kaat->paid_au ?? 0);
 
                     $paid_au_account = Account::find($paid_account_au_id);
-                    $paid_au_jv = $this->PaidAUtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount);
+                    $paid_au_jv = $this->PaidAUtoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_au_account, $supplir_account, $Paid_au_Amount);
 
                     // Supplier AU payment
                     $supplier_au_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
@@ -452,7 +450,7 @@ class RattiKaatService
                     $Paid_dollar_Amount = str_replace(',', '', $ratti_kaat->paid_dollar ?? 0);
 
                     $paid_dollar_account = Account::find($paid_account_dollar_id);
-                    $paid_dollar_jv = $this->PaidDollartoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_dollar_account, $supplir_dollar_account, $Paid_dollar_Amount);
+                    $paid_dollar_jv = $this->PaidDollartoSupplier($ratti_kaat->ratti_kaat_no, $ratti_kaat->purchase_date, $ratti_kaat->id, $supplier, $paid_dollar_account, $supplir_account, $Paid_dollar_Amount);
                     // Supplier Dollar payment
                     $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
                         $supplier->id,
@@ -545,7 +543,7 @@ class RattiKaatService
     }
 
     // AU paid to supplier
-    public function PaidAUtoSupplier($ratti_kaat_no, $purchase_date, $bill_no, $supplier, $paid_au_account, $supplir_au_account, $Paid_au_Amount)
+    public function PaidAUtoSupplier($ratti_kaat_no, $purchase_date, $bill_no, $supplier, $paid_au_account, $supplir_account, $Paid_au_Amount)
     {
         $journal_type = ($paid_au_account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
         $journal = Journal::find($journal_type);
@@ -576,8 +574,8 @@ class RattiKaatService
             $purchase_date, //check date
             1, // is credit flag 0 for credit, 1 for debit
             $Paid_au_Amount, //amount
-            $supplir_au_account->id, // account id
-            $supplir_au_account->code, // account code
+            $supplir_account->id, // account id
+            $supplir_account->code, // account code
             Auth::User()->id //created by id
         );
 
@@ -600,7 +598,7 @@ class RattiKaatService
     }
 
     // Dollar paid to supplier
-    public function PaidDollartoSupplier($ratti_kaat_no, $purchase_date, $bill_no, $supplier, $paid_dollar_account, $supplir_dollar_account, $Paid_dollar_Amount)
+    public function PaidDollartoSupplier($ratti_kaat_no, $purchase_date, $bill_no, $supplier, $paid_dollar_account, $supplir_account, $Paid_dollar_Amount)
     {
         $journal_type = ($paid_dollar_account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
         $journal = Journal::find($journal_type);
@@ -631,8 +629,8 @@ class RattiKaatService
             $purchase_date, //check date
             1, // is credit flag 0 for credit, 1 for debit
             $Paid_dollar_Amount, //amount
-            $supplir_dollar_account->id, // account id
-            $supplir_dollar_account->code, // account code
+            $supplir_account->id, // account id
+            $supplir_account->code, // account code
             Auth::User()->id //created by id
         );
 
