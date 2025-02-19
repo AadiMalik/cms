@@ -500,7 +500,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-by-tag-no/{tag}', [FinishProductController::class, 'getByTagNoJson']);
         Route::get('destroy/{id}', [FinishProductController::class, 'destroy']);
         Route::get('status/{id}', [FinishProductController::class, 'status']);
-        Route::get('print/{id}', [FinishProductController::class, 'print']);
+        Route::get('print', [FinishProductController::class, 'print']);
 
 
         Route::get('get-bead-by-id/{id}', [FinishProductController::class, 'beadByFinishProductId']);

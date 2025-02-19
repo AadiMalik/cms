@@ -22,6 +22,10 @@
                     <a class="btn btn-primary btn-md m-1" href="{{ url('finish-product/create') }}"><i
                             class="fa fa-plus text-white mr-2"></i> Add Tagging</a>
                     @endcan
+                    @can('tagging_product_view')
+                    <a class="btn btn-info btn-md m-1" href="javascript:void(0)" id="tagPrintBtn"><i
+                            class="fa fa-print text-white mr-2"></i> Tag Print</a>
+                    @endcan
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -56,6 +60,7 @@
     </div>
     <!-- end of row-->
 </div>
+@include('finish_product/Modal/TagPrint')
 @endsection
 @section('js')
 @include('includes.datatable', [
@@ -82,6 +87,7 @@
 ])
 
 <script>
+    var url_local = "{{ url('/') }}";
     function errorMessage(message) {
 
         toastr.error(message, "Error", {
@@ -101,6 +107,17 @@
         });
 
     }
+    $("#tagPrintBtn").click(function() {
+        $("#id").val("");
+        $("#tagPrintForm").trigger("reset");
+        $("#tagPrintModel").modal("show");
+    });
+    $("body").on("click", "#printBtn", function() {
+        var tag_product_1 = $("#tag_product_1").find(':selected').val();
+        var tag_product_2 = $("#tag_product_2").find(':selected').val();
+        var finalUrl = `${url_local}/finish-product/print?tag_product_1=${encodeURIComponent(tag_product_1)}&tag_product_2=${encodeURIComponent(tag_product_2)}`;
+        window.location.href = finalUrl;
+    });
     $("body").on("click", "#status", function() {
         var finish_product_id = $(this).data("id");
         $.ajax({

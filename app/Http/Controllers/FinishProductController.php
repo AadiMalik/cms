@@ -61,7 +61,8 @@ class FinishProductController extends Controller
     public function index()
     {
         abort_if(Gate::denies('tagging_product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return view('finish_product.index');
+        $finish_product = $this->finish_product_service->getAllActiveFinishProduct();
+        return view('finish_product.index',compact('finish_product'));
     }
     public function getData(Request $request)
     {
@@ -283,12 +284,13 @@ class FinishProductController extends Controller
         }
     }
 
-    public function print($id)
+    public function print(Request $request)
     {
         abort_if(Gate::denies('tagging_product_view'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $finish_product = $this->finish_product_service->getById($id);
+        $finish_product_1 = $this->finish_product_service->getById($request->tag_product_1);
+        $finish_product_2 = $this->finish_product_service->getById($request->tag_product_2);
         return view('finish_product.print', compact(
-            'finish_product'
+            'finish_product_1','finish_product_2'
         ));
     }
 }

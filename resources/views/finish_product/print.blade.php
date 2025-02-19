@@ -26,12 +26,12 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td><img style="width:220px; height: 30px;" src="{{ asset($finish_product->barcode) }}" alt=""></td>
+                        <td><img style="width:220px; height: 30px;" src="{{ asset($finish_product_1->barcode) }}" alt=""></td>
                   </tr>
                   <tr>
                         <td></td>
                         <td></td>
-                        <td style="min-width: 120px;text-align: left;">{{$finish_product->product->name??''}}</td>
+                        <td style="min-width: 120px;text-align: left;">{{$finish_product_1->product->name??''}}</td>
                         <td style="text-align: center;">Al Saeed Jewellers</td>
                   </tr>
                   <tr>
@@ -40,33 +40,33 @@
     flex-direction: column;
     transform: translateY(-35%) rotate(-90deg);
     transform-origin: center;">
-                              <b>{{ $finish_product->tag_no ?? '' }}</b> 
-                              <b>Ntw {{$finish_product->net_weight??0.00}}</b>
-                              <b>Wst {{$finish_product->waste??0.00}}</b> 
-                              <b>Gw {{$finish_product->gross_weight??0.00}}</b> <br><br>
-                              <b>Dw {{$finish_product->diamond_weight??0.00}} Ct</b> <br>
-                              <b>Kt {{$finish_product->waste_per??0.00}}</b>
+                              <b>{{ $finish_product_1->tag_no ?? '' }}</b> 
+                              <b>Ntw {{$finish_product_1->net_weight??0.00}}</b>
+                              <b>Wst {{$finish_product_1->waste??0.00}}</b> 
+                              <b>Gw {{$finish_product_1->gross_weight??0.00}}</b> <br><br>
+                              <b>Dw {{$finish_product_1->diamond_weight??0.00}} Ct</b> <br>
+                              <b>Kt {{$finish_product_1->waste_per??0.00}}</b>
                         </td>
                         <td></td>
                         <td></td>
                         <td style="display: flex; flex-direction: column; transform: translateY(35%) rotate(-270deg); transform-origin: center;">
-                              <b>{{ $finish_product->tag_no ?? '' }}</b> 
-                              <b>Ntw {{$finish_product->net_weight??0.00}}</b>
-                              <b>Wst {{$finish_product->waste??0.00}}</b> 
-                              <b>Gw {{$finish_product->gross_weight??0.00}}</b> <br><br>
-                              <b>Dw {{$finish_product->diamond_weight??0.00}} Ct</b> <br>
-                              <b>Kt {{$finish_product->waste_per??0.00}}</b>
+                              <b>{{ $finish_product_2->tag_no ?? '' }}</b> 
+                              <b>Ntw {{$finish_product_2->net_weight??0.00}}</b>
+                              <b>Wst {{$finish_product_2->waste??0.00}}</b> 
+                              <b>Gw {{$finish_product_2->gross_weight??0.00}}</b> <br><br>
+                              <b>Dw {{$finish_product_2->diamond_weight??0.00}} Ct</b> <br>
+                              <b>Kt {{$finish_product_2->waste_per??0.00}}</b>
                         </td>
                   </tr>
                   <tr>
-                        <td><img style="width:220px; height: 30px;" src="{{ asset($finish_product->barcode) }}" alt=""></td>
+                        <td><img style="width:220px; height: 30px;" src="{{ asset($finish_product_2->barcode) }}" alt=""></td>
                         <td></td>
                         <td></td>
                         <td></td>
                   </tr>
                   <tr>
                         <td style="text-align: center;">Al Saeed Jewellers</td>
-                        <td style="min-width: 120px;text-align: right;">{{$finish_product->product->name??''}}</td>
+                        <td style="min-width: 120px;text-align: right;">{{$finish_product_2->product->name??''}}</td>
                         <td></td>
                         <td></td>
                   </tr>

@@ -88,8 +88,8 @@ class FinishProductService
                 if (Auth::user()->can('tagging_product_delete'))
                     $action_column .= $delete_column;
 
-                if (Auth::user()->can('tagging_product_view'))
-                    $action_column .= $print_column;
+                // if (Auth::user()->can('tagging_product_view'))
+                //     $action_column .= $print_column;
 
                 return $action_column;
             })
