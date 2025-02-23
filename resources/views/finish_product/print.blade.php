@@ -25,48 +25,48 @@
                   <tr>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td><img style="width:220px; height: 30px;" src="{{ asset($finish_product_1->barcode) }}" alt=""></td>
+                        <td style="min-width: 150px;text-align: left;"><small>{{$finish_product_1->product->name??''}}</small></td>
+                        <td><img style="width:140px; height: 20px;" src="{{ asset($finish_product_1->barcode) }}" alt=""></td>
                   </tr>
                   <tr>
                         <td></td>
                         <td></td>
-                        <td style="min-width: 120px;text-align: left;">{{$finish_product_1->product->name??''}}</td>
-                        <td style="text-align: center;">Al Saeed Jewellers</td>
+                        <td></td>
+                        <td style="text-align: center;"><small>Al Saeed Jewellers</small></td>
                   </tr>
                   <tr>
                         <td style="display: flex
 ;
     flex-direction: column;
-    transform: translateY(-35%) rotate(-90deg);
+    transform: translateY(-42%) rotate(-90deg);
     transform-origin: center;">
-                              <b>{{ $finish_product_1->tag_no ?? '' }}</b> 
-                              <b>Ntw {{$finish_product_1->net_weight??0.00}}</b>
-                              <b>Wst {{$finish_product_1->waste??0.00}}</b> 
-                              <b>Gw {{$finish_product_1->gross_weight??0.00}}</b> <br><br>
-                              <b>Dw {{$finish_product_1->diamond_weight??0.00}} Ct</b> <br>
-                              <b>Kt {{$finish_product_1->waste_per??0.00}}</b>
+                              <small>{{ $finish_product_1->tag_no ?? '' }}</small> 
+                              <small>Ntw {{$finish_product_1->net_weight??0.00}}</small>
+                              <small>Wst {{$finish_product_1->waste??0.00}}</small> 
+                              <small>Gw {{$finish_product_1->gross_weight??0.00}}</small> <br>
+                              <small>Dw {{$finish_product_1->diamond_weight??0.00}} Ct</small> <br>
+                              <small>Kt {{$finish_product_1->waste_per??0.00}}</small>
                         </td>
                         <td></td>
                         <td></td>
-                        <td style="display: flex; flex-direction: column; transform: translateY(35%) rotate(-270deg); transform-origin: center;">
-                              <b>{{ $finish_product_2->tag_no ?? '' }}</b> 
-                              <b>Ntw {{$finish_product_2->net_weight??0.00}}</b>
-                              <b>Wst {{$finish_product_2->waste??0.00}}</b> 
-                              <b>Gw {{$finish_product_2->gross_weight??0.00}}</b> <br><br>
-                              <b>Dw {{$finish_product_2->diamond_weight??0.00}} Ct</b> <br>
-                              <b>Kt {{$finish_product_2->waste_per??0.00}}</b>
+                        <td style="display: flex; flex-direction: column; transform: translateY(33%) rotate(-270deg); transform-origin: center;">
+                              <small>{{ $finish_product_2->tag_no ?? '' }}</small> 
+                              <small>Ntw {{$finish_product_2->net_weight??0.00}}</small>
+                              <small>Wst {{$finish_product_2->waste??0.00}}</small> 
+                              <small>Gw {{$finish_product_2->gross_weight??0.00}}</small> <br>
+                              <small>Dw {{$finish_product_2->diamond_weight??0.00}} Ct</small> <br>
+                              <small>Kt {{$finish_product_2->waste_per??0.00}}</small>
                         </td>
                   </tr>
                   <tr>
-                        <td><img style="width:220px; height: 30px;" src="{{ asset($finish_product_2->barcode) }}" alt=""></td>
-                        <td></td>
+                        <td><img style="width:140px; height: 20px;" src="{{ asset($finish_product_2->barcode) }}" alt=""></td>
+                        <td style="min-width: 150px;text-align: right;"><small>{{$finish_product_2->product->name??''}}</small></td>
                         <td></td>
                         <td></td>
                   </tr>
                   <tr>
-                        <td style="text-align: center;">Al Saeed Jewellers</td>
-                        <td style="min-width: 120px;text-align: right;">{{$finish_product_2->product->name??''}}</td>
+                        <td style="text-align: center;"><small>Al Saeed Jewellers</small></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                   </tr>
