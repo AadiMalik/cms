@@ -35,8 +35,51 @@ return [
 
       // Company Information
 
-      'company_name' =>'Al Saeed Jeweler',
-      'company_email'=>'alsaaed@gmail.com',
-      'company_phone'=>'03001234567'
+      'company_name' => 'Al Saeed Jeweler',
+      'company_email' => 'alsaaed@gmail.com',
+      'company_phone' => '03001234567',
+
+      // Departments
+      'department' => [
+            "Sales & Customer Service",
+            "Jewelry Design & Customization",
+            "Repairs & Maintenance",
+            "Inventory & Merchandising",
+            "Appraisal & Certification",
+            "E-commerce & Digital Sales",
+            "Administration & Management",
+            "Security & Loss Prevention"
+      ],
+
+      // Employee types
+      'employee_type' => [
+            "Full-Time",
+            "Part-Time",
+            "Contract",
+            "Freelance",
+            "Intern",
+            "Seasonal",
+            "Commission-Based"
+      ],
+
+      // Shift
+      'shift' => [
+            "Morning Shift",
+            "Afternoon Shift",
+            "Evening Shift",
+            "Night Shift",
+            "Rotational Shift",
+            "Flexible Hours",
+            "Weekend Shift",
+      ],
+
+      // Payment Method
+      'payment_method' => [
+            "Cash",
+            "Credit Card",
+            "Debit Card",
+            "Bank Transfer",
+            "Mobile Payment"
+      ],
 
 ];
