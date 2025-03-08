@@ -11,6 +11,7 @@ use App\Services\Concrete\OtherProductService;
 use App\Services\Concrete\ProductService;
 use App\Services\Concrete\ReportService;
 use App\Services\Concrete\SupplierService;
+use App\Services\Concrete\UserService;
 use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
 use PDF;
@@ -35,6 +36,7 @@ class ReportController extends Controller
     protected $product_service;
     protected $warehouse_service;
     protected $other_product_service;
+    protected $user_service;
 
     #endregion
 
@@ -49,7 +51,8 @@ class ReportController extends Controller
         FinishProductService $finish_product_service,
         ProductService $product_service,
         WarehouseService $warehouse_service,
-        OtherProductService $other_product_service
+        OtherProductService $other_product_service,
+        UserService $user_service
     ) {
         $this->report_service = $report_service;
         $this->account_service = $account_service;
@@ -60,6 +63,7 @@ class ReportController extends Controller
         $this->product_service = $product_service;
         $this->warehouse_service = $warehouse_service;
         $this->other_product_service = $other_product_service;
+        $this->user_service = $user_service;
     }
 
 
@@ -611,6 +615,76 @@ class ReportController extends Controller
             }
             $pdf = PDF::loadView('/reports/financial_report/partials.report', compact('parms'));
             return $pdf->stream('Financial Report' . $request->start_date . '-' . $request->end_date . '.pdf');
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+
+    // Sale User Report
+    public function saleUserWiseReport()
+    {
+        abort_if(Gate::denies('sale_user_wise_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
+            $users = $this->user_service->getUserWithoutSupplier();
+            return view('reports/sale_user_wise/index', compact('users'));
+        } catch (Exception $e) {
+            return back()->with('error', config('enum.error'));
+        }
+    }
+    public function getPreviewSaleUserWiseReport(Request $request)
+    {
+        abort_if(Gate::denies('sale_user_wise_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'start_date' => 'required',
+                'end_date' => 'required',
+            ]
+        );
+        if ($validation->fails()) {
+            $validation_error = "";
+            foreach ($validation->errors()->all() as $message) {
+                $validation_error .= $message;
+            }
+            return $this->error(
+                $validation_error
+            );
+        }
+        try {
+            $obj = $request->all();
+            $parms['data'] = $this->report_service->saleUserWiseReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->start_date;
+            $parms->end_date = $request->end_date;
+            if ($request->user_id != '' && $request->user_id != null) {
+                $user = $this->user_service->getById($request->user_id);
+                $parms->user = $user->name ?? '';
+            }
+            $parms->report_name = "sale_user_wise_report";
+            return view('/reports/sale_user_wise/partials.report', compact('parms'));
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
+    }
+    public function getSaleUserWiseReport(Request $request)
+    {
+        abort_if(Gate::denies('sale_user_wise_report'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        try {
+            $obj = $request->all();
+            $parms['data'] = $this->report_service->saleUserWiseReport($obj);
+            $parms = (object)$parms;
+            $parms->start_date = $request->start_date;
+            $parms->end_date = $request->end_date;
+            if ($request->user_id != '' && $request->user_id != null) {
+                $user = $this->user_service->getById($request->user_id);
+                $parms->user = $user->name ?? '';
+            }
+            $parms->report_name = "sale_user_wise_report";
+            if ($request->has('export-excel')) {
+                return Excel::download(new ReportExport($parms), 'Sale-User-Wise-Report.xls');
+            }
+            $pdf = PDF::loadView('/reports/sale_user_wise/partials.report', compact('parms'));
+            return $pdf->stream('Sale User Wise Report' . $request->start_date . '-' . $request->end_date . '.pdf');
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }

@@ -46,7 +46,7 @@ function getCustomer() {
                     '<option value="' +
                     value.id +
                     '">' +
-                    value.name +
+                    value.name +' - '+value.contact+
                     " </option>";
             });
             $("#customer_id").append(customer);

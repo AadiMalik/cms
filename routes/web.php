@@ -919,5 +919,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('financial-report', [ReportController::class, 'financialReport']);
         Route::get('get-preview-financial-report', [ReportController::class, 'getPreviewFinancialReport']);
         Route::get('get-financial-report', [ReportController::class, 'getFinancialReport']);
+
+        // Sale User Report
+        Route::get('sale-user-wise-report', [ReportController::class, 'saleUserWiseReport']);
+        Route::get('get-preview-sale-user-wise-report', [ReportController::class, 'getPreviewSaleUserWiseReport']);
+        Route::get('get-sale-user-wise-report', [ReportController::class, 'getSaleUserWiseReport']);
     });
 });

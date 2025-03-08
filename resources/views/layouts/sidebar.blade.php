@@ -325,6 +325,12 @@
                             href="{{ url('reports/financial-report') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Financial Report</span></a></li>
                     @endcan
+                    @can('sale_user_wise_report')
+                    <li class="item-name"><a
+                            class="{{ Request::is('reports/sale-user-wise-report*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('reports/sale-user-wise-report') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Sale User Wise Report</span></a></li>
+                    @endcan
                 </ul>
             </li>
             @endcan

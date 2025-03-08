@@ -47,7 +47,7 @@
                                     <select id="customer_id" name="customer_id" class="form-control">
                                         <option value="">--Select Customer--</option>
                                         @foreach ($customers as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->name ?? '' }} - {{ $item->contact ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
