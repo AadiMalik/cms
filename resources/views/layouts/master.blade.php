@@ -227,6 +227,8 @@
         </div>
     </div>
 
+    <audio id="notification-sound" src="{{ asset('assets/sounds/alert.wav') }}"></audio>
+
     @include('includes/change_gold_rate')
     @include('includes/change_dollar_rate')
     <!-- ============ Search UI End ============= -->
@@ -282,6 +284,44 @@
 
             return true;
         }
+    </script>
+
+    <script>
+        function fetchNotifications() {
+            $.get('/notifications', function (data) {
+                let list = $('#notification-list');
+                list.empty();
+    
+                data.forEach(notification => {
+                    let listItem = `<li>
+                        ${notification.message} 
+                        <button onclick="markAsRead(${notification.id})">Mark as Read</button>
+                    </li>`;
+                    list.append(listItem);
+    
+                    // Play sound if the notification requires it
+                    if (notification.play_sound) {
+                        document.getElementById("notification-sound").play();
+                    }
+                });
+            });
+        }
+    
+        function markAsRead(id) {
+            $.post(`/notifications/${id}/read`, function () {
+                fetchNotifications(); // Refresh list
+            });
+        }
+    
+        function markAllAsRead() {
+            $.post('/notifications/read-all', function () {
+                fetchNotifications(); // Refresh list
+            });
+        }
+    
+        // Fetch notifications every 5 seconds
+        setInterval(fetchNotifications, 5000);
+        fetchNotifications();
     </script>
     @yield('js')
 </body>
