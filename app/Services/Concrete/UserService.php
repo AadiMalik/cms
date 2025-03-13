@@ -66,4 +66,12 @@ class UserService
     {
         return $this->model_user->getModel()::with(['roles','permissions'])->find($id);
     }
+
+    public function getUserWithoutSupplier(){
+        return User::with('roles')
+        ->whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Supplier/Karigar User');
+        })
+        ->get();
+    }
 }

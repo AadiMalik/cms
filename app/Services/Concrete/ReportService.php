@@ -18,6 +18,7 @@ use App\Models\SaleDetailDiamond;
 use App\Models\SaleDetailStone;
 use App\Models\Supplier;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Models\Warehouse;
 use App\Repository\Repository;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,7 @@ class ReportService
       protected $model_warehouse;
       protected $model_other_product;
       protected $model_transaction;
+      protected $model_user;
       public function __construct()
       {
             // set the model
@@ -56,6 +58,7 @@ class ReportService
             $this->model_warehouse = new Repository(new Warehouse);
             $this->model_other_product = new Repository(new OtherProduct);
             $this->model_transaction = new Repository(new Transaction);
+            $this->model_user = new Repository(new User);
       }
 
       // Ledger Report
@@ -517,5 +520,37 @@ class ReportService
                         ->get();
             }
             return $journal_entry;
+      }
+
+      // Sale User Report
+      public function saleUserWiseReport($obj)
+      {
+            $wh = [];
+            $wh_user = [];
+            if (isset($obj['user_id']) && $obj['user_id'] != 0 && $obj['user_id'] != "") {
+                  $wh[] = ['createdby_id', '=', $obj['user_id']];
+                  $wh_user[] = ['id', '=', $obj['user_id']];
+            }
+            $users = $this->model_user->getModel()::with('roles')
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'Supplier/Karigar User');
+            })
+            ->where($wh_user)
+            ->get();
+            $sales = $this->model_sale->getModel()::has('SaleDetail')->with('created_by')
+                  ->where('sale_date', '>=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['start_date']))))
+                  ->where('sale_date', '<=', date("Y-m-d", strtotime(str_replace('/', '-', $obj['end_date']))))
+                  ->where($wh)
+                  ->where('is_deleted', 0)
+                  ->orderBy('sale_date', 'ASC')
+                  ->get();
+            $data=[];
+            foreach($users as $item){
+                  $data[]=[
+                        "user_name"=>$item->name??'',
+                        "sales"=>$sales->where('createdby_id',$item->id)
+                  ];
+            }
+            return $data;
       }
 }
