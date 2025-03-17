@@ -35,6 +35,7 @@ class SaleService
     protected $common_service;
     protected $journal_entry_service;
     protected $customer_payment_service;
+    protected $notification_service;
     public function __construct()
     {
         // set the model
@@ -48,6 +49,7 @@ class SaleService
         $this->common_service = new CommonService();
         $this->journal_entry_service = new JournalEntryService();
         $this->customer_payment_service = new CustomerPaymentService();
+        $this->notification_service = new NotificationService();
     }
 
     public function getSaleSource($obj)
@@ -87,7 +89,7 @@ class SaleService
                 $payment_column    = "<a class='text-primary mr-2' href='javascript:void(0)' id='createNewPayment' data-toggle='tooltip'  data-sale_id='" . $item->id . "' data-customer_id='" . $item->customer_id . "'><i title='Add Payment' class='nav-icon mr-2 fa fa-dollar'></i>Add Payment</a>";
                 // if (Auth::user()->can('customers_edit'))
                 //     $action_column .= $edit_column;
-                if (Auth::user()->can('customer_payment_create') && $item->total_received!=$item->total)
+                if (Auth::user()->can('customer_payment_create') && $item->total_received != $item->total)
                     $action_column .= $payment_column;
                 if (Auth::user()->can('sale_print'))
                     $action_column .= $print_column;
@@ -243,6 +245,16 @@ class SaleService
                 $finish_product->update();
             }
 
+            if (getRoleName() == config('enum.salesman')) {
+                foreach (Admins() as $item) {
+                    $data = [
+                        "title" => 'New Sale',
+                        "user_id" => $item,
+                        "message" => 'New Sale Generate by '.Auth::user()->name
+                    ];
+                    $this->notification_service->save($data);
+                }
+            }
             DB::commit();
         } catch (Exception $e) {
             return $e;

@@ -74,4 +74,10 @@ class UserService
         })
         ->get();
     }
+
+    public function getAdminIdsOnly(){
+        return User::whereHas('roles', function ($query) {
+            $query->where('name', config('enum.superAdmin'));
+        })->pluck('id')->toArray();
+    }
 }

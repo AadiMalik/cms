@@ -1,6 +1,10 @@
 <?php
 return [
       // Roles name
+      'superAdmin'      =>'Super Admin',
+      'accountant'      =>'Accountant',
+      'supplier'        =>'Supplier/Karigar User',
+      'salesman'        =>'Salesman',
       // Messages
       'saved'           => 'Record Save Successfully!',
       'updated'         => 'Record Update Successfully!',

@@ -1,7 +1,19 @@
 <?php
 
 use App\Services\Concrete\GoldRateService;
+use App\Services\Concrete\UserService;
+use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\Switch_;
+
+function getRoleName()
+{
+      return Auth::User()->roles[0]->name;
+}
+function Admins()
+{
+      $user_service = new UserService();
+      return $user_service->getAdminIdsOnly();
+}
 
 function GoldRate(){
     $gold_rate_service = new GoldRateService();

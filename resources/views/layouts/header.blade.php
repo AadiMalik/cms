@@ -42,7 +42,7 @@ $dollar_rate = DollarRate();
             <div class="dropdown-menu dropdown-menu-right notification-dropdown rtl-ps-none" aria-labelledby="dropdownNotification" data-perfect-scrollbar data-suppress-scroll-x="true" id="notification_scroll">
                 <div class="card-header text-right" id="card">
                     <!-- <a href="list-notification" class="text-primary mr-3">View All</a> -->
-                    <a onclick="NotificationUpdate();" class="text-primary">Mark all as read</a>
+                    <a onclick="readAllNotifications();" class="text-primary">Mark all as read</a>
                 </div>
                 <div id="notification_list"></div>
                 {{-- @foreach ($notification as $item)

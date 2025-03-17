@@ -41,7 +41,7 @@
     <div class="app-admin-wrap layout-sidebar-vertical sidebar-full">
         <div class="sidebar-panel bg-white">
             <div class="gull-brand pr-3 text-center mt-3 mb-2 d-flex justify-content-center align-items-center">
-                 <img class="pl-3" src="{{ asset('assets/images/logo.png') }}" style="width:183px;" alt="alt" />
+                <img class="pl-3" src="{{ asset('assets/images/logo.png') }}" style="width:183px;" alt="alt" />
                 <!--  <span class=" item-name text-20 text-primary font-weight-700">GULL</span> -->
                 <div class="sidebar-compact-switch ml-auto"><span></span></div>
             </div>
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 <div class="footer-bottom border-top pt-3 d-flex flex-column flex-sm-row align-items-center">
-                    
+
                     <span class="flex-grow-1"></span>
                     <div class="d-flex align-items-center">
                         <img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="">
@@ -227,7 +227,7 @@
         </div>
     </div>
 
-    <audio id="notification-sound" src="{{ asset('assets/sounds/alert.wav') }}"></audio>
+    <audio id="notification_sound" src="{{ asset('assets/sounds/alert.wav') }}"></audio>
 
     @include('includes/change_gold_rate')
     @include('includes/change_dollar_rate')
@@ -287,41 +287,94 @@
     </script>
 
     <script>
-        function fetchNotifications() {
-            $.get('/notifications', function (data) {
-                let list = $('#notification-list');
-                list.empty();
-    
-                data.forEach(notification => {
-                    let listItem = `<li>
-                        ${notification.message} 
-                        <button onclick="markAsRead(${notification.id})">Mark as Read</button>
-                    </li>`;
-                    list.append(listItem);
-    
-                    // Play sound if the notification requires it
-                    if (notification.play_sound) {
-                        document.getElementById("notification-sound").play();
-                    }
-                });
+        $(document).ready(function() {
+
+            displayNotifications();
+            //     setTimeout(function () { 
+            //     $('.alert').alert('close'); 
+            // }, 5000); 
+        });
+
+        function displayNotifications() {
+            $.ajax({
+                url: "{{ url('notifications') }}", //Define Post URL
+                type: "POST",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    $('#notification_badge').html(response.Data.new_notification);
+                    appendNotificationDropdown(response.Data.notifications);
+                }
             });
         }
-    
+
+        function appendNotificationDropdown(notification_list) {
+            var html = '';
+            $('#notification_list').text('');
+            $.each(notification_list, function(index, item) {
+                var new_notification = '';
+                if (item.is_read == 0) {
+                    new_notification = `<span class="badge badge-pill badge-primary ml-1 mr-1">new</span>`;
+                }
+
+                html += `<a href="javascript:void(0);" onclick="markAsRead(${item.id})">
+                                        <div class="dropdown-item d-flex">
+                                            <div class="notification-icon">
+                                                <i class="fa fa-bell text-primary mr-1"></i>
+                                            </div>
+                                            <div class="notification-details flex-grow-1">
+                                                <p class="m-0 d-flex align-items-center">
+                                                    <span>${item.title} </span>
+                                                    ${new_notification}
+                                                    <span class="flex-grow-1"></span>
+                                                    <span class="flex-grow-1"></span>
+                                                    <span class="text-small text-muted ml-auto"> ${item.time}</span>
+                                                </p>
+                                                <p class="text-small text-muted m-0">${item.message}</p>
+                                            </div>
+                                        </div>
+                                    </a>`;
+                // Play sound if the notification requires it
+                if (item.play_sound == 1 && item.is_read == 0) {
+                    // document.getElementById("notification_sound").play();
+                    let audio = document.getElementById("notification_sound");
+                    audio.play().catch(error => console.log("Playback error:", error));
+                }
+            })
+            html += '</div>'
+            $('#notification_list').append(html);
+        }
+
         function markAsRead(id) {
-            $.post(`/notifications/${id}/read`, function () {
-                fetchNotifications(); // Refresh list
+            $.ajax({
+                url: "{{ url('read-single-notification') }}/"+id, //Define Post URL
+                type: "GET",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    if(response.Success){
+                        displayNotifications();
+                    }
+                }
             });
         }
-    
-        function markAllAsRead() {
-            $.post('/notifications/read-all', function () {
-                fetchNotifications(); // Refresh list
+
+        function readAllNotifications() {
+            $.ajax({
+                url: "{{ url('read-all-notification') }}", //Define Post URL
+                type: "GET",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                },
+                success: function(response) {
+                    if(response.Success){
+                        displayNotifications();
+                    }
+                }
             });
         }
-    
-        // Fetch notifications every 5 seconds
-        setInterval(fetchNotifications, 5000);
-        fetchNotifications();
     </script>
     @yield('js')
 </body>

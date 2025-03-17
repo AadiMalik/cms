@@ -18,6 +18,7 @@ use App\Http\Controllers\JobTaskActivityController;
 use App\Http\Controllers\JobTaskController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OtherProductController;
 use App\Http\Controllers\OtherPurchaseController;
 use App\Http\Controllers\OtherSaleController;
@@ -62,6 +63,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+    Route::post('notifications', [NotificationController::class,'index'])->name('notifications');
+    Route::get('read-all-notification', [NotificationController::class,'markAllAsRead']);
+    Route::get('read-single-notification/{id}', [NotificationController::class,'readSingleNotification']);
 
     Route::group(['prefix' => 'permissions'], function () {
         Route::get('/', [PermissionController::class, 'index']);
@@ -291,7 +295,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('print/{id}', [JournalEntryController::class, 'print']);
         Route::get('all-jvs', [JournalEntryController::class, 'allJvs']);
         Route::get('grid-edit/{id}', [JournalEntryController::class, 'grid_journal_edit']);
-        Route::get('get-sale-order-advance/{sale_order_id}',[JournalEntryController::class,'saleOrderAdvance']);
+        Route::get('get-sale-order-advance/{sale_order_id}', [JournalEntryController::class, 'saleOrderAdvance']);
         Route::get('/js/JournalEntryForm.js', function () {
             $path = resource_path('views/journal_entries/js/JournalEntryForm.js');
             if (file_exists($path)) {

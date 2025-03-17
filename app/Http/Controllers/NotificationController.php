@@ -21,7 +21,7 @@ class NotificationController extends Controller
     }
 
     // Mark a single notification as read
-    public function markAsRead($id)
+    public function readSingleNotification($id)
     {
         $notification = $this->notification_service->singleMarkAsRead($id);
          
