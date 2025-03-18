@@ -7,6 +7,7 @@ use App\Repository\Repository;
 use App\Models\JobTask;
 use App\Models\JobTaskDetail;
 use App\Models\SaleOrder;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -93,6 +94,15 @@ class JobTaskService
       {
             return $this->model_job_task->getModel()::with('supplier_name')
                   ->where('is_deleted', 0)
+                  ->get();
+      }
+      public function getCurrentDeliveryBySupplierId($supplier_id)
+      {
+            return $this->model_job_task->getModel()::with('supplier_name')
+                  ->where('is_deleted', 0)
+                  ->where('is_complete', 0)
+                  ->where('supplier_id',$supplier_id)
+                  ->whereDate('delivery_date',Carbon::now()->format('Y-m-d'))
                   ->get();
       }
       public function save($obj)

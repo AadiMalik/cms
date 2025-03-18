@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Concrete\JobTaskService;
+use App\Services\Concrete\NotificationService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -12,9 +16,16 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    protected $job_task_service;
+    protected $notification_service;
+    public function __construct(
+        JobTaskService $job_task_service,
+        NotificationService $notification_service
+        )
     {
         $this->middleware('auth');
+        $this->job_task_service = $job_task_service;
+        $this->notification_service = $notification_service;
     }
 
     /**
@@ -24,6 +35,21 @@ class HomeController extends Controller
      */
     public function index()
     {
+        if(getRoleName()==config('enum.supplier')){
+            $job_tasks = $this->job_task_service->getCurrentDeliveryBySupplierId(Auth::user()->supplier_id);
+            // dd($job_tasks);
+            foreach($job_tasks as $item){
+                $date = Carbon::parse($item->delivery_date);
+                $obj=[
+                    "title" => 'Delivery Reminder',
+                    "user_id" => Auth::user()->id,
+                    "message" => $item->job_task_no.' delivery date: '.$date->format('Y-m-d H:i A'),
+                    "play_sound"=>1
+                ];
+                $this->notification_service->save($obj);
+            }
+            return redirect('job-task');
+        }
         $result = DB::select('CALL GetSalesAndCustomerSummary()');
         $data = $result[0];
         $monthly_sale = DB::select("SELECT 

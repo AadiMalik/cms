@@ -17,7 +17,7 @@ class NotificationService
 
     public function getByCurrentUser()
     {
-        $notifications = $this->model->getModel()::where('user_id', Auth::user()->id)->get();
+        $notifications = $this->model->getModel()::where('user_id', Auth::user()->id)->orderBy('created_at','DESC')->get();
         $notification = [];
         foreach ($notifications as $item) {
             $notification[] = [
@@ -51,7 +51,7 @@ class NotificationService
     {
         $notification = $this->model->getModel()::where('user_id', Auth::user()->id)->update(['is_read' => true]);
         if ($notification) {
-            $notification->update(['is_read' => true]);
+            // $notification->update(['is_read' => true]);
             return true;
         }
         return false;

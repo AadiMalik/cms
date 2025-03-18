@@ -314,12 +314,14 @@
             $('#notification_list').text('');
             $.each(notification_list, function(index, item) {
                 var new_notification = '';
+                var is_read ='';
                 if (item.is_read == 0) {
                     new_notification = `<span class="badge badge-pill badge-primary ml-1 mr-1">new</span>`;
+                    is_read=`style="background: #3334;"`;
                 }
 
                 html += `<a href="javascript:void(0);" onclick="markAsRead(${item.id})">
-                                        <div class="dropdown-item d-flex">
+                                        <div class="dropdown-item d-flex" ${is_read}>
                                             <div class="notification-icon">
                                                 <i class="fa fa-bell text-primary mr-1"></i>
                                             </div>
@@ -339,7 +341,9 @@
                 if (item.play_sound == 1 && item.is_read == 0) {
                     // document.getElementById("notification_sound").play();
                     let audio = document.getElementById("notification_sound");
-                    audio.play().catch(error => console.log("Playback error:", error));
+                    audio.addEventListener("canplaythrough", () => {
+                        audio.play().catch(error => console.log("Playback failed:", error));
+                    });
                 }
             })
             html += '</div>'
@@ -348,13 +352,13 @@
 
         function markAsRead(id) {
             $.ajax({
-                url: "{{ url('read-single-notification') }}/"+id, //Define Post URL
+                url: "{{ url('read-single-notification') }}/" + id, //Define Post URL
                 type: "GET",
                 data: {
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function(response) {
-                    if(response.Success){
+                    if (response.Success) {
                         displayNotifications();
                     }
                 }
@@ -369,7 +373,7 @@
                     "_token": "{{ csrf_token() }}",
                 },
                 success: function(response) {
-                    if(response.Success){
+                    if (response.Success) {
                         displayNotifications();
                     }
                 }
