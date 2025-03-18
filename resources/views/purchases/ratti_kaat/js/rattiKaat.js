@@ -186,6 +186,7 @@ $("body").on("click", "#submit", function (e) {
     var formData = new FormData();
     formData.append("id", $("#id").val());
     formData.append("purchase_date", $("#purchase_date").val());
+    formData.append("purchase_order_id", $("#purchase_order_id").find(":selected").val());
     formData.append("supplier_id", $("#supplier_id").find(":selected").val());
     formData.append("paid", $("#paid").val());
     formData.append("paid_au", $("#paid_au").val());

@@ -163,6 +163,7 @@
                                             <th>Sr#</th>
                                             <th>Date</th>
                                             <th>Ratti Kaat#</th>
+                                            <th>Purchase Order#</th>
                                             <th>Supplier/Karigar</th>
                                             <th>Purchase Account</th>
                                             <th>Total</th>
@@ -197,6 +198,7 @@
 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
 {data: 'purchase_date', name: 'purchase_date', orderable: false, searchable: false},
 {data: 'ratti_kaat_no', name: 'ratti_kaat_no', orderable: false, searchable: false},
+{data: 'purchase_order', name: 'purchase_order', orderable: false, searchable: false},
 {data: 'supplier',name: 'supplier', orderable: false, searchable: false},
 {data: 'purchase_account',name: 'purchase_account', orderable: false, searchable: false},
 {data: 'total',name: 'total', orderable: false, searchable: false},

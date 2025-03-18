@@ -53,7 +53,12 @@ class RattiKaatService
         if ($obj['supplier_id'] != '') {
             $wh[] = ['supplier_id', $obj['supplier_id']];
         }
-        $model = RattiKaat::has('RattiKaatDetail')->with(['supplier_name', 'purchase_account_name', 'paid_account_name'])
+        $model = RattiKaat::has('RattiKaatDetail')->with([
+            'supplier_name',
+            'purchase_account_name',
+            'paid_account_name',
+            'purchase_order_name'
+        ])
             ->whereBetween('purchase_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
             ->where('is_deleted', 0)
             ->where($wh);
@@ -64,6 +69,9 @@ class RattiKaatService
             })
             ->addColumn('supplier', function ($item) {
                 return $item->supplier_name->name ?? '';
+            })
+            ->addColumn('purchase_order', function ($item) {
+                return $item->purchase_order_name->purchase_order_no ?? '';
             })
             ->addColumn('purchase_account', function ($item) {
                 $code = $item->purchase_account_name->code ?? '';
@@ -111,7 +119,7 @@ class RattiKaatService
 
                 return $action_column;
             })
-            ->rawColumns(['check_box', 'supplier', 'purchase_account', 'posted', 'action'])
+            ->rawColumns(['check_box', 'supplier', 'purchase_account', 'posted','purchase_order', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;
@@ -182,57 +190,57 @@ class RattiKaatService
 
                 // Beads
                 $this->model_ratti_kaat_bead->getModel()::where('ratti_kaat_detail_id', $ratti_kaat_detail->id)
-                ->update(['is_deleted' => 1, 'deletedby_id' => Auth::User()->id]);
+                    ->update(['is_deleted' => 1, 'deletedby_id' => Auth::User()->id]);
                 foreach ($item['beadData'] as $key => $bead) {
                     $objBead = [
-                        "type"=>$bead['type']??'',
-                        "beads"=>$bead['beads']??0,
-                        "gram"=>$bead['gram']??0,
-                        "carat"=>$bead['carat']??0,
-                        "gram_rate"=>$bead['gram_rate']??0,
-                        "carat_rate"=>$bead['carat_rate']??0,
-                        "total_amount"=>$bead['total_amount']??0,
-                        "ratti_kaat_detail_id"=>$ratti_kaat_detail->id,
-                        "createdby_id"=>Auth::User()->id
+                        "type" => $bead['type'] ?? '',
+                        "beads" => $bead['beads'] ?? 0,
+                        "gram" => $bead['gram'] ?? 0,
+                        "carat" => $bead['carat'] ?? 0,
+                        "gram_rate" => $bead['gram_rate'] ?? 0,
+                        "carat_rate" => $bead['carat_rate'] ?? 0,
+                        "total_amount" => $bead['total_amount'] ?? 0,
+                        "ratti_kaat_detail_id" => $ratti_kaat_detail->id,
+                        "createdby_id" => Auth::User()->id
                     ];
                     $this->model_ratti_kaat_bead->getModel()::create($objBead);
                 }
 
                 // Stones
                 $this->model_ratti_kaat_stone->getModel()::where('ratti_kaat_detail_id', $ratti_kaat_detail->id)
-                ->update(['is_deleted' => 1, 'deletedby_id' => Auth::User()->id]);
+                    ->update(['is_deleted' => 1, 'deletedby_id' => Auth::User()->id]);
                 foreach ($item['stoneData'] as $key => $stone) {
                     $objStone = [
-                        "category"=>$stone['category']??'',
-                        "type"=>$stone['type']??'',
-                        "stones"=>$stone['stones']??0,
-                        "gram"=>$stone['gram']??0,
-                        "carat"=>$stone['carat']??0,
-                        "gram_rate"=>$stone['gram_rate']??0,
-                        "carat_rate"=>$stone['carat_rate']??0,
-                        "total_amount"=>$stone['total_amount']??0,
-                        "ratti_kaat_detail_id"=>$ratti_kaat_detail->id,
-                        "createdby_id"=>Auth::User()->id
+                        "category" => $stone['category'] ?? '',
+                        "type" => $stone['type'] ?? '',
+                        "stones" => $stone['stones'] ?? 0,
+                        "gram" => $stone['gram'] ?? 0,
+                        "carat" => $stone['carat'] ?? 0,
+                        "gram_rate" => $stone['gram_rate'] ?? 0,
+                        "carat_rate" => $stone['carat_rate'] ?? 0,
+                        "total_amount" => $stone['total_amount'] ?? 0,
+                        "ratti_kaat_detail_id" => $ratti_kaat_detail->id,
+                        "createdby_id" => Auth::User()->id
                     ];
                     $this->model_ratti_kaat_stone->getModel()::create($objStone);
                 }
 
                 // Diamonds
                 $this->model_ratti_kaat_diamond->getModel()::where('ratti_kaat_detail_id', $ratti_kaat_detail->id)
-                ->update(['is_deleted' => 1, 'deletedby_id' => Auth::User()->id]);
+                    ->update(['is_deleted' => 1, 'deletedby_id' => Auth::User()->id]);
                 foreach ($item['diamondData'] as $key => $diamond) {
                     $objDiamond = [
-                        "type"=>$diamond['type']??'',
-                        "cut"=>$diamond['cut']??'',
-                        "color"=>$diamond['color']??'',
-                        "clarity"=>$diamond['clarity']??'',
-                        "diamonds"=>$diamond['diamonds']??0,
-                        "carat"=>$diamond['carat']??0,
-                        "carat_rate"=>$diamond['carat_rate']??0,
-                        "total_amount"=>$diamond['total_amount']??0,
-                        "total_dollar"=>$diamond['total_dollar']??0,
-                        "ratti_kaat_detail_id"=>$ratti_kaat_detail->id,
-                        "createdby_id"=>Auth::User()->id
+                        "type" => $diamond['type'] ?? '',
+                        "cut" => $diamond['cut'] ?? '',
+                        "color" => $diamond['color'] ?? '',
+                        "clarity" => $diamond['clarity'] ?? '',
+                        "diamonds" => $diamond['diamonds'] ?? 0,
+                        "carat" => $diamond['carat'] ?? 0,
+                        "carat_rate" => $diamond['carat_rate'] ?? 0,
+                        "total_amount" => $diamond['total_amount'] ?? 0,
+                        "total_dollar" => $diamond['total_dollar'] ?? 0,
+                        "ratti_kaat_detail_id" => $ratti_kaat_detail->id,
+                        "createdby_id" => Auth::User()->id
                     ];
                     $this->model_ratti_kaat_diamond->getModel()::create($objDiamond);
                 }
@@ -667,12 +675,12 @@ class RattiKaatService
     public function getRattiKaatDetail($ratti_kaat_id)
     {
         $ratti_kaat_detail = $this->model_ratti_kaat_detail->getModel()::with('product_name')->where('ratti_kaat_id', $ratti_kaat_id)->orderBy('id', 'DESC')->where('is_deleted', 0)->get();
-        $data=[];
-        foreach($ratti_kaat_detail as $item){
-            $item['beadData']=$this->model_ratti_kaat_bead->getModel()::where('ratti_kaat_detail_id',$item->id)->where('is_deleted', 0)->get();
-            $item['stoneData']=$this->model_ratti_kaat_stone->getModel()::where('ratti_kaat_detail_id',$item->id)->where('is_deleted', 0)->get();
-            $item['diamondData']=$this->model_ratti_kaat_diamond->getModel()::where('ratti_kaat_detail_id',$item->id)->where('is_deleted', 0)->get();
-            $data[]=$item;
+        $data = [];
+        foreach ($ratti_kaat_detail as $item) {
+            $item['beadData'] = $this->model_ratti_kaat_bead->getModel()::where('ratti_kaat_detail_id', $item->id)->where('is_deleted', 0)->get();
+            $item['stoneData'] = $this->model_ratti_kaat_stone->getModel()::where('ratti_kaat_detail_id', $item->id)->where('is_deleted', 0)->get();
+            $item['diamondData'] = $this->model_ratti_kaat_diamond->getModel()::where('ratti_kaat_detail_id', $item->id)->where('is_deleted', 0)->get();
+            $data[] = $item;
         }
         return $data;
     }

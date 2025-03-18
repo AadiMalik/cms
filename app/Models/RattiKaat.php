@@ -14,6 +14,7 @@ class RattiKaat extends Model
         'purchase_date',
         'supplier_id',
         'purchase_account',
+        'purchase_order_id',
         'paid',
         'paid_account',
         'paid_au',
@@ -52,6 +53,10 @@ class RattiKaat extends Model
     public function purchase_account_name()
     {
         return $this->belongsTo(Account::class, 'purchase_account');
+    }
+    public function purchase_order_name()
+    {
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
     public function supplier_name()
     {

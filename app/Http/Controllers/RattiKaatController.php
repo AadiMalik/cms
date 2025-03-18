@@ -16,6 +16,7 @@ use App\Services\Concrete\DiamondColorService;
 use App\Services\Concrete\DiamondCutService;
 use App\Services\Concrete\DiamondTypeService;
 use App\Services\Concrete\JobPurchaseService;
+use App\Services\Concrete\PurchaseOrderService;
 use App\Services\Concrete\StoneCategoryService;
 use App\Traits\JsonResponse;
 use Carbon\Carbon;
@@ -43,6 +44,7 @@ class RattiKaatController extends Controller
     protected $diamond_clarity_service;
     protected $job_purchase_service;
     protected $company_setting_service;
+    protected $purchase_order_service;
 
     public function __construct(
         SupplierService $supplier_service,
@@ -57,7 +59,8 @@ class RattiKaatController extends Controller
         DiamondCutService $diamond_cut_service,
         DiamondClarityService $diamond_clarity_service,
         JobPurchaseService $job_purchase_service,
-        CompanySettingService $company_setting_service
+        CompanySettingService $company_setting_service,
+        PurchaseOrderService $purchase_order_service
     ) {
         $this->account_service = $account_service;
         $this->supplier_service = $supplier_service;
@@ -72,6 +75,7 @@ class RattiKaatController extends Controller
         $this->diamond_clarity_service = $diamond_clarity_service;
         $this->job_purchase_service = $job_purchase_service;
         $this->company_setting_service = $company_setting_service;
+        $this->purchase_order_service = $purchase_order_service;
     }
 
     public function index()
@@ -113,6 +117,7 @@ class RattiKaatController extends Controller
         $diamond_colors = $this->diamond_color_service->getAllActive();
         $diamond_cuts = $this->diamond_cut_service->getAllActive();
         $diamond_clarities = $this->diamond_clarity_service->getAllActive();
+        $purchase_orders = $this->purchase_order_service->getAllPurchaseOrder();
         return view('purchases.ratti_kaat.create', compact(
             'suppliers',
             'products',
@@ -122,7 +127,8 @@ class RattiKaatController extends Controller
             'diamond_types',
             'diamond_colors',
             'diamond_cuts',
-            'diamond_clarities'
+            'diamond_clarities',
+            'purchase_orders'
         ));
     }
 
@@ -409,6 +415,7 @@ class RattiKaatController extends Controller
                 // "paid_account_dollar" => $request->paid_account_dollar ?? Null,
                 "reference" => $request->reference ?? Null,
                 "pictures" => $filenames ?? Null,
+                "purchase_order_id" => $request->purchase_order_id ?? Null,
                 "purchaseDetail" => $request->purchaseDetail
             ];
 
@@ -436,6 +443,7 @@ class RattiKaatController extends Controller
         $diamond_cuts = $this->diamond_cut_service->getAllActive();
         $diamond_clarities = $this->diamond_clarity_service->getAllActive();
         $ratti_kaat = $this->ratti_kaat_service->getRattiKaatById($id);
+        $purchase_orders = $this->purchase_order_service->getAllPurchaseOrder();
         return view('purchases.ratti_kaat.create', compact(
             'suppliers',
             'products',
@@ -445,7 +453,8 @@ class RattiKaatController extends Controller
             'diamond_types',
             'diamond_colors',
             'diamond_cuts',
-            'diamond_clarities'
+            'diamond_clarities',
+            'purchase_orders'
         ));
     }
 

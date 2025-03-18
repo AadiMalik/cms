@@ -41,7 +41,26 @@ $dollar_rate = DollarRate();
                             {{-- Edit Form  --}}
                             @csrf
                             <div class="row">
-                                <div class="col-md-6">
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Purchase Order:</label>
+                                        <select id="purchase_order_id" name="purchase_order_id" class="form-control show-tick"
+                                            tabindex="3">
+                                            <option value="0" selected="selected" disabled>--Select
+                                                Purchase Order--
+                                            </option>
+                                            @foreach ($purchase_orders as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if (isset($ratti_kaat)) {{ $ratti_kaat->purchase_order_id == $item->id ? 'selected' : '' }} @endif>
+                                                {{ $item->purchase_order_no ?? '' }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">Purchase Date:<span
                                                 style="color:red;">*</span></label>
@@ -52,7 +71,7 @@ $dollar_rate = DollarRate();
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label class="form-label">Supplier/Karigar:</label>
                                         <select id="supplier_id" name="supplier_id" class="form-control show-tick"
@@ -481,6 +500,7 @@ $dollar_rate = DollarRate();
 
 <script>
     $(document).ready(function() {
+        $('#purchase_order_id').select2();
         $('#purchase_account').select2();
         $('#product_id').select2();
         $('#supplier_id').select2();
