@@ -11,6 +11,7 @@ use App\Http\Controllers\DiamondCutController;
 use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinishProductController;
+use App\Http\Controllers\FinishProductLocationController;
 use App\Http\Controllers\GoldImpurityPurchaseController;
 use App\Http\Controllers\GoldRateController;
 use App\Http\Controllers\JobPurchaseController;
@@ -494,6 +495,27 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('store', [GoldRateController::class, 'storeDollar']);
     });
 
+    // Finish product location
+    Route::group(['prefix' => 'finish-product-location'], function () {
+        Route::get('/', [FinishProductLocationController::class, 'index']);
+        Route::post('data', [FinishProductLocationController::class, 'getData'])->name('finish-product-location.data');
+        Route::get('create', [FinishProductLocationController::class, 'create']);
+        Route::post('store', [FinishProductLocationController::class, 'store']);
+        Route::get('edit/{id}', [FinishProductLocationController::class, 'edit']);
+        Route::post('update', [FinishProductLocationController::class, 'update']);
+        Route::get('destroy/{id}', [FinishProductLocationController::class, 'destroy']);
+        Route::get('status/{id}', [FinishProductLocationController::class, 'status']);
+        Route::get('/js/FinishProductLocationForm.js', function () {
+            $path = resource_path('views/finish_product_location/js/FinishProductLocationForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
     // Finish Product
     Route::group(['prefix' => 'finish-product'], function () {
         Route::get('/', [FinishProductController::class, 'index']);
@@ -504,6 +526,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-by-tag-no/{tag}', [FinishProductController::class, 'getByTagNoJson']);
         Route::get('destroy/{id}', [FinishProductController::class, 'destroy']);
         Route::get('status/{id}', [FinishProductController::class, 'status']);
+        Route::post('location-update', [FinishProductController::class, 'update']);
         Route::get('print', [FinishProductController::class, 'print']);
 
 

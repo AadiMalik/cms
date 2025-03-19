@@ -14,6 +14,7 @@ class FinishProduct extends Model
         'ratti_kaat_id',
         'ratti_kaat_detail_id',
         'job_purchase_detail_id',
+        'finish_product_location_id',
         'tag_no',
         'parent_id',
         'is_parent',
@@ -76,6 +77,11 @@ class FinishProduct extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function finish_product_location()
+    {
+        return $this->belongsTo(FinishProductLocation::class, 'finish_product_location_id');
     }
 
     public function warehouse()

@@ -6,6 +6,7 @@ use App\Repository\Repository;
 use App\Models\FinishProduct;
 use App\Models\FinishProductBead;
 use App\Models\FinishProductDiamond;
+use App\Models\FinishProductLocation;
 use App\Models\FinishProductStone;
 use App\Models\JobPurchaseDetail;
 use App\Models\RattiKaatDetail;
@@ -21,6 +22,7 @@ class FinishProductService
     protected $model_finish_product_bead;
     protected $model_finish_product_stone;
     protected $model_finish_product_diamond;
+    protected $model_finish_product_location;
 
     public function __construct()
     {
@@ -29,10 +31,12 @@ class FinishProductService
         $this->model_finish_product_bead = new Repository(new FinishProductBead);
         $this->model_finish_product_stone = new Repository(new FinishProductStone);
         $this->model_finish_product_diamond = new Repository(new FinishProductDiamond);
+        $this->model_finish_product_location = new Repository(new FinishProductLocation);
     }
 
     public function getFinishProductSource()
     {
+        $locations = $this->model_finish_product_location->getModel()::where('is_active',1)->where('is_deleted',0)->get();
         $model = $this->model_finish_product->getModel()::with(['product', 'warehouse', 'parent_name'])->where('is_deleted', 0);
 
         $data = DataTables::of($model)
@@ -65,16 +69,27 @@ class FinishProductService
             ->addColumn('status', function ($item) {
                 if (Auth::user()->can('tagging_product_create')) {
                     if ($item->is_active == 1) {
-                        $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                        $status = '<label class="switch pr-2 switch-primary mr-1"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
                     } else {
-                        $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                        $status = '<label class="switch pr-2 switch-primary mr-1"><input type="checkbox" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
                     }
                     return $status;
                 } else {
                     return 'N/A';
                 }
             })
-
+            ->addColumn('location', function ($item) use ($locations) {
+                $dropdown = '<select id="location-dropdown" style="width:150px;" class="form-control" data-id="' . $item->id . '">';
+                $dropdown .= '<option value="">Select Location</option>';
+    
+                foreach ($locations as $location) {
+                    $selected = ($item->finish_product_location_id == $location->id) ? 'selected' : '';
+                    $dropdown .= '<option value="' . $location->id . '" ' . $selected . '>' . $location->name . '</option>';
+                }
+    
+                $dropdown .= '</select>';
+                return $dropdown;
+            })
             ->addColumn('action', function ($item) {
                 $action_column = '';
                 $view_column    = "<a class='text-warning mr-2' href='finish-product/view/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-eye'></i>View</a>";
@@ -93,7 +108,7 @@ class FinishProductService
 
                 return $action_column;
             })
-            ->rawColumns(['product', 'warehouse', 'parent', 'is_parent', 'saled', 'status', 'action'])
+            ->rawColumns(['product', 'warehouse', 'parent', 'is_parent', 'saled', 'status','location', 'action'])
             ->make(true);
         return $data;
     }
@@ -389,6 +404,13 @@ class FinishProductService
             return false;
         }
 
+        return true;
+    }
+
+    public function updateLocation($obj){
+        $finish_product = $this->model_finish_product->getModel()::find($obj['id']);
+        $finish_product->finish_product_location_id = $obj['finish_product_location_id'];
+        $finish_product->update();
         return true;
     }
 }

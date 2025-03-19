@@ -62,7 +62,7 @@ class FinishProductController extends Controller
     {
         abort_if(Gate::denies('tagging_product_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $finish_product = $this->finish_product_service->getAllActiveFinishProduct();
-        return view('finish_product.index',compact('finish_product'));
+        return view('finish_product.index', compact('finish_product'));
     }
     public function getData(Request $request)
     {
@@ -290,7 +290,26 @@ class FinishProductController extends Controller
         $finish_product_1 = $this->finish_product_service->getById($request->tag_product_1);
         $finish_product_2 = $this->finish_product_service->getById($request->tag_product_2);
         return view('finish_product.print', compact(
-            'finish_product_1','finish_product_2'
+            'finish_product_1',
+            'finish_product_2'
         ));
+    }
+
+    public function update(Request $request)
+    {
+        abort_if(Gate::denies('tagging_product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $obj = $request->all();
+        try {
+            $finish_product = $this->finish_product_service->updateLocation($obj);
+            if ($finish_product)
+                return $this->success(
+                    config('enum.success'),
+                    [],
+                    false
+
+                );
+        } catch (Exception $e) {
+            return $this->error($e->getMessage());
+        }
     }
 }

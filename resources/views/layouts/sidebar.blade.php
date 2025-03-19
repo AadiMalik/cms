@@ -191,7 +191,7 @@
             @endcan
             @can('common_access')
             <li
-                class="Ul_li--hover {{ Request::is('bead-type*') || Request::is('stone-category*') || Request::is('diamond-type*') || Request::is('diamond-color*') || Request::is('diamond-cut*') || Request::is('diamond-clarity*') ? 'mm-active' : '' }}">
+                class="Ul_li--hover {{ Request::is('bead-type*') || Request::is('stone-category*') || Request::is('diamond-type*') || Request::is('diamond-color*') || Request::is('finish-product-location*') || Request::is('diamond-cut*') || Request::is('diamond-clarity*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Commons</span></a>
                 <ul class="mm-collapse">
@@ -224,6 +224,11 @@
                     <li class="item-name"><a class="{{ Request::is('diamond-clarity*') ? 'sidebar_active' : '' }}"
                             href="{{ url('diamond-clarity') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Diamond Clarity</span></a></li>
+                    @endcan
+                    @can('tagging_location_access')
+                    <li class="item-name"><a class="{{ Request::is('finish-product-location*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('finish-product-location') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Tagging Location</span></a></li>
                     @endcan
                 </ul>
             </li>

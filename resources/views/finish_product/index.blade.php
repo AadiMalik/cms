@@ -45,6 +45,7 @@
                                     <th scope="col">Is Parent</th>
                                     <th scope="col">Saled</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Location</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -78,6 +79,7 @@
 {data: 'is_parent' , name: 'is_parent' , 'sortable': false , searchable: false},
 {data: 'saled' , name: 'saled' , 'sortable': false , searchable: false},
 {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
+{data: 'location' , name: 'location' , 'sortable': false , searchable: false},
 {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
 'route' => 'finish-product/data',
 'buttons' => false,
@@ -88,6 +90,7 @@
 
 <script>
     var url_local = "{{ url('/') }}";
+
     function errorMessage(message) {
 
         toastr.error(message, "Error", {
@@ -163,6 +166,29 @@
                     .catch(function(err) {
                         errorMessage(err.Message);
                     });
+            }
+        });
+    });
+    $("body").on('change','#location-dropdown', function() {
+        let itemId = $(this).data('id');
+        let locationId = $(this).val();
+
+        // Send AJAX request to update the location
+        $.ajax({
+            url: "{{ url('finish-product/location-update') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id: itemId,
+                finish_product_location_id: locationId
+            },
+            success: function(data) {
+                if (data.Success) {
+                    successMessage(data.Message);
+                    initDataTablefinish_product_table();
+                } else {
+                    errorMessage(data.Message);
+                }
             }
         });
     });
