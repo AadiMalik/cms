@@ -260,6 +260,19 @@ class FinishProductService
         ])->find($id);
     }
 
+    public function getByIds($ids)
+    {
+        if (!is_array($ids)) {
+            $ids = explode(',', $ids);
+        }
+        return $this->model_finish_product->getModel()::with([
+            'ratti_kaat',
+            'ratti_kaat_detail',
+            'product',
+            'warehouse'
+        ])->whereIn('id',$ids)->get();
+    }
+
     public function getByTagNo($tag_no)
     {
         $finish_product = $this->model_finish_product->getModel()::with([
@@ -412,5 +425,13 @@ class FinishProductService
         $finish_product->finish_product_location_id = $obj['finish_product_location_id'];
         $finish_product->update();
         return true;
+    }
+
+    public function getFinishProductByDate($obj)
+    {
+        return $this->model_finish_product->getModel()::where('is_deleted', 0)
+            ->whereDate('created_at','>=', $obj['start_date'])
+            ->whereDate('created_at','<=', $obj['end_date'])
+            ->get();
     }
 }

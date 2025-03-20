@@ -527,6 +527,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('destroy/{id}', [FinishProductController::class, 'destroy']);
         Route::get('status/{id}', [FinishProductController::class, 'status']);
         Route::post('location-update', [FinishProductController::class, 'update']);
+        Route::get('get-by-date', [FinishProductController::class, 'getByDate']);
         Route::get('print', [FinishProductController::class, 'print']);
 
 

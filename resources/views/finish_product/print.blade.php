@@ -13,20 +13,23 @@
                   justify-content: center;
                   margin: 20px;
             }
-
             
-
       </style>
 </head>
 
-<body>
+<body style="display: grid;">
+      @foreach($finish_products->chunk(2) as $pair)
+      @php
+      $finish_product_1 = $pair[0] ?? null;
+      $finish_product_2 = $pair[1] ?? null;
+      @endphp
       <table>
             <tbody>
                   <tr>
                         <td></td>
                         <td></td>
                         <td style="min-width: 150px;text-align: left;"><small>{{$finish_product_1->product->name??''}}</small></td>
-                        <td><img style="width:140px; height: 20px;" src="{{ asset($finish_product_1->barcode) }}" alt=""></td>
+                        <td><img style="width:140px; height: 20px;" src="{{ asset($finish_product_1->barcode??'') }}" alt=""></td>
                   </tr>
                   <tr>
                         <td></td>
@@ -35,14 +38,10 @@
                         <td style="text-align: center;"><small>Al Saeed Jewellers</small></td>
                   </tr>
                   <tr>
-                        <td style="display: flex
-;
-    flex-direction: column;
-    transform: translateY(-42%) rotate(-90deg);
-    transform-origin: center;">
-                              <small>{{ $finish_product_1->tag_no ?? '' }}</small> 
+                        <td style="display: flex; flex-direction: column; transform: translateY(-42%) rotate(-90deg); transform-origin: center;">
+                              <small>{{ $finish_product_1->tag_no ?? '' }}</small>
                               <small>Ntw {{$finish_product_1->net_weight??0.00}}</small>
-                              <small>Wst {{$finish_product_1->waste??0.00}}</small> 
+                              <small>Wst {{$finish_product_1->waste??0.00}}</small>
                               <small>Gw {{$finish_product_1->gross_weight??0.00}}</small> <br>
                               <small>Dw {{$finish_product_1->diamond_weight??0.00}} Ct</small> <br>
                               <small>Kt {{$finish_product_1->waste_per??0.00}}</small>
@@ -50,16 +49,16 @@
                         <td></td>
                         <td></td>
                         <td style="display: flex; flex-direction: column; transform: translateY(33%) rotate(-270deg); transform-origin: center;">
-                              <small>{{ $finish_product_2->tag_no ?? '' }}</small> 
+                              <small>{{ $finish_product_2->tag_no ?? '' }}</small>
                               <small>Ntw {{$finish_product_2->net_weight??0.00}}</small>
-                              <small>Wst {{$finish_product_2->waste??0.00}}</small> 
+                              <small>Wst {{$finish_product_2->waste??0.00}}</small>
                               <small>Gw {{$finish_product_2->gross_weight??0.00}}</small> <br>
                               <small>Dw {{$finish_product_2->diamond_weight??0.00}} Ct</small> <br>
                               <small>Kt {{$finish_product_2->waste_per??0.00}}</small>
                         </td>
                   </tr>
                   <tr>
-                        <td><img style="width:140px; height: 20px;" src="{{ asset($finish_product_2->barcode) }}" alt=""></td>
+                        <td><img style="width:140px; height: 20px;" src="{{ asset($finish_product_2->barcode??'') }}" alt=""></td>
                         <td style="min-width: 150px;text-align: right;"><small>{{$finish_product_2->product->name??''}}</small></td>
                         <td></td>
                         <td></td>
@@ -72,6 +71,7 @@
                   </tr>
             </tbody>
       </table>
+      @endforeach
       <!-- <div id="printableArea" class="print-area">
             <div class="tag">
                   <div class="barcode"></div>

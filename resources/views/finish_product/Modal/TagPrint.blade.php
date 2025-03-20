@@ -8,23 +8,33 @@
                   </div>
                   <div class="modal-body">
                         <div class="row">
-                              <div class="col-md-6">
+                              <div class="col-md-12">
+                                    <b>Filter</b>
+                              </div>
+                              <div class="col-md-4">
                                     <div class="form-group">
-                                          <label for="name">Tag Product 1:<span style="color:red;">*</span></label>
-                                          <select name="tag_product_1" class="form-control" id="tag_product_1" required>
-                                                @foreach ($finish_product as $item)
-                                                <option value="{{ $item->id ?? '' }}">{{ $item->tag_no ?? '' }}</option>
-                                                @endforeach
-                                          </select>
+                                          <label for="start_date">Start Date:<span style="color:red;">*</span></label>
+                                          <input type="date" class="form-control" id="start_date" value="{{date('Y-m-d')}}">
                                     </div>
                               </div>
-                              <div class="col-md-6">
+                              <div class="col-md-4">
                                     <div class="form-group">
-                                          <label for="name">Tag Product 2:<span style="color:red;">*</span></label>
-                                          <select name="tag_product_2" class="form-control" id="tag_product_2" required>
-                                                @foreach ($finish_product as $item)
-                                                <option value="{{ $item->id ?? '' }}">{{ $item->tag_no ?? '' }}</option>
-                                                @endforeach
+                                          <label for="end_date">Start Date:<span style="color:red;">*</span></label>
+                                          <input type="date" class="form-control" id="end_date" value="{{date('Y-m-d')}}">
+                                    </div>
+                              </div>
+                              <div class="col-md-4">
+                                    <div class="form-group">
+                                          <button id="search_tag" class="btn btn-primary mt-4">Search</button>
+                                    </div>
+                              </div>
+                        </div>
+                        <div class="row">
+                              <div class="col-md-12">
+                                    <div class="form-group">
+                                          <label for="name">Tag Product:<span style="color:red;">*</span></label>
+                                          <select name="tag_products[]" class="form-control" id="tag_products" required multiple style="width:100%;">
+                                                
                                           </select>
                                     </div>
                               </div>

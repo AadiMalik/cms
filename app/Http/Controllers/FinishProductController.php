@@ -287,11 +287,10 @@ class FinishProductController extends Controller
     public function print(Request $request)
     {
         abort_if(Gate::denies('tagging_product_view'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $finish_product_1 = $this->finish_product_service->getById($request->tag_product_1);
-        $finish_product_2 = $this->finish_product_service->getById($request->tag_product_2);
+        $finish_products = $this->finish_product_service->getByIds($request->tag_products);
+        // dd($finish_products);
         return view('finish_product.print', compact(
-            'finish_product_1',
-            'finish_product_2'
+            'finish_products'
         ));
     }
 
@@ -311,5 +310,20 @@ class FinishProductController extends Controller
         } catch (Exception $e) {
             return $this->error($e->getMessage());
         }
+    }
+
+    public function getByDate(Request $request)
+    {
+        $obj = $request->all();
+        $finish_product = $this->finish_product_service->getFinishProductByDate($obj);
+        if ($finish_product)
+            return $this->success(
+                config('enum.success'),
+                $finish_product
+            );
+
+        return $this->error(
+            'Product Not Found!',
+        );
     }
 }

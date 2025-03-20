@@ -89,6 +89,9 @@
 ])
 
 <script>
+    $(document).ready(function() {
+        $('#tag_products').select2();
+    });
     var url_local = "{{ url('/') }}";
 
     function errorMessage(message) {
@@ -115,11 +118,42 @@
         $("#tagPrintForm").trigger("reset");
         $("#tagPrintModel").modal("show");
     });
+    $("body").on("click", "#search_tag", function() {
+        $("#preloader").show();
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        $.ajax({
+            url: url_local + "/finish-product/get-by-date?start_date=" + start_date + "&end_date=" + end_date,
+            type: "GET",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function(data) {
+                console.log(data);
+                var data = data.Data;
+                $("#tag_products").empty();
+                var tags = '';
+                $.each(data, function(key, value) {
+                    tags +=
+                        '<option value="' +
+                        value.id +
+                        '">' +
+                        value.tag_no + " </option>";
+                });
+                $("#tag_products").append(tags);
+                $("#preloader").hide();
+            },
+        });
+    });
     $("body").on("click", "#printBtn", function() {
-        var tag_product_1 = $("#tag_product_1").find(':selected').val();
-        var tag_product_2 = $("#tag_product_2").find(':selected').val();
-        var finalUrl = `${url_local}/finish-product/print?tag_product_1=${encodeURIComponent(tag_product_1)}&tag_product_2=${encodeURIComponent(tag_product_2)}`;
-        window.location.href = finalUrl;
+        var tag_products = $("#tag_products").val();
+        if (tag_products && tag_products.length % 2 === 0) {
+            var finalUrl = `${url_local}/finish-product/print?tag_products=${encodeURIComponent(tag_products)}`;
+            window.location.href = finalUrl;
+        } else {
+            errorMessage("The number of selected items is odd.");
+        }
+
     });
     $("body").on("click", "#status", function() {
         var finish_product_id = $(this).data("id");
@@ -169,7 +203,7 @@
             }
         });
     });
-    $("body").on('change','#location-dropdown', function() {
+    $("body").on('change', '#location-dropdown', function() {
         let itemId = $(this).data('id');
         let locationId = $(this).val();
 
