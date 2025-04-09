@@ -770,6 +770,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('by-warehouse/{warehouse_id}', [SaleOrderController::class, 'byWarehouse']);
         Route::get('by-customer/{customer_id}', [SaleOrderController::class, 'byCustomer']);
         Route::get('get-detail/{id}', [SaleOrderController::class, 'getDetail']);
+        Route::get('get-product-mol/{id}', [SaleOrderController::class, 'getProductMol']);
 
         Route::get('/js/sale_order.js', function () {
             $path = resource_path('views/sale_order/js/sale_order.js');

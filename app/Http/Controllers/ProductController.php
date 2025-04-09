@@ -44,7 +44,8 @@ class ProductController extends Controller
             $request->all(),
             [
                 'name' => 'required',
-                'prefix' => 'required|max:3'
+                'prefix' => 'required|max:3',
+                'mol' => 'required|max:3'
             ],
             $this->validationMessage()
         );
@@ -63,7 +64,8 @@ class ProductController extends Controller
                 $obj = [
                     'id' => $request->id,
                     'name' => $request->name,
-                    'prefix' => $request->prefix
+                    'prefix' => $request->prefix,
+                    'mol' => $request->mol
                 ];
                 $response = $this->product_service->updateProduct($obj);
                 return  $this->success(
@@ -73,7 +75,8 @@ class ProductController extends Controller
             } else {
                 $obj = [
                     'name' => $request->name,
-                    'prefix' => $request->prefix
+                    'prefix' => $request->prefix,
+                    'mol' => $request->mol
                 ];
                 $response = $this->product_service->saveProduct($obj);
                 return  $this->success(

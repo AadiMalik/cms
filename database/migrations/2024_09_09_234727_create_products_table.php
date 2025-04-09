@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('prefix')->nullable();
+            $table->integer('mol')->default(10);
             $table->boolean('is_active')->default(1);
             $table->boolean('is_deleted')->default(0);
             $table->integer('createdby_id')->nullable();

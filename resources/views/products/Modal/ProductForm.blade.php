@@ -25,10 +25,18 @@
                                 placeholder="Enter Journal Prefix" required>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
-                        <button type="submit" id="saveBtn" class="btn btn-primary" value="create">Save</button>
+                    <div class="form-group">
+                        <label for="mol" class="col-sm-2 control-label">MOL (Minimum order level) :<span
+                                style="color:red;">*</span></label>
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" value="10" id="mol" name="mol"
+                                placeholder="Enter MOL" required>
+                        </div>
                     </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                    <button type="submit" id="saveBtn" class="btn btn-primary" value="create">Save</button>
                 </div>
             </form>
         </div>

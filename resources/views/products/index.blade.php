@@ -27,6 +27,7 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Prefix</th>
+                                            <th>MOL</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -57,6 +58,7 @@
         'columns' => "
                         {data: 'name' , name: 'name'},
                         {data: 'prefix' , name: 'prefix'},
+                        {data: 'mol' , name: 'mol'},
                         {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
                         {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
         'route' => 'products/data',

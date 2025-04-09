@@ -5,6 +5,7 @@ namespace App\Services\Concrete;
 use App\Models\CompanySetting;
 use App\Repository\Repository;
 use App\Models\Customer;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
@@ -34,10 +35,10 @@ class CustomerService
                 return $code . ' ' . $name;
             })
             ->addColumn('balance', function ($item) {
-                if($item->account_id!=null){
-                    $balance = $this->journal_entry_service->getCustomerBalanceByAccountId($item->id,$item->account_id,0);
-                    return ($balance>0)?"<span class='btn-danger pl-1'> <i class='fa fa-arrow-up'></i>".$balance."</span> ":(($balance<0)?"<span class='btn-primary pl-1'> <i class='fa fa-arrow-down'></i>".$balance."</span>":"<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>".(($balance==null)?0:$balance)."</span>");
-                }else{
+                if ($item->account_id != null) {
+                    $balance = $this->journal_entry_service->getCustomerBalanceByAccountId($item->id, $item->account_id, 0);
+                    return ($balance > 0) ? "<span class='btn-danger pl-1'> <i class='fa fa-arrow-up'></i>" . $balance . "</span> " : (($balance < 0) ? "<span class='btn-primary pl-1'> <i class='fa fa-arrow-down'></i>" . $balance . "</span>" : "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>" . (($balance == null) ? 0 : $balance) . "</span>");
+                } else {
                     return "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>0</span>";
                 }
             })
@@ -65,16 +66,16 @@ class CustomerService
 
                 return $action_column;
             })
-            ->rawColumns(['account', 'status','balance', 'action'])
+            ->rawColumns(['account', 'status', 'balance', 'action'])
             ->make(true);
         return $data;
     }
 
-    public function getAllActiveCustomer($obj=null)
+    public function getAllActiveCustomer($obj = null)
     {
-        $wh=[];
-        if(isset($obj['customer_id']) && $obj['customer_id']!=''){
-            $wh[]=['id',$obj['customer_id']];
+        $wh = [];
+        if (isset($obj['customer_id']) && $obj['customer_id'] != '') {
+            $wh[] = ['id', $obj['customer_id']];
         }
         return $this->model_customer->getModel()::with('account_name')
             ->where('is_deleted', 0)
@@ -88,13 +89,37 @@ class CustomerService
         return $this->model_customer->getModel()::with('account_name')
             ->where('is_deleted', 0)
             ->where('is_active', 1)
-            ->where('account_id','!=',null)
+            ->where('account_id', '!=', null)
+            ->get();
+    }
+
+    public function getAllAnniversaryCustomer()
+    {
+        $date = Carbon::now()->format('m-d');
+
+        return $this->model_customer->getModel()::where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->where(function ($query) use ($date) {
+                $query->whereRaw("DATE_FORMAT(anniversary_date, '%m-%d') = ?", [$date]);
+            })
+            ->get();
+    }
+
+    public function getAllBirthdayCustomer()
+    {
+        $date = Carbon::now()->format('m-d');
+
+        return $this->model_customer->getModel()::where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->where(function ($query) use ($date) {
+                $query->whereRaw("DATE_FORMAT(date_of_birth, '%m-%d') = ?", [$date]);
+            })
             ->get();
     }
 
     public function save($obj)
     {
-        
+
         if ($obj['id'] != null && $obj['id'] != '') {
             $obj['updatedby_id'] = Auth::user()->id;
             $this->model_customer->update($obj, $obj['id']);

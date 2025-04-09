@@ -45,6 +45,7 @@ class FinishProduct extends Model
         'total_gold_price',
         'total_amount',
         'is_active',
+        'is_saled',
         'is_deleted',
         'createdby_id',
         'updatedby_id',

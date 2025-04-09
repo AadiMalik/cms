@@ -12,6 +12,7 @@ class Product extends Model
         'id',
         'name',
         'prefix',
+        'mol',
         'createdby_id',
         'updatedby_id',
         'is_active',

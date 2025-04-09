@@ -163,6 +163,19 @@ class SaleOrderController extends Controller
         }
     }
 
+    public function getProductMol($product_id){
+        // try {
+            $product_mol = $this->product_service->getAllMolProductId($product_id);
+            return $this->success(
+                config("enum.success"),
+                $product_mol,
+                false
+            );
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'),);
+        // }
+    }
+
     public function byWarehouse($warehouse_id)
     {
         try {

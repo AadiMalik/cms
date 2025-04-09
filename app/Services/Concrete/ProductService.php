@@ -5,6 +5,7 @@ namespace App\Services\Concrete;
 use App\Models\Product;
 use App\Repository\Repository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class ProductService
@@ -21,17 +22,16 @@ class ProductService
         $model = Product::where('is_deleted', 0);
         $data = DataTables::of($model)
             ->addColumn('status', function ($item) {
-                if (Auth::user()->can('products_status')){
-                if ($item->is_active == 1) {
-                    $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                if (Auth::user()->can('products_status')) {
+                    if ($item->is_active == 1) {
+                        $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                    } else {
+                        $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                    }
+                    return $status;
                 } else {
-                    $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
+                    return 'N/A';
                 }
-                return $status;
-            }else{
-                return 'N/A';
-            }
-
             })
             ->addColumn('action', function ($item) {
                 $action_column = '';
@@ -56,7 +56,51 @@ class ProductService
     // get all product
     public function getAllActiveProduct()
     {
-        return Product::where('is_deleted', 0)->where('is_active',1)->get();
+        return Product::where('is_deleted', 0)->where('is_active', 1)->get();
+    }
+
+    // get all mol product
+    public function getAllMolProduct()
+    {
+        return Product::select(
+        'products.id',
+        'products.name',
+        'products.mol',
+        DB::raw('COUNT(finish_products.id) as total_quantity')
+    )
+    ->leftJoin('finish_products', 'products.id', '=', 'finish_products.product_id')
+    ->where('products.is_deleted', 0)
+    ->where('products.is_active', 1)
+    ->where('finish_products.is_deleted', 0)
+    ->where('finish_products.is_active', 1)
+    ->where('finish_products.is_saled', 1)
+    ->where('finish_products.is_parent', 0)
+    ->groupBy('products.id', 'products.name', 'products.mol')
+    ->havingRaw('total_quantity <= mol')
+    ->get();
+
+    }
+
+    public function getAllMolProductId($product_id)
+    {
+        return Product::select(
+        'products.id',
+        'products.name',
+        'products.mol',
+        DB::raw('COUNT(finish_products.id) as total_quantity')
+    )
+    ->leftJoin('finish_products', 'products.id', '=', 'finish_products.product_id')
+    ->where('products.id', $product_id)
+    ->where('products.is_deleted', 0)
+    ->where('products.is_active', 1)
+    ->where('finish_products.is_deleted', 0)
+    ->where('finish_products.is_active', 1)
+    ->where('finish_products.is_saled', 1)
+    ->where('finish_products.is_parent', 0)
+    ->groupBy('products.id', 'products.name', 'products.mol')
+    ->havingRaw('total_quantity <= mol')
+    ->first();
+
     }
     // save Product
     public function saveProduct($obj)

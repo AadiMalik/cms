@@ -46,7 +46,7 @@ function getCustomer() {
                     '<option value="' +
                     value.id +
                     '">' +
-                    value.name +' - '+value.contact+
+                    value.name + ' - ' + value.contact +
                     " </option>";
             });
             $("#customer_id").append(customer);
@@ -91,6 +91,32 @@ $("#customer_id").on("change", function () {
                 row += "</table>";
                 $("#customer").html(row);
                 $("#preloader").hide();
+            } else {
+                error(data.Message);
+                $("#preloader").hide();
+            }
+        },
+    });
+});
+
+$("#product_id").on("change", function () {
+    var product_id = $("#product_id").val();
+    $("#preloader").show();
+    $.ajax({
+        url: url_local + "/sale-order/get-product-mol/" + product_id,
+        type: "GET",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (data) {
+            console.log(data);
+            if (data.Success) {
+                var data = data.Data;
+                console.log(data);
+                $("#preloader").hide();
+                if (data != null) {
+                    error(data.name + ' quantity is low. remening stock is ' + data.total_quantity + ".  make a purchase order.");
+                }
             } else {
                 error(data.Message);
                 $("#preloader").hide();
@@ -296,7 +322,7 @@ $("body").on("click", "#submit", function (e) {
         $("#preloader").hide();
         return false;
     }
-    
+
 
     // Create FormData object for Ajax
     var formData = new FormData();
