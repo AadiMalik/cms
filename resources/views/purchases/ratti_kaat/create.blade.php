@@ -541,7 +541,7 @@ $dollar_rate = DollarRate();
 
     function removeSpaces(input) {
         if (input && typeof input === 'string') {
-            return input.replace(/\s+/g, '');
+            return input.replace(/[^\w-]/g, '');
         } else {
             console.error("Input is invalid:", input);
             return ''; // Return a safe default
