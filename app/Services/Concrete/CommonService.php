@@ -2,6 +2,7 @@
 
 namespace App\Services\Concrete;
 
+use App\Models\DiamondPurchase;
 use App\Models\FinishProduct;
 use App\Models\GoldImpurityPurchase;
 use App\Models\JobPurchase;
@@ -83,6 +84,32 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "OPO-" . date('dmY') . "-" . $mystring;
+      }
+
+      // Diamond purchase no
+      public function generateDiamondPurchaseNo()
+      {
+            $diamond_purchase = DiamondPurchase::orderby('id', 'desc')->first();
+
+            if (!$diamond_purchase) {
+                  return "DPO-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $diamond_purchase->diamond_purchase_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "DPO-" . date('dmY') . "-" . $mystring;
       }
 
       public function generateSaleNo()

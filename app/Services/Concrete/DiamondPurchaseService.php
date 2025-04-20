@@ -3,13 +3,13 @@
 namespace App\Services\Concrete;
 
 use App\Models\Account;
-use App\Models\Customer;
+use App\Models\DiamondPurchase;
+use App\Models\DiamondPurchaseDetail;
 use App\Models\Journal;
 use App\Models\JournalEntry;
 use App\Repository\Repository;
 use App\Models\OtherPurchase;
 use App\Models\OtherPurchaseDetail;
-use App\Models\Supplier;
 use App\Models\SupplierPayment;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
-class OtherPurchaseService
+class DiamondPurchaseService
 {
     // initialize protected model variables
-    protected $model_other_purchase;
-    protected $model_other_purchase_detail;
+    protected $model_diamond_purchase;
+    protected $model_diamond_purchase_detail;
     protected $model_journal_entry;
     protected $model_supplier_payment;
 
@@ -31,8 +31,8 @@ class OtherPurchaseService
     public function __construct()
     {
         // set the model
-        $this->model_other_purchase = new Repository(new OtherPurchase);
-        $this->model_other_purchase_detail = new Repository(new OtherPurchaseDetail);
+        $this->model_diamond_purchase = new Repository(new DiamondPurchase);
+        $this->model_diamond_purchase_detail = new Repository(new DiamondPurchaseDetail);
         $this->model_journal_entry = new Repository(new JournalEntry);
         $this->model_supplier_payment = new Repository(new SupplierPayment);
 
@@ -49,8 +49,8 @@ class OtherPurchaseService
         if ($obj['supplier_id'] != '') {
             $wh[] = ['supplier_id', $obj['supplier_id']];
         }
-        $model = $this->model_other_purchase->getModel()::has('OtherPurchaseDetail')->with('supplier_name')->where('is_deleted', 0)
-            ->whereBetween('other_purchase_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
+        $model = $this->model_diamond_purchase->getModel()::has('DiamondPurchaseDetail')->with('supplier_name')->where('is_deleted', 0)
+            ->whereBetween('diamond_purchase_date', [date("Y-m-d", strtotime(str_replace('/', '-', $obj['start']))), date("Y-m-d", strtotime(str_replace('/', '-', $obj['end'])))])
             ->where($wh);
 
         $data = DataTables::of($model)
@@ -63,6 +63,14 @@ class OtherPurchaseService
                 $badge_text = $item->posted == 0 ? 'Unposted' : 'Posted';
                 return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
             })
+            ->addColumn('is_pkr', function ($item) {
+                  $badge_color = $item->is_pkr == 0 ? 'badge-primary' : 'badge-success';
+                  $badge_text = $item->is_pkr == 0 ? 'Unposted' : 'Posted';
+                  return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
+              })
+              ->addColumn('total_amount', function ($item) {
+                  return $item->is_pkr == 1 ? $item->total : $item->total_dollar;
+              })
             ->addColumn('supplier', function ($item) {
                 return $item->supplier_name->name ?? '';
             })
@@ -77,44 +85,44 @@ class OtherPurchaseService
 
                 $action_column = '';
                 $unpost = '<a class="text text-danger" id="unpost" data-toggle="tooltip" data-id="' . $item->id . '" data-original-title="Unpost" href="javascript:void(0)"><i class="fa fa-repeat"></i>Unpost</a>';
-                $print_column    = "<a class='text-info mr-2' href='other-purchase/print/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
+                $print_column    = "<a class='text-info mr-2' href='diamond-purchase/print/" . $item->id . "'><i title='Add' class='nav-icon mr-2 fa fa-print'></i>Print</a>";
                 $all_print_column    = "<a class='text-info mr-2' id='Ref' href='javascript:void(0)' data-toggle='tooltip'  data-filter='" . $jvs . "' data-original-title='Accounting'><i title='Accounting' class='nav-icon mr-2 fa fa-eye'></i>Accounting</a>";
-                $delete_column    = "<a class='text-danger mr-2' id='deleteOtherPurchase' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
+                $delete_column    = "<a class='text-danger mr-2' id='deleteDiamondPurchase' href='javascript:void(0)' data-toggle='tooltip'  data-id='" . $item->id . "' data-original-title='Delete'><i title='Delete' class='nav-icon mr-2 fa fa-trash'></i>Delete</a>";
 
 
-                if (Auth::user()->can('other_purchase_print'))
+                if (Auth::user()->can('diamond_purchase_print'))
                     $action_column .= $print_column;
-                if (Auth::user()->can('other_purchase_unpost') && $item->posted == 1)
+                if (Auth::user()->can('diamond_purchase_unpost') && $item->posted == 1)
                     $action_column .= $unpost;
-                if (Auth::user()->can('other_purchase_jvs') && $item->posted == 1)
+                if (Auth::user()->can('diamond_purchase_jvs') && $item->posted == 1)
                     $action_column .= $all_print_column;
 
-                if (Auth::user()->can('other_purchase_delete'))
+                if (Auth::user()->can('diamond_purchase_delete'))
                     $action_column .= $delete_column;
 
                 return $action_column;
             })
-            ->rawColumns(['check_box', 'supplier', 'posted', 'action'])
+            ->rawColumns(['check_box','is_pkr', 'supplier','total_amount', 'posted', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;
     }
 
-    public function getAllOtherPurchase()
+    public function getAllDiamondPurchase()
     {
-        return $this->model_other_purchase->getModel()::with('supplier_name')
+        return $this->model_diamond_purchase->getModel()::with('supplier_name')
             ->where('is_deleted', 0)
             ->get();
     }
-    public function saveOtherPurchase()
+    public function saveDiamondPurchase()
     {
         try {
             DB::beginTransaction();
             $obj = [
-                'other_purchase_no' => $this->common_service->generateOtherPurchaseNo(),
+                'diamond_purchase_no' => $this->common_service->generateDiamondPurchaseNo(),
                 'createdby_id' => Auth::User()->id
             ];
-            $saved_obj = $this->model_other_purchase->create($obj);
+            $saved_obj = $this->model_diamond_purchase->create($obj);
 
             DB::commit();
         } catch (Exception $e) {
@@ -128,9 +136,9 @@ class OtherPurchaseService
     {
         try {
             DB::beginTransaction();
-            $otherPurchaseDetail = json_decode($obj['otherProductDetail']);
-            $otherPurchaseObj = [
-                "other_purchase_date" => $obj['other_purchase_date'],
+            $diamondPurchaseDetail = json_decode($obj['diamondProductDetail']);
+            $diamondPurchaseObj = [
+                "diamond_purchase_date" => $obj['diamond_purchase_date'],
                 "supplier_id" => $obj['supplier_id'],
                 "total_qty" => $obj['total_qty'] ?? 0,
                 "warehouse_id" => $obj['warehouse_id'] ?? null,
@@ -141,20 +149,25 @@ class OtherPurchaseService
                 "updatedby_id" => Auth::user()->id
             ];
             $total_qty = 0;
-            foreach ($otherPurchaseDetail as $item) {
-                $otherPurchaseDetailObj = [
-                    "other_purchase_id" => $obj['id'],
-                    "other_product_id" => $item->other_product_id ?? '',
+            foreach ($diamondPurchaseDetail as $item) {
+                $diamondPurchaseDetailObj = [
+                    "diamond_purchase_id" => $obj['id'],
+                    "diamond_type_id" => $item->diamond_type_id ?? '',
+                    "diamond_cut_id" => $item->diamond_cut_id ?? '',
+                    "diamond_color_id" => $item->diamond_color_id ?? '',
+                    "diamond_clarity_id" => $item->diamond_clarity_id ?? '',
+                    "carat" => $item->carat ?? 0.000,
                     "qty" => $item->qty ?? 0.000,
-                    "unit_price" => $item->unit_price ?? 0.000,
+                    "carat_price" => $item->carat_price ?? 0.000,
                     "total_amount" => $item->total_amount,
+                    "total_dollar" => $item->total_dollar,
                     "createdby_id" => Auth::user()->id
                 ];
                 $total_qty = $total_qty + $item->qty;
-                $other_purchase_detail = $this->model_other_purchase_detail->create($otherPurchaseDetailObj);
+                $diamond_purchase_detail = $this->model_diamond_purchase_detail->create($diamondPurchaseDetailObj);
             }
-            $otherPurchaseObj['total_qty'] = $total_qty;
-            $other_purchase = $this->model_other_purchase->update($otherPurchaseObj, $obj['id']);
+            $diamondPurchaseObj['total_qty'] = $total_qty;
+            $diamond_purchase = $this->model_diamond_purchase->update($diamondPurchaseObj, $obj['id']);
             DB::commit();
         } catch (Exception $e) {
             return $e;
@@ -165,26 +178,29 @@ class OtherPurchaseService
 
     public function getById($id)
     {
-        return $this->model_other_purchase->getModel()::with(['supplier_name', 'other_product'])->find($id);
+        return $this->model_diamond_purchase->getModel()::with(['supplier_name'])->find($id);
     }
 
-    public function otherPurchaseDetail($other_purchase_id)
+    public function diamondPurchaseDetail($diamond_purchase_id)
     {
-        $other_purchase_detail = $this->model_other_purchase_detail->getModel()::with([
-            'other_product'
+        $diamond_purchase_detail = $this->model_diamond_purchase_detail->getModel()::with([
+            'diamond_product'
         ])
-            ->where('other_purchase_id', $other_purchase_id)
+            ->where('diamond_purchase_id', $diamond_purchase_id)
             ->where('is_deleted', 0)->get();
 
         $data = [];
-        foreach ($other_purchase_detail as $item) {
+        foreach ($diamond_purchase_detail as $item) {
             $data[] = [
-                "code" => $item->other_product->code ?? '',
-                "product" => $item->other_product->name ?? '',
-                "unit" => $item->other_product->other_product_unit->name ?? '',
-                "unit_price" => $item->unit_price ?? 0,
+                "type" => $item->diamond_type->name ?? '',
+                "cut" => $item->diamond_cut->name ?? '',
+                "color" => $item->diamond_color->name ?? '',
+                "clarity" => $item->diamond_clarity->name ?? '',
+                "carat" => $item->carat ?? 0,
+                "carat_price" => $item->carat_price ?? 0,
                 "qty" => $item->qty,
-                "total_amount" => $item->total_amount
+                "total_amount" => $item->total_amount,
+                "total_dollar" => $item->total_dollar
             ];
         }
 
@@ -197,61 +213,61 @@ class OtherPurchaseService
         try {
             DB::beginTransaction();
 
-            foreach ($obj['other_purchase'] as $item) {
+            foreach ($obj['diamond_purchase'] as $item) {
 
                 $journal_entry_supplier_payment = null;
-                $other_purchase_voucher = null;
+                $diamond_purchase_voucher = null;
                 $journal_entry_supplier_payment = null;
 
-                $other_purchase = $this->model_other_purchase->getModel()::with([
+                $diamond_purchase = $this->model_diamond_purchase->getModel()::with([
                     'supplier_name',
                     'supplier_name.account_name',
                     'purchase_account',
-                    'OtherPurchaseDetail',
+                    'DiamondPurchaseDetail',
                     'paid_account'
                 ])
                     ->find($item);
 
-                $supplier =  $other_purchase->supplier_name;
+                $supplier =  $diamond_purchase->supplier_name;
 
                 //==============  Create Purchase Inventory Transaction
 
-                $this->createOtherPurchaseInventoryTransaction(
-                    $other_purchase->OtherPurchaseDetail,
-                    $other_purchase->other_purchase_date,
-                    $other_purchase->bill_no,
-                    $other_purchase->warehouse_id
+                $this->createDiamondPurchaseInventoryTransaction(
+                    $diamond_purchase->DiamondPurchaseDetail,
+                    $diamond_purchase->diamond_purchase_date,
+                    $diamond_purchase->bill_no,
+                    $diamond_purchase->warehouse_id
                 );
 
-                $debit_amount = str_replace(',', '', $other_purchase->total);
+                $debit_amount = str_replace(',', '', $diamond_purchase->total);
 
                 //============== Create Purchase Voucher
-                $other_purchase_voucher = $this->createOtherPurchaseVoucher(
-                    $other_purchase->other_purchase_no,
-                    $other_purchase->other_purchase_date,
-                    $other_purchase->bill_no,
-                    $other_purchase->supplier_name,
-                    $other_purchase->purchase_account,
+                $diamond_purchase_voucher = $this->createOtherPurchaseVoucher(
+                    $diamond_purchase->diamond_purchase_no,
+                    $diamond_purchase->diamond_purchase_date,
+                    $diamond_purchase->bill_no,
+                    $diamond_purchase->supplier_name,
+                    $diamond_purchase->purchase_account,
                     $debit_amount
                 );
 
                 // paid Amount
-                if ($other_purchase->paid > 0) {
-                    if ($other_purchase->paid_account_id == null || $other_purchase->paid_account_id == '') {
+                if ($diamond_purchase->paid > 0) {
+                    if ($diamond_purchase->paid_account_id == null || $diamond_purchase->paid_account_id == '') {
                         $msg = 'Paid amount is greater then 0 but paid account not select!';
                         return $msg;
                     }
 
                     // supplier Payment Add
-                    $paid_amount = str_replace(',', '', $other_purchase->paid);
+                    $paid_amount = str_replace(',', '', $diamond_purchase->paid);
 
                     //============== Create Purchase supplier Payment Voucher
                     $journal_entry_supplier_payment = $this->createOtherPurchaseSupplierPaymentVoucher(
-                        $other_purchase->other_purchase_no,
-                        $other_purchase->other_purchase_date,
-                        $other_purchase->bill_no,
+                        $diamond_purchase->diamond_purchase_no,
+                        $diamond_purchase->diamond_purchase_date,
+                        $diamond_purchase->bill_no,
                         $supplier,
-                        $other_purchase->paid_account,
+                        $diamond_purchase->paid_account,
                         $supplier->account_name,
                         $paid_amount
                     );
@@ -259,20 +275,20 @@ class OtherPurchaseService
                     //============== Create Purchase Supplier Payment
                     $supplier_payment = $this->createOtherPurchaseSupplierPayment(
                         $journal_entry_supplier_payment,
-                        $other_purchase->other_purchase_no,
-                        $other_purchase->other_purchase_date,
+                        $diamond_purchase->diamond_purchase_no,
+                        $diamond_purchase->diamond_purchase_date,
                         $supplier,
-                        $other_purchase->paid_account,
+                        $diamond_purchase->paid_account,
                         $paid_amount,
-                        $other_purchase->tax_amount ?? 0,
-                        $other_purchase->id
+                        $diamond_purchase->tax_amount ?? 0,
+                        $diamond_purchase->id
                     );
                 }
-                $other_purchase->posted = 1;
-                $other_purchase->jv_id = $other_purchase_voucher;
-                $other_purchase->paid_jv_id = $journal_entry_supplier_payment;
-                $other_purchase->supplier_payment_id = $supplier_payment;
-                $other_purchase->update();
+                $diamond_purchase->posted = 1;
+                $diamond_purchase->jv_id = $diamond_purchase_voucher;
+                $diamond_purchase->paid_jv_id = $journal_entry_supplier_payment;
+                $diamond_purchase->supplier_payment_id = $supplier_payment;
+                $diamond_purchase->update();
             }
             DB::commit();
         } catch (Exception $e) {
@@ -282,41 +298,41 @@ class OtherPurchaseService
         }
         return true;
     }
-    public function unpost($other_purchase_id)
+    public function unpost($diamond_purchase_id)
     {
         try {
             DB::beginTransaction();
 
-            $other_purchase = $this->model_other_purchase->getModel()::find($other_purchase_id);
+            $diamond_purchase = $this->model_diamond_purchase->getModel()::find($diamond_purchase_id);
 
             // Journal entry delete
-            $journal_entry = $this->model_journal_entry->getModel()::find($other_purchase->jv_id);
+            $journal_entry = $this->model_journal_entry->getModel()::find($diamond_purchase->jv_id);
             $journal_entry->is_deleted = 1;
             $journal_entry->deletedby_id = Auth::user()->id;
             $journal_entry->update();
 
-            if ($other_purchase->paid_jv_id != null) {
+            if ($diamond_purchase->paid_jv_id != null) {
                 // Journal entry delete
-                $paid_journal_entry = $this->model_journal_entry->getModel()::find($other_purchase->paid_jv_id);
+                $paid_journal_entry = $this->model_journal_entry->getModel()::find($diamond_purchase->paid_jv_id);
                 $paid_journal_entry->is_deleted = 1;
                 $paid_journal_entry->deletedby_id = Auth::user()->id;
                 $paid_journal_entry->update();
             }
 
-            if ($other_purchase->supplier_payment_id != null) {
+            if ($diamond_purchase->supplier_payment_id != null) {
                 // Journal entry delete
-                $supplier_payment = $this->model_supplier_payment->getModel()::find($other_purchase->supplier_payment_id);
+                $supplier_payment = $this->model_supplier_payment->getModel()::find($diamond_purchase->supplier_payment_id);
                 $supplier_payment->is_deleted = 1;
                 $supplier_payment->deletedby_id = Auth::user()->id;
                 $supplier_payment->update();
             }
 
             // other purchase update
-            $other_purchase->posted = 0;
-            $other_purchase->jv_id = Null;
-            $other_purchase->paid_jv_id = Null;
-            $other_purchase->supplier_payment_id = Null;
-            $other_purchase->update();
+            $diamond_purchase->posted = 0;
+            $diamond_purchase->jv_id = Null;
+            $diamond_purchase->paid_jv_id = Null;
+            $diamond_purchase->supplier_payment_id = Null;
+            $diamond_purchase->update();
 
             DB::commit();
         } catch (Exception $e) {
@@ -327,41 +343,41 @@ class OtherPurchaseService
         return true;
     }
 
-    public function deleteById($other_purchase_id)
+    public function deleteById($diamond_purchase_id)
     {
         try {
             DB::beginTransaction();
 
-            $other_purchase = $this->model_other_purchase->getModel()::find($other_purchase_id);
+            $diamond_purchase = $this->model_diamond_purchase->getModel()::find($diamond_purchase_id);
 
             // Journal entry delete
-            $journal_entry = $this->model_journal_entry->getModel()::find($other_purchase->jv_id);
+            $journal_entry = $this->model_journal_entry->getModel()::find($diamond_purchase->jv_id);
             $journal_entry->is_deleted = 1;
             $journal_entry->deletedby_id = Auth::user()->id;
             $journal_entry->update();
 
-            if ($other_purchase->paid_jv_id != null) {
+            if ($diamond_purchase->paid_jv_id != null) {
                 // Journal entry delete
-                $paid_journal_entry = $this->model_journal_entry->getModel()::find($other_purchase->paid_jv_id);
+                $paid_journal_entry = $this->model_journal_entry->getModel()::find($diamond_purchase->paid_jv_id);
                 $paid_journal_entry->is_deleted = 1;
                 $paid_journal_entry->deletedby_id = Auth::user()->id;
                 $paid_journal_entry->update();
             }
 
-            if ($other_purchase->supplier_payment_id != null) {
+            if ($diamond_purchase->supplier_payment_id != null) {
                 // Journal entry delete
-                $supplier_payment = $this->model_supplier_payment->getModel()::find($other_purchase->supplier_payment_id);
+                $supplier_payment = $this->model_supplier_payment->getModel()::find($diamond_purchase->supplier_payment_id);
                 $supplier_payment->is_deleted = 1;
                 $supplier_payment->deletedby_id = Auth::user()->id;
                 $supplier_payment->update();
             }
 
             // other purchase update
-            $other_purchase->posted = 0;
-            $other_purchase->jv_id = Null;
-            $other_purchase->paid_jv_id = Null;
-            $other_purchase->supplier_payment_id = Null;
-            $other_purchase->update();
+            $diamond_purchase->posted = 0;
+            $diamond_purchase->jv_id = Null;
+            $diamond_purchase->paid_jv_id = Null;
+            $diamond_purchase->supplier_payment_id = Null;
+            $diamond_purchase->update();
 
             DB::commit();
         } catch (Exception $e) {
@@ -373,13 +389,13 @@ class OtherPurchaseService
     }
 
 
-    public function createOtherPurchaseVoucher($other_purchase_no, $other_purchase_date, $bill_no, $supplier, $purchase_account, $amount)
+    public function createOtherPurchaseVoucher($diamond_purchase_no, $diamond_purchase_date, $bill_no, $supplier, $purchase_account, $amount)
     {
         $journal = Journal::find(config('enum.PV'));
-        $other_purchase_date = date("Y-m-d", strtotime(str_replace('/', '-', $other_purchase_date)));
+        $diamond_purchase_date = date("Y-m-d", strtotime(str_replace('/', '-', $diamond_purchase_date)));
         // Add journal entry
         $data = [
-            "date" => $other_purchase_date,
+            "date" => $diamond_purchase_date,
             "prefix" => $journal->prefix,
             "journal_id" => $journal->id
         ];
@@ -388,8 +404,8 @@ class OtherPurchaseService
         $journal_entry = new JournalEntry;
         $journal_entry->journal_id = $journal->id;
         $journal_entry->supplier_id = $supplier->id;
-        $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $other_purchase_date)));
-        $journal_entry->reference = 'Date :' . $other_purchase_date . ' other purchase ' . $other_purchase_no . '. Supplier is ' . $supplier->name;
+        $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $diamond_purchase_date)));
+        $journal_entry->reference = 'Date :' . $diamond_purchase_date . ' other purchase ' . $diamond_purchase_no . '. Supplier is ' . $supplier->name;
         $journal_entry->entryNum = $entryNum;
         $journal_entry->createdby_id = Auth::User()->id;
         $journal_entry->save();
@@ -408,7 +424,7 @@ class OtherPurchaseService
             'Purchase Amount From Purchase Debit Entry', //explaination
             $bill_no, //bill no
             0, // check no or 0
-            $other_purchase_date, //check date
+            $diamond_purchase_date, //check date
             1, // is credit flag 0 for credit, 1 for debit
             $amount, //amount
             $purchase_account->id, // account id
@@ -429,7 +445,7 @@ class OtherPurchaseService
             'Credit Amount From Purchase Credit Entry from ' . $supplier->name, //explaination
             $bill_no, //bill no
             0, // check no or 0
-            $other_purchase_date, //check date
+            $diamond_purchase_date, //check date
             0, // is credit flag 0 for credit, 1 for debit
             $amount, //amount
             $supplier_account->id, // account id
@@ -440,13 +456,13 @@ class OtherPurchaseService
         return $journal_entry_id;
     }
 
-    public function createOtherPurchaseInventoryTransaction($other_purchase_detail, $other_purchase_date, $bill_no, $warehouse_id)
+    public function createDiamondPurchaseInventoryTransaction($diamond_purchase_detail, $diamond_purchase_date, $bill_no, $warehouse_id)
     {
-        foreach ($other_purchase_detail as $index => $item) {
+        foreach ($diamond_purchase_detail as $index => $item) {
 
             $obj = [
-                "other_purchase_id" => $item->other_purchase_id,
-                "date" => $other_purchase_date ?? Carbon::now(),
+                "diamond_purchase_id" => $item->diamond_purchase_id,
+                "date" => $diamond_purchase_date ?? Carbon::now(),
                 "bill_no" => $bill_no,
                 "warehouse_id" => $warehouse_id,
                 "other_product_id" => $item->other_product_id,
@@ -463,8 +479,8 @@ class OtherPurchaseService
     }
 
     public function createOtherPurchaseSupplierPaymentVoucher(
-        $other_purchase_no,
-        $other_purchase_date,
+        $diamond_purchase_no,
+        $diamond_purchase_date,
         $bill_no,
         $supplier,
         $paid_account,
@@ -476,7 +492,7 @@ class OtherPurchaseService
         $journal_supplier = Journal::find($journal_type);
         // Add journal entry
         $data = [
-            "date" => $other_purchase_date,
+            "date" => $diamond_purchase_date,
             "prefix" => $journal_supplier->prefix,
             "journal_id" => $journal_supplier->id
         ];
@@ -485,8 +501,8 @@ class OtherPurchaseService
         $journal_entry_supplier = new JournalEntry;
         $journal_entry_supplier->journal_id = $journal_supplier->id;
         $journal_entry_supplier->supplier_id = $supplier->id;
-        $journal_entry_supplier->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $other_purchase_date)));
-        $journal_entry_supplier->reference = 'Date :' . $other_purchase_date . ' Against OPO. ' . $other_purchase_no;
+        $journal_entry_supplier->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $diamond_purchase_date)));
+        $journal_entry_supplier->reference = 'Date :' . $diamond_purchase_date . ' Against OPO. ' . $diamond_purchase_no;
         $journal_entry_supplier->entryNum = $entryNum_supplier;
         $journal_entry_supplier->createdby_id = Auth::User()->id;
         $journal_entry_supplier->save();
@@ -500,7 +516,7 @@ class OtherPurchaseService
             'Supplier Paid Payment Against Other Purchase Credit', //explaination
             $bill_no, //bill no
             0, // check no or 0
-            $other_purchase_date, //check date
+            $diamond_purchase_date, //check date
             0, // is credit flag 0 for credit, 1 for debit
             $paid_amount, //amount
             $paid_account->id, // account id
@@ -515,7 +531,7 @@ class OtherPurchaseService
             'Supplier Paid Payment Against Purchase Debit', //explaination
             $bill_no, //bill no
             0, // check no or 0
-            $other_purchase_date, //check date
+            $diamond_purchase_date, //check date
             1, // is credit flag 0 for credit, 1 for debit
             $paid_amount, //amount
             $supplier_account->id, // account id
@@ -528,27 +544,27 @@ class OtherPurchaseService
 
     public function createOtherPurchaseSupplierPayment(
         $journal_entry_id,
-        $other_purchase_no,
-        $other_purchase_date,
+        $diamond_purchase_no,
+        $diamond_purchase_date,
         $supplier,
         $paid_account,
         $paid_amount,
         $tax_amount,
-        $other_purchase_id
+        $diamond_purchase_id
     ) {
         // Supplier Payment Add
         $supplier_payment_data = [
             'supplier_id' => $supplier->id,
             'account_id' => $paid_account->id,
-            'payment_date' => $other_purchase_date,
+            'payment_date' => $diamond_purchase_date,
             'currency' => 0,
-            'cheque_ref' => 'Date :' . $other_purchase_date . ' Against OPO. ' . $other_purchase_no,
+            'cheque_ref' => 'Date :' . $diamond_purchase_date . ' Against OPO. ' . $diamond_purchase_no,
             'sub_total' => $paid_amount,
             'total' => $paid_amount,
             'tax' => 0,
             'tax_amount' => $tax_amount ?? 0,
             'tax_account_id' => Null,
-            'other_purchase_id' => $other_purchase_id,
+            'diamond_purchase_id' => $diamond_purchase_id,
             'posted' => 1,
             'jv_id' => $journal_entry_id,
             'createdby_id' => Auth::User()->id

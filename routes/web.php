@@ -8,6 +8,7 @@ use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\DiamondClarityController;
 use App\Http\Controllers\DiamondColorController;
 use App\Http\Controllers\DiamondCutController;
+use App\Http\Controllers\DiamondPurchaseController;
 use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinishProductController;
@@ -753,7 +754,30 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
-    // Other Purchase
+    // Diamond Purchase
+    Route::group(['prefix' => 'diamond-purchase'], function () {
+        Route::get('/', [DiamondPurchaseController::class, 'index']);
+        Route::get('create', [DiamondPurchaseController::class, 'create']);
+        Route::post('data', [DiamondPurchaseController::class, 'getData'])->name('diamond-purchase.data');
+        Route::post('store', [DiamondPurchaseController::class, 'store']);
+        Route::get('print/{id}', [DiamondPurchaseController::class, 'print']);
+        Route::get('destroy/{id}', [DiamondPurchaseController::class, 'destroy']);
+        Route::get('status/{id}', [DiamondPurchaseController::class, 'status']);
+        Route::post('post', [DiamondPurchaseController::class, 'post']);
+        Route::get('unpost/{id}', [DiamondPurchaseController::class, 'unpost']);
+
+        Route::get('/js/diamond_purchase.js', function () {
+            $path = resource_path('views/purchases/diamond_purchase/js/diamond_purchase.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Company Setting
     Route::group(['prefix' => 'company-setting'], function () {
         Route::get('/', [CompanySettingController::class, 'index']);
         Route::post('store', [CompanySettingController::class, 'store']);

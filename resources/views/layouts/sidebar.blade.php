@@ -113,7 +113,7 @@
             @endcan
             @can('purchase_access')
             <li
-                class="Ul_li--hover {{ Request::is('ratti-kaats*')|| Request::is('gold-impurity*') ||Request::is('job-purchase*') || Request::is('supplier-payment*') || Request::is('other-purchase*') || Request::is('purchase-order*') ? 'mm-active' : '' }}">
+                class="Ul_li--hover {{ Request::is('ratti-kaats*')|| Request::is('gold-impurity*') ||Request::is('job-purchase*') || Request::is('supplier-payment*') || Request::is('other-purchase*') || Request::is('diamond-purchase*') || Request::is('purchase-order*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Purchase</span></a>
                 <ul class="mm-collapse">
@@ -126,6 +126,11 @@
                     <li class="item-name"><a class="{{ Request::is('other-purchase*') ? 'sidebar_active' : '' }}"
                             href="{{ url('other-purchase') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Other Purchase</span></a></li>
+                    @endcan
+                    @can('diamond_purchase_access')
+                    <li class="item-name"><a class="{{ Request::is('diamond-purchase*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('diamond-purchase') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Diamond Purchase</span></a></li>
                     @endcan
                     @can('purchase_order_access')
                     <li class="item-name"><a class="{{ Request::is('purchase-order*') ? 'sidebar_active' : '' }}"
