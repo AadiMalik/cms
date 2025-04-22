@@ -287,7 +287,7 @@ $(row).css("background-color", "Pink");
     // Delete diamond sale Code
 
     $("body").on("click", "#deleteDiamondPurchase", function() {
-        var diamond_sale_id = $(this).data("id");
+        var diamond_purchase_id = $(this).data("id");
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",

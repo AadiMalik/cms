@@ -359,11 +359,13 @@ class DiamondPurchaseService
 
             $diamond_purchase = $this->model_diamond_purchase->getModel()::find($diamond_purchase_id);
 
-            // Journal entry delete
-            $journal_entry = $this->model_journal_entry->getModel()::find($diamond_purchase->jv_id);
-            $journal_entry->is_deleted = 1;
-            $journal_entry->deletedby_id = Auth::user()->id;
-            $journal_entry->update();
+            if ($diamond_purchase->jv_id != null) {
+                // Journal entry delete
+                $journal_entry = $this->model_journal_entry->getModel()::find($diamond_purchase->jv_id);
+                $journal_entry->is_deleted = 1;
+                $journal_entry->deletedby_id = Auth::user()->id;
+                $journal_entry->update();
+            }
 
             if ($diamond_purchase->paid_jv_id != null) {
                 // Journal entry delete
@@ -383,6 +385,8 @@ class DiamondPurchaseService
 
             // other purchase update
             $diamond_purchase->posted = 0;
+            $diamond_purchase->is_deleted = 1;
+            $diamond_purchase->deletedby_id = Auth::user()->id;
             $diamond_purchase->jv_id = Null;
             $diamond_purchase->paid_jv_id = Null;
             $diamond_purchase->supplier_payment_id = Null;
@@ -408,7 +412,7 @@ class DiamondPurchaseService
         $is_pkr
     ) {
         $journal = Journal::find(config('enum.PV'));
-        $in_purchase = ($is_pkr==0)?0:2;
+        $in_purchase = ($is_pkr == 0) ? 0 : 2;
         $diamond_purchase_date = date("Y-m-d", strtotime(str_replace('/', '-', $diamond_purchase_date)));
         // Add journal entry
         $data = [
