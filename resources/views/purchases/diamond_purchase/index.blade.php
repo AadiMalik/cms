@@ -95,7 +95,8 @@
                                             <th>Purchase No</th>
                                             <th>Supplier Name</th>
                                             <th>Total QTY</th>
-                                            <th>Total</th>
+                                            <th>Total(PKR)</th>
+                                            <th>Total($)</th>
                                             <th>Purchase In</th>
                                             <th>Status</th>
                                             <th>Action</th>
@@ -131,6 +132,8 @@
 {data: 'supplier',name: 'supplier', orderable: false, searchable: false},
 {data: 'total_qty',name: 'total_qty', orderable: false, searchable: false},
 {data: 'total_amount',name: 'total_amount', orderable: false, searchable: false},
+{data: 'total_dollar',name: 'total_dollar', orderable: false, searchable: false},
+{data: 'is_pkr',name: 'is_pkr', orderable: false, searchable: false},
 {data: 'posted',name: 'posted', orderable: false, searchable: false},
 {data: 'action',name: 'action','sortable': false,searchable: false}",
 'route' => 'diamond-purchase/data',

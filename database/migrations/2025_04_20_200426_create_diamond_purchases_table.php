@@ -26,6 +26,7 @@ return new class extends Migration
             $table->decimal('tax_amount',18,3)->nullable();
             $table->decimal('sub_total',18,3)->nullable();
             $table->decimal('total',18,3)->nullable();
+            $table->decimal('total_dollar',18,3)->nullable();
             $table->boolean('is_pkr')->default(1);
             $table->decimal('paid',18,3)->nullable();
             $table->integer('purchase_account_id')->nullable();

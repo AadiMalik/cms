@@ -21,6 +21,7 @@ class DiamondPurchase extends Model
         'tax_amount',
         'sub_total',
         'total',
+        'total_dollar',
         'is_pkr',
         'paid',
         'purchase_account_id',

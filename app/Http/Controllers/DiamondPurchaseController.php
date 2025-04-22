@@ -108,12 +108,14 @@ class DiamondPurchaseController extends Controller
             $request->all(),
             [
                 'id'                    => 'required',
-                'diamond_purchase_date'   => 'required',
+                'diamond_purchase_date' => 'required',
                 'supplier_id'           => 'required',
                 'warehouse_id'          => 'required',
                 'purchase_account_id'   => 'required',
                 'total'                 => 'required',
-                'diamondProductDetail'    => 'required'
+                'total_dollar'          => 'required',
+                'is_pkr'                => 'required',
+                'diamondProductDetail'  => 'required'
             ],
             $this->validationMessage()
         );
@@ -149,7 +151,7 @@ class DiamondPurchaseController extends Controller
             $diamond_purchase =  $this->diamond_purchase_service->getById($id);
             $diamond_purchase_detail = $this->diamond_purchase_service->diamondPurchaseDetail($id);
 
-            $pdf = PDF::loadView('/purchases/diamond_purchase/partials.print', compact('diamond_purchase', 'other_purchase_detail'));
+            $pdf = PDF::loadView('/purchases/diamond_purchase/partials.print', compact('diamond_purchase', 'diamond_purchase_detail'));
             return $pdf->stream();
         } catch (Exception $e) {
             return $this->error(config('enum.error'));

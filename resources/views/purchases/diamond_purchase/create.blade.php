@@ -1,3 +1,6 @@
+@php
+$dollar_rate = DollarRate();
+@endphp
 @extends('layouts.master')
 @section('content')
 <div class="main-content pt-4">
@@ -280,7 +283,8 @@
                                                 <th>Carat</th>
                                                 <th>Carat Price</th>
                                                 <th>Quantity</th>
-                                                <th>Total</th>
+                                                <th>Total(PKR)</th>
+                                                <th>Total($)</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -377,6 +381,7 @@
 <script src="{{ url('diamond-purchase/js/diamond_purchase.js') }}"></script>
 <script type="text/javascript">
     var url_local = "{{ url('/') }}";
+    var dollar_rate = "{{$dollar_rate->rate}}";
     var diamond_purchase_id = "{{ isset($diamond_purchase) ? $diamond_purchase->id : '' }}";
 </script>
 
@@ -385,7 +390,10 @@
         $('#supplier_id').select2();
         $('#warehouse_id').select2();
         $('#purchase_account_id').select2();
-        $('#diamond_product_id').select2();
+        $('#diamond_type_id').select2();
+        $('#diamond_cut_id').select2();
+        $('#diamond_color_id').select2();
+        $('#diamond_clarity_id').select2();
         $('#paid_account_id').select2();
         const diamond_purchase_date = document.getElementById("diamond_purchase_date");
 

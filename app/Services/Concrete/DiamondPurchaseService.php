@@ -5,6 +5,7 @@ namespace App\Services\Concrete;
 use App\Models\Account;
 use App\Models\DiamondPurchase;
 use App\Models\DiamondPurchaseDetail;
+use App\Models\DiamondTransaction;
 use App\Models\Journal;
 use App\Models\JournalEntry;
 use App\Repository\Repository;
@@ -64,13 +65,13 @@ class DiamondPurchaseService
                 return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
             })
             ->addColumn('is_pkr', function ($item) {
-                  $badge_color = $item->is_pkr == 0 ? 'badge-primary' : 'badge-success';
-                  $badge_text = $item->is_pkr == 0 ? 'Unposted' : 'Posted';
-                  return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
-              })
-              ->addColumn('total_amount', function ($item) {
-                  return $item->is_pkr == 1 ? $item->total : $item->total_dollar;
-              })
+                $badge_color = $item->is_pkr == 0 ? 'badge-primary' : 'badge-success';
+                $badge_text = $item->is_pkr == 0 ? 'PKR' : 'Dollar';
+                return '<span class="badge ' . $badge_color . '">' . $badge_text . '</span>';
+            })
+            ->addColumn('total_amount', function ($item) {
+                return $item->is_pkr == 1 ? $item->total : $item->total_dollar;
+            })
             ->addColumn('supplier', function ($item) {
                 return $item->supplier_name->name ?? '';
             })
@@ -102,7 +103,7 @@ class DiamondPurchaseService
 
                 return $action_column;
             })
-            ->rawColumns(['check_box','is_pkr', 'supplier','total_amount', 'posted', 'action'])
+            ->rawColumns(['check_box', 'is_pkr', 'supplier', 'total_amount', 'posted', 'action'])
             ->addIndexColumn()
             ->make(true);
         return $data;
@@ -140,12 +141,14 @@ class DiamondPurchaseService
             $diamondPurchaseObj = [
                 "diamond_purchase_date" => $obj['diamond_purchase_date'],
                 "supplier_id" => $obj['supplier_id'],
-                "total_qty" => $obj['total_qty'] ?? 0,
+                "is_pkr" => $obj['is_pkr'] ?? 0,
                 "warehouse_id" => $obj['warehouse_id'] ?? null,
                 "purchase_account_id" => $obj['purchase_account_id'] ?? null,
                 "total" => $obj['total'],
+                "total_dollar" => $obj['total_dollar'],
                 "paid" => $obj['paid'] ?? 0,
                 "paid_account_id" => $obj['paid_account_id'] ?? null,
+                "reference" => $obj['reference'] ?? null,
                 "updatedby_id" => Auth::user()->id
             ];
             $total_qty = 0;
@@ -184,7 +187,10 @@ class DiamondPurchaseService
     public function diamondPurchaseDetail($diamond_purchase_id)
     {
         $diamond_purchase_detail = $this->model_diamond_purchase_detail->getModel()::with([
-            'diamond_product'
+            'diamond_type',
+            'diamond_cut',
+            'diamond_color',
+            'diamond_clarity'
         ])
             ->where('diamond_purchase_id', $diamond_purchase_id)
             ->where('is_deleted', 0)->get();
@@ -217,7 +223,7 @@ class DiamondPurchaseService
 
                 $journal_entry_supplier_payment = null;
                 $diamond_purchase_voucher = null;
-                $journal_entry_supplier_payment = null;
+                $supplier_payment = null;
 
                 $diamond_purchase = $this->model_diamond_purchase->getModel()::with([
                     'supplier_name',
@@ -239,16 +245,17 @@ class DiamondPurchaseService
                     $diamond_purchase->warehouse_id
                 );
 
-                $debit_amount = str_replace(',', '', $diamond_purchase->total);
+                $debit_amount = ($diamond_purchase->is_pkr == 0) ? str_replace(',', '', $diamond_purchase->total) : str_replace(',', '', $diamond_purchase->total_dollar);
 
                 //============== Create Purchase Voucher
-                $diamond_purchase_voucher = $this->createOtherPurchaseVoucher(
+                $diamond_purchase_voucher = $this->createDiamondPurchaseVoucher(
                     $diamond_purchase->diamond_purchase_no,
                     $diamond_purchase->diamond_purchase_date,
                     $diamond_purchase->bill_no,
                     $diamond_purchase->supplier_name,
                     $diamond_purchase->purchase_account,
-                    $debit_amount
+                    $debit_amount,
+                    $diamond_purchase->is_pkr
                 );
 
                 // paid Amount
@@ -262,18 +269,19 @@ class DiamondPurchaseService
                     $paid_amount = str_replace(',', '', $diamond_purchase->paid);
 
                     //============== Create Purchase supplier Payment Voucher
-                    $journal_entry_supplier_payment = $this->createOtherPurchaseSupplierPaymentVoucher(
+                    $journal_entry_supplier_payment = $this->createDiamondPurchaseSupplierPaymentVoucher(
                         $diamond_purchase->diamond_purchase_no,
                         $diamond_purchase->diamond_purchase_date,
                         $diamond_purchase->bill_no,
                         $supplier,
                         $diamond_purchase->paid_account,
                         $supplier->account_name,
-                        $paid_amount
+                        $paid_amount,
+                        $diamond_purchase->is_pkr
                     );
 
                     //============== Create Purchase Supplier Payment
-                    $supplier_payment = $this->createOtherPurchaseSupplierPayment(
+                    $supplier_payment = $this->createDiamondPurchaseSupplierPayment(
                         $journal_entry_supplier_payment,
                         $diamond_purchase->diamond_purchase_no,
                         $diamond_purchase->diamond_purchase_date,
@@ -281,7 +289,8 @@ class DiamondPurchaseService
                         $diamond_purchase->paid_account,
                         $paid_amount,
                         $diamond_purchase->tax_amount ?? 0,
-                        $diamond_purchase->id
+                        $diamond_purchase->id,
+                        $diamond_purchase->is_pkr
                     );
                 }
                 $diamond_purchase->posted = 1;
@@ -389,9 +398,17 @@ class DiamondPurchaseService
     }
 
 
-    public function createOtherPurchaseVoucher($diamond_purchase_no, $diamond_purchase_date, $bill_no, $supplier, $purchase_account, $amount)
-    {
+    public function createDiamondPurchaseVoucher(
+        $diamond_purchase_no,
+        $diamond_purchase_date,
+        $bill_no,
+        $supplier,
+        $purchase_account,
+        $amount,
+        $is_pkr
+    ) {
         $journal = Journal::find(config('enum.PV'));
+        $in_purchase = ($is_pkr==0)?0:2;
         $diamond_purchase_date = date("Y-m-d", strtotime(str_replace('/', '-', $diamond_purchase_date)));
         // Add journal entry
         $data = [
@@ -405,7 +422,7 @@ class DiamondPurchaseService
         $journal_entry->journal_id = $journal->id;
         $journal_entry->supplier_id = $supplier->id;
         $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $diamond_purchase_date)));
-        $journal_entry->reference = 'Date :' . $diamond_purchase_date . ' other purchase ' . $diamond_purchase_no . '. Supplier is ' . $supplier->name;
+        $journal_entry->reference = 'Date :' . $diamond_purchase_date . ' diamond purchase ' . $diamond_purchase_no . '. Supplier is ' . $supplier->name;
         $journal_entry->entryNum = $entryNum;
         $journal_entry->createdby_id = Auth::User()->id;
         $journal_entry->save();
@@ -419,7 +436,7 @@ class DiamondPurchaseService
         }
         // PKR (Debit)
         $this->journal_entry_service->saveJVDetail(
-            0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+            $in_purchase, // currency 0 for PKR, 1 for AU, 2 for Dollar
             $journal_entry_id, // journal entry id
             'Purchase Amount From Purchase Debit Entry', //explaination
             $bill_no, //bill no
@@ -440,7 +457,7 @@ class DiamondPurchaseService
         $supplier_account = Account::find($supplier->account_id);
         // PKR (Credit)
         $this->journal_entry_service->saveJVDetail(
-            0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+            $in_purchase, // currency 0 for PKR, 1 for AU, 2 for Dollar
             $journal_entry_id, // journal entry id
             'Credit Amount From Purchase Credit Entry from ' . $supplier->name, //explaination
             $bill_no, //bill no
@@ -465,30 +482,36 @@ class DiamondPurchaseService
                 "date" => $diamond_purchase_date ?? Carbon::now(),
                 "bill_no" => $bill_no,
                 "warehouse_id" => $warehouse_id,
-                "other_product_id" => $item->other_product_id,
+                "diamond_type_id" => $item->diamond_type_id,
+                "diamond_cut_id" => $item->diamond_cut_id,
+                "diamond_color_id" => $item->diamond_color_id,
+                "diamond_clarity_id" => $item->diamond_clarity_id,
+                "carat" => $item->carat ?? 0,
                 "qty" => $item->qty ?? 0,
-                "unit_price" => $item->unit_price ?? 0,
+                "carat_price" => $item->carat_price ?? 0,
                 "createdby_id" => Auth::User()->id,
                 "type" => 0,
                 "created_at" => Carbon::now(),
                 "updated_at" => Carbon::now()
             ];
 
-            $transation = Transaction::create($obj);
+            $transation = DiamondTransaction::create($obj);
         }
     }
 
-    public function createOtherPurchaseSupplierPaymentVoucher(
+    public function createDiamondPurchaseSupplierPaymentVoucher(
         $diamond_purchase_no,
         $diamond_purchase_date,
         $bill_no,
         $supplier,
         $paid_account,
         $supplier_account,
-        $paid_amount
+        $paid_amount,
+        $is_pkr
     ) {
 
         $journal_type = ($paid_account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
+        $in_purchase = ($is_pkr == 0) ? 0 : 2;
         $journal_supplier = Journal::find($journal_type);
         // Add journal entry
         $data = [
@@ -502,7 +525,7 @@ class DiamondPurchaseService
         $journal_entry_supplier->journal_id = $journal_supplier->id;
         $journal_entry_supplier->supplier_id = $supplier->id;
         $journal_entry_supplier->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $diamond_purchase_date)));
-        $journal_entry_supplier->reference = 'Date :' . $diamond_purchase_date . ' Against OPO. ' . $diamond_purchase_no;
+        $journal_entry_supplier->reference = 'Date :' . $diamond_purchase_date . ' Against DPO. ' . $diamond_purchase_no;
         $journal_entry_supplier->entryNum = $entryNum_supplier;
         $journal_entry_supplier->createdby_id = Auth::User()->id;
         $journal_entry_supplier->save();
@@ -511,7 +534,7 @@ class DiamondPurchaseService
 
         // Journal entry detail (Credit)
         $this->journal_entry_service->saveJVDetail(
-            0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+            $in_purchase, // currency 0 for PKR, 1 for AU, 2 for Dollar
             $paid_jv_id, // journal entry id
             'Supplier Paid Payment Against Other Purchase Credit', //explaination
             $bill_no, //bill no
@@ -526,7 +549,7 @@ class DiamondPurchaseService
 
         // Journal entry detail (Debit)
         $this->journal_entry_service->saveJVDetail(
-            0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+            $in_purchase, // currency 0 for PKR, 1 for AU, 2 for Dollar
             $paid_jv_id, // journal entry id
             'Supplier Paid Payment Against Purchase Debit', //explaination
             $bill_no, //bill no
@@ -542,7 +565,7 @@ class DiamondPurchaseService
         return $paid_jv_id;
     }
 
-    public function createOtherPurchaseSupplierPayment(
+    public function createDiamondPurchaseSupplierPayment(
         $journal_entry_id,
         $diamond_purchase_no,
         $diamond_purchase_date,
@@ -550,15 +573,18 @@ class DiamondPurchaseService
         $paid_account,
         $paid_amount,
         $tax_amount,
-        $diamond_purchase_id
+        $diamond_purchase_id,
+        $is_pkr
     ) {
         // Supplier Payment Add
+
+        $in_purchase = ($is_pkr == 0) ? 0 : 2;
         $supplier_payment_data = [
             'supplier_id' => $supplier->id,
             'account_id' => $paid_account->id,
             'payment_date' => $diamond_purchase_date,
-            'currency' => 0,
-            'cheque_ref' => 'Date :' . $diamond_purchase_date . ' Against OPO. ' . $diamond_purchase_no,
+            'currency' => $in_purchase,
+            'cheque_ref' => 'Date :' . $diamond_purchase_date . ' Against DPO. ' . $diamond_purchase_no,
             'sub_total' => $paid_amount,
             'total' => $paid_amount,
             'tax' => 0,
