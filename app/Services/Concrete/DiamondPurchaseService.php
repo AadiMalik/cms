@@ -26,6 +26,7 @@ class DiamondPurchaseService
     protected $model_diamond_purchase_detail;
     protected $model_journal_entry;
     protected $model_supplier_payment;
+    protected $model_diamond_transaction;
 
     protected $common_service;
     protected $journal_entry_service;
@@ -36,6 +37,7 @@ class DiamondPurchaseService
         $this->model_diamond_purchase_detail = new Repository(new DiamondPurchaseDetail);
         $this->model_journal_entry = new Repository(new JournalEntry);
         $this->model_supplier_payment = new Repository(new SupplierPayment);
+        $this->model_diamond_transaction = new Repository(new DiamondTransaction);
 
         $this->common_service = new CommonService();
         $this->journal_entry_service = new JournalEntryService();
@@ -319,6 +321,12 @@ class DiamondPurchaseService
             $journal_entry->is_deleted = 1;
             $journal_entry->deletedby_id = Auth::user()->id;
             $journal_entry->update();
+
+            // transaction delete
+            $this->model_diamond_transaction->getModel()::where('diamond_purchase_id',$diamond_purchase_id)
+            ->where('type',0)
+            ->where('is_deleted',0)
+            ->update(['is_deleted'=>1,'deletedby_id'=>Auth::user()->id]);
 
             if ($diamond_purchase->paid_jv_id != null) {
                 // Journal entry delete

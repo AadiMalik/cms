@@ -108,6 +108,12 @@
                                 class="item-name">Transaction Logs</span></a></li>
                     @endcan
 
+                    @can('diamond_stock_access')
+                    <li class="item-name"><a class="{{ Request::is('diamond-stock') ? 'sidebar_active' : '' }}"
+                            href="{{ url('diamond-stock') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Diamond Stock</span></a></li>
+                    @endcan
+
                 </ul>
             </li>
             @endcan

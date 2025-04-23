@@ -9,6 +9,7 @@ use App\Http\Controllers\DiamondClarityController;
 use App\Http\Controllers\DiamondColorController;
 use App\Http\Controllers\DiamondCutController;
 use App\Http\Controllers\DiamondPurchaseController;
+use App\Http\Controllers\DiamondStockController;
 use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\FinishProductController;
@@ -775,6 +776,12 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // Diamond Stock
+    Route::group(['prefix' => 'diamond-stock'], function () {
+        Route::get('/', [DiamondStockController::class, 'index']);
+        Route::post('data', [DiamondStockController::class, 'getData'])->name('diamond-stock.data');
     });
 
     // Company Setting

@@ -10,6 +10,8 @@ class DiamondTransaction extends Model
     use HasFactory;
     protected $fillable = [
         'id',
+        'type',
+        'date',
         'diamond_purchase_id',
         'diamond_sale_id',
         'diamond_type_id',
@@ -59,6 +61,11 @@ class DiamondTransaction extends Model
     public function diamond_clarity()
     {
         return $this->belongsTo(DiamondClarity::class, 'diamond_clarity_id');
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
 
     public function created_by()
