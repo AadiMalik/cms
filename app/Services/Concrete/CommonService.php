@@ -3,6 +3,7 @@
 namespace App\Services\Concrete;
 
 use App\Models\DiamondPurchase;
+use App\Models\DiamondSale;
 use App\Models\FinishProduct;
 use App\Models\GoldImpurityPurchase;
 use App\Models\JobPurchase;
@@ -160,6 +161,32 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "OSL-" . date('dmY') . "-" . $mystring;
+      }
+
+      // Diamond sale no
+      public function generateDiamondSaleNo()
+      {
+            $diamond_sale = DiamondSale::orderby('id', 'desc')->first();
+
+            if (!$diamond_sale) {
+                  return "DSL-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $diamond_sale->diamond_sale_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "DSL-" . date('dmY') . "-" . $mystring;
       }
 
       public function generateFinishProductTagNo($prefix)

@@ -9,6 +9,7 @@ use App\Http\Controllers\DiamondClarityController;
 use App\Http\Controllers\DiamondColorController;
 use App\Http\Controllers\DiamondCutController;
 use App\Http\Controllers\DiamondPurchaseController;
+use App\Http\Controllers\DiamondSaleController;
 use App\Http\Controllers\DiamondStockController;
 use App\Http\Controllers\DiamondTypeController;
 use App\Http\Controllers\EmployeeController;
@@ -700,6 +701,29 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/other_sale.js', function () {
             $path = resource_path('views/other_sale/js/other_sale.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Diamond Sale
+    Route::group(['prefix' => 'diamond-sale'], function () {
+        Route::get('/', [DiamondSaleController::class, 'index']);
+        Route::get('create', [DiamondSaleController::class, 'create']);
+        Route::post('data', [DiamondSaleController::class, 'getData'])->name('diamond-sale.data');
+        Route::post('store', [DiamondSaleController::class, 'store']);
+        Route::get('print/{id}', [DiamondSaleController::class, 'print']);
+        Route::get('destroy/{id}', [DiamondSaleController::class, 'destroy']);
+        Route::get('status/{id}', [DiamondSaleController::class, 'status']);
+        Route::post('post', [DiamondSaleController::class, 'post']);
+        Route::get('unpost/{id}', [DiamondSaleController::class, 'unpost']);
+
+        Route::get('/js/diamond_sale.js', function () {
+            $path = resource_path('views/diamond_sale/js/diamond_sale.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

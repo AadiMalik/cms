@@ -245,7 +245,7 @@
             </li>
             @endcan
             @can('sales_access')
-            <li class="Ul_li--hover {{ (Request::is('sale*') || Request::is('other-sale*') || Request::is('sale-order*') )? 'mm-active' : '' }}">
+            <li class="Ul_li--hover {{ (Request::is('sale*') || Request::is('other-sale*') || Request::is('diamond-sale*') || Request::is('sale-order*') )? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Sales</span></a>
                 <ul class="mm-collapse">
@@ -263,6 +263,11 @@
                     <li class="item-name"><a class="{{ Request::is('sale-order*') ? 'sidebar_active' : '' }}"
                             href="{{ url('sale-order') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Sale Order</span></a></li>
+                    @endcan
+                    @can('diamond_sale_access')
+                    <li class="item-name"><a class="{{ Request::is('diamond-sale*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('diamond-sale') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Diamond Sale</span></a></li>
                     @endcan
                 </ul>
             </li>
