@@ -50,7 +50,7 @@ class SupplierPaymentService
             ->addColumn('currency', function ($item) {
                 if ($item->currency == 0) {
                     $name = 'PKR';
-                } elseif ($item->currency == 0) {
+                } elseif ($item->currency == 1) {
                     $name = 'AU';
                 } else {
                     $name = 'Dollar';
@@ -129,7 +129,7 @@ class SupplierPaymentService
             $Amount = str_replace(',', '', $obj['sub_total']);
             // Journal entry detail (Credit)
             $this->journal_entry_service->saveJVDetail(
-                0,
+                $obj['currency'],
                 $journal_entry->id, // journal entry id
                 'Supplier/Karigar Payment Credit From ' . $account->name, //explaination
                 $saved_obj->id, //bill no
@@ -143,7 +143,7 @@ class SupplierPaymentService
             );
             // Journal entry detail (Debit)
             $this->journal_entry_service->saveJVDetail(
-                0,
+                $obj['currency'],
                 $journal_entry->id, // journal entry id
                 'Supplier Payment Debit', //explaination
                 $saved_obj->id, //bill no
@@ -161,7 +161,7 @@ class SupplierPaymentService
                 $TaxAmount = str_replace(',', '', $obj['tax_amount']);
                 // Journal entry detail (Credit)
                 $this->journal_entry_service->saveJVDetail(
-                    0,
+                    $obj['currency'],
                     $journal_entry->id, // journal entry id
                     'Supplier Tax Credit ', //explaination
                     $saved_obj->id, //bill no
@@ -176,7 +176,7 @@ class SupplierPaymentService
 
                 // Journal entry detail (Debit)
                 $this->journal_entry_service->saveJVDetail(
-                    0,
+                    $obj['currency'],
                     $journal_entry->id, // journal entry id
                     'Supplier Tax Debit ', //explaination
                     $saved_obj->id, //bill no
