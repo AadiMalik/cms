@@ -5,9 +5,12 @@ namespace App\Services\Concrete;
 use App\Models\Account;
 use App\Models\Journal;
 use App\Models\JournalEntry;
+use App\Models\OtherProduct;
 use App\Models\Supplier;
 use App\Models\SupplierPayment;
+use App\Models\Transaction;
 use App\Repository\Repository;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -189,6 +192,25 @@ class SupplierPaymentService
                     Auth::User()->id //created by id
                 );
             }
+
+            if ($saved_obj->is_consumed == 1 && $saved_obj->other_product_id != null) {
+                $gold_rate = GoldRate();
+                $obj = [
+                    "supplier_payment_id" => $saved_obj->id,
+                    "date" => Carbon::now(),
+                    "bill_no" => $saved_obj->id,
+                    "warehouse_id" => $saved_obj->warehouse_id,
+                    "other_product_id" => $saved_obj->other_product_id,
+                    "unit_price" => $gold_rate->rate_gram??0,
+                    "qty" => $Amount ?? 0,
+                    "createdby_id" => Auth::User()->id,
+                    "type" => 1,
+                    "created_at" => Carbon::now(),
+                    "updated_at" => Carbon::now()
+                ];
+
+                $transation = Transaction::create($obj);
+            }
             $vendor_payment_update = SupplierPayment::find($saved_obj->id);
             $vendor_payment_update->jv_id = $journal_entry_id;
             $vendor_payment_update->update();
@@ -203,7 +225,7 @@ class SupplierPaymentService
         return $saved_obj;
     }
 
-    public function saveSupplierPaymentWithoutTax($supplier_id,$currency,$account_id,$payment_date,$cheque_ref,$amount,$jv_id)
+    public function saveSupplierPaymentWithoutTax($supplier_id, $currency, $account_id, $payment_date, $cheque_ref, $amount, $jv_id)
     {
 
         $obj = [
@@ -211,13 +233,13 @@ class SupplierPaymentService
             'currency' => $currency,
             'account_id' => $account_id ?? null,
             'payment_date' => $payment_date,
-            'cheque_ref' => $cheque_ref??null,
+            'cheque_ref' => $cheque_ref ?? null,
             'sub_total' => $amount,
             'total' => $amount,
             'tax' => 0.000,
             'tax_amount' => 0.000,
             'tax_account_id' => null,
-            'jv_id'=>$jv_id->id
+            'jv_id' => $jv_id->id
         ];
 
         $saved_obj = $this->model_supplier_payment->create($obj);

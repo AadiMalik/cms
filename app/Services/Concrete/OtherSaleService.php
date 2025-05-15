@@ -9,6 +9,8 @@ use App\Models\JournalEntry;
 use App\Repository\Repository;
 use App\Models\OtherSale;
 use App\Models\OtherSaleDetail;
+use App\Models\Transaction;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -142,13 +144,12 @@ class OtherSaleService
                 $otherSaleDetailObj = [
                     "other_sale_id" => $obj['id'],
                     "other_product_id" => $item->other_product_id ?? '',
-                    "qty" => $item->qty??0.000,
-                    "unit_price" => $item->unit_price??0.000,
+                    "qty" => $item->qty ?? 0.000,
+                    "unit_price" => $item->unit_price ?? 0.000,
                     "total_amount" => $item->total_amount,
                     "createdby_id" => Auth::user()->id
                 ];
                 $sale_detail = $this->model_other_sale_detail->create($otherSaleDetailObj);
-
             }
 
             DB::commit();
@@ -161,7 +162,7 @@ class OtherSaleService
 
     public function getById($id)
     {
-        return $this->model_other_sale->getModel()::with(['customer_name','other_product'])->find($id);
+        return $this->model_other_sale->getModel()::with(['customer_name', 'other_product'])->find($id);
     }
 
     public function otherSaleDetail($other_sale_id)
@@ -178,7 +179,7 @@ class OtherSaleService
                 "code" => $item->other_product->code ?? '',
                 "product" => $item->other_product->name ?? '',
                 "unit" => $item->other_product->other_product_unit->name ?? '',
-                "unit_price" => $item->unit_price??0,
+                "unit_price" => $item->unit_price ?? 0,
                 "qty" => $item->qty,
                 "total_amount" => $item->total_amount
             ];
@@ -219,6 +220,15 @@ class OtherSaleService
                 $journal_entry->save();
 
                 $journal_entry_id = $journal_entry->id ?? null;
+
+                //==============  Create Sale Inventory Transaction
+
+                $this->createOtherSaleInventoryTransaction(
+                    $other_sale->OtherSaleDetail,
+                    $other_sale->other_sale_date,
+                    $other_sale->id,
+                    $other_sale->warehouse_id
+                );
 
                 // cash amount
                 if ($other_sale->cash_amount > 0) {
@@ -377,13 +387,38 @@ class OtherSaleService
         }
         return true;
     }
+    public function createOtherSaleInventoryTransaction($other_sale_detail, $other_sale_date, $bill_no, $warehouse_id)
+    {
+        foreach ($other_sale_detail as $index => $item) {
+
+            $obj = [
+                "other_sale_id" => $item->other_sale_id,
+                "date" => $other_sale_date ?? Carbon::now(),
+                "bill_no" => $bill_no,
+                "warehouse_id" => $warehouse_id,
+                "other_product_id" => $item->other_product_id,
+                "unit_price" => $item->unit_price ?? 0,
+                "qty" => $item->qty ?? 0,
+                "createdby_id" => Auth::User()->id,
+                "type" => 1,
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now()
+            ];
+
+            $transation = Transaction::create($obj);
+        }
+    }
     public function unpost($other_sale_id)
     {
         try {
             DB::beginTransaction();
 
             $other_sale = $this->model_other_sale->getModel()::find($other_sale_id);
-
+            // transaction delete
+            Transaction::where('other_sale_id', $other_sale_id)
+                ->where('type', 1)
+                ->where('is_deleted', 0)
+                ->update(['is_deleted' => 1, 'deletedby_id' => Auth::user()->id]);
             // Journal entry delete
             $journal_entry = $this->model_journal_entry->getModel()::find($other_sale->jv_id);
             $journal_entry->is_deleted = 1;
@@ -451,5 +486,4 @@ class OtherSaleService
 
         return false;
     }
-
 }

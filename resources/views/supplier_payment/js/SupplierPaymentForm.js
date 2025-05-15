@@ -43,6 +43,8 @@ $(function () {
     $("#account_id").removeAttr("disabled");
     $("#payment_date").removeAttr("disabled");
     $("#cheque_ref").removeAttr("disabled");
+    $("#other_product_id").removeAttr("disabled");
+    $("#warehouse_id").removeAttr("disabled");
     $("#sub_total").removeAttr("disabled");
     $("#tax").removeAttr("disabled");
     $("#tax_account_id").removeAttr("disabled");

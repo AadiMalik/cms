@@ -19,6 +19,9 @@ class SupplierPayment extends Model
         'tax_account_id',
         'sub_total',
         'currency',
+        'is_consumed',
+        'other_product_id',
+        'warehouse_id',
         'total',
         'jv_id',
         'created_at',
@@ -49,5 +52,14 @@ class SupplierPayment extends Model
     public function jv_name()
     {
         return $this->belongsTo(JournalEntry::class, 'jv_id');
+    }
+
+    public function other_product()
+    {
+        return $this->belongsTo(OtherProduct::class, 'other_product_id');
+    }
+    public function warehouse_name()
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
 }

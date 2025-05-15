@@ -16,9 +16,9 @@
                                 <select class="form-control" name="supplier_id" id="supplier_id" required style="width: 100%;">
                                     <option selected disabled>--Select supplier/karigar--</option>
                                     @if (isset($suppliers))
-                                        @foreach ($suppliers as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name ?? '' }} </option>
-                                        @endforeach
+                                    @foreach ($suppliers as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name ?? '' }} </option>
+                                    @endforeach
                                     @endif
                                 </select>
                             </div>
@@ -29,10 +29,10 @@
                                 <select class="form-control" name="account_id" id="account_id" style="width: 100%;">
                                     <option value="" selected disabled>--Select Account--</option>
                                     @if (isset($accounts))
-                                        @foreach ($accounts as $item)
-                                            <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($accounts as $item)
+                                    <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
+                                    </option>
+                                    @endforeach
                                     @endif
                                 </select>
                             </div>
@@ -96,10 +96,44 @@
                                 <select class="form-control" name="tax_account_id" id="tax_account_id" style="width: 100%;">
                                     <option selected disabled>--Select Account--</option>
                                     @if (isset($accounts))
-                                        @foreach ($accounts as $item)
-                                            <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($accounts as $item)
+                                    <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
+                                    </option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: none;">
+                            <div class="form-group mt-4">
+                                <input type="checkbox" name="is_consumed" id="is_consumed">
+                                <label for="tax_amount">Is Consumed:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: none;">
+                            <label for="select_branch">Product:<span style="color:red;">*</span></label>
+                            <div class="form-group">
+                                <select class="form-control" name="other_product_id" id="other_product_id" style="width: 100%;" required>
+                                    <option selected disabled>--Select Product--</option>
+                                    @if (isset($other_products))
+                                    @foreach ($other_products as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}
+                                    </option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="display: none;">
+                            <label for="select_branch">Warehouse:<span style="color:red;">*</span></label>
+                            <div class="form-group">
+                                <select class="form-control" name="warehouse_id" id="warehouse_id" style="width: 100%;" required>
+                                    <option selected disabled>--Select Warehouse--</option>
+                                    @if (isset($warehouses))
+                                    @foreach ($warehouses as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name }}
+                                    </option>
+                                    @endforeach
                                     @endif
                                 </select>
                             </div>

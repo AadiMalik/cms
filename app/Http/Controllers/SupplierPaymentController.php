@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Services\Concrete\AccountService;
+use App\Services\Concrete\OtherProductService;
 use App\Services\Concrete\SupplierPaymentService;
 use App\Services\Concrete\SupplierService;
+use App\Services\Concrete\WarehouseService;
 use App\Traits\JsonResponse;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,15 +19,21 @@ class SupplierPaymentController extends Controller
     protected $supplier_service;
     protected $supplier_payment_service;
     protected $account_service;
+    protected $other_product_service;
+    protected $warehouse_service;
 
     public function __construct(
         SupplierService  $supplier_service,
         SupplierPaymentService $supplier_payment_service,
-        AccountService $account_service
+        AccountService $account_service,
+        OtherProductService $other_product_service,
+        WarehouseService $warehouse_service
     ) {
         $this->supplier_service = $supplier_service;
         $this->supplier_payment_service = $supplier_payment_service;
         $this->account_service = $account_service;
+        $this->other_product_service = $other_product_service;
+        $this->warehouse_service = $warehouse_service;
     }
     /**
      * Display a listing of the resource.
@@ -39,7 +47,9 @@ class SupplierPaymentController extends Controller
         try {
             $suppliers = $this->supplier_service->getAllActiveSupplier();
             $accounts = $this->account_service->getAllActiveChild();
-            return view('supplier_payment.index', compact('accounts', 'suppliers'));
+            $other_products = $this->other_product_service->getAllActiveOtherProduct();
+            $warehouses = $this->warehouse_service->getAll();
+            return view('supplier_payment.index', compact('accounts', 'suppliers','other_products','warehouses'));
         } catch (Exception $e) {
             return redirect('home');
         }
@@ -74,7 +84,10 @@ class SupplierPaymentController extends Controller
                 'total' => $request->total,
                 'tax' => $request->tax,
                 'tax_amount' => $request->tax_amount,
-                'tax_account_id' => $request->tax_account_id ?? null
+                'tax_account_id' => $request->tax_account_id ?? null,
+                'is_consumed' => isset($request->is_consumed)?1:0,
+                'other_product_id' => $request->other_product_id ?? null,
+                'warehouse_id' => $request->warehouse_id ?? null
             ];
             $supplier_payment = $this->supplier_payment_service->saveSupplierPayment($obj, $request->id);
             return $this->success(

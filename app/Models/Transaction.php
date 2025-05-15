@@ -16,6 +16,7 @@ class Transaction extends Model
         'qty',
         'unit_price',
         'other_purchase_id',
+        'supplier_payment_id',
         'other_sale_id',
         'stock_taking_id',
         'stock_taking_link_id',
@@ -44,6 +45,11 @@ class Transaction extends Model
     public function other_purchase()
     {
         return $this->belongsTo(OtherPurchase::class, 'other_purchase_id');
+    }
+
+    public function supplier_payment()
+    {
+        return $this->belongsTo(SupplierPayment::class, 'supplier_payment_id');
     }
 
     public function stock_taking()
