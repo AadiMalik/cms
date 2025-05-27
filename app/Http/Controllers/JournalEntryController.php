@@ -52,11 +52,11 @@ class JournalEntryController extends Controller
     public function getData(Request $request)
     {
         abort_if(Gate::denies('journal_entries_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        try {
+        // try {
             return $this->journal_entry_service->getJournalEntrySource($request->all());
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
 
     public function store(Request $request)

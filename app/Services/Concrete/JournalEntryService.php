@@ -38,10 +38,17 @@ class JournalEntryService
             if ($obj['customer_id'] != '' && $obj['customer_id'] != null) {
                   $wh[] = ['supplier_id', $obj['customer_id']];
             }
-            $model = $this->model_journal_entry->getModel()::with('journal_name')
+
+            $model = $this->model_journal_entry->getModel()::with(['journal_name', 'journal_entry_detail'])
                   ->where($wh)
                   ->where('date_post', '>=', $obj['from_date'] . " 00:00:00")->where('date_post', '<=', $obj['to_date'] . " 23:59:59")
                   ->orderBy('date_post', 'DESC');
+
+            if ($obj['currency'] != '' && $obj['currency'] != null) {
+                  $model->whereHas('journal_entry_detail', function ($query) use ($obj) {
+                        $query->where('currency', $obj['currency']);
+                  });
+            }
             $data = DataTables::of($model)
                   ->addColumn('journal', function ($item) {
                         return $item->journal_name->name ?? '';
@@ -52,6 +59,16 @@ class JournalEntryService
                   ->addColumn('credit', function ($item) {
                         return  number_format(JournalEntryDetail::where("journal_entry_id", $item->id)->sum("credit"), 2);
                   })
+                  ->addColumn('currency', function ($item) {
+                        $currency = $item->journal_entry_detail->pluck('currency')->first();
+                        if($currency==0){
+                              return 'PKR';
+                        }elseif($currency==1){
+                              return 'Gold (AU)';
+                        }else{
+                              return 'Dollar ($)';
+                        }
+                    })
                   ->addColumn('action', function ($item) {
                         $action_column = '';
                         $edit_column    = "<a class='text-warning mr-2' href='journal-entries/edit/" . $item->id . "' data-toggle='tooltip'><i title='Edit' class='nav-icon mr-2 fa fa-edit'></i>Edit</a>";
@@ -67,7 +84,7 @@ class JournalEntryService
 
                         return $action_column;
                   })
-                  ->rawColumns(['journal', 'debit', 'credit', 'action'])
+                  ->rawColumns(['journal', 'debit', 'credit','currency', 'action'])
                   ->make(true);
             return $data;
       }
@@ -268,7 +285,7 @@ class JournalEntryService
 
             return $data;
       }
-      public function getCustomerBalanceByAccountId($customer_id,$account_id,$currency)
+      public function getCustomerBalanceByAccountId($customer_id, $account_id, $currency)
       {
             $balance = $this->model_journal_entry->getModel()::where('journal_entries.date_post', '<=', Carbon::now()->format('Y-m-d'))
                   ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
@@ -281,7 +298,7 @@ class JournalEntryService
 
             return $balance;
       }
-      public function getSupplierBalanceByAccountId($supplier_id,$account_id,$currency)
+      public function getSupplierBalanceByAccountId($supplier_id, $account_id, $currency)
       {
             $balance = $this->model_journal_entry->getModel()::where('journal_entries.date_post', '<=', Carbon::now()->format('Y-m-d'))
                   ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
@@ -315,7 +332,7 @@ class JournalEntryService
                   ->where('journal_entry_details.account_id', $sale_order->customer_name->account_id)
                   ->where('journal_entry_details.currency', 0)
                   ->where('journal_entries.is_deleted', 0)
-                  ->select('journal_entry_details.credit',DB::raw("DATE_FORMAT(journal_entries.date_post, '%d %b %Y') AS date_post"))->get();
+                  ->select('journal_entry_details.credit', DB::raw("DATE_FORMAT(journal_entries.date_post, '%d %b %Y') AS date_post"))->get();
 
             return $payments;
       }

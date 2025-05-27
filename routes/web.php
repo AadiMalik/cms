@@ -532,6 +532,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('location-update', [FinishProductController::class, 'update']);
         Route::get('get-by-date', [FinishProductController::class, 'getByDate']);
         Route::get('print', [FinishProductController::class, 'print']);
+        Route::post('change-picture', [FinishProductController::class, 'updatePicture']);
 
 
         Route::get('get-bead-by-id/{id}', [FinishProductController::class, 'beadByFinishProductId']);

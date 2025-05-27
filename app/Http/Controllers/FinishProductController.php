@@ -311,6 +311,35 @@ class FinishProductController extends Controller
             return $this->error($e->getMessage());
         }
     }
+    public function updatePicture(Request $request)
+    {
+        abort_if(Gate::denies('tagging_product_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'picture'           => 'required|image|mimes:jpeg,png,jpg,gif'
+        ]);
+
+        if ($validator->fails()) {
+
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        try {
+            $obj = $request->all();
+            $filenames = null;
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $filename = time() . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('pictures'), $filename);
+                $filenames = 'pictures/' . $filename;
+                $obj['picture'] = $filenames;
+            }
+            $finish_product = $this->finish_product_service->updatePicture($obj);
+            if ($finish_product)
+                return redirect()->back();
+        } catch (Exception $e) {
+            return redirect()->back();
+        }
+    }
 
     public function getByDate(Request $request)
     {

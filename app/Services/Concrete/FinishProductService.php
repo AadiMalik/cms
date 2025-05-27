@@ -427,6 +427,13 @@ class FinishProductService
         return true;
     }
 
+    public function updatePicture($obj){
+        $finish_product = $this->model_finish_product->getModel()::find($obj['id']);
+        $finish_product->picture = $obj['picture'];
+        $finish_product->update();
+        return true;
+    }
+
     public function getFinishProductByDate($obj)
     {
         return $this->model_finish_product->getModel()::where('is_deleted', 0)

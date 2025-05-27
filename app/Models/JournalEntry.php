@@ -29,6 +29,10 @@ class JournalEntry extends Model
         'updated_at',
         'created_at'
     ];
+    public function journal_entry_detail()
+    {
+        return $this->hasMany(JournalEntryDetail::class, 'journal_entry_id');
+    }
     public function journal_name()
     {
         return $this->belongsTo(Journal::class, 'journal_id');
