@@ -14,7 +14,7 @@ function success(message) {
 }
 
 $("#DiamondCaratButton").click(function () {
-    if ($("#ratti_kaat_detail_id").val() == '' && $("#job_purchase_detail_id").val()=='') {
+    if ($("#ratti_kaat_detail_id").val() == '' && $("#job_purchase_detail_id").val() == '') {
         error("Purchase is not selected!");
         return false;
     }
@@ -26,7 +26,7 @@ $("#carat").on("keyup", function (event) {
     var carat = $("#carat").val();
     var carat_rate = $("#carat_rate").val();
     var cal = carat * carat_rate;
-    var dollars= cal/dollar_rate;
+    var dollars = cal / dollar_rate;
     $("#diamond_total").val(cal.toFixed(3));
     $("#diamond_total_dollar").val(dollars.toFixed(3));
 });
@@ -35,7 +35,7 @@ $("#carat_rate").on("keyup", function (event) {
     var carat = $("#carat").val();
     var carat_rate = $("#carat_rate").val();
     var cal = carat * carat_rate;
-    var dollars= cal/dollar_rate;
+    var dollars = cal / dollar_rate;
     $("#diamond_total").val(cal.toFixed(3));
     $("#diamond_total_dollar").val(dollars.toFixed(3));
 });
@@ -84,7 +84,7 @@ function addDiamond() {
     }
     var check = true;
     $.each(diamondsData, function (e, val) {
-        var valuetype=val.type;
+        var valuetype = val.type;
         if (valuetype.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat) == type.replace(/\s+/g, '') + Math.floor(diamonds) + Math.floor(carat)) {
             error("This Diamond is already added !");
             check = false;
@@ -113,10 +113,17 @@ function addDiamond() {
     });
     $.each(diamondsData, function (e, val) {
         var type = val.type;
-        
+
         rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
-          <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+          <td style="text-align: right;" ><input type="number" class="form-control form-control-sm carat-rate" 
+         value="${val.carat_rate}" 
+         data-diamonds="${val.diamonds}" 
+         data-carat="${val.carat}" 
+         data-rowid="${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" 
+         style="width: 100px; text-align: right;" /></td><td style="text-align: right;" class="total-amount" id="total-${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}">
+  ${val.total_amount}
+</td>
           <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
         total += val.total_amount * 1;
         total_weight += val.carat * 0.2;
@@ -124,7 +131,7 @@ function addDiamond() {
 
     $("#total_diamond_price").val(total.toFixed(3));
     $("#diamond_weight").val(total_weight.toFixed(3));
-    
+
     TotalAmount();
     netWeight();
     success("diamonds Added Successfully!");
@@ -149,11 +156,18 @@ function DiamondsByPurchaseDetail(ratti_kaat_detail_id) {
             var total = 0;
             var total_weight = 0;
             $.each(diamondsData, function (e, val) {
-                
+
                 var type = val.type;
                 rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
-          <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+          <td style="text-align: right;" ><input type="number" class="form-control form-control-sm carat-rate" 
+         value="${val.carat_rate}" 
+         data-diamonds="${val.diamonds}" 
+         data-carat="${val.carat}" 
+         data-rowid="${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" 
+         style="width: 100px; text-align: right;" /></td><td style="text-align: right;" class="total-amount" id="total-${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}">
+  ${val.total_amount}
+</td>
           <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;
                 total_weight += val.carat * 0.2;
@@ -167,6 +181,29 @@ function DiamondsByPurchaseDetail(ratti_kaat_detail_id) {
         },
     });
 }
+$(document).off('input', '.carat-rate').on('input', '.carat-rate', function () {
+    let rate = parseFloat($(this).val()) || 0;
+    let carat = parseFloat($(this).data('carat')) || 0;
+    let totalAmount = rate * carat;
+
+    // ✅ Find the same row and update the Total(PKR) cell
+    let $row = $(this).closest('tr');
+    $row.find('.total-amount').text(totalAmount.toFixed(3));
+
+    // ✅ Recalculate overall total from all rows
+    let total = 0;
+    $(".carat-rate").each(function () {
+        let r = parseFloat($(this).val()) || 0;
+        let c = parseFloat($(this).data('carat')) || 0;
+        total += r * c;
+    });
+
+    $("#total_diamond_price").val(total.toFixed(3));
+    TotalAmount();
+});
+
+
+
 function DiamondsByJobPurchaseDetail(job_purchase_detail_id, product_id) {
     $.ajax({
         type: "GET",
@@ -184,11 +221,18 @@ function DiamondsByJobPurchaseDetail(job_purchase_detail_id, product_id) {
             var total = 0;
             var total_weight = 0;
             $.each(diamondsData, function (e, val) {
-                
+
                 var type = val.type;
                 rows += `<tr id=${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}><td>${val.diamonds}</td><td>${val.type}</td>
                 <td >${val.cut}</td><td >${val.color}</td><td >${val.clarity}</td><td style="text-align: right;" >${val.carat}</td>
-          <td style="text-align: right;" >${val.carat_rate}</td><td style="text-align: right;" >${val.total_amount}</td>
+          <td style="text-align: right;" ><input type="number" class="form-control form-control-sm carat-rate" 
+         value="${val.carat_rate}" 
+         data-diamonds="${val.diamonds}" 
+         data-carat="${val.carat}" 
+         data-rowid="${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" 
+         style="width: 100px; text-align: right;" /></td><td style="text-align: right;" class="total-amount" id="total-${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}">
+  ${val.total_amount}
+</td>
           <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;
                 total_weight += val.carat * 0.2;
@@ -203,7 +247,7 @@ function DiamondsByJobPurchaseDetail(job_purchase_detail_id, product_id) {
     });
 }
 function DiamondRemove(id) {
-    
+
     console.log(id);
     Swal.fire({
         title: "Are you sure?",
@@ -218,11 +262,11 @@ function DiamondRemove(id) {
         var total = 0;
         var total_weight = 0;
         $.each(diamondsData, function (diamond_sr, val) {
-            
+
             var type = val.type;
             if (type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat) == id) {
                 total = $("#total_diamond_price").val() * 1 - val.total_amount * 1;
-                total_weight = $("#diamond_weight").val() * 0.2 - val.carat * 1;
+                total_weight = $("#diamond_weight").val() - val.carat * 0.2;
                 $("#total_diamond_price").val(total > 0 ? total : 0);
                 $("#diamond_weight").val(total_weight > 0 ? total_weight : 0);
                 $("#" + id).hide();
