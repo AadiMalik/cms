@@ -346,7 +346,9 @@ $(row).css("background-color", "Pink");
             success: function(data) {
                 console.log(data);
                 var data = data.Data;
-                $("#total_amount").val(data.total);
+                var total_amount=0;
+                total_amount = data.total - data.total_received;
+                $("#total_amount").val(total_amount);
                 $("#preloader").hide();
             },
         });
@@ -438,15 +440,15 @@ $(row).css("background-color", "Pink");
             return false;
         }
 
-        if (
-            $("#balance").val() != 0 &&
-            $("#total_amount").val() != $("#total_paid").val()
-        ) {
-            error("Paid Amount not equal to total amount!");
-            $("#preloader").hide();
-            $("#paymentSave").show();
-            return false;
-        }
+        // if (
+        //     $("#balance").val() != 0 &&
+        //     $("#total_amount").val() != $("#total_paid").val()
+        // ) {
+        //     error("Paid Amount not equal to total amount!");
+        //     $("#preloader").hide();
+        //     $("#paymentSave").show();
+        //     return false;
+        // }
 
         // Create FormData object for Ajax
         var formData = new FormData();
