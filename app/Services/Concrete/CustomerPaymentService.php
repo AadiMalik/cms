@@ -47,7 +47,7 @@ class CustomerPaymentService
             ->addColumn('currency', function ($item) {
                 if ($item->currency == 0) {
                     $name = 'PKR';
-                } elseif ($item->currency == 0) {
+                } elseif ($item->currency == 1) {
                     $name = 'AU';
                 } else {
                     $name = 'Dollar';
@@ -97,7 +97,7 @@ class CustomerPaymentService
             $customer = Customer::find($obj['customer_id']);
             $customer_account = Account::find($customer->account_id);
             $account = Account::find($obj['account_id']);
-            $journal_type = ($account->account_id == 1) ? config('enum.CPV') : config('enum.BPV');
+            $journal_type = ($account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
             $Amount = str_replace(',', '', $obj['sub_total']);
             $obj['createdby_id'] = Auth::user()->id;
             $saved_obj = $this->model_customer_payment->create($obj);
@@ -128,7 +128,7 @@ class CustomerPaymentService
             $Amount = str_replace(',', '', $obj['sub_total']);
             // Journal entry detail (Credit)
             $this->journal_entry_service->saveJVDetail(
-                0,
+                $obj['currency'],
                 $journal_entry->id, // journal entry id
                 'Customer Payment Credit To ' . $customer_account->name, //explaination
                 $saved_obj->id, //bill no
@@ -142,7 +142,7 @@ class CustomerPaymentService
             );
             // Journal entry detail (Debit)
             $this->journal_entry_service->saveJVDetail(
-                0,
+                $obj['currency'],
                 $journal_entry->id, // journal entry id
                 'Customer Payment Debit To '.$account->name, //explaination
                 $saved_obj->id, //bill no
@@ -160,7 +160,7 @@ class CustomerPaymentService
                 $TaxAmount = str_replace(',', '', $obj['tax_amount']);
                 // Journal entry detail (Credit)
                 $this->journal_entry_service->saveJVDetail(
-                    0,
+                    $obj['currency'],
                     $journal_entry->id, // journal entry id
                     'Customer Tax Credit ', //explaination
                     $saved_obj->id, //bill no
@@ -175,7 +175,7 @@ class CustomerPaymentService
 
                 // Journal entry detail (Debit)
                 $this->journal_entry_service->saveJVDetail(
-                    0,
+                    $obj['currency'],
                     $journal_entry->id, // journal entry id
                     'Customer Tax Debit ', //explaination
                     $saved_obj->id, //bill no
