@@ -3,6 +3,7 @@
 namespace App\Services\Concrete;
 
 use App\Models\Account;
+use App\Models\CompanySetting;
 use App\Models\Journal;
 use App\Models\JournalEntry;
 use App\Models\Customer;
@@ -93,10 +94,13 @@ class CustomerPaymentService
     {
         try {
             DB::beginTransaction();
+
             $journal_entry_id = null;
             $customer = Customer::find($obj['customer_id']);
             $customer_account = Account::find($customer->account_id);
             $account = Account::find($obj['account_id']);
+            $company_setting = CompanySetting::find(1);
+            $convert_currency_account = $company_setting->convert_currency_account_id??'';
             $journal_type = ($account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
             $Amount = str_replace(',', '', $obj['sub_total']);
             $obj['createdby_id'] = Auth::user()->id;
@@ -125,7 +129,6 @@ class CustomerPaymentService
 
 
             // Journal Entry Detail
-            $Amount = str_replace(',', '', $obj['sub_total']);
             // Journal entry detail (Credit)
             $this->journal_entry_service->saveJVDetail(
                 $obj['currency'],
@@ -155,39 +158,39 @@ class CustomerPaymentService
                 Auth::User()->id //created by id
             );
 
-            if ($obj['tax_amount'] > 0) {
-                $tax_account = Account::find($obj['tax_account_id']);
-                $TaxAmount = str_replace(',', '', $obj['tax_amount']);
-                // Journal entry detail (Credit)
-                $this->journal_entry_service->saveJVDetail(
-                    $obj['currency'],
-                    $journal_entry->id, // journal entry id
-                    'Customer Tax Credit ', //explaination
-                    $saved_obj->id, //bill no
-                    0, // check no or 0
-                    $obj['payment_date'], //check date
-                    0, // is credit flag 0 for credit, 1 for debit
-                    $TaxAmount, //amount
-                    $account->id, // account id
-                    $account->code, // account code
-                    Auth::User()->id //created by id
-                );
+            // if ($obj['tax_amount'] > 0) {
+            //     $tax_account = Account::find($obj['tax_account_id']);
+            //     $TaxAmount = str_replace(',', '', $obj['tax_amount']);
+            //     // Journal entry detail (Credit)
+            //     $this->journal_entry_service->saveJVDetail(
+            //         $obj['currency'],
+            //         $journal_entry->id, // journal entry id
+            //         'Customer Tax Credit ', //explaination
+            //         $saved_obj->id, //bill no
+            //         0, // check no or 0
+            //         $obj['payment_date'], //check date
+            //         0, // is credit flag 0 for credit, 1 for debit
+            //         $TaxAmount, //amount
+            //         $account->id, // account id
+            //         $account->code, // account code
+            //         Auth::User()->id //created by id
+            //     );
 
-                // Journal entry detail (Debit)
-                $this->journal_entry_service->saveJVDetail(
-                    $obj['currency'],
-                    $journal_entry->id, // journal entry id
-                    'Customer Tax Debit ', //explaination
-                    $saved_obj->id, //bill no
-                    0, // check no or 0
-                    $obj['payment_date'], //check date
-                    1, // is credit flag 0 for credit, 1 for debit
-                    $TaxAmount, //amount
-                    $tax_account->id, // account id
-                    $tax_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-            }
+            //     // Journal entry detail (Debit)
+            //     $this->journal_entry_service->saveJVDetail(
+            //         $obj['currency'],
+            //         $journal_entry->id, // journal entry id
+            //         'Customer Tax Debit ', //explaination
+            //         $saved_obj->id, //bill no
+            //         0, // check no or 0
+            //         $obj['payment_date'], //check date
+            //         1, // is credit flag 0 for credit, 1 for debit
+            //         $TaxAmount, //amount
+            //         $tax_account->id, // account id
+            //         $tax_account->code, // account code
+            //         Auth::User()->id //created by id
+            //     );
+            // }
             $vendor_payment_update = CustomerPayment::find($saved_obj->id);
             $vendor_payment_update->jv_id = $journal_entry_id;
             $vendor_payment_update->update();

@@ -76,8 +76,9 @@
                                             <th>Customer</th>
                                             <th>Date</th>
                                             <th>Currency</th>
-                                            <th>Tax(%)</th>
-                                            <th>Tax Amount</th>
+                                            <th>Type</th>
+                                            <!-- <th>Tax(%)</th>
+                                            <th>Tax Amount</th> -->
                                             <th>Sub Total</th>
                                             <th>Total</th>
                                             <th>Action</th>
@@ -115,8 +116,7 @@
         {data: 'customer' , name: 'customer'},
         {data: 'date' , name: 'date'},
         {data: 'currency' , name: 'currency'},
-        {data: 'tax' , name: 'tax'},
-        {data: 'tax_amount' , name: 'tax_amount'},
+        {data: 'type' , name: 'type'},
         {data: 'sub_total' , name: 'sub_total'},
         {data: 'total' , name: 'total'},
         {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",

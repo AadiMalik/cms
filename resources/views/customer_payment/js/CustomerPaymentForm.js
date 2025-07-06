@@ -1,37 +1,37 @@
 import {
-    ajaxPostRequest,
-    ajaxGetRequest,
+  ajaxPostRequest,
+  ajaxGetRequest,
 } from "../../../../../js/common-methods/http-requests.js";
 import {
-    errorMessage,
-    successMessage,
+  errorMessage,
+  successMessage,
 } from "../../../../../js/common-methods/toasters.js";
 
 $(document).ready(function () {
-    $("#customer").select2();
-    $("#account_id").select2();
-    $("#tax_account_id").select2();
-    $("#customer_id").select2();
+  $("#customer").select2();
+  $("#account_id").select2();
+  $("#tax_account_id").select2();
+  $("#customer_id").select2();
 });
 
 $("body").on("change", "#tax,#sub_total", function (event) {
-    var amount = $("#sub_total").val();
-    var taxPrecent = $("#tax").val();
-    var sub = 0;
-    var tax_amount = 0;
-    var taxRate = 0;
-    var tax = taxPrecent / 100;
-    if (tax > 0) {
-        taxRate = tax;
-        tax_amount = amount * taxRate;
-        sub = amount - tax_amount;
-    } else {
-        sub = amount;
-    }
+  var amount = $("#sub_total").val();
+  var taxPrecent = $("#tax").val();
+  var sub = 0;
+  var tax_amount = 0;
+  var taxRate = 0;
+  var tax = taxPrecent / 100;
+  if (tax > 0) {
+    taxRate = tax;
+    tax_amount = amount * taxRate;
+    sub = amount - tax_amount;
+  } else {
+    sub = amount;
+  }
 
-    $("#sub_total").val(sub);
-    $("#total").val(amount);
-    $("#tax_amount").val(tax_amount);
+  $("#sub_total").val(sub);
+  $("#total").val(amount);
+  $("#tax_amount").val(tax_amount);
 });
 $(function () {
   // Click to Button
@@ -41,6 +41,9 @@ $(function () {
     $("#saveBtn").show();
     $("#customer_id").removeAttr("disabled");
     $("#account_id").removeAttr("disabled");
+    $("#currency").removeAttr("disabled");
+    $("#convert_currency").removeAttr("disabled");
+    $("#type").removeAttr("disabled");
     $("#payment_date").removeAttr("disabled");
     $("#refernce").removeAttr("disabled");
     $("#sub_total").removeAttr("disabled");
@@ -118,8 +121,27 @@ $(function () {
         initDataTablecustomer_payment_table();
       })
       .catch(function (err) {
-        errorMessage(err.Message);
+        console.log(err); // Debugging
+
+        // Handle Laravel validation errors
+        if (err.responseJSON && err.responseJSON.errors) {
+          let messages = '';
+          $.each(err.responseJSON.errors, function (field, errorArray) {
+            messages += errorArray.join('<br>') + '<br>';
+          });
+
+          // Show errors (replace this with your own error modal or toastr)
+          errorMessage(messages);
+
+        } else if (err.responseJSON && err.responseJSON.message) {
+          // Fallback to general message if no 'errors' array
+          errorMessage(err.responseJSON.message);
+
+        } else {
+          errorMessage("Something went wrong. Please try again.");
+        }
       });
+
   });
 
   // Delete Customer Payment Code

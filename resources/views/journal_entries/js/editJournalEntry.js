@@ -44,6 +44,8 @@ $(document).ready(function () {
     var creditAmt = "";
     var explanation = "";
     var description = "";
+    var currency_id = "";
+    var currency = "";
     var checkno = "";
     var check_date = "";
     var tbl_index = "";
@@ -79,6 +81,8 @@ $(document).ready(function () {
             .toFixed(3)
             .replace(/\d(?=(\d{3})+\.)/g, "$&,");
         description = $("#description").val();
+        currency_id = $("#currency :selected").val();
+        currency = $("#currency :selected").text();
         explanation = $("#explanation").val();
         check_date = $("#doc_date").val();
         checkno = $("#checkno").val();
@@ -95,6 +99,11 @@ $(document).ready(function () {
         if (account_id == "" || account_id == null) {
             errorMessage("Please Select Account!");
             $("#account_id").focus();
+            return;
+        }
+        if (currency_id == "" || currency_id == null) {
+            errorMessage("Please Select Currency!");
+            $("#currency").focus();
             return;
         }
 
@@ -128,6 +137,8 @@ $(document).ready(function () {
             obj.reference = reference;
             obj.tbl_id = tbl_id;
             obj.tbl_index = tbl_index;
+            obj.Currency_id = currency_id;
+            obj.Currency = currency;
 
             $("#jsGrid")
                 .jsGrid("updateItem", editedItems)
@@ -142,6 +153,8 @@ $(document).ready(function () {
             obj.acc_head_id = account_id;
             obj.Code = accountCode;
             obj.Account = accountName;
+            obj.Currency = currency;
+            obj.Currency_id = currency_id;
             obj.Debit = debitAmt;
             obj.Credit = creditAmt;
             obj.description = description;
@@ -176,15 +189,39 @@ $(document).ready(function () {
 
             var bal = total_debit * 1 - total_credit * 1;
             $("#balance").empty();
+            $("#balance_au").empty();
+            $("#balance_dollar").empty();
             var bal_value = "";
-            if (bal > 0) {
+            var au_value = "";
+            var dollar_value = "";
+            if (bal > 0 && currency_id == 0) {
                 bal_value = bal + " Dr";
                 $("#balance").val(bal_value);
-            } else if (bal < 0) {
+            } else if (bal < 0 && currency_id == 0) {
                 bal_value = bal * -1 + " Cr";
                 $("#balance").val(bal_value);
             } else {
                 $("#balance").val(0);
+            }
+            // AU
+            if (bal > 0 && currency_id == 1) {
+                au_value = bal + " Dr";
+                $("#balance_au").val(au_value);
+            } else if (bal < 0 && currency_id == 1) {
+                au_value = bal * -1 + " Cr";
+                $("#balance_au").val(au_value);
+            } else {
+                $("#balance_au").val(0);
+            }
+            // dollar
+            if (bal > 0 && currency_id == 2) {
+                dollar_value = bal + " Dr";
+                $("#balance_dollar").val(dollar_value);
+            } else if (bal < 0 && currency_id == 0) {
+                dollar_value = bal * -1 + " Cr";
+                $("#balance_dollar").val(dollar_value);
+            } else {
+                $("#balance_dollar").val(0);
             }
         } else {
             var result = [];
@@ -210,7 +247,11 @@ $(document).ready(function () {
 
             var bal = total_debit * 1 - total_credit * 1;
             $("#balance").empty();
+            $("#balance_au").empty();
+            $("#balance_dollar").empty();
             var bal_value = "";
+            var au_value = "";
+            var dollar_value = "";
             if (bal > 0) {
                 bal_value = bal + " Dr";
                 $("#balance").val(bal_value);
@@ -219,6 +260,26 @@ $(document).ready(function () {
                 $("#balance").val(bal_value);
             } else {
                 $("#balance").val(0);
+            }
+            // AU
+            if (bal > 0 && currency_id == 1) {
+                au_value = bal + " Dr";
+                $("#balance_au").val(au_value);
+            } else if (bal < 0 && currency_id == 1) {
+                au_value = bal * -1 + " Cr";
+                $("#balance_au").val(au_value);
+            } else {
+                $("#balance_au").val(0);
+            }
+            // dollar
+            if (bal > 0 && currency_id == 2) {
+                dollar_value = bal + " Dr";
+                $("#balance_dollar").val(dollar_value);
+            } else if (bal < 0 && currency_id == 0) {
+                dollar_value = bal * -1 + " Cr";
+                $("#balance_dollar").val(dollar_value);
+            } else {
+                $("#balance_dollar").val(0);
             }
             var worrds = parseInt(total_debit);
             obj.amount_in_words = toWords(worrds);
@@ -274,6 +335,26 @@ $(document).ready(function () {
                 } else {
                     $("#balance").val(0);
                 }
+                // AU
+                if (bal > 0 && currency_id == 1) {
+                    au_value = bal + " Dr";
+                    $("#balance_au").val(au_value);
+                } else if (bal < 0 && currency_id == 1) {
+                    au_value = bal * -1 + " Cr";
+                    $("#balance_au").val(au_value);
+                } else {
+                    $("#balance_au").val(0);
+                }
+                // dollar
+                if (bal > 0 && currency_id == 2) {
+                    dollar_value = bal + " Dr";
+                    $("#balance_dollar").val(dollar_value);
+                } else if (bal < 0 && currency_id == 0) {
+                    dollar_value = bal * -1 + " Cr";
+                    $("#balance_dollar").val(dollar_value);
+                } else {
+                    $("#balance_dollar").val(0);
+                }
 
                 totalCredit = parseFloat(totalCredit)
                     .toFixed(3)
@@ -328,6 +409,26 @@ $(document).ready(function () {
                             } else {
                                 $("#balance").val(0);
                             }
+                            // AU
+                            if (bal > 0 && currency_id == 1) {
+                                au_value = bal + " Dr";
+                                $("#balance_au").val(au_value);
+                            } else if (bal < 0 && currency_id == 1) {
+                                au_value = bal * -1 + " Cr";
+                                $("#balance_au").val(au_value);
+                            } else {
+                                $("#balance_au").val(0);
+                            }
+                            // dollar
+                            if (bal > 0 && currency_id == 2) {
+                                dollar_value = bal + " Dr";
+                                $("#balance_dollar").val(dollar_value);
+                            } else if (bal < 0 && currency_id == 0) {
+                                dollar_value = bal * -1 + " Cr";
+                                $("#balance_dollar").val(dollar_value);
+                            } else {
+                                $("#balance_dollar").val(0);
+                            }
                         },
                     });
                 },
@@ -349,6 +450,12 @@ $(document).ready(function () {
                     name: "Account",
                     type: "text",
                     width: 40,
+                    editing: false,
+                },
+                {
+                    name: "Currency",
+                    type: "text",
+                    width: 25,
                     editing: false,
                 },
                 {
@@ -376,7 +483,7 @@ $(document).ready(function () {
                 {
                     name: "Explanation",
                     type: "text",
-                    width: 45,
+                    width: 30,
                     editing: false,
                 },
                 {
@@ -392,17 +499,24 @@ $(document).ready(function () {
                     editing: false,
                 },
                 {
+                    type: "control",
+                    width: 30,
+                    modeSwitchButton: false,
+                    editButton: false,
+                },
+                {
                     name: "account_id",
                     type: "text",
                     width: 0,
                     visible: false,
                 },
                 {
-                    type: "control",
-                    width: 30,
-                    modeSwitchButton: false,
-                    editButton: false,
+                    name: "Currency_id",
+                    type: "text",
+                    width: 0,
+                    visible: false,
                 },
+                
             ],
         });
         $("#submitajax").click(function () {
@@ -446,11 +560,11 @@ $(document).ready(function () {
                 errorMessage("Please Add a Journal Entries!");
                 return;
             }
-            if ($("#currency").find(':selected').val() == "") {
-                errorMessage("Currency filed required!");
-                $("#currency").focus();
-                return;
-            }
+            // if ($("#currency").find(':selected').val() == "") {
+            //     errorMessage("Currency filed required!");
+            //     $("#currency").focus();
+            //     return;
+            // }
             if ($("#reference").val() == "") {
                 errorMessage("Reference filed required!");
                 $("#reference").focus();
@@ -464,7 +578,7 @@ $(document).ready(function () {
             var journal_id = $("#journal_id").find(':selected').val();
             var supplier_id = $("#supplier_id").find(':selected').val();
             var reference = $("#reference").val();
-            var currency = $("#currency").find(':selected').val();
+            // var currency = $("#currency").find(':selected').val();
             if (obj.item.length > 0) {
                 var load_func = function () {
                     $("#preloader").show();
@@ -476,7 +590,7 @@ $(document).ready(function () {
                         journal_id: journal_id,
                         supplier_id: supplier_id,
                         reference: reference,
-                        currency: currency,
+                        // currency: currency,
                         items: obj,
                     },
                     headers: {

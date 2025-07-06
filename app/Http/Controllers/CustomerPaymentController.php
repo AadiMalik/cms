@@ -59,14 +59,25 @@ class CustomerPaymentController extends Controller
         $this->validate($request, [
             'customer_id' => 'required',
             'currency' => 'required',
+            'type' => 'required',
             'sub_total' => 'required',
             'account_id' => 'required',
             'payment_date' => 'required',
+            'convert_currency' => [
+                'nullable',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (!is_null($value) && $value === $request->currency) {
+                        $fail('The convert currency must be different from the base currency.');
+                    }
+                },
+            ],
         ]);
         try {
             $obj = [
                 'customer_id' => $request->customer_id,
                 'currency' => $request->currency,
+                'convert_currency' => $request->convert_currency ?? null,
+                'type' => $request->type,
                 'account_id' => $request->account_id ?? null,
                 'payment_date' => $request->payment_date,
                 'reference' => $request->reference,
@@ -102,9 +113,9 @@ class CustomerPaymentController extends Controller
                 'currency' => 0,
                 'account_id' => $request->recieving_account_id ?? null,
                 'payment_date' => date('Y-m-d'),
-                'reference' => $request->reference??'',
-                'sub_total' => $request->amount??0,
-                'total' => $request->amount??0,
+                'reference' => $request->reference ?? '',
+                'sub_total' => $request->amount ?? 0,
+                'total' => $request->amount ?? 0,
                 'tax' => 0,
                 'tax_amount' => 0,
                 'tax_account_id' => null

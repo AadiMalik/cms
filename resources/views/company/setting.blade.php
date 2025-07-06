@@ -143,6 +143,18 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="convert_currency_account_id">Convert Currency Account <span class="text-danger">*</span> </label>
+                                    <select class="form-control" name="convert_currency_account_id" id="convert_currency_account_id"
+                                        style="width: 100%;">
+                                        <option value="">--Select Account--</option>
+                                        @foreach ($accounts as $account)
+                                            <option value="{{ $account->id }}"
+                                                {{ isset($company_setting) && $company_setting->convert_currency_account_id == $account->id ? 'selected' : '' }}>
+                                                {{ $account->code ?? '' }} - {{ $account->name ?? '' }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -173,6 +185,7 @@
             $('#supplier_account_id').select2();
             $('#recieving_account_id').select2();
             $('#discount_account_id').select2();
+            $('#convert_currency_account_id').select2();
         });
     </script>
 @endsection

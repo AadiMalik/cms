@@ -21,6 +21,7 @@ class CompanySetting extends Model
         'supplier_account_id',
         'recieving_account_id',
         'discount_account_id',
+        'convert_currency_account_id',
         'createdby_id',
         'updatedby_id',
     ];

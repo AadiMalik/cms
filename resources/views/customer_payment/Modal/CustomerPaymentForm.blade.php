@@ -10,34 +10,34 @@
                 <div class="modal-body">
                     <div class="row">
                         <input type="hidden" id="id" name="id" readonly>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="customer_id">Customer:<span style="color:red;">*</span></label>
                             <div class="form-group">
                                 <select class="form-control" name="customer_id" id="customer_id" required style="width: 100%;">
                                     <option selected disabled>--Select customer--</option>
                                     @if (isset($customers))
-                                        @foreach ($customers as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name ?? '' }} </option>
-                                        @endforeach
+                                    @foreach ($customers as $item)
+                                    <option value="{{ $item->id }}">{{ $item->name ?? '' }} </option>
+                                    @endforeach
                                     @endif
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="account_id">Debit Account:</label>
                             <div class="form-group">
                                 <select class="form-control" name="account_id" id="account_id" style="width: 100%;">
                                     <option value="" selected disabled>--Select Account--</option>
                                     @if (isset($accounts))
-                                        @foreach ($accounts as $item)
-                                            <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($accounts as $item)
+                                    <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
+                                    </option>
+                                    @endforeach
                                     @endif
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>Currency:<span style="color:red;">*</span></label>
                             <div class="form-group">
                                 <select id="currency" name="currency" class="form-control show-tick" required>
@@ -47,59 +47,78 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label>Convert Currency:<span style="color:red;">*</span></label>
+                            <div class="form-group">
+                                <select id="convert_currency" name="convert_currency" class="form-control show-tick" required>
+                                    <option value="" selected>Not Convert</option>
+                                    <option value="0">PKR</option>
+                                    <option value="1">Gold (AU)</option>
+                                    <option value="2">Dollar ($)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Type:<span style="color:red;">*</span></label>
+                            <div class="form-group">
+                                <select id="type" name="type" class="form-control show-tick" required>
+                                    <option value="payment" selected>Payment</option>
+                                    <option value="advance">Advance</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <label for="payment_date">Date:<span style="color:red;">*</span></label>
                             <div class="form-group">
                                 <input type="date" class="form-control" name="payment_date" id="payment_date"
                                     placeholder="Enter Payment Date" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="reference">Reference:</label>
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="reference" id="reference"
-                                    placeholder="Enter Reference">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="sub_total">Amount:<span style="color:red;">*</span></label>
                             <div class="form-group">
                                 <input type="number" step="any" class="form-control" name="sub_total"
                                     id="sub_total" placeholder="Enter Amount">
                             </div>
                         </div>
-
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label for="reference">Reference:</label>
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="reference" id="reference"
+                                    placeholder="Enter Reference">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <label for="total">Total Amount:</label>
                             <div class="form-group">
                                 <input type="number" step="any" class="form-control" readonly name="total"
                                     id="total" value="0">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="display: none;">
                             <label for="tax">Tax(%):</label>
                             <div class="form-group">
                                 <input type="number" step="any" class="form-control" value="0" name="tax"
                                     id="tax" placeholder="Enter Tax">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="display: none;">
                             <label for="tax_amount">Tax Amount:</label>
                             <div class="form-group">
                                 <input type="text" step="any" class="form-control" readonly name="tax_amount"
                                     id="tax_amount" value="0">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="display: none;">
                             <label for="select_branch">Tax Account:</label>
                             <div class="form-group">
                                 <select class="form-control" name="tax_account_id" id="tax_account_id" style="width: 100%;">
                                     <option selected disabled>--Select Account--</option>
                                     @if (isset($accounts))
-                                        @foreach ($accounts as $item)
-                                            <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
-                                            </option>
-                                        @endforeach
+                                    @foreach ($accounts as $item)
+                                    <option value="{{ $item->id }}">{{ $item->code }} {{ $item->name }}
+                                    </option>
+                                    @endforeach
                                     @endif
                                 </select>
                             </div>
