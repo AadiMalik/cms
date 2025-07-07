@@ -18,6 +18,7 @@ class CustomerPayment extends Model
         'tax_amount',
         'tax_account_id',
         'sub_total',
+        'convert_amount',
         'currency',
         'convert_currency',
         'is_used',

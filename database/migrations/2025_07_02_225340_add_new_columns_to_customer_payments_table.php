@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('customer_payments', function (Blueprint $table) {
             $table->enum('type',['payment','advance'])->default('payment');
             $table->boolean('is_used')->default(0);
+            $table->decimal('convert_amount',18,3)->default(0);
         });
     }
 
@@ -27,7 +28,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('customer_payments', function (Blueprint $table) {
-            $table->dropColumn(['type','is_used']);
+            $table->dropColumn(['type','is_used','convert_amount']);
         });
     }
 };

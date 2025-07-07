@@ -90,7 +90,8 @@ class JournalEntryController extends Controller
                         'credit' => str_replace(',', '', $data['item'][$i]['Credit']),
                         'debit' => str_replace(',', '', $data['item'][$i]['Debit']),
                         'doc_date' => $data['item'][$i]['Date'],
-                        'account_id' => $data['item'][$i]['acc_head_id'],
+                        'account_id' => $data['item'][$i]['account_id'],
+                        'currency' => $data['item'][$i]['Currency_id'],
                         'createdby_id' => Auth::user()->id,
                         'amount' => str_replace(',', '', $amount),
                         'amount_in_words' => $data['item'][$i]['amount_in_words'],
@@ -148,12 +149,12 @@ class JournalEntryController extends Controller
                         'credit' => str_replace(',', '', $data['item'][$i]['Credit']),
                         'debit' => str_replace(',', '', $data['item'][$i]['Debit']),
                         'doc_date' => $data['item'][$i]['Date'],
-                        'account_id' => $data['item'][$i]['acc_head_id'],
+                        'account_id' => $data['item'][$i]['account_id'],
+                        'currency' => $data['item'][$i]['Currency_id'],
                         'createdby_id' => Auth::user()->id,
                         'amount' => str_replace(',', '', $amount),
                         'amount_in_words' => $data['item'][$i]['amount_in_words'],
-                        'account_code' => $data['item'][$i]['Code'],
-                        'currency' => $request->currency??0
+                        'account_code' => $data['item'][$i]['Code']
                     ];
                     $response = $this->journal_entry_service->saveJournalEntryDetail($dataSet);
                 }

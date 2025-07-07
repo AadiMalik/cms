@@ -77,8 +77,15 @@
                         <div class="col-md-4">
                             <label for="sub_total">Amount:<span style="color:red;">*</span></label>
                             <div class="form-group">
-                                <input type="number" step="any" class="form-control" name="sub_total"
-                                    id="sub_total" placeholder="Enter Amount">
+                                <input type="text" step="any" required class="form-control" name="sub_total"
+                                    id="sub_total" placeholder="Enter Amount" onkeypress="return isNumberKey(event)">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="convert_amount">Convert Amount:<span style="color:red;">*</span></label>
+                            <div class="form-group">
+                                <input type="text" step="any" required class="form-control" name="convert_amount"
+                                    id="convert_amount" placeholder="Enter Amount" value="0" onkeypress="return isNumberKey(event)">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -88,7 +95,7 @@
                                     placeholder="Enter Reference">
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4" style="display: none;">
                             <label for="total">Total Amount:</label>
                             <div class="form-group">
                                 <input type="number" step="any" class="form-control" readonly name="total"

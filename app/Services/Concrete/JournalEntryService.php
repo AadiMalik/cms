@@ -199,7 +199,11 @@ class JournalEntryService
                   ->leftjoin('journal_entry_details', 'journal_entries.id', '=', 'journal_entry_details.journal_entry_id')
                   ->leftjoin('accounts', 'journal_entry_details.account_id', '=', 'accounts.id')
                   ->where('journal_entries.id', $id)
-                  ->select('*', 'journals.name', 'journal_entries.journal_id as jentries_id', 'journal_entries.id as j_id', 'journal_entries.date_post as Date', 'journal_entry_details.id as tbl_id', 'journal_entry_details.debit as Debit', 'journal_entry_details.credit as Credit', 'journal_entry_details.bill_no as BillNo', 'journal_entry_details.check_no as CheckNo', 'accounts.code as Code', 'accounts.name as Account', 'journal_entry_details.explanation as Explanation', 'accounts.id as account_id')
+                  ->select('*', 'journals.name', 'journal_entries.journal_id as jentries_id', 'journal_entries.id as j_id', 'journal_entries.date_post as Date', 'journal_entry_details.id as tbl_id', 'journal_entry_details.debit as Debit', 'journal_entry_details.credit as Credit',DB::raw("CASE journal_entry_details.currency
+                  WHEN 0 THEN 'PKR'
+                  WHEN 1 THEN 'AU'
+                  WHEN 2 THEN 'Dollar'
+                  ELSE 'Unknown' END as Currency"),'journal_entry_details.currency as Currency_id','journal_entry_details.account_id as acc_head_id', 'journal_entry_details.bill_no as BillNo', 'journal_entry_details.check_no as CheckNo', 'accounts.code as Code', 'accounts.name as Account', 'journal_entry_details.explanation as Explanation', 'accounts.id as account_id')
                   ->get();
             return $grid_journal;
       }

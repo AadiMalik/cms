@@ -70,7 +70,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <!-- <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="role">Currency</label>
                                     <select name="currency" id="currency" class="form-control">
@@ -80,7 +80,7 @@
                                         <option value="2">Dollar ($)</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <button class="mt-4 btn btn-primary" id="search">Search</button>
@@ -97,7 +97,7 @@
                                         <th>Date</th>
                                         <th>Voucher</th>
                                         <th>Journal</th>
-                                        <th>Currency</th>
+                                        <!-- <th>Currency</th> -->
                                         <th>Reference</th>
                                         <th>Debit</th>
                                         <th>Credit</th>
@@ -128,7 +128,7 @@
         $("#journal_id").select2();
         $("#supplier_id").select2();
         $("#customer_id").select2();
-        $("#currency").select2();
+        // $("#currency").select2();
     });
 </script>
 @include('includes.datatable', [
@@ -136,7 +136,6 @@
 {data: 'date_post' , name: 'date_post'},
 {data: 'entryNum' , name: 'entryNum'},
 {data: 'journal' , name: 'journal','sortable': false , searchable: false},
-{data: 'currency' , name: 'currency','sortable': false , searchable: false},
 {data: 'reference' , name: 'reference' , 'sortable': false},
 {data: 'debit' , name: 'debit' , 'sortable': false},
 {data: 'credit' , name: 'credit' , 'sortable': false},

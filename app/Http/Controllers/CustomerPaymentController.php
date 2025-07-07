@@ -72,7 +72,7 @@ class CustomerPaymentController extends Controller
                 },
             ],
         ]);
-        try {
+        // try {
             $obj = [
                 'customer_id' => $request->customer_id,
                 'currency' => $request->currency,
@@ -82,6 +82,7 @@ class CustomerPaymentController extends Controller
                 'payment_date' => $request->payment_date,
                 'reference' => $request->reference,
                 'sub_total' => $request->sub_total,
+                'convert_amount' => $request->convert_amount,
                 'total' => $request->total,
                 'tax' => $request->tax,
                 'tax_amount' => $request->tax_amount,
@@ -92,9 +93,9 @@ class CustomerPaymentController extends Controller
                 config('enum.saved'),
                 $customer_payment
             );
-        } catch (Exception $e) {
-            return $this->error(config('enum.error'));
-        }
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
     public function advance(Request $request)
     {
