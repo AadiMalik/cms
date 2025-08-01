@@ -358,8 +358,8 @@ $(row).css("background-color", "Pink");
         var cash_amount = $("#cash_amount").val();
         var bank_transfer_amount = $("#bank_transfer_amount").val();
         var card_amount = $("#card_amount").val();
-        var gold_impurity_amount = $("#gold_impurity_amount").val();
-        var total_paid = (advance_amount * 1) + (cash_amount * 1) + (bank_transfer_amount * 1) + (card_amount * 1) + (gold_impurity_amount * 1);
+        // var gold_impurity_amount = $("#gold_impurity_amount").val();
+        var total_paid = (advance_amount * 1) + (cash_amount * 1) + (bank_transfer_amount * 1) + (card_amount * 1);
         var total_amount = $("#total_amount").val();
         var balance = (total_amount*1) - (total_paid*1);
         $("#total_paid").val(total_paid.toFixed(3));
@@ -390,8 +390,7 @@ $(row).css("background-color", "Pink");
             $("#advance_amount").val() == 0 &&
             $("#cash_amount").val() == 0 &&
             $("#bank_transfer_amount").val() == 0 &&
-            $("#card_amount").val() == 0 &&
-            $("#gold_impurity_amount").val() == 0
+            $("#card_amount").val() == 0
         ) {
             error("Please add amount!");
             $("#preloader").hide();
@@ -429,16 +428,16 @@ $(row).css("background-color", "Pink");
             return false;
         }
 
-        if (
-            $("#gold_impurity_amount").val() > 0 &&
-            $("#gold_impurity_account_id").find(':selected').val() == ''
-        ) {
-            error("Please select gold impurity account!");
-            $("#gold_impurity_account_id").focus();
-            $("#preloader").hide();
-            $("#paymentSave").show();
-            return false;
-        }
+        // if (
+        //     $("#gold_impurity_amount").val() > 0 &&
+        //     $("#gold_impurity_account_id").find(':selected').val() == ''
+        // ) {
+        //     error("Please select gold impurity account!");
+        //     $("#gold_impurity_account_id").focus();
+        //     $("#preloader").hide();
+        //     $("#paymentSave").show();
+        //     return false;
+        // }
 
         // if (
         //     $("#balance").val() != 0 &&
@@ -466,9 +465,9 @@ $(row).css("background-color", "Pink");
         formData.append("card_account_id", $("#card_account_id").find(':selected').val());
         formData.append("card_amount", $("#card_amount").val());
         formData.append("card_reference", $("#card_reference").val());
-        formData.append("gold_impurity_account_id", $("#gold_impurity_account_id").find(':selected').val());
-        formData.append("gold_impurity_amount", $("#gold_impurity_amount").val());
-        formData.append("gold_impurity_reference", $("#gold_impurity_reference").val());
+        // formData.append("gold_impurity_account_id", $("#gold_impurity_account_id").find(':selected').val());
+        // formData.append("gold_impurity_amount", $("#gold_impurity_amount").val());
+        // formData.append("gold_impurity_reference", $("#gold_impurity_reference").val());
         formData.append("total_received", $("#total_paid").val());
 
         $.ajax({

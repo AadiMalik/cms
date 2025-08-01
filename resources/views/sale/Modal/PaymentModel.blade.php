@@ -111,7 +111,7 @@
                                                 placeholder="Enter Reference" />
                                     </div>
                               </div>
-                              <div class="row">
+                              <!-- <div class="row">
                                     <div class="col-md-4 form-group mb-3">
                                           <label for="gold_impurity_amount">Gold Impurity Amount</label>
                                           <input class="form-control" type="number" name="gold_impurity_amount" id="gold_impurity_amount" value="0" min="0" />
@@ -138,7 +138,7 @@
                                                 value="" maxlength="191"
                                                 placeholder="Enter Reference" />
                                     </div>
-                              </div>
+                              </div> -->
                               <div class="row">
                                     <div class="col-md-4 form-group">
                                           <label for="">Total Amount</label>

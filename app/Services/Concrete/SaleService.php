@@ -5,6 +5,7 @@ namespace App\Services\Concrete;
 use App\Models\Account;
 use App\Models\CompanySetting;
 use App\Models\Customer;
+use App\Models\CustomerPayment;
 use App\Models\FinishProduct;
 use App\Models\Journal;
 use App\Models\JournalEntry;
@@ -16,6 +17,7 @@ use App\Models\SaleDetailBead;
 use App\Models\SaleDetailDiamond;
 use App\Models\SaleDetailStone;
 use App\Models\SaleOrder;
+use App\Models\SaleUsedGold;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +33,7 @@ class SaleService
     protected $model_sale_detail_stone;
     protected $model_sale_detail_diamond;
     protected $model_journal_entry;
+    protected $model_sale_used_gold;
 
     protected $common_service;
     protected $journal_entry_service;
@@ -45,6 +48,7 @@ class SaleService
         $this->model_sale_detail_stone = new Repository(new SaleDetailStone);
         $this->model_sale_detail_diamond = new Repository(new SaleDetailDiamond);
         $this->model_journal_entry = new Repository(new JournalEntry);
+        $this->model_sale_used_gold = new Repository(new SaleUsedGold);
 
         $this->common_service = new CommonService();
         $this->journal_entry_service = new JournalEntryService();
@@ -140,6 +144,8 @@ class SaleService
             DB::beginTransaction();
             $customer = Customer::find($obj['customer_id']);
             $saleDetail = json_decode($obj['productDetail']);
+            $usedGold = json_decode($obj['usedGoldDetail']);
+            $selectedAdvanceIds = json_decode($obj['selected_advance_ids'], true);
             $saleObj = [
                 "sale_date" => $obj['sale_date'],
                 "customer_id" => $obj['customer_id'],
@@ -151,6 +157,10 @@ class SaleService
                 "sub_total" => $obj['sub_total'],
                 "discount_amount" => $obj['discount_amount'] ?? 0,
                 "total" => $obj['total'],
+                "advance_amount" => $obj['advance_amount'] ?? 0,
+                "gold_impure_amount" => $obj['gold_impurity_amount'] ?? 0,
+                "total_received" => $obj['advance_amount'] + $obj['gold_impurity_amount'],
+                "change_amount" => $obj['change_amount'] ?? 0,
                 "updatedby_id" => Auth::user()->id
             ];
             $sale = $this->model_sale->update($saleObj, $obj['id']);
@@ -245,12 +255,30 @@ class SaleService
                 $finish_product->update();
             }
 
+            foreach ($usedGold as $item) {
+                $usedGoldObj = [
+                    "sale_id" => $obj['id'],
+                    "type" => $item->type ?? '',
+                    "weight" => $item->weight ?? 0,
+                    "kaat" => $item->kaat ?? 0,
+                    "pure_weight" => $item->pure_weight ?? 0,
+                    "karat" => $item->karat ?? 0,
+                    "rate" => $item->rate ?? 0,
+                    "amount" => $item->amount ?? 0,
+                    "description" => $item->description ?? ''
+                ];
+                $sale_used_gold = $this->model_sale_used_gold->create($usedGoldObj);
+            }
+            if (!empty($selectedAdvanceIds)) {
+                CustomerPayment::whereIn('id', $selectedAdvanceIds)
+                    ->update(['is_used' => 1]);
+            }
             if (getRoleName() == config('enum.salesman')) {
                 foreach (Admins() as $item) {
                     $data = [
                         "title" => 'New Sale',
                         "user_id" => $item,
-                        "message" => 'New Sale Generate by '.Auth::user()->name
+                        "message" => 'New Sale Generate by ' . Auth::user()->name
                     ];
                     $this->notification_service->save($data);
                 }
@@ -321,9 +349,12 @@ class SaleService
 
             $journal_entry_id = null;
             $jv_id = null;
+            $company_setting = CompanySetting::find(1);
+            $sale_account = Account::find($company_setting->sale_account_id);
             foreach ($obj['sale'] as $item) {
                 $sale = Sale::with('customer_name')->find($item);
                 $customer = Customer::find($sale->customer_id);
+                $customer_account = Account::find($customer->account_id);
 
                 $journal = Journal::find(config('enum.SV'));
                 $sale_date = date("Y-m-d", strtotime(str_replace('/', '-', $sale->sale_date)));
@@ -348,7 +379,6 @@ class SaleService
                 $journal_entry_id = $journal_entry->id ?? null;
                 // credit to customer
                 if ($sale->total > 0) {
-                    $customer_account = Account::find($customer->account_id);
                     $credit_amount = str_replace(',', '', $sale->total ?? 0);
                     // PKR (Debit)
                     $this->journal_entry_service->saveJVDetail(
@@ -409,6 +439,70 @@ class SaleService
                         $revenue_amount, //amount
                         $revenue_account->id, // account id
                         $revenue_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                }
+
+                // advance amount
+                if ($sale->advance_amount > 0) {
+                    $Advance_Amount = str_replace(',', '', $sale->advance_amount ?? 0);
+                    // PKR (Debit)
+                    $this->journal_entry_service->saveJVDetail(
+                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Advance Used For Sale Debit Entry', //explaination
+                        $sale->id, //bill no
+                        0, // check no or 0
+                        $sale->sale_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $Advance_Amount, //amount
+                        $customer_account->id, // account id
+                        $customer_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                    // PKR (Credit)
+                    $this->journal_entry_service->saveJVDetail(
+                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Advance Used For Sale Credit Entry', //explaination
+                        $sale->id, //bill no
+                        0, // check no or 0
+                        $sale->sale_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $Advance_Amount, //amount
+                        $sale_account->id, // account id
+                        $sale_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                }
+                if ($sale->gold_impure_amount > 0) {
+                    $gold_impure_amount = str_replace(',', '', $sale->gold_impure_amount ?? 0);
+                    // PKR (Debit)
+                    $this->journal_entry_service->saveJVDetail(
+                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Gold Impurity Amount From Sale Debit Entry', //explaination
+                        $sale->id, //bill no
+                        0, // check no or 0
+                        $sale->sale_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $gold_impure_amount, //amount
+                        $sale_account->id, // account id
+                        $sale_account->code, // account code
+                        Auth::User()->id //created by id
+                    );
+                    // PKR (Credit)
+                    $this->journal_entry_service->saveJVDetail(
+                        0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry_id, // journal entry id
+                        'Gold Impurity Amount From Sale Credit Entry', //explaination
+                        $sale->id, //bill no
+                        0, // check no or 0
+                        $sale->sale_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $gold_impure_amount, //amount
+                        $customer_account->id, // account id
+                        $customer_account->code, // account code
                         Auth::User()->id //created by id
                     );
                 }
@@ -664,58 +758,58 @@ class SaleService
             }
 
             // gold impure Amount
-            if ($obj['gold_impurity_amount'] > 0) {
-                if ($obj['gold_impurity_account_id'] == null || $obj['gold_impurity_account_id'] == '') {
-                    $msg = 'Gold Impurity Account not select but gold impure amount is greater then 0';
-                    return $msg;
-                }
-                $gold_impure_account = Account::find($obj['gold_impurity_account_id']);
-                $gold_impure_amount = str_replace(',', '', $obj['gold_impurity_amount'] ?? 0);
-                // PKR (Debit)
-                $this->journal_entry_service->saveJVDetail(
-                    0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Gold Impurity Amount From Sale Debit Entry', //explaination
-                    $sale->id, //bill no
-                    0, // check no or 0
-                    $payment_date, //check date
-                    1, // is credit flag 0 for credit, 1 for debit
-                    $gold_impure_amount, //amount
-                    $gold_impure_account->id, // account id
-                    $gold_impure_account->code, // account code
-                    Auth::User()->id //created by id
-                );
-                // PKR (Credit)
-                $this->journal_entry_service->saveJVDetail(
-                    0, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                    $journal_entry_id, // journal entry id
-                    'Gold Impurity Amount From Sale Credit Entry', //explaination
-                    $sale->id, //bill no
-                    0, // check no or 0
-                    $payment_date, //check date
-                    0, // is credit flag 0 for credit, 1 for debit
-                    $gold_impure_amount, //amount
-                    $customer_account->id, // account id
-                    $customer_account->code, // account code
-                    Auth::User()->id //created by id
-                );
+            // if ($obj['gold_impurity_amount'] > 0) {
+            //     if ($obj['gold_impurity_account_id'] == null || $obj['gold_impurity_account_id'] == '') {
+            //         $msg = 'Gold Impurity Account not select but gold impure amount is greater then 0';
+            //         return $msg;
+            //     }
+            //     $gold_impure_account = Account::find($obj['gold_impurity_account_id']);
+            //     $gold_impure_amount = str_replace(',', '', $obj['gold_impurity_amount'] ?? 0);
+            //     // PKR (Debit)
+            //     $this->journal_entry_service->saveJVDetail(
+            //         0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+            //         $journal_entry_id, // journal entry id
+            //         'Gold Impurity Amount From Sale Debit Entry', //explaination
+            //         $sale->id, //bill no
+            //         0, // check no or 0
+            //         $payment_date, //check date
+            //         1, // is credit flag 0 for credit, 1 for debit
+            //         $gold_impure_amount, //amount
+            //         $gold_impure_account->id, // account id
+            //         $gold_impure_account->code, // account code
+            //         Auth::User()->id //created by id
+            //     );
+            //     // PKR (Credit)
+            //     $this->journal_entry_service->saveJVDetail(
+            //         0, // currency 0 for PKR, 1 for AU, 2 for Dollar
+            //         $journal_entry_id, // journal entry id
+            //         'Gold Impurity Amount From Sale Credit Entry', //explaination
+            //         $sale->id, //bill no
+            //         0, // check no or 0
+            //         $payment_date, //check date
+            //         0, // is credit flag 0 for credit, 1 for debit
+            //         $gold_impure_amount, //amount
+            //         $customer_account->id, // account id
+            //         $customer_account->code, // account code
+            //         Auth::User()->id //created by id
+            //     );
 
-                $this->customer_payment_service->saveCustomerPaymentWithoutTax(
-                    $customer->id, //customer id
-                    0, // currency
-                    $gold_impure_account->id, // recieved account
-                    $payment_date, // date
-                    $obj['gold_impurity_reference'], //reference
-                    $gold_impure_amount, //amount
-                    $journal_entry // journal entries
-                );
-            }
+            //     $this->customer_payment_service->saveCustomerPaymentWithoutTax(
+            //         $customer->id, //customer id
+            //         0, // currency
+            //         $gold_impure_account->id, // recieved account
+            //         $payment_date, // date
+            //         $obj['gold_impurity_reference'], //reference
+            //         $gold_impure_amount, //amount
+            //         $journal_entry // journal entries
+            //     );
+            // }
             $sale->advance_amount = $sale->advance_amount + $obj['advance_amount'] ?? 0;
             $sale->cash_amount = $sale->cash_amount + $obj['cash_amount'] ?? 0;
             $sale->bank_transfer_amount = $sale->bank_transfer_amount + $obj['bank_transfer_amount'] ?? 0;
             $sale->card_amount = $sale->card_amount + $obj['card_amount'] ?? 0;
-            $sale->gold_impure_amount = $sale->gold_impure_amount + $obj['gold_impurity_amount'] ?? 0;
-            $sale->total_received = $obj['total_received'];
+            // $sale->gold_impure_amount = $sale->gold_impure_amount + $obj['gold_impurity_amount'] ?? 0;
+            $sale->total_received = $sale->total_received + $obj['total_received'];
             $sale->update();
             if ($obj['sale_order_id'] != '' && $obj['sale_order_id'] != 0) {
                 $sale_order = SaleOrder::find($obj['sale_order_id']);
