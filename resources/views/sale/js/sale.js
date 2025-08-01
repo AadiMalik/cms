@@ -26,6 +26,9 @@ $("#CustomerButton").click(function () {
     $("#customerForm").trigger("reset");
     $("#customerModel").modal("show");
 });
+$("#advancePayment").click(function () {
+    $("#customerAdvanceModel").modal("show");
+});
 function getCustomer() {
     $("#preloader").show();
     $.ajax({
@@ -46,7 +49,7 @@ function getCustomer() {
                     '<option value="' +
                     value.id +
                     '">' +
-                    value.name +' - '+value.contact+
+                    value.name + ' - ' + value.contact +
                     " </option>";
             });
             $("#customer_id").append(customer);
@@ -90,6 +93,21 @@ $("#customer_id").on("change", function () {
                 row += "</tbody>";
                 row += "</table>";
                 $("#customer").html(row);
+
+                var advance = '';
+                $.each(data.advances, function (key, value) {
+                    advance += "<tr>";
+                    advance += "<td><input type='checkbox' class='advance-check' name='advances[]' value='" + value.id + "' data-amount='" + value.total + "'/></td>";
+                    advance += "<td>" + (key + 1) + "</td>";
+                    advance += "<td>"+value.payment_date+"</td>";
+                    advance += "<td>PKR</td>";
+                    advance += "<td>Advance</td>";
+                    advance += "<td>"+value.total+"</td>";
+                    advance += "<td>"+value.reference+"</td>";
+                    advance += "</tr>";
+                });
+                $("#customerAdvanceTable").html(advance);
+
                 $("#preloader").hide();
             } else {
                 error(data.Message);
@@ -98,6 +116,42 @@ $("#customer_id").on("change", function () {
         },
     });
 });
+$("#advance_amount").val(0);
+let selectedAdvances = [];
+
+$(document).on("change", ".advance-check", function () {
+    let amount = parseFloat($(this).data("amount")) || 0;
+    let id = $(this).val();
+
+    let totalAdvance = parseFloat($("#advance_amount").val()) || 0;
+    let grandTotal = parseFloat($("#grand_total_total").val()) || 0;
+
+    if ($(this).is(":checked")) {
+        totalAdvance += amount;
+        selectedAdvances.push(id);
+    } else {
+        totalAdvance -= amount;
+        selectedAdvances = selectedAdvances.filter(item => item !== id);
+    }
+
+    
+
+    $("#advance_amount").val(totalAdvance.toFixed(2)).trigger("keyup");
+    $("#grand_total_total").val(grandTotal.toFixed(2));
+    $("#selected_advance_ids").val(JSON.stringify(selectedAdvances));
+    ChangeAmount();
+});
+
+function ChangeAmount() {
+    let totalAdvance = parseFloat($("#advance_amount").val()) || 0;
+    let goldAmount = parseFloat($("#gold_impurity_amount").val()) || 0;
+    let grandTotal = parseFloat($("#grand_total_total").val()) || 0;
+
+    let changeAmount = grandTotal - (totalAdvance + goldAmount);
+    $("#change_amount").val(changeAmount.toFixed(2));
+}
+
+
 $("#customerForm").submit(function (e) {
     e.preventDefault();
     $("#preloader").show();
@@ -617,11 +671,16 @@ $("body").on("click", "#submit", function (e) {
     formData.append("id", $("#id").val());
     formData.append("sale_date", $("#sale_date").val());
     formData.append("customer_id", $("#customer_id").find(":selected").val());
+    formData.append("selected_advance_ids", $("#selected_advance_ids").val());
     formData.append("sub_total", $("#grand_total").val());
     formData.append("total", $("#grand_total_total").val());
     formData.append("discount_amount", $("#discount_amount").val());
+    formData.append("advance_amount", $("#advance_amount").val());
+    formData.append("gold_impurity_amount", $("#gold_impurity_amount").val());
+    formData.append("change_amount", $("#change_amount").val());
 
     formData.append("productDetail", JSON.stringify(productData));
+    formData.append("usedGoldDetail", JSON.stringify(usedGoldData));
 
     $.ajax({
         url: url_local + "/sale/store", // Laravel route

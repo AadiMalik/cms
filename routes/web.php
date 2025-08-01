@@ -629,6 +629,15 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+        Route::get('/js/usedGold.js', function () {
+            $path = resource_path('views/sale/js/usedGold.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 
 

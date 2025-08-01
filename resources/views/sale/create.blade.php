@@ -343,45 +343,85 @@ $gold_rate = GoldRate();
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4"></div>
-                                <div class="col-md-8">
-                                    <div class="row">
-                                    <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="form-label font-weight-bold">Subtotal(PKR):<span class="text-danger">*</span> </label>
-                                                <div class="form-group form-float">
-                                                    <div class="form-line">
-                                                        <input type="text" name="grand_total"
-                                                            value="{{ isset($sale) ? $sale->sub_total : '0' }}"
-                                                            id="grand_total" class="form-control font-weight-bold"
-                                                            readonly required>
-                                                    </div>
-                                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Subtotal(PKR):<span class="text-danger">*</span> </label>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" name="grand_total"
+                                                    value="{{ isset($sale) ? $sale->sub_total : '0' }}"
+                                                    id="grand_total" class="form-control font-weight-bold"
+                                                    readonly required>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="form-label font-weight-bold">Discount:</label>
-                                                <div class="form-group form-float">
-                                                    <div class="form-line">
-                                                        <input type="text" name="discount_amount"
-                                                            value="{{ isset($sale) ? $sale->discount_amount : 0 }}"
-                                                            id="discount_amount" class="form-control font-weight-bold">
-                                                    </div>
-                                                </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Discount:</label>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" name="discount_amount"
+                                                    value="{{ isset($sale) ? $sale->discount_amount : 0 }}"
+                                                    id="discount_amount" class="form-control font-weight-bold">
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="form-label font-weight-bold">Total(PKR):<span class="text-danger">*</span> </label>
-                                                <div class="form-group form-float">
-                                                    <div class="form-line">
-                                                        <input type="text" name="grand_total_total"
-                                                            value="{{ isset($sale) ? $sale->total : '0' }}"
-                                                            id="grand_total_total" class="form-control font-weight-bold"
-                                                            readonly required>
-                                                    </div>
-                                                </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Total(PKR):<span class="text-danger">*</span> </label>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" name="grand_total_total"
+                                                    value="{{ isset($sale) ? $sale->total : '0' }}"
+                                                    id="grand_total_total" class="form-control font-weight-bold"
+                                                    readonly required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="selected_advance_ids[]" id="selected_advance_ids">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Advance:
+                                            <a href="javascript:void(0)" id="advancePayment"
+                                                style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                class="btn-primary"><i class="fa fa-plus text-white"></i></a>
+                                        </label>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" name="advance_amount" readonly
+                                                    value="{{ isset($sale) ? $sale->advance_amount : 0 }}"
+                                                    id="advance_amount" class="form-control font-weight-bold">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Gold Impurity:
+                                            <a href="javascript:void(0)" id="UsedGoldButton"
+                                                style="border: 1px solid #000; border-radius: 50%;padding: 3px 5px 3px 5px;"
+                                                class="btn-primary"><i class="fa fa-plus text-white"></i></a>
+                                        </label>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" name="gold_impurity_amount" readonly
+                                                    value="0"
+                                                    id="gold_impurity_amount" class="form-control font-weight-bold">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="form-label font-weight-bold">Change:</label>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <input type="text" name="change_amount" readonly
+                                                    value=""
+                                                    id="change_amount" class="form-control font-weight-bold">
                                             </div>
                                         </div>
                                     </div>
@@ -394,6 +434,8 @@ $gold_rate = GoldRate();
                                     tabindex="10">SAVE</button>
                             </div>
                         </div>
+
+                        @include('sale/Modal/AdvanceModel')
                     </form>
                 </div>
                 <!-- end of col -->
@@ -408,12 +450,14 @@ $gold_rate = GoldRate();
 @include('sale/Modal/DiamondModal')
 @include('sale/Modal/StonesModal')
 @include('sale/Modal/DetailModal')
+@include('sale/Modal/UsedGoldModal')
 @endsection
 @section('js')
 <script src="{{ url('sale/js/sale.js') }}"></script>
 <script src="{{ url('sale/js/beadWeight.js') }}"></script>
 <script src="{{ url('sale/js/stoneWeight.js') }}"></script>
 <script src="{{ url('sale/js/diamondCarat.js') }}"></script>
+<script src="{{ url('sale/js/usedGold.js') }}"></script>
 <script type="text/javascript">
     var url_local = "{{ url('/') }}";
     var sale_id = "{{ isset($sale) ? $sale->id : '' }}";

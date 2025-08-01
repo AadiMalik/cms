@@ -5,6 +5,7 @@ namespace App\Services\Concrete;
 use App\Models\CompanySetting;
 use App\Repository\Repository;
 use App\Models\Customer;
+use App\Models\CustomerPayment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
@@ -13,6 +14,7 @@ class CustomerService
 {
     // initialize protected model variables
     protected $model_customer;
+    protected $model_customer_payment;
 
     protected $journal_entry_service;
 
@@ -20,6 +22,7 @@ class CustomerService
     {
         // set the model
         $this->model_customer = new Repository(new Customer);
+        $this->model_customer_payment = new Repository(new CustomerPayment);
 
         $this->journal_entry_service = new JournalEntryService;
     }
@@ -89,7 +92,6 @@ class CustomerService
         return $this->model_customer->getModel()::with('account_name')
             ->where('is_deleted', 0)
             ->where('is_active', 1)
-            ->where('account_id', '!=', null)
             ->get();
     }
 
@@ -138,7 +140,14 @@ class CustomerService
 
     public function getById($id)
     {
-        return $this->model_customer->getModel()::find($id);
+        $customer = $this->model_customer->getModel()::find($id);
+        $customer_payments = $this->model_customer_payment->getModel()::where('customer_id',$customer->id)
+        ->where('currency',0)
+        ->where('type','advance')
+        ->where('is_used',0)
+        ->get();
+        $customer->advances = $customer_payments;
+        return $customer;
     }
 
     public function statusById($id)

@@ -50,7 +50,7 @@
                         <div class="col-md-4">
                             <label>Convert Currency:<span style="color:red;">*</span></label>
                             <div class="form-group">
-                                <select id="convert_currency" name="convert_currency" class="form-control show-tick" required>
+                                <select id="convert_currency" name="convert_currency" class="form-control show-tick">
                                     <option value="" selected>Not Convert</option>
                                     <option value="0">PKR</option>
                                     <option value="1">Gold (AU)</option>

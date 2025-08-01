@@ -41,7 +41,7 @@
             </li>
             @endcan
             @can('accounting_access')
-            <li class="Ul_li--hover {{ Request::is('journals*') | Request::is('journal-entries*') | Request::is('customer-payment*') | Request::is('supplier-payment*') ? 'mm-active' : '' }}">
+            <li class="Ul_li--hover {{ Request::is('journal-entries*') | Request::is('customer-payment*') | Request::is('supplier-payment*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-credit-card text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Reciepts & Pay..</span></a>
                 <ul class="mm-collapse">
@@ -180,7 +180,7 @@
             @endcan
             @can('common_access')
             <li
-                class="Ul_li--hover {{ Request::is('bead-type*') || Request::is('stone-category*') || Request::is('diamond-type*') || Request::is('diamond-color*') || Request::is('finish-product-location*') || Request::is('diamond-cut*') || Request::is('diamond-clarity*') ? 'mm-active' : '' }}">
+                class="Ul_li--hover {{Request::is('journals*') | Request::is('bead-type*') || Request::is('stone-category*') || Request::is('diamond-type*') || Request::is('diamond-color*') || Request::is('finish-product-location*') || Request::is('diamond-cut*') || Request::is('diamond-clarity*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Coding</span></a>
                 <ul class="mm-collapse">
