@@ -44,11 +44,11 @@ class JournalEntryService
                   ->where('date_post', '>=', $obj['from_date'] . " 00:00:00")->where('date_post', '<=', $obj['to_date'] . " 23:59:59")
                   ->orderBy('date_post', 'DESC');
 
-            if ($obj['currency'] != '' && $obj['currency'] != null) {
-                  $model->whereHas('journal_entry_detail', function ($query) use ($obj) {
-                        $query->where('currency', $obj['currency']);
-                  });
-            }
+            // if ($obj['currency'] != '' && $obj['currency'] != null) {
+            //       $model->whereHas('journal_entry_detail', function ($query) use ($obj) {
+            //             $query->where('currency', $obj['currency']);
+            //       });
+            // }
             $data = DataTables::of($model)
                   ->addColumn('journal', function ($item) {
                         return $item->journal_name->name ?? '';
@@ -84,7 +84,7 @@ class JournalEntryService
 
                         return $action_column;
                   })
-                  ->rawColumns(['journal', 'debit', 'credit','currency', 'action'])
+                  ->rawColumns(['journal', 'debit', 'credit', 'action'])
                   ->make(true);
             return $data;
       }
