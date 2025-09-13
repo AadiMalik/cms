@@ -166,7 +166,9 @@
                                             <th>Purchase Order#</th>
                                             <th>Supplier/Karigar</th>
                                             <th>Purchase Account</th>
-                                            <th>Total</th>
+                                            <th>Total (PKR)</th>
+                                            <th>Total (AU)</th>
+                                            <th>Total ($)</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -202,6 +204,8 @@
 {data: 'supplier',name: 'supplier', orderable: false, searchable: false},
 {data: 'purchase_account',name: 'purchase_account', orderable: false, searchable: false},
 {data: 'total',name: 'total', orderable: false, searchable: false},
+{data: 'total_au',name: 'total_au', orderable: false, searchable: false},
+{data: 'total_dollar',name: 'total_dollar', orderable: false, searchable: false},
 {data: 'posted',name: 'posted', orderable: false, searchable: false},
 {data: 'action',name: 'action','sortable': false,searchable: false}",
 'route' => 'ratti-kaats/data',

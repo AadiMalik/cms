@@ -126,7 +126,7 @@ function addDiamondProduct() {
         total_dollar: diamond_total_dollar,
     });
 
-    $("#total").val(total);
+    // $("#total").val(total);
 
     $.each(diamondData, function (index, val) {
 

@@ -130,7 +130,7 @@ function addBeadProduct() {
         total_amount: bead_total,
     });
 
-    $("#total").val(total);
+    // $("#total").val(total);
 
     $.each(beadData, function (index, val) {
 

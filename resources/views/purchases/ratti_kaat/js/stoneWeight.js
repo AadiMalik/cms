@@ -174,7 +174,7 @@ function addStoneProduct() {
         total_amount: stone_total,
     });
 
-    $("#total").val(total);
+    // $("#total").val(total);
 
     $.each(stoneData, function (index, val) {
 

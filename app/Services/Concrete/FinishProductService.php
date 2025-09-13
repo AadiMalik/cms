@@ -177,7 +177,8 @@ class FinishProductService
                 "total_amount" => $obj['total_amount'] ?? 0,
                 "picture" => $obj['picture'] ?? null,
                 "barcode" => $obj['barcode'] ?? null,
-                "createdby_id" => Auth::user()->id
+                "createdby_id" => Auth::user()->id,
+                "finish_product_location_id"=>1
             ];
             $saved_obj = $this->model_finish_product->create($finishProduct);
 
