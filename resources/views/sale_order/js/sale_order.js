@@ -220,8 +220,12 @@ function addProduct() {
     }
     var check = true;
     $.each(saleOrderData, function (e, val) {
-        if (val.product_id == $("#product_id").find(":selected").val()) {
-            error("Product is already added !");
+        if (
+            val.product_id == product_id &&
+            val.category == category &&
+            val.design_no == design_no
+        ) {
+            error("This product with same category and design no is already added!");
             $("#preloader").hide();
             check = false;
             return false;
@@ -250,12 +254,12 @@ function addProduct() {
         sale_order_sr = sale_order_sr + 1;
         saleOrderData.sr = sale_order_sr;
 
-        rows += `<tr id="${val.product_id}"><td>${sale_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
+        rows += `<tr id="row_${val.product_id}_${val.category}_${val.design_no}"><td>${sale_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
                 <td>${val.design_no}</td><td style="text-align: right;">${val.net_weight}</td>
                 <td style="text-align: right;">${val.waste}</td>
                 <td style="text-align: right;">${val.gross_weight}</td>
                 <td>${val.description}</td>
-                <td><a class="text-danger text-white saleorderr${val.product_id}" onclick="SaleOrderRemove(${val.product_id})"><i class="fa fa-trash"></i></a></td></tr>`;
+                <td><a class="text-danger text-white saleorderr${val.product_id}" onclick="SaleOrderRemove('${val.product_id}','${val.category}','${val.design_no}')"><i class="fa fa-trash"></i></a></td></tr>`;
 
     });
     success("Product Added Successfully!");
@@ -368,7 +372,7 @@ $("body").on("click", "#submit", function (e) {
     });
 });
 
-function SaleOrderRemove(id) {
+function SaleOrderRemove(product_id, category, design_no) {
     console.log(id);
     Swal.fire({
         title: "Are you sure?",
@@ -383,16 +387,21 @@ function SaleOrderRemove(id) {
         var total = 0;
         $("#preloader").show();
         $.each(saleOrderData, function (i, val) {
-            if (val.product_id == id) {
-                $("#" + id).hide();
+            if (
+                val.product_id == product_id &&
+                val.category == category &&
+                val.design_no == design_no
+            ) {
+                $("#row_" + val.product_id + "_" + val.category + "_" + val.design_no).remove();
                 item_index = i;
                 return false;
             }
         });
-
-        saleOrderData.splice(item_index, 1);
-        var check = ".saleorderr" + id;
-        $(check).closest("tr").remove();
+        if (item_index !== "") {
+            saleOrderData.splice(item_index, 1);
+        }
+        // var check = ".saleorderr" + id;
+        // $(check).closest("tr").remove();
         success("Product Deleted Successfully!");
         SaleOrderShort();
         $("#preloader").hide();

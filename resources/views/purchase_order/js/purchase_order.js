@@ -75,13 +75,13 @@ $("body").on("click", "#SaleOrder", function (event) {
         var data = data.Data;
         purchaseOrderData = [];
         $("#purchase_order_products").empty();
-        var purchase_order_sr =0;
+        var purchase_order_sr = 0;
         var rows = "";
         $.each(data, function (k, value) {
             purchaseOrderData.push({
                 // sr: i,
-                product_id:value.product_id,
-                product:value.product_name,
+                product_id: value.product_id,
+                product: value.product_name,
                 category: value.category,
                 design_no: value.design_no,
                 net_weight: value.net_weight,
@@ -92,18 +92,14 @@ $("body").on("click", "#SaleOrder", function (event) {
             purchase_order_sr = purchase_order_sr + 1;
             purchaseOrderData.sr = purchase_order_sr;
 
-            rows += `<tr id="${
-                val.product_id
-            }"><td>${purchase_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
-                <td>${val.design_no}</td><td style="text-align: right;">${
-                val.net_weight
-            }</td>
+            rows += `<tr id="${val.product_id
+                }"><td>${purchase_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
+                <td>${val.design_no}</td><td style="text-align: right;">${val.net_weight
+                }</td>
                 <td>${val.description}</td>
-                <td><a class="text-danger text-white purchaseorderr${
-                    val.product_id
-                }" onclick="PurchaseOrderRemove(${
-                val.product_id
-            })"><i class="fa fa-trash"></i></a></td></tr>`;
+                <td><a class="text-danger text-white purchaseorderr${val.product_id
+                }" onclick="PurchaseOrderRemove(${val.product_id
+                })"><i class="fa fa-trash"></i></a></td></tr>`;
         });
         console.log(rows);
         $("#purchase_order_products").html(rows);
@@ -150,10 +146,11 @@ function addProduct() {
     var check = true;
     $.each(purchaseOrderData, function (e, val) {
         if (
-            val.product_id ==
-            $("#product_id").find(":selected").val()
+            val.product_id == product_id &&
+            val.category == category &&
+            val.design_no == design_no
         ) {
-            error("Product is already added !");
+            error("This product with same category and design no is already added!");
             $("#preloader").hide();
             check = false;
             return false;
@@ -167,8 +164,8 @@ function addProduct() {
 
     purchaseOrderData.push({
         // sr: i,
-        product_id:product_id,
-        product:product,
+        product_id: product_id,
+        product: product,
         category: category,
         design_no: design_no,
         net_weight: net_weight,
@@ -179,18 +176,12 @@ function addProduct() {
         purchase_order_sr = purchase_order_sr + 1;
         purchaseOrderData.sr = purchase_order_sr;
 
-        rows += `<tr id="${
-            val.product_id
-        }"><td>${purchase_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
-                <td>${val.design_no}</td><td style="text-align: right;">${
-            val.net_weight
-        }</td>
+        rows += `<tr id="prow_${val.product_id}_${val.category}_${val.design_no}"><td>${purchase_order_sr}</td><td>${val.product}</td><td>${val.category}</td>
+                <td>${val.design_no}</td><td style="text-align: right;">${val.net_weight
+            }</td>
                 <td>${val.description}</td>
-                <td><a class="text-danger text-white purchaseorderr${
-                    val.product_id
-                }" onclick="PurchaseOrderRemove(${
-            val.product_id
-        })"><i class="fa fa-trash"></i></a></td></tr>`;
+                <td><a class="text-danger text-white purchaseorderr${val.product_id
+            }" onclick="PurchaseOrderRemove('${val.product_id}','${val.category}','${val.design_no}')"><i class="fa fa-trash"></i></a></td></tr>`;
     });
     success("Product Added Successfully!");
     $("#purchase_order_products").empty();
@@ -277,8 +268,7 @@ $("body").on("click", "#submit", function (e) {
     });
 });
 
-function PurchaseOrderRemove(id) {
-    console.log(id);
+function PurchaseOrderRemove(product_id, category, design_no) {
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -292,16 +282,23 @@ function PurchaseOrderRemove(id) {
         var total = 0;
         $("#preloader").show();
         $.each(purchaseOrderData, function (i, val) {
-            if (val.product_id == id) {
-                $("#" + id).hide();
+            if (
+                val.product_id == product_id &&
+                val.category == category &&
+                val.design_no == design_no
+            ) {
+                $("#prow_" + val.product_id + "_" + val.category + "_" + val.design_no).remove();
                 item_index = i;
                 return false;
             }
         });
 
-        purchaseOrderData.splice(item_index, 1);
-        var check = ".purchaseorderr" + id;
-        $(check).closest("tr").remove();
+        // purchaseOrderData.splice(item_index, 1);
+        // var check = ".purchaseorderr" + id;
+        // $(check).closest("tr").remove();
+        if (item_index !== "") {
+            purchaseOrderData.splice(item_index, 1);
+        }
         success("Product Deleted Successfully!");
         PurchaseOrderShort();
         $("#preloader").hide();
