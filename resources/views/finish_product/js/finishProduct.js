@@ -179,11 +179,10 @@ function netWeight() {
     var scale_weight = $("#scale_weight").val();
     var bead_weight = $("#bead_weight").val();
     var stones_weight = $("#stones_weight").val();
-    var diamond_weight = $("#diamond_weight").val();
     var net_weight = 0;
     net_weight =
         scale_weight * 1 -
-        (bead_weight * 1 + stones_weight * 1 + diamond_weight * 1);
+        (bead_weight * 1 + stones_weight * 1);
     $("#net_weight").val(net_weight.toFixed(3));
 }
 $("#waste_per").on("keyup", function (event) {
