@@ -38,7 +38,7 @@ $dollar_rate = DollarRate();
                                     <label for="">Start Date:<span class="text-danger">*</span></label>
                                     <div class="form-line">
                                         <input type="date" id="start_date" name="start_date" class="form-control"
-                                            required value="{{ date('Y-m-d') }}">
+                                            required value="{{ date('Y-m-d', strtotime('-30 days')) }}">
                                     </div>
                                 </div>
                             </div>

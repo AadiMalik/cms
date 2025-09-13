@@ -32,13 +32,13 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="">From:<span class="text-danger">*</span></label>
-                                    <input type="date" id="start_date" name="start_date" class="form-control date">
+                                    <input type="date" id="start_date" name="start_date" class="form-control date" value="{{ date('Y-m-d', strtotime('-30 days')) }}">
                                 </div>
                             </div>
                             <div class="col-md-2" id="div_end_date">
                                 <div class="form-group">
                                     <label for="">To:<span class="text-danger">*</span></label>
-                                    <input type="date" id="end_date" name="end_date" class="form-control date">
+                                    <input type="date" id="end_date" name="end_date" class="form-control date" value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
                             <div class="col-md-3" id="div_vendor">
@@ -159,30 +159,6 @@ $(row).css("background-color", "Pink");
             $("#selectAll").show();
             $("#unselectAll").hide();
         })
-        const startDate = document.getElementById("start_date");
-        const endDate = document.getElementById("end_date");
-
-        // ✅ Using the visitor's timezone
-        startDate.value = formatDate();
-        endDate.value = formatDate();
-
-        console.log(formatDate());
-
-        function padTo2Digits(num) {
-            return num.toString().padStart(2, "0");
-        }
-
-        function formatDate(date = new Date()) {
-            return [
-                padTo2Digits(date.getMonth() + 1),
-                padTo2Digits(date.getDate()),
-                date.getFullYear(),
-            ].join("/");
-        }
-        startDate.value = new Date().toISOString().split("T")[0];
-        endDate.value = new Date().toISOString().split("T")[0];
-
-
     });
 
     function isNumberKey(evt) {

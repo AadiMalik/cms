@@ -173,7 +173,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-label">Disign No:</label>
+                                            <label class="form-label">Design No:</label>
                                             <div class="form-group form-float">
                                                 <div class="form-line">
                                                     <input type="text" name="design_no" id="design_no"

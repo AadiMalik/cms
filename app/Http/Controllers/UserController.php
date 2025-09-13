@@ -71,12 +71,18 @@ class UserController extends Controller
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
+            if($request->role=='Supplier/Karigar User'){
+                $supplier_id=$request->supplier_id;
+            }else{
+                $supplier_id=null;
+            }
+
             $obj = [
                 "id"        => $request->id,
                 "name"      => $request->name,
                 "email"     => $request->email,
                 "password"  => Hash::make($request->password),
-                "supplier_id"=> $request->supplier_id??null,
+                "supplier_id"=> $supplier_id,
             ];
 
             $user = $this->user_service->save($obj);

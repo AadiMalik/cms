@@ -28,13 +28,13 @@
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="">From:<span class="text-danger">*</span></label>
-                                        <input type="date" id="start_date" name="start_date" class="form-control date">
+                                        <input type="date" id="start_date" name="start_date" class="form-control date" value="{{ date('Y-m-d', strtotime('-30 days')) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-2" id="div_end_date">
                                     <div class="form-group">
                                         <label for="">To:<span class="text-danger">*</span></label>
-                                        <input type="date" id="end_date" name="end_date" class="form-control date">
+                                        <input type="date" id="end_date" name="end_date" class="form-control date" value="{{ date('Y-m-d') }}">
                                     </div>
                                 </div>
                                 @if(auth()->user()->roles[0]->name!='Supplier/Karigar User')

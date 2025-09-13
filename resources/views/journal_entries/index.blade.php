@@ -28,13 +28,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="role">From Date</label>
-                                    <input type="date" name="from_date" class="form-control" id="from_date" required>
+                                    <input type="date" name="from_date" class="form-control" id="from_date" required  value="{{ date('Y-m-d', strtotime('-30 days')) }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="role">To Date</label>
-                                    <input type="date" name="to_date" class="form-control" id="to_date" required>
+                                    <input type="date" name="to_date" class="form-control" id="to_date" required  value="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -151,29 +151,6 @@
 
 <script>
     $(document).ready(function() {
-        const fromDate = document.getElementById("from_date");
-        const toDate = document.getElementById("to_date");
-
-        // ✅ Using the visitor's timezone
-        fromDate.value = formatDate();
-        toDate.value = formatDate();
-
-        console.log(formatDate());
-
-        function padTo2Digits(num) {
-            return num.toString().padStart(2, "0");
-        }
-
-        function formatDate(date = new Date()) {
-            return [
-                padTo2Digits(date.getMonth() + 1),
-                padTo2Digits(date.getDate()),
-                date.getFullYear(),
-            ].join("/");
-        }
-        fromDate.value = new Date().toISOString().split("T")[0];
-        toDate.value = new Date().toISOString().split("T")[0];
-
         initDataTablejournal_entry_table();
     });
 
