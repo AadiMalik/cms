@@ -34,7 +34,9 @@
                                         <th scope="col">Email</th>
                                         <th scope="col">Address</th>
                                         <th scope="col">Status</th>
-                                        <th scope="col">Balance</th>
+                                        <th scope="col">Balance (PKR)</th>
+                                        <th scope="col">Balance (AU)</th>
+                                        <th scope="col">Balance ($)</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -61,6 +63,8 @@
                                     {data: 'address' , name: 'address'},
                                     {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
                                     {data: 'balance' , name: 'balance' , 'sortable': false , searchable: false},
+                                    {data: 'balance_au' , name: 'balance_au' , 'sortable': false , searchable: false},
+                                    {data: 'balance_dollar' , name: 'balance_dollar' , 'sortable': false , searchable: false},
                                     {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
         'route' => 'customers/data',
         'buttons' => false,

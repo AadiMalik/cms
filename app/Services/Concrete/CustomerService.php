@@ -45,6 +45,22 @@ class CustomerService
                     return "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>0</span>";
                 }
             })
+            ->addColumn('balance_au', function ($item) {
+                if ($item->account_id != null) {
+                    $balance_au = $this->journal_entry_service->getCustomerBalanceByAccountId($item->id, $item->account_id, 1);
+                    return ($balance_au > 0) ? "<span class='btn-danger pl-1'> <i class='fa fa-arrow-up'></i>" . $balance_au . "</span> " : (($balance_au < 0) ? "<span class='btn-primary pl-1'> <i class='fa fa-arrow-down'></i>" . $balance_au . "</span>" : "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>" . (($balance_au == null) ? 0 : $balance_au) . "</span>");
+                } else {
+                    return "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>0</span>";
+                }
+            })
+            ->addColumn('balance_dollar', function ($item) {
+                if ($item->account_id != null) {
+                    $balance_dollar = $this->journal_entry_service->getCustomerBalanceByAccountId($item->id, $item->account_id, 2);
+                    return ($balance_dollar > 0) ? "<span class='btn-danger pl-1'> <i class='fa fa-arrow-up'></i>" . $balance_dollar . "</span> " : (($balance_dollar < 0) ? "<span class='btn-primary pl-1'> <i class='fa fa-arrow-down'></i>" . $balance_dollar . "</span>" : "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>" . (($balance_dollar == null) ? 0 : $balance_dollar) . "</span>");
+                } else {
+                    return "<span class='btn-success pl-1'> <i class='fa fa-arrows'></i>0</span>";
+                }
+            })
             ->addColumn('status', function ($item) {
                 if ($item->is_active == 1) {
                     $status = '<label class="switch pr-5 switch-primary mr-3"><input type="checkbox" checked="checked" id="status" data-id="' . $item->id . '"><span class="slider"></span></label>';
@@ -69,7 +85,7 @@ class CustomerService
 
                 return $action_column;
             })
-            ->rawColumns(['account', 'status', 'balance', 'action'])
+            ->rawColumns(['account', 'status', 'balance','balance_au','balance_dollar', 'action'])
             ->make(true);
         return $data;
     }
