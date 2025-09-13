@@ -171,7 +171,7 @@ function DiamondsByPurchaseDetail(ratti_kaat_detail_id) {
           <td><a class="text-danger text-white stoner${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}" onclick="DiamondRemove('${type.replace(/\s+/g, '') + Math.floor(val.diamonds) + Math.floor(val.carat)}')"><i class="fa fa-trash"></i></a></td></tr>`;
                 total += val.total_amount * 1;
                 // total_weight += val.carat * 0.2;
-                total_weight += val.carat;
+                total_weight += val.carat * 1;
             });
 
             $("#total_diamond_price").val(total.toFixed(3));
