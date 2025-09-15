@@ -295,12 +295,12 @@ class JobPurchaseService
 
                 $journal_entry_id = $journal_entry->id ?? null;
 
-                if (
-                    $supplier->account_id == null || $supplier->account_au_id == null || $supplier->account_dollar_id == null
-                ) {
-                    $message = "This Supplier/Karigar have  not 3 accounts. please update then post again.!";
-                    return $message;
-                }
+                // if (
+                //     $supplier->account_id == null || $supplier->account_au_id == null || $supplier->account_dollar_id == null
+                // ) {
+                //     $message = "This Supplier/Karigar have  not 3 accounts. please update then post again.!";
+                //     return $message;
+                // }
 
                 $purchase_account = Account::find($obj['purchase_account_id']);
                 $supplir_account = Account::find($supplier->account_id);
