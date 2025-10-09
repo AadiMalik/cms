@@ -31,6 +31,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RattiKaatController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\RetainerController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SaleOrderController;
@@ -962,6 +963,28 @@ Route::group(['middleware' => ['auth']], function () {
         });
         Route::get('/js/diamond_carat.js', function () {
             $path = resource_path('views/purchases/job_purchase/js/diamond_carat.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    //retainer
+    Route::group(['prefix' => 'retainer'], function () {
+        Route::get('/', [RetainerController::class, 'index']);
+        Route::post('data', [RetainerController::class, 'getData'])->name('retainer.data');
+        Route::get('create', [RetainerController::class, 'create']);
+        Route::post('store', [RetainerController::class, 'store']);
+        Route::get('edit/{id}', [RetainerController::class, 'edit']);
+        Route::post('update', [RetainerController::class, 'update']);
+        Route::get('destroy/{id}', [RetainerController::class, 'destroy']);
+        Route::get('active/{id}', [RetainerController::class, 'active']);
+        Route::post('status', [RetainerController::class, 'status']);
+        Route::get('/js/RetainerForm.js', function () {
+            $path = resource_path('views/retainer/js/RetainerForm.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

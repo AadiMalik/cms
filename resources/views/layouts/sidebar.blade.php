@@ -41,7 +41,7 @@
             </li>
             @endcan
             @can('accounting_access')
-            <li class="Ul_li--hover {{ Request::is('journal-entries*') | Request::is('customer-payment*') | Request::is('supplier-payment*') ? 'mm-active' : '' }}">
+            <li class="Ul_li--hover {{ Request::is('journal-entries*') | Request::is('customer-payment*') | Request::is('reatainer*') | Request::is('supplier-payment*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-credit-card text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Reciepts & Pay..</span></a>
                 <ul class="mm-collapse">
@@ -60,6 +60,11 @@
                             href="{{ url('supplier-payment') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Supplier Payments</span></a></li>
                     @endcan
+                    {{--@can('retainer_access')--}}
+                    <li class="item-name"><a class="{{ Request::is('retainer*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('retainer') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Retainers</span></a></li>
+                    {{--@endcan--}}
 
                 </ul>
             </li>
