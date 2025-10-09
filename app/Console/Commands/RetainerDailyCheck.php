@@ -48,9 +48,8 @@ class RetainerDailyCheck extends Command
 
     protected function sendRetainerNotifications($today)
     {
-        $retainers = Retainer::whereDay('day', $today->day)
+        $retainers = Retainer::where('day_of_month', $today->day)
             ->get();
-
         foreach ($retainers as $retainer) {
             // Skip if already notified today
             if ($retainer->notification_at && Carbon::parse($retainer->notification_at)->isSameDay($today)) {
@@ -78,7 +77,7 @@ class RetainerDailyCheck extends Command
             'journal',
             'debit_account',
             'credit_account'
-        ])->whereDay('day', $yesterday->day)
+        ])->whereDay('day_of_month', $yesterday->day)
             ->where('status', 'pending')
             ->get();
 
@@ -96,7 +95,7 @@ class RetainerDailyCheck extends Command
                 $journal_entry = new JournalEntry;
                 $journal_entry->journal_id = $retainer->journal_id;
                 $journal_entry->date_post = now();
-                $journal_entry->reference = 'Automatically Created for Retainer: ' . $retainer->name;
+                $journal_entry->reference = 'Automatically Created for Retainer: ' . $retainer->title??'';
                 $journal_entry->entryNum = $entryNum;
                 $journal_entry->createdby_id = 1;
                 $journal_entry->save();
@@ -106,7 +105,7 @@ class RetainerDailyCheck extends Command
                     $retainer->currency, // currency 0 for PKR, 1 for AU, 2 for Dollar
                     $journal_entry->id, // journal entry id
                     'Retainer Debit Entry', //explaination
-                    '', //bill no
+                    $retainer->id, //bill no
                     0, // check no or 0
                     $payment_date, //check date
                     1, // is credit flag 0 for credit, 1 for debit
@@ -121,7 +120,7 @@ class RetainerDailyCheck extends Command
                     $retainer->currency, // currency 0 for PKR, 1 for AU, 2 for Dollar
                     $journal_entry->id, // journal entry id
                     'Retainer Credit Entry', //explaination
-                    '', //bill no
+                    $retainer->id, //bill no
                     0, // check no or 0
                     $payment_date, //check date
                     0, // is credit flag 0 for credit, 1 for debit
@@ -134,7 +133,9 @@ class RetainerDailyCheck extends Command
                 // Update retainer status to confirm
                 $retainer->update([
                     'status' => 'confirmed',
-                    'last_jv_id' => $journal_entry->id ?? null,
+                    'confirmed_at'=> now(),
+                    'confirmed_by' => 1,
+                    'jv_id' => $journal_entry->id ?? null,
                 ]);
             });
         }

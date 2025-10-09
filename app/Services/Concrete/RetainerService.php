@@ -2,18 +2,23 @@
 
 namespace App\Services\Concrete;
 
+use App\Models\JournalEntry;
 use App\Models\Retainer;
 use App\Repository\Repository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Concrete\JournalEntryService;
 use Yajra\DataTables\Facades\DataTables;
 
 class RetainerService
 {
       protected $model_retainer;
+      protected $journal_entry_service;
       public function __construct()
       {
             // set the model
             $this->model_retainer = new Repository(new Retainer);
+            $this->journal_entry_service = new JournalEntryService();
       }
       //Other Product
       public function getSource()
@@ -39,7 +44,8 @@ class RetainerService
                         // }
                   })
                   ->addColumn('status', function ($item) {
-                        $dropdown = '<select id="status" style="width:150px;" class="form-control" data-id="' . $item->id . '">';
+                        $disabled = $item->status == 'confirmed' ? 'disabled' : '';
+                        $dropdown = '<select id="status" style="width:150px;" class="form-control" data-id="' . $item->id . '" ' . $disabled . '>';
                         if ($item->status == 'pending') {
                               $dropdown .= '<option value="pending" selected>Pending</option>';
                               $dropdown .= '<option value="confirmed">Confirmed</option>';
@@ -168,8 +174,63 @@ class RetainerService
       public function status($obj)
       {
             $retainer = $this->model_retainer->getModel()::find($obj['id']);
-            $retainer->status = $obj['status'];
-            $retainer->update();
-            return true;
+            if ($obj['status'] == 'confirmed') {
+                  $payment_date = date("Y-m-d", strtotime(str_replace('/', '-', Carbon::now())));
+                  $data = [
+                        "date" => $payment_date,
+                        "prefix" => $retainer->journal->prefix,
+                        "journal_id" => $retainer->journal->id
+                  ];
+                  $entryNum = $this->journal_entry_service->generateJournalEntryNum($data);
+
+                  $journal_entry = new JournalEntry();
+                  $journal_entry->journal_id = $retainer->journal_id;
+                  $journal_entry->date_post = now();
+                  $journal_entry->reference = 'Automatically Created for Retainer: ' . $retainer->title ?? '';
+                  $journal_entry->entryNum = $entryNum;
+                  $journal_entry->createdby_id = 1;
+                  $journal_entry->save();
+                  $amount = str_replace(',', '', $retainer->amount ?? 0);
+                  //for debit
+                  $this->journal_entry_service->saveJVDetail(
+                        $retainer->currency, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry->id, // journal entry id
+                        'Retainer Debit Entry', //explaination
+                        $retainer->id, //bill no
+                        0, // check no or 0
+                        $payment_date, //check date
+                        1, // is credit flag 0 for credit, 1 for debit
+                        $amount, //amount
+                        $retainer->debit_account->id, // account id
+                        $retainer->debit_account->code, // account code
+                        1 //created by id
+                  );
+
+                  //for credit
+                  $this->journal_entry_service->saveJVDetail(
+                        $retainer->currency, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                        $journal_entry->id, // journal entry id
+                        'Retainer Credit Entry', //explaination
+                        $retainer->id, //bill no
+                        0, // check no or 0
+                        $payment_date, //check date
+                        0, // is credit flag 0 for credit, 1 for debit
+                        $amount, //amount
+                        $retainer->credit_account->id, // account id
+                        $retainer->credit_account->code, // account code
+                        1 //created by id
+                  );
+
+                  // Update retainer status to confirm
+                  $retainer->update([
+                        'status' => 'confirmed',
+                        'confirmed_at' => now(),
+                        'confirmed_by' => 1,
+                        'jv_id' => $journal_entry->id ?? null,
+                  ]);
+                  return $journal_entry;
+            } else {
+                  return true;
+            }
       }
 }
