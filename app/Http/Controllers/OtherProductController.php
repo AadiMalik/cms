@@ -46,6 +46,7 @@ class OtherProductController extends Controller
             $request->all(),
             [
                 'name' => 'required',
+                'type' => 'required',
                 'other_product_unit_id' => 'required'
             ],
             $this->validationMessage()
@@ -65,6 +66,7 @@ class OtherProductController extends Controller
                 $obj = [
                     'id' => $request->id,
                     'name' => $request->name,
+                    'type' => $request->type,
                     'other_product_unit_id' => $request->other_product_unit_id
                 ];
                 $response = $this->other_product_service->update($obj);
@@ -76,6 +78,7 @@ class OtherProductController extends Controller
                 $obj = [
                     'code'=>$this->generateProductCode($request->name),
                     'name' => $request->name,
+                    'type' => $request->type,
                     'other_product_unit_id' => $request->other_product_unit_id
                 ];
                 $response = $this->other_product_service->save($obj);

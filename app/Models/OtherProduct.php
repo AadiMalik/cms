@@ -13,11 +13,12 @@ class OtherProduct extends Model
         'code',
         'name',
         'other_product_unit_id',
+        'type',
         'createdby_id',
         'updatedby_id',
         'is_active',
         'is_deleted',
-        'deletedby_id'
+        'deletedby_id',
     ];
     protected $dates = [
         'updated_at',

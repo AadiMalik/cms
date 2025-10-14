@@ -46,6 +46,7 @@
                             <thead>
                                 <tr>
                                     <th>Product</th>
+                                    <th>Type</th>
                                     <th>Unit</th>
                                     <th>Warehouse</th>
                                     <th>Stock</th>
@@ -73,6 +74,7 @@
 @include('includes.datatable', [
 'columns' => "
 {data: 'name' , name: 'name'},
+{data: 'type' , name: 'type'},
 {data: 'unit' , name: 'unit'},
 {data: 'warehouse' , name: 'warehouse'},
 {data: 'stock' , name: 'stock'},",

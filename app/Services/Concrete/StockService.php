@@ -47,6 +47,7 @@ class StockService
             $model[] = [
                 "id" => $item->id,
                 "name" => $item->code.' - '.$item->name ?? '',
+                "type" => $item->type ?? '',
                 "unit" => $item->other_product_unit->name ?? '',
                 "warehouse" => $warehouse->name ?? '',
                 "stock" => $stock ?? 0

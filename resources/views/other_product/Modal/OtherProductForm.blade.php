@@ -18,6 +18,24 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="form-label" class="col-sm-2 control-label">Type:<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-12">
+                            <select id="type" name="type"
+                                class="form-control show-tick" required>
+                                <option value="" selected="selected" disabled>--Select
+                                    Type--
+                                </option>
+                                <option value="Raw Material">Raw Material</option>
+                                <option value="Consumable">Consumable</option>
+                                <option value="Trading Goods">Trading Goods</option>
+                                <option value="Packaging Material">Packaging Material</option>
+                                <option value="Fixed Assets">Fixed Assets</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="form-label" class="col-sm-2 control-label">Unit:<span
                                 class="text-danger">*</span></label>
                         <div class="col-sm-12">

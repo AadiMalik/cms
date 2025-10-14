@@ -27,6 +27,7 @@
                                         <tr>
                                             <th>Code</th>
                                             <th>Name</th>
+                                            <th>Type</th>
                                             <th>Unit</th>
                                             <th>Status</th>
                                             <th>Action</th>
@@ -58,6 +59,7 @@
         'columns' => "
                         {data: 'code' , name: 'code'},
                         {data: 'name' , name: 'name'},
+                        {data: 'type' , name: 'type'},
                         {data: 'unit' , name: 'unit', 'sortable': false , searchable: false},
                         {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
                         {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
