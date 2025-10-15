@@ -42,15 +42,11 @@ class GoldImpurityPurchase extends Model
         static::addGlobalScope('roleFilter', function ($query) {
             $user = Auth::user();
 
-            if (!$user) return $query;
+            if (!$user) return;
 
-            if (in_array($user->role, [config('enum.salesman'), config('enum.admin')])) {
+            if (getRoleName() == config('enum.salesman') || getRoleName() == config('enum.admin')) {
                 return $query->where('createdby_id', $user->id);
-            } else {
-                return $query;
             }
-
-            return $query;
         });
     }
 
