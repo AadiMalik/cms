@@ -2,6 +2,7 @@
 return [
       // Roles name
       'superAdmin'      =>'Super Admin',
+      'admin'           =>'Admin',
       'accountant'      =>'Accountant',
       'supplier'        =>'Supplier/Karigar User',
       'salesman'        =>'Salesman',

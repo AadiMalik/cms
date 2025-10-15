@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\DiamondSaleController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class DiamondSale extends Model
 {
@@ -44,6 +45,22 @@ class DiamondSale extends Model
         'updated_at',
         'created_at'
     ];
+    protected static function booted()
+    {
+        static::addGlobalScope('roleFilter', function ($query) {
+            $user = Auth::user();
+
+            if (!$user) return $query;
+
+            if (in_array($user->role, [config('enum.salesman'), config('enum.admin')])) {
+                return $query->where('createdby_id', $user->id);
+            } else {
+                return $query;
+            }
+
+            return $query;
+        });
+    }
 
     public function DiamondSaleDetail()
     {
