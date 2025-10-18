@@ -335,10 +335,12 @@ class OtherPurchaseService
             $other_purchase = $this->model_other_purchase->getModel()::find($other_purchase_id);
 
             // Journal entry delete
-            $journal_entry = $this->model_journal_entry->getModel()::find($other_purchase->jv_id);
-            $journal_entry->is_deleted = 1;
-            $journal_entry->deletedby_id = Auth::user()->id;
-            $journal_entry->update();
+            if ($other_purchase->jv_id != null) {
+                $journal_entry = $this->model_journal_entry->getModel()::find($other_purchase->jv_id);
+                $journal_entry->is_deleted = 1;
+                $journal_entry->deletedby_id = Auth::user()->id;
+                $journal_entry->update();
+            }
 
             if ($other_purchase->paid_jv_id != null) {
                 // Journal entry delete
@@ -358,9 +360,11 @@ class OtherPurchaseService
 
             // other purchase update
             $other_purchase->posted = 0;
+            $other_purchase->is_deleted = 1;
             $other_purchase->jv_id = Null;
             $other_purchase->paid_jv_id = Null;
             $other_purchase->supplier_payment_id = Null;
+            $other_purchase->deletedby_id = Auth::user()->id;
             $other_purchase->update();
 
             DB::commit();
