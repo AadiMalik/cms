@@ -259,7 +259,7 @@ $(row).css("background-color", "Pink");
     // Delete other sale Code
 
     $("body").on("click", "#deleteOtherPurchase", function() {
-        var other_sale_id = $(this).data("id");
+        var other_purchase_id = $(this).data("id");
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
