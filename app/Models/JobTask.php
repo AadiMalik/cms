@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class JobTask extends Model
 {
@@ -28,6 +29,18 @@ class JobTask extends Model
         'updated_at',
         'created_at'
     ];
+    protected static function booted()
+    {
+        static::addGlobalScope('roleFilter', function ($query) {
+            $user = Auth::user();
+
+            if (!$user) return;
+
+            if (getRoleName() == config('enum.salesman') || getRoleName() == config('enum.admin')) {
+                return $query->where('createdby_id', $user->id);
+            }
+        });
+    }
 
     public function JobTaskDetail()
     {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Retainer extends Model
 {
@@ -29,6 +30,18 @@ class Retainer extends Model
         'updated_at',
     ];
 
+    protected static function booted()
+    {
+        static::addGlobalScope('roleFilter', function ($query) {
+            $user = Auth::user();
+
+            if (!$user) return;
+
+            if (getRoleName() == config('enum.salesman') || getRoleName() == config('enum.admin')) {
+                return $query->where('createdby_id', $user->id);
+            }
+        });
+    }
     public function journal()
     {
         return $this->belongsTo(Journal::class, 'journal_id');
