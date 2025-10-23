@@ -296,7 +296,7 @@ function addProductRequest(id = null) {
         error("Please Enter Description!");
         return false;
     }
-    if (supplier_kaat == 0 || supplier_kaat == "") {
+    if (supplier_kaat == "") {
         error("Select Supplier/Karigar or Enter Ratti Kaat!");
         return false;
     }
