@@ -47,7 +47,7 @@ function netWeight() {
     var stones_weight = $("#stones_weight").val();
     var diamond_carat = $("#diamond_carat").val();
     var net_weight = 0;
-    net_weight = scale_weight * 1 - (bead_weight * 1 + stones_weight * 1 + diamond_carat * 1);
+    net_weight = scale_weight * 1 - (bead_weight * 1 + stones_weight * 1);
     $("#net_weight").val(net_weight.toFixed(3)).trigger("keyup");
 }
 
