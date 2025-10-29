@@ -23,6 +23,7 @@ use App\Http\Controllers\JobTaskController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OtherMaterialCategoryController;
 use App\Http\Controllers\OtherProductController;
 use App\Http\Controllers\OtherPurchaseController;
 use App\Http\Controllers\OtherSaleController;
@@ -985,6 +986,27 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('status', [RetainerController::class, 'status']);
         Route::get('/js/RetainerForm.js', function () {
             $path = resource_path('views/retainer/js/RetainerForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    //other material category
+    Route::group(['prefix' => 'other-material-category'], function () {
+        Route::get('/', [OtherMaterialCategoryController::class, 'index']);
+        Route::post('data', [OtherMaterialCategoryController::class, 'getData'])->name('other-material-category.data');
+        Route::get('create', [OtherMaterialCategoryController::class, 'create']);
+        Route::post('store', [OtherMaterialCategoryController::class, 'store']);
+        Route::get('edit/{id}', [OtherMaterialCategoryController::class, 'edit']);
+        Route::post('update', [OtherMaterialCategoryController::class, 'update']);
+        Route::get('destroy/{id}', [OtherMaterialCategoryController::class, 'destroy']);
+        Route::get('status/{id}', [OtherMaterialCategoryController::class, 'status']);
+        Route::get('/js/OtherMaterialCategoryForm.js', function () {
+            $path = resource_path('views/other_material_category/js/OtherMaterialCategoryForm.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

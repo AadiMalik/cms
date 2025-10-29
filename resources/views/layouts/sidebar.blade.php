@@ -147,6 +147,7 @@
                 </ul>
             </li>
             @endcan
+
             @can('stock_access')
             <li class="Ul_li--hover {{ ( Request::is('finish-product*') | Request::is('stock') || Request::is('stock-taking*') || Request::is('transaction*') ) ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-line-chart text-20 mr-2 text-muted"></i><span
@@ -258,6 +259,11 @@
                     <li class="item-name"><a class="{{ Request::is('journals*') ? 'sidebar_active' : '' }}"
                             href="{{ url('journals') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Journals</span></a></li>
+                    @endcan
+                    @can('other_material_category_access')
+                    <li class="item-name"><a class="{{ Request::is('other-material-category*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('other-material-category') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Other Material Category</span></a></li>
                     @endcan
                 </ul>
             </li>
