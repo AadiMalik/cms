@@ -535,6 +535,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('get-by-date', [FinishProductController::class, 'getByDate']);
         Route::get('print', [FinishProductController::class, 'print']);
         Route::post('change-picture', [FinishProductController::class, 'updatePicture']);
+        Route::get('search', [FinishProductController::class, 'search']);
+        Route::get('fetch-search/{id}', [FinishProductController::class, 'getSearch']);
 
 
         Route::get('get-bead-by-id/{id}', [FinishProductController::class, 'beadByFinishProductId']);

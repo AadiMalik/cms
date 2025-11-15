@@ -7,6 +7,12 @@
                         class="item-name text-15 text-muted">Dashboard</span></a>
             </li>
             @endcan
+            @can('tagging_product_access')
+            <li class="Ul_li--hover"><a class="{{ Request::is('finish-product/search') ? 'sidebar_active' : '' }}"
+                    href="{{ url('finish-product/search') }}"><i class="fa fa-search mr-2 text-muted" style="font-size:20px;"></i><span
+                        class="item-name text-15 text-muted">Tag Search</span></a>
+            </li>
+            @endcan
             @can('user_management_access')
             <li
                 class="Ul_li--hover {{ Request::is('permissions*') || Request::is('roles*') || Request::is('users*') ? 'mm-active' : '' }}">

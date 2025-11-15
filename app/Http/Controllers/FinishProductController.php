@@ -355,4 +355,25 @@ class FinishProductController extends Controller
             'Product Not Found!',
         );
     }
+
+    public function search(){
+        $tags = $this->finish_product_service->getActiveFinishProduct();
+        return view('finish_product.search', compact('tags'));
+    }
+
+    public function getSearch($id)
+    {
+        abort_if(Gate::denies('tagging_product_view'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $finish_product = $this->finish_product_service->getById($id);
+        $finish_product_bead = $this->finish_product_service->getBeadByFinishProductId($id);
+        $finish_product_stone = $this->finish_product_service->getStoneByFinishProductId($id);
+        $finish_product_diamond = $this->finish_product_service->getDiamondByFinishProductId($id);
+        $data=[
+            'finish_product'=>$finish_product,
+            'finish_product_bead'=>$finish_product_bead,
+            'finish_product_stone'=>$finish_product_stone,
+            'finish_product_diamond'=>$finish_product_diamond
+        ];
+        return $this->success('Success',$data,false);
+    }
 }
