@@ -112,7 +112,13 @@ class FinishProductService
             ->make(true);
         return $data;
     }
-
+    public function getActiveFinishProduct()
+    {
+        return $this->model_finish_product->getModel()::with(['product', 'warehouse'])
+            ->where('is_deleted', 0)
+            ->where('is_active', 1)
+            ->get();
+    }
     public function getAllActiveFinishProduct()
     {
         return $this->model_finish_product->getModel()::with(['product', 'warehouse'])
