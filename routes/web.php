@@ -22,6 +22,7 @@ use App\Http\Controllers\JobTaskActivityController;
 use App\Http\Controllers\JobTaskController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\MetalPurchaseController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OtherMaterialCategoryController;
 use App\Http\Controllers\OtherProductController;
@@ -69,9 +70,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-    Route::post('notifications', [NotificationController::class,'index'])->name('notifications');
-    Route::get('read-all-notification', [NotificationController::class,'markAllAsRead']);
-    Route::get('read-single-notification/{id}', [NotificationController::class,'readSingleNotification']);
+    Route::post('notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::get('read-all-notification', [NotificationController::class, 'markAllAsRead']);
+    Route::get('read-single-notification/{id}', [NotificationController::class, 'readSingleNotification']);
 
     Route::group(['prefix' => 'permissions'], function () {
         Route::get('/', [PermissionController::class, 'index']);
@@ -997,18 +998,22 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
-    //other material category
-    Route::group(['prefix' => 'other-material-category'], function () {
-        Route::get('/', [OtherMaterialCategoryController::class, 'index']);
-        Route::post('data', [OtherMaterialCategoryController::class, 'getData'])->name('other-material-category.data');
-        Route::get('create', [OtherMaterialCategoryController::class, 'create']);
-        Route::post('store', [OtherMaterialCategoryController::class, 'store']);
-        Route::get('edit/{id}', [OtherMaterialCategoryController::class, 'edit']);
-        Route::post('update', [OtherMaterialCategoryController::class, 'update']);
-        Route::get('destroy/{id}', [OtherMaterialCategoryController::class, 'destroy']);
-        Route::get('status/{id}', [OtherMaterialCategoryController::class, 'status']);
-        Route::get('/js/OtherMaterialCategoryForm.js', function () {
-            $path = resource_path('views/other_material_category/js/OtherMaterialCategoryForm.js');
+    Route::group(['prefix' => 'metal-purchase'], function () {
+        Route::get('/', [MetalPurchaseController::class, 'index']);
+        Route::post('data', [MetalPurchaseController::class, 'getData'])->name('metal-purchase.data');
+        Route::get('create', [MetalPurchaseController::class, 'create']);
+        Route::post('store', [MetalPurchaseController::class, 'store']);
+        Route::get('edit/{id}', [MetalPurchaseController::class, 'edit']);
+        Route::get('get-metal-purchase-detail/{id}', [MetalPurchaseController::class, 'metalPurchaseDetail']);
+        Route::post('update', [MetalPurchaseController::class, 'update']);
+        Route::get('destroy/{id}', [MetalPurchaseController::class, 'destroy']);
+        Route::post('post-metal-purchase', [MetalPurchaseController::class, 'postMetalPurchase']);
+        Route::get('unpost-metal-purchase/{id}', [MetalPurchaseController::class, 'unpostMetalPurchase']);
+        Route::get('ratti-kaat-by-product-id/{product_id}', [MetalPurchaseController::class, 'getMetalPurchaseByProductId']);
+        Route::get('get-detail-by-id/{id}', [MetalPurchaseController::class, 'getMetalPurchaseDetailById']);
+
+        Route::get('/js/metalPurchase.js', function () {
+            $path = resource_path('views/purchases/metal_purchase/js/metalPurchase.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',
@@ -1016,6 +1021,52 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+
+        // Bead weight
+        Route::get('beads/{metal_purchase_detail_id}', [RattiKaatController::class, 'getBeadWeight']);
+        // Route::post('bead-store', [RattiKaatController::class, 'storeBeadWeight']);
+        // Route::get('bead-destroy/{id}', [RattiKaatController::class, 'destroyBeadWeight']);
+
+        Route::get('/js/beadWeight.js', function () {
+            $path = resource_path('views/purchases/metal_purchase/js/beadWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+
+        // Stone weight
+        Route::get('stones/{metal_purchase_detail_id}', [RattiKaatController::class, 'getStoneWeight']);
+        // Route::post('stone-store', [RattiKaatController::class, 'storeStoneWeight']);
+        // Route::get('stone-destroy/{id}', [RattiKaatController::class, 'destroyStoneWeight']);
+
+        Route::get('/js/stoneWeight.js', function () {
+            $path = resource_path('views/purchases/metal_purchase/js/stoneWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+
+        // diamond carat
+        Route::get('diamonds/{metal_purchase_detail_id}', [RattiKaatController::class, 'getDiamondCarat']);
+        // Route::post('diamond-store', [RattiKaatController::class, 'storeDiamondCarat']);
+        // Route::get('diamond-destroy/{id}', [RattiKaatController::class, 'destroyDiamondCarat']);
+
+        Route::get('/js/diamondCarat.js', function () {
+            $path = resource_path('views/purchases/metal_purchase/js/diamondCarat.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+
     });
 
     // Reports

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('supplier_id')->nullable();
             $table->integer('purchase_account_id')->nullable();
             $table->integer('paid_account_id')->nullable();
+            $table->integer('paid_account_dollar_id')->nullable();
             $table->integer('tax_account_id')->nullable();
             $table->decimal('paid',18,3)->default(0);
             $table->string('reference')->nullable();
@@ -27,9 +28,12 @@ return new class extends Migration
             $table->decimal('tax_amount',18,3)->default(0);
             $table->decimal('sub_total',18,3)->default(0);
             $table->decimal('total',18,3)->default(0);
+            $table->decimal('total_dollar',18,3)->default(0);
             $table->integer('jv_id')->nullable();
             $table->integer('paid_jv_id')->nullable();
+            $table->integer('paid_dollar_jv_id')->nullable();
             $table->integer('supplier_payment_id')->nullable();
+            $table->integer('supplier_dollar_payment_id')->nullable();
             $table->boolean('is_active')->default(1);
             $table->boolean('is_posted')->default(0);
             $table->boolean('is_deleted')->default(0);

@@ -8,6 +8,7 @@ use App\Models\FinishProduct;
 use App\Models\GoldImpurityPurchase;
 use App\Models\JobPurchase;
 use App\Models\JobTask;
+use App\Models\MetalPurchase;
 use App\Models\OtherPurchase;
 use App\Models\OtherSale;
 use App\Models\PurchaseOrder;
@@ -59,6 +60,32 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "RK-" . date('dmY') . "-" . $mystring;
+      }
+
+      // Metal purchase no
+      public function generateMetalPurchaseNo()
+      {
+            $metal_purchase = MetalPurchase::orderby('id', 'desc')->first();
+
+            if (!$metal_purchase) {
+                  return "MP-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $metal_purchase->metal_purchase_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "MP-" . date('dmY') . "-" . $mystring;
       }
 
       // Other purchase no

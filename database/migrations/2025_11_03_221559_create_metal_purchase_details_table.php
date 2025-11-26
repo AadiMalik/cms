@@ -30,6 +30,8 @@ return new class extends Migration
             $table->decimal('bead_amount',18,3)->default(0);
             $table->decimal('stone_amount',18,3)->default(0);
             $table->decimal('diamond_amount',18,3)->default(0);
+            $table->decimal('other_charges',18,3)->default(0);
+            $table->decimal('total_dollar_amount',18,3)->default(0);
             $table->decimal('total_amount',18,3)->default(0);
             $table->boolean('is_deleted')->default(0);
             $table->integer('createdby_id')->nullable();

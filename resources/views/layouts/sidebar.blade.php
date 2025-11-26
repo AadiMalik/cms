@@ -129,6 +129,11 @@
                             href="{{ url('ratti-kaats') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Ratti Kaat</span></a></li>
                     @endcan
+                    @can('metal_purchase_access')
+                    <li class="item-name"><a class="{{ Request::is('metal-purchase*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('metal-purchase') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Metal Purchase</span></a></li>
+                    @endcan
                     @can('other_purchase_access')
                     <li class="item-name"><a class="{{ Request::is('other-purchase*') ? 'sidebar_active' : '' }}"
                             href="{{ url('other-purchase') }}"><i class="nav-icon fa fa-circle"></i><span

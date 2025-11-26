@@ -19,6 +19,7 @@ class MetalPurchase extends Model
         'supplier_id',
         'purchase_account_id',
         'paid_account_id',
+        'paid_account_dollar_id',
         'tax_account_id',
         'paid',
         'reference',
@@ -26,9 +27,12 @@ class MetalPurchase extends Model
         'tax_amount',
         'sub_total',
         'total',
+        'total_dollar',
         'jv_id',
         'paid_jv_id',
+        'paid_dollar_jv_id',
         'supplier_payment_id',
+        'supplier_dollar_payment_id',
         'is_active',
         'is_posted',
         'is_deleted',
@@ -51,6 +55,10 @@ class MetalPurchase extends Model
             }
         });
     }
+    public function MetalPurchaseDetail()
+    {
+        return $this->hasMany(MetalPurchaseDetail::class, 'metal_purchase_id');
+    }
     public function supplier_name()
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
@@ -68,6 +76,10 @@ class MetalPurchase extends Model
     public function paid_account_name()
     {
         return $this->belongsTo(Account::class, 'paid_account_id');
+    }
+    public function paid_account_dollar_name()
+    {
+        return $this->belongsTo(Account::class, 'paid_account_dollar_id');
     }
     public function tax_account_name()
     {
