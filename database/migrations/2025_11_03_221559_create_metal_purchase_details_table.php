@@ -34,6 +34,7 @@ return new class extends Migration
             $table->decimal('total_dollar_amount',18,3)->default(0);
             $table->decimal('total_amount',18,3)->default(0);
             $table->boolean('is_deleted')->default(0);
+            $table->boolean('is_metal_product')->default(0);
             $table->integer('createdby_id')->nullable();
             $table->integer('updatedby_id')->nullable();
             $table->integer('deletedby_id')->nullable();

@@ -13,6 +13,12 @@
                         class="item-name text-15 text-muted">Tag Search</span></a>
             </li>
             @endcan
+            @can('tagging_metal_product_access')
+            <li class="Ul_li--hover"><a class="{{ Request::is('metal-product/search') ? 'sidebar_active' : '' }}"
+                    href="{{ url('metal-product/search') }}"><i class="fa fa-search mr-2 text-muted" style="font-size:20px;"></i><span
+                        class="item-name text-15 text-muted">Metal Tag Search</span></a>
+            </li>
+            @endcan
             @can('user_management_access')
             <li
                 class="Ul_li--hover {{ Request::is('permissions*') || Request::is('roles*') || Request::is('users*') ? 'mm-active' : '' }}">
@@ -160,7 +166,7 @@
             @endcan
 
             @can('stock_access')
-            <li class="Ul_li--hover {{ ( Request::is('finish-product*') | Request::is('stock') || Request::is('stock-taking*') || Request::is('transaction*') ) ? 'mm-active' : '' }}">
+            <li class="Ul_li--hover {{ ( Request::is('finish-product*') | Request::is('metal-product*') | Request::is('stock') || Request::is('stock-taking*') || Request::is('transaction*') ) ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-line-chart text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">Stock</span></a>
                 <ul class="mm-collapse">
@@ -168,6 +174,11 @@
                     <li class="item-name"><a class="{{ Request::is('finish-product*') ? 'sidebar_active' : '' }}"
                             href="{{ url('finish-product') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Tagging Products</span></a></li>
+                    @endcan
+                    @can('tagging_metal_product_access')
+                    <li class="item-name"><a class="{{ Request::is('metal-product*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('metal-product') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Tagging Metal Products</span></a></li>
                     @endcan
                     @can('stock_access')
                     <li class="item-name"><a class="{{ Request::is('stock') ? 'sidebar_active' : '' }}"

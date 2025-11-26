@@ -29,6 +29,7 @@ class MetalPurchaseDetail extends Model
         'total_amount',
         'total_dollar_amount',
         'is_deleted',
+        'is_metal_product',
         'createdby_id',
         'updatedby_id',
         'deletedby_id'

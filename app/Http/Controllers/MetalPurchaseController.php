@@ -333,11 +333,11 @@ class MetalPurchaseController extends Controller
         try {
             $product = $this->product_service->getProductById($product_id);
             $metal_purchases = $this->metal_purchase_service->getMetalPurchaseByProductId($product_id);
-            $job_purchase = $this->job_purchase_service->getJobPurchaseByProductId($product_id);
+            // $job_purchase = $this->job_purchase_service->getJobPurchaseByProductId($product_id);
             $tag_no = $this->common_service->generateFinishProductTagNo($product->prefix);
             $data = [
                 "metal_purchase" => $metal_purchases,
-                "job_purchase" => $job_purchase,
+                // "job_purchase" => $job_purchase,
                 "tag_no" => $tag_no
             ];
             return $this->success(
