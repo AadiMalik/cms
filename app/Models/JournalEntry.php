@@ -24,7 +24,8 @@ class JournalEntry extends Model
         'created_at',
         'updated_at',
         'sale_order_id',
-        'sale_id'
+        'sale_id',
+        'metal_sale_id'
     ];
     protected $dates = [
         'updated_at',
@@ -59,6 +60,10 @@ class JournalEntry extends Model
     public function sale_name()
     {
         return $this->belongsTo(Sale::class, 'sale_id');
+    }
+    public function metal_sale_name()
+    {
+        return $this->belongsTo(MetalSale::class, 'metal_sale_id');
     }
     public function supplier_name()
     {

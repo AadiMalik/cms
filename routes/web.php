@@ -37,6 +37,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RetainerController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\MetalSaleController;
 use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockTakingController;
@@ -704,6 +705,69 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // Metal Sale
+    Route::group(['prefix' => 'metal-sale'], function () {
+        Route::get('/', [MetalSaleController::class, 'index']);
+        Route::get('create', [MetalSaleController::class, 'create']);
+        Route::post('data', [MetalSaleController::class, 'getData'])->name('metal-sale.data');
+        Route::post('store', [MetalSaleController::class, 'store']);
+        Route::get('print/{id}', [MetalSaleController::class, 'print']);
+        Route::get('destroy/{id}', [MetalSaleController::class, 'destroy']);
+        Route::get('status/{id}', [MetalSaleController::class, 'status']);
+        Route::get('get-metal-sale-detail/{id}', [MetalSaleController::class, 'metalSaleDetail']);
+        Route::post('post-metal-sale', [MetalSaleController::class, 'postMetalSale']);
+        Route::get('unpost-metal-sale/{id}', [MetalSaleController::class, 'unpostMetalSale']);
+        Route::get('metal-sale-by-product-id/{product_id}', [MetalSaleController::class, 'getMetalSaleByProductId']);
+        Route::get('get-metal-sale-detail-by-id/{id}', [MetalSaleController::class, 'getMetalSaleDetailById']);
+        Route::post('metal-sale-payment', [MetalSaleController::class, 'metalSalePayment']);
+
+        Route::get('/js/metal_sale.js', function () {
+            $path = resource_path('views/metal_sale/js/metal_sale.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/beadWeight.js', function () {
+            $path = resource_path('views/metal_sale/js/beadWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/stoneWeight.js', function () {
+            $path = resource_path('views/metal_sale/js/stoneWeight.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        Route::get('/js/diamondCarat.js', function () {
+            $path = resource_path('views/metal_sale/js/diamondCarat.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+        // Route::get('/js/usedGold.js', function () {
+        //     $path = resource_path('views/metal_sale/js/usedGold.js');
+        //     if (file_exists($path)) {
+        //         return Response::file($path, [
+        //             'Content-Type' => 'application/javascript',
+        //         ]);
+        //     }
+        //     abort(404);
+        // });
     });
 
 

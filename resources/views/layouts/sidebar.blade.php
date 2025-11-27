@@ -96,6 +96,11 @@
                             href="{{ url('sale') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Sales</span></a></li>
                     @endcan
+                    @can('metal_sale_access')
+                    <li class="item-name"><a class="{{ Request::is('metal-sale*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('metal-sale') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Metal Sales</span></a></li>
+                    @endcan
                     @can('other_sale_access')
                     <li class="item-name"><a class="{{ Request::is('other-sale*') ? 'sidebar_active' : '' }}"
                             href="{{ url('other-sale') }}"><i class="nav-icon fa fa-circle"></i><span

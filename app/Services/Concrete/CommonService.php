@@ -9,6 +9,7 @@ use App\Models\GoldImpurityPurchase;
 use App\Models\JobPurchase;
 use App\Models\JobTask;
 use App\Models\MetalPurchase;
+use App\Models\MetalSale;
 use App\Models\OtherPurchase;
 use App\Models\OtherSale;
 use App\Models\PurchaseOrder;
@@ -163,6 +164,31 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "SL-" . date('dmY') . "-" . $mystring;
+      }
+
+      public function generateMetalSaleNo()
+      {
+            $metal_sale = MetalSale::orderby('id', 'desc')->first();
+
+            if (!$metal_sale) {
+                  return "MSL-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $metal_sale->metal_sale_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "MSL-" . date('dmY') . "-" . $mystring;
       }
 
       public function generateOtherSaleNo()
