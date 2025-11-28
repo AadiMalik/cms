@@ -334,39 +334,39 @@ class MetalPurchaseService
                 }
 
                 //Dollar Metal Purchase
-                if ($metal_purchase->total_dollar > 0) {
-                    $Dollar_Amount = str_replace(',', '', $metal_purchase->total_dollar ?? 0);
+                // if ($metal_purchase->total_dollar > 0) {
+                //     $Dollar_Amount = str_replace(',', '', $metal_purchase->total_dollar ?? 0);
 
-                    // Dollar (Debit)
-                    $this->journal_entry_service->saveJVDetail(
-                        2, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                        $journal_entry_id, // journal entry id
-                        'Metal Purchase Dollar($) Debit Entry', //explaination
-                        $metal_purchase->id, //bill no
-                        0, // check no or 0
-                        $metal_purchase->purchase_date, //check date
-                        1, // is credit flag 0 for credit, 1 for debit
-                        $Dollar_Amount, //amount
-                        $purchase_account->id, // account id
-                        $purchase_account->code, // account code
-                        Auth::User()->id //created by id
-                    );
+                //     // Dollar (Debit)
+                //     $this->journal_entry_service->saveJVDetail(
+                //         2, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                //         $journal_entry_id, // journal entry id
+                //         'Metal Purchase Dollar($) Debit Entry', //explaination
+                //         $metal_purchase->id, //bill no
+                //         0, // check no or 0
+                //         $metal_purchase->purchase_date, //check date
+                //         1, // is credit flag 0 for credit, 1 for debit
+                //         $Dollar_Amount, //amount
+                //         $purchase_account->id, // account id
+                //         $purchase_account->code, // account code
+                //         Auth::User()->id //created by id
+                //     );
 
-                    // Dollar (Credit)
-                    $this->journal_entry_service->saveJVDetail(
-                        2, // currency 0 for PKR, 1 for AU, 2 for Dollar
-                        $journal_entry_id, // journal entry id
-                        'Metal Purchase Dollar($) Supplier/Karigar Credit Entry', //explaination
-                        $metal_purchase->id, //bill no
-                        0, // check no or 0
-                        $metal_purchase->purchase_date, //check date
-                        0, // is credit flag 0 for credit, 1 for debit
-                        $Dollar_Amount, //amount
-                        $supplir_account->id, // account id
-                        $supplir_account->code, // account code
-                        Auth::User()->id //created by id
-                    );
-                }
+                //     // Dollar (Credit)
+                //     $this->journal_entry_service->saveJVDetail(
+                //         2, // currency 0 for PKR, 1 for AU, 2 for Dollar
+                //         $journal_entry_id, // journal entry id
+                //         'Metal Purchase Dollar($) Supplier/Karigar Credit Entry', //explaination
+                //         $metal_purchase->id, //bill no
+                //         0, // check no or 0
+                //         $metal_purchase->purchase_date, //check date
+                //         0, // is credit flag 0 for credit, 1 for debit
+                //         $Dollar_Amount, //amount
+                //         $supplir_account->id, // account id
+                //         $supplir_account->code, // account code
+                //         Auth::User()->id //created by id
+                //     );
+                // }
 
 
                 if ($metal_purchase->paid > 0 && $paid_account_id != null) {
@@ -387,22 +387,22 @@ class MetalPurchaseService
                 }
 
                 // Dollar Payment JV
-                if ($metal_purchase->paid_dollar > 0  && $paid_account_dollar_id != null) {
-                    $Paid_dollar_Amount = str_replace(',', '', $metal_purchase->paid_dollar ?? 0);
+                // if ($metal_purchase->paid_dollar > 0  && $paid_account_dollar_id != null) {
+                //     $Paid_dollar_Amount = str_replace(',', '', $metal_purchase->paid_dollar ?? 0);
 
-                    $paid_dollar_account = Account::find($paid_account_dollar_id);
-                    $paid_dollar_jv = $this->PaidDollartoSupplier($metal_purchase->metal_purchase_no, $metal_purchase->purchase_date, $metal_purchase->id, $supplier, $paid_dollar_account, $supplir_account, $Paid_dollar_Amount);
-                    // Supplier Dollar payment
-                    $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
-                        $supplier->id,
-                        2,
-                        $paid_account_dollar_id,
-                        $metal_purchase->purchase_date,
-                        null,
-                        $Paid_dollar_Amount,
-                        $paid_dollar_jv
-                    );
-                }
+                //     $paid_dollar_account = Account::find($paid_account_dollar_id);
+                //     $paid_dollar_jv = $this->PaidDollartoSupplier($metal_purchase->metal_purchase_no, $metal_purchase->purchase_date, $metal_purchase->id, $supplier, $paid_dollar_account, $supplir_account, $Paid_dollar_Amount);
+                //     // Supplier Dollar payment
+                //     $supplier_dollar_payment = $this->supplier_payment_service->saveSupplierPaymentWithoutTax(
+                //         $supplier->id,
+                //         2,
+                //         $paid_account_dollar_id,
+                //         $metal_purchase->purchase_date,
+                //         null,
+                //         $Paid_dollar_Amount,
+                //         $paid_dollar_jv
+                //     );
+                // }
 
                 // Purchase Update
                 $metal_purchase->purchase_account_id = $purchase_account_id;

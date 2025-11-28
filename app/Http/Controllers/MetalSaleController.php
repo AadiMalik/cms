@@ -144,16 +144,16 @@ class MetalSaleController extends Controller
             );
         }
 
-        // try {
+        try {
             $obj = $request->all();
             $sale = $this->metal_sale_service->save($obj);
             return  $this->success(
                 config("enum.saved"),
                 $sale
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
     public function metalSalePayment(Request $request){
@@ -193,16 +193,16 @@ class MetalSaleController extends Controller
     public function print($id)
     {
         abort_if(Gate::denies('metal_sale_print'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        // try {
+        try {
 
             $metal_sale =  $this->metal_sale_service->getById($id);
             $metal_sale_detail = $this->metal_sale_service->metalSaleDetail($id);
 
 
             return view('metal_sale/partials.print', compact('metal_sale', 'metal_sale_detail'));
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
     public function getMetalSaleDetailById($id)
     {

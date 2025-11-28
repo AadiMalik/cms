@@ -396,7 +396,7 @@ $dollar_rate = DollarRate();
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="display: none;">
                                     <div class="form-group">
                                         <label class="form-label font-weight-bold">Grand Total($):</label>
                                         <div class="form-group form-float">
@@ -421,7 +421,7 @@ $dollar_rate = DollarRate();
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="display: none;">
                                     <div class="form-group">
                                         <label class="form-label font-weight-bold">Paid($):</label>
                                         <div class="form-group form-float">
