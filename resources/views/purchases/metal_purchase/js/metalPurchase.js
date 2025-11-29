@@ -35,7 +35,7 @@ function netWeight() {
     var scale_weight = $("#scale_weight").val();
     var bead_weight = $("#bead_weight").val();
     var stone_weight = $("#stone_weight").val();
-    var diamond_carat = $("#diamond_carat").val();
+    var diamond_weight = $("#diamond_weight").val();
     var net_weight = 0;
     net_weight = scale_weight * 1 - (bead_weight * 1 + stone_weight * 1);
     $("#net_weight").val(net_weight.toFixed(3)).trigger("keyup");
@@ -79,7 +79,7 @@ $("#bead_weight").on("keyup", function (event) {
 $("#stone_weight").on("keyup", function (event) {
     netWeight();
 });
-$("#diamond_carat").on("keyup", function (event) {
+$("#diamond_weight").on("keyup", function (event) {
     netWeight();
 });
 
@@ -217,7 +217,7 @@ function addProductRequest(id = null) {
     var description = $("#description").val();
     var bead_weight = $("#bead_weight").val();
     var stone_weight = $("#stone_weight").val();
-    var diamond_carat = $("#diamond_carat").val();
+    var diamond_weight = $("#diamond_weight").val();
     var net_weight = $("#net_weight").val();
     var other_charges = $("#other_charges").val();
     var total_metal_amount = $("#total_metal_amount").val();
@@ -265,7 +265,7 @@ function addProductRequest(id = null) {
     var rows = "";
 
     rows += `<tr id=${productId}><td>${i}</td><td>${productName}</td><td>${metal}</td><td>${purity}</td><td>${description}</td><td style="text-align: right;">${scale_weight}</td><td style="text-align: right;" >${bead_weight}</td>
-          <td style="text-align: right;" >${stone_weight}</td><td style="text-align: right;" >${diamond_carat}</td><td style="text-align: right;" >${net_weight}</td><td style="text-align: right;" >${metal_rate}</td>
+          <td style="text-align: right;" >${stone_weight}</td><td style="text-align: right;" >${diamond_weight}</td><td style="text-align: right;" >${net_weight}</td><td style="text-align: right;" >${metal_rate}</td>
           <td style="text-align: right;" >${other_charges}</td><td style="text-align: right;" >${total_dollar}</td><td style="text-align: right;" >${total_amount}</td><td>
           <a class="text-danger text-white r${metal.replace(/\s+/g, '') + productId.toString()}" onclick="Remove('${metal.replace(/\s+/g, '') + productId.toString()}')"><i class="fa fa-trash"></i></a></td></tr>`;
     total = $("#total").val() * 1 + total_amount * 1;
@@ -288,7 +288,7 @@ function addProductRequest(id = null) {
         scale_weight: scale_weight,
         bead_weight: bead_weight,
         stone_weight: stone_weight,
-        diamond_carat: diamond_carat,
+        diamond_weight: diamond_weight,
         net_weight: net_weight,
         other_charges: other_charges,
         total_bead_amount: total_bead_amount,
@@ -382,7 +382,7 @@ function Clear() {
     $("#description").val('');
     $("#bead_weight").val(0);
     $("#stone_weight").val(0);
-    $("#diamond_carat").val(0);
+    $("#diamond_weight").val(0);
     $("#net_weight").val(0);
     $("#metal_rate").val(0);
     $("#total_bead_amount").val(0);

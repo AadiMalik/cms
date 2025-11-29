@@ -111,7 +111,7 @@ function addDiamondProduct() {
     var rows = "";
     var total = 0;
     var total_dollar = 0;
-    var diamond_carat = 0;
+    var diamond_weight = 0;
 
     diamondData.push({
         // sr: i,
@@ -143,11 +143,11 @@ function addDiamondProduct() {
                 <td><a class="text-danger text-white diamondproductr${removeSpaces(val.type)}${removeSpaces(val.cut)}${removeSpaces(val.color)}" onclick="DiamondRemove('${removeSpaces(val.type)}${removeSpaces(val.cut)}${removeSpaces(val.color)}')"><i class="fa fa-trash"></i></a></td></tr>`;
 
         total += val.total_amount * 1;
-        diamond_carat = diamond_carat * 1 + val.carat * 1;
+        diamond_weight = diamond_weight * 1 + val.carat * 1;
         total_dollar = total_dollar * 1 + val.total_dollar * 1;
     });
     $("#total_diamond_amount").val(total.toFixed(3));
-    $("#diamond_carat").val(diamond_carat.toFixed(3)).trigger("keyup");
+    $("#diamond_weight").val(diamond_weight.toFixed(3)).trigger("keyup");
     $("#total_dollar").val(total_dollar.toFixed(3));
     success("Diamond Added Successfully!");
     $("#diamonds_products").empty();
@@ -173,16 +173,16 @@ function DiamondRemove(id) {
         var item_index = "";
         var total = 0;
         var total_dollar = 0;
-        var diamond_carat = 0;
+        var diamond_weight = 0;
         $("#preloader").show();
         $.each(diamondData, function (index, val) {
             if (removeSpaces(val.type) + removeSpaces(val.cut) + removeSpaces(val.color) == id) {
                 total = $("#total_diamond_amount").val() * 1 - val.total_amount * 1;
                 total_dollar = $("#total_dollar").val() * 1 - val.total_dollar * 1;
-                diamond_carat = diamond_carat * 1 - val.carat * 1;
+                diamond_weight = diamond_weight * 1 - val.carat * 1;
                 $("#total_diamond_amount").val(total > 0 ? total : 0);
                 $("#total_dollar").val(total_dollar > 0 ? total_dollar : 0);
-                $("#diamond_carat").val(diamond_carat > 0 ? diamond_carat : 0);
+                $("#diamond_weight").val(diamond_weight > 0 ? diamond_weight : 0);
                 $("#" + id).hide();
                 item_index = index;
                 return false;
