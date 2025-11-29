@@ -203,7 +203,7 @@ class MetalPurchaseController extends Controller
             );
         }
 
-        // try {
+        try {
             $filenames = [];
             if ($request->hasFile('pictures')) {
                 foreach ($request->file('pictures') as $file) {
@@ -230,9 +230,9 @@ class MetalPurchaseController extends Controller
                 config('enum.saved'),
                 []
             );
-        // } catch (Exception $e) {
-        //     return $this->error(config('enum.error'));
-        // }
+        } catch (Exception $e) {
+            return $this->error(config('enum.error'));
+        }
     }
 
 
