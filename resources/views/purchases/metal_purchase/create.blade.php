@@ -238,7 +238,7 @@ $dollar_rate = DollarRate();
                                         </label>
                                         <div class="form-group form-float">
                                             <div class="form-line">
-                                                <input type="text" name="stones_weight" id="stones_weight"
+                                                <input type="text" name="stone_weight" id="stone_weight"
                                                     class="form-control" min="0" value="0" readonly>
                                             </div>
                                         </div>

@@ -75,7 +75,7 @@ function stoneWeightData(ratti_kaat_id, product_id) {
                         rows += `<tr id=${val.id} ><td>${i}</td><td>${val.category}</td><td>${val.type}</td><td>${val.stones}</td><td>${val.gram}</td><td>${val.carat}</td><td>${val.gram_rate}</td><td>${val.carat_rate}</td><td>${val.total_amount}</td><td><a class="text-danger text-white"  id="deleteStone" href="javascript:void(0)" data-toggle="tooltip"  data-id="${val.id}" data-original-title="delete"><i class="fa fa-trash" style="font-size:18px;"></i></a></td></tr>`;
                     });
 
-                    $("#stones_weight").val(total_weight.toFixed(3)).trigger("keyup");
+                    $("#stone_weight").val(total_weight.toFixed(3)).trigger("keyup");
                     $("#total_stones_amount").val(total_stones_amount.toFixed(3)).trigger("keyup");
                     var tbody = $("#stoneTable");
                     tbody.prepend(rows);
@@ -193,7 +193,7 @@ function addStoneProduct() {
         total_weight = total_weight * 1 + val.gram * 1;
     });
     $("#total_stones_amount").val(total.toFixed(3));
-    $("#stones_weight").val(total_weight.toFixed(3)).trigger("keyup");
+    $("#stone_weight").val(total_weight.toFixed(3)).trigger("keyup");
     success("Stone Added Successfully!");
     $("#stones_products").empty();
     netWeight();
@@ -224,7 +224,7 @@ function StoneRemove(id) {
                 total = $("#total_stones_amount").val() * 1 - val.total_amount * 1;
                 total_weight = total_weight * 1 - val.gram * 1;
                 $("#total_stones_amount").val(total > 0 ? total : 0);
-                $("#stones_weight").val(total_weight.toFixed(3)).trigger("keyup");
+                $("#stone_weight").val(total_weight.toFixed(3)).trigger("keyup");
                 $("#" + id).hide();
                 item_index = index;
                 return false;
