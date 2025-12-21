@@ -148,6 +148,25 @@ class MetalProductService
             ->where('is_parent', 0)
             ->get();
     }
+    public function getAllMolProduct()
+    {
+        return MetalProduct::select(
+            'products.id',
+            'products.name',
+            'products.mol',
+            DB::raw('COUNT(metal_products.id) as total_quantity')
+        )
+            ->leftJoin('metal_products', 'products.id', '=', 'metal_products.product_id')
+            ->where('products.is_deleted', 0)
+            ->where('products.is_active', 1)
+            ->where('metal_products.is_deleted', 0)
+            ->where('metal_products.is_active', 1)
+            ->where('metal_products.is_saled', 1)
+            ->where('metal_products.is_parent', 0)
+            ->groupBy('products.id', 'products.name', 'products.mol')
+            ->havingRaw('total_quantity <= mol')
+            ->get();
+    }
     public function getAllMolProductId($product_id)
     {
         return MetalProduct::select(
