@@ -3,7 +3,7 @@
 <div class="main-content pt-4">
     <div class="row pl-2">
         <div class="col-md-8 breadcrumb">
-            <h1>Sale Order</h1>
+            <h1>Metal Sale Order</h1>
             @if (isset($metal_sale_order))
             <ul>
                 <li>Edit</li>
