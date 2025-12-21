@@ -36,6 +36,7 @@ class HomeController extends Controller
         $this->job_task_service = $job_task_service;
         $this->notification_service = $notification_service;
         $this->product_service = $product_service;
+        $this->metal_product_service = $metal_product_service;
         $this->customer_service = $customer_service;
     }
 

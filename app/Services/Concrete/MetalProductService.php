@@ -10,6 +10,7 @@ use App\Models\FinishProductLocation;
 use App\Models\MetalProductStone;
 use App\Models\JobPurchaseDetail;
 use App\Models\MetalPurchaseDetail;
+use App\Models\Product;
 use App\Models\RattiKaatDetail;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -150,7 +151,7 @@ class MetalProductService
     }
     public function getAllMolProduct()
     {
-        return MetalProduct::select(
+        return Product::select(
             'products.id',
             'products.name',
             'products.mol',
@@ -169,7 +170,7 @@ class MetalProductService
     }
     public function getAllMolProductId($product_id)
     {
-        return MetalProduct::select(
+        return Product::select(
             'products.id',
             'products.name',
             'products.mol',
