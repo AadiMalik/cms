@@ -128,6 +128,185 @@ class CustomerPaymentService
             $journal_entry = new JournalEntry;
             $journal_entry->journal_id = $journal->id;
             $journal_entry->customer_id = $obj['customer_id'];
+            $journal_entry->metal_sale_order_id = isset($obj['metal_sale_order_id']) ? $obj['metal_sale_order_id'] : null;
+            $journal_entry->sale_id = isset($obj['sale_id']) ? $obj['sale_id'] : null;
+            $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $obj['payment_date'])));
+            $journal_entry->reference = 'Date :' . $obj['payment_date'] . ' Against Customer. ' . $customer->name ?? '';
+            $journal_entry->entryNum = $entryNum;
+            $journal_entry->createdby_id = Auth::User()->id;
+            $journal_entry->save();
+            $journal_entry_id = $journal_entry->id;
+
+            $amount = str_replace(',', '', $obj['sub_total']);
+            // Journal Entry Detail
+            if ($obj['convert_amount'] > 0) {
+
+                $convert_amount = str_replace(',', '', $obj['convert_amount']);
+
+                // Journal entry detail (Credit)
+                $this->journal_entry_service->saveJVDetail(
+                    $obj['convert_currency'],
+                    $journal_entry->id, // journal entry id
+                    'Customer Payment Credit To ' . $customer_account->name, //explaination
+                    $saved_obj->id, //bill no
+                    0, // check no or 0
+                    $obj['payment_date'], //check date
+                    0, // is credit flag 0 for credit, 1 for debit
+                    $convert_amount, //amount
+                    $customer_account->id, // account id
+                    $customer_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+
+                // Journal entry detail (Debit)
+                $this->journal_entry_service->saveJVDetail(
+                    $obj['convert_currency'],
+                    $journal_entry->id, // journal entry id
+                    'Convert Amount Debit To ' . $convert_currency_account->name, //explaination
+                    $saved_obj->id, //bill no
+                    0, // check no or 0
+                    $obj['payment_date'], //check date
+                    1, // is credit flag 0 for credit, 1 for debit
+                    $convert_amount, //amount
+                    $convert_currency_account->id, // account id
+                    $convert_currency_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+
+                // Journal entry detail (Credit)
+                $this->journal_entry_service->saveJVDetail(
+                    $obj['currency'],
+                    $journal_entry->id, // journal entry id
+                    'Convert Amount Credit To ' . $convert_currency_account->name, //explaination
+                    $saved_obj->id, //bill no
+                    0, // check no or 0
+                    $obj['payment_date'], //check date
+                    0, // is credit flag 0 for credit, 1 for debit
+                    $amount, //amount
+                    $convert_currency_account->id, // account id
+                    $convert_currency_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+
+                // Journal entry detail (Debit)
+                $this->journal_entry_service->saveJVDetail(
+                    $obj['currency'],
+                    $journal_entry->id, // journal entry id
+                    'Convert Amount Debit To ' . $account->name, //explaination
+                    $saved_obj->id, //bill no
+                    0, // check no or 0
+                    $obj['payment_date'], //check date
+                    1, // is credit flag 0 for credit, 1 for debit
+                    $amount, //amount
+                    $account->id, // account id
+                    $account->code, // account code
+                    Auth::User()->id //created by id
+                );
+            } else {
+                // Journal entry detail (Credit)
+                $this->journal_entry_service->saveJVDetail(
+                    $obj['currency'],
+                    $journal_entry->id, // journal entry id
+                    'Customer Payment Credit To ' . $customer_account->name, //explaination
+                    $saved_obj->id, //bill no
+                    0, // check no or 0
+                    $obj['payment_date'], //check date
+                    0, // is credit flag 0 for credit, 1 for debit
+                    $amount, //amount
+                    $customer_account->id, // account id
+                    $customer_account->code, // account code
+                    Auth::User()->id //created by id
+                );
+                // Journal entry detail (Debit)
+                $this->journal_entry_service->saveJVDetail(
+                    $obj['currency'],
+                    $journal_entry->id, // journal entry id
+                    'Customer Payment Debit To ' . $account->name, //explaination
+                    $saved_obj->id, //bill no
+                    0, // check no or 0
+                    $obj['payment_date'], //check date
+                    1, // is credit flag 0 for credit, 1 for debit
+                    $amount, //amount
+                    $account->id, // account id
+                    $account->code, // account code
+                    Auth::User()->id //created by id
+                );
+            }
+
+            // if ($obj['tax_amount'] > 0) {
+            //     $tax_account = Account::find($obj['tax_account_id']);
+            //     $TaxAmount = str_replace(',', '', $obj['tax_amount']);
+            //     // Journal entry detail (Credit)
+            //     $this->journal_entry_service->saveJVDetail(
+            //         $obj['currency'],
+            //         $journal_entry->id, // journal entry id
+            //         'Customer Tax Credit ', //explaination
+            //         $saved_obj->id, //bill no
+            //         0, // check no or 0
+            //         $obj['payment_date'], //check date
+            //         0, // is credit flag 0 for credit, 1 for debit
+            //         $TaxAmount, //amount
+            //         $account->id, // account id
+            //         $account->code, // account code
+            //         Auth::User()->id //created by id
+            //     );
+
+            //     // Journal entry detail (Debit)
+            //     $this->journal_entry_service->saveJVDetail(
+            //         $obj['currency'],
+            //         $journal_entry->id, // journal entry id
+            //         'Customer Tax Debit ', //explaination
+            //         $saved_obj->id, //bill no
+            //         0, // check no or 0
+            //         $obj['payment_date'], //check date
+            //         1, // is credit flag 0 for credit, 1 for debit
+            //         $TaxAmount, //amount
+            //         $tax_account->id, // account id
+            //         $tax_account->code, // account code
+            //         Auth::User()->id //created by id
+            //     );
+            // }
+            $vendor_payment_update = CustomerPayment::find($saved_obj->id);
+            $vendor_payment_update->jv_id = $journal_entry_id;
+            $vendor_payment_update->update();
+
+
+            DB::commit();
+        } catch (Exception $e) {
+
+            DB::rollback();
+            throw $e;
+        }
+        return $saved_obj;
+    }
+    public function saveMetalCustomerPayment($obj, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $journal_entry_id = null;
+            $customer = Customer::find($obj['customer_id']);
+            $customer_account = Account::find($customer->account_id);
+            $account = Account::find($obj['account_id']);
+            $company_setting = CompanySetting::find(1);
+            $convert_currency_account = Account::find($company_setting->convert_currency_account_id);
+            $journal_type = ($account->is_cash_account == 1) ? config('enum.CPV') : config('enum.BPV');
+
+            $obj['createdby_id'] = Auth::user()->id;
+            $saved_obj = $this->model_customer_payment->create($obj);
+
+            $journal = Journal::find($journal_type);
+            // Add journal entry
+            $data = [
+                "date" => $obj['payment_date'],
+                "prefix" => $journal->prefix,
+                "journal_id" => $journal->id
+            ];
+            $entryNum = $this->journal_entry_service->GenerateJournalEntryNum($data);
+
+            $journal_entry = new JournalEntry;
+            $journal_entry->journal_id = $journal->id;
+            $journal_entry->customer_id = $obj['customer_id'];
             $journal_entry->sale_order_id = isset($obj['sale_order_id']) ? $obj['sale_order_id'] : null;
             $journal_entry->sale_id = isset($obj['sale_id']) ? $obj['sale_id'] : null;
             $journal_entry->date_post = date("Y-m-d", strtotime(str_replace('/', '-', $obj['payment_date'])));

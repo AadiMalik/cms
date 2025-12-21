@@ -37,7 +37,7 @@ class MetalProductService
 
     public function getMetalProductSource()
     {
-        $locations = $this->model_finish_product_location->getModel()::where('is_active',1)->where('is_deleted',0)->get();
+        $locations = $this->model_finish_product_location->getModel()::where('is_active', 1)->where('is_deleted', 0)->get();
         $model = $this->model_metal_product->getModel()::with(['product', 'warehouse', 'parent_name'])->where('is_deleted', 0);
 
         $data = DataTables::of($model)
@@ -82,12 +82,12 @@ class MetalProductService
             ->addColumn('location', function ($item) use ($locations) {
                 $dropdown = '<select id="location-dropdown" style="width:150px;" class="form-control" data-id="' . $item->id . '">';
                 $dropdown .= '<option value="">Select Location</option>';
-    
+
                 foreach ($locations as $location) {
                     $selected = ($item->finish_product_location_id == $location->id) ? 'selected' : '';
                     $dropdown .= '<option value="' . $location->id . '" ' . $selected . '>' . $location->name . '</option>';
                 }
-    
+
                 $dropdown .= '</select>';
                 return $dropdown;
             })
@@ -109,7 +109,7 @@ class MetalProductService
 
                 return $action_column;
             })
-            ->rawColumns(['product', 'warehouse', 'parent', 'is_parent', 'saled', 'status','location', 'action'])
+            ->rawColumns(['product', 'warehouse', 'parent', 'is_parent', 'saled', 'status', 'location', 'action'])
             ->make(true);
         return $data;
     }
@@ -148,6 +148,26 @@ class MetalProductService
             ->where('is_parent', 0)
             ->get();
     }
+    public function getAllMolProductId($product_id)
+    {
+        return MetalProduct::select(
+            'products.id',
+            'products.name',
+            'products.mol',
+            DB::raw('COUNT(metal_products.id) as total_quantity')
+        )
+            ->leftJoin('metal_products', 'products.id', '=', 'metal_products.product_id')
+            ->where('products.id', $product_id)
+            ->where('products.is_deleted', 0)
+            ->where('products.is_active', 1)
+            ->where('metal_products.is_deleted', 0)
+            ->where('metal_products.is_active', 1)
+            ->where('metal_products.is_saled', 1)
+            ->where('metal_products.is_parent', 0)
+            ->groupBy('products.id', 'products.name', 'products.mol')
+            ->havingRaw('total_quantity <= mol')
+            ->first();
+    }
 
     public function save($obj)
     {
@@ -181,7 +201,7 @@ class MetalProductService
                 "picture" => $obj['picture'] ?? null,
                 "barcode" => $obj['barcode'] ?? null,
                 "createdby_id" => Auth::user()->id,
-                "finish_product_location_id"=>1
+                "finish_product_location_id" => 1
             ];
             $saved_obj = $this->model_metal_product->create($metalProduct);
 
@@ -275,7 +295,7 @@ class MetalProductService
             'metal_purchase_detail',
             'product',
             'warehouse'
-        ])->whereIn('id',$ids)->get();
+        ])->whereIn('id', $ids)->get();
     }
 
     public function getByTagNo($tag_no)
@@ -424,14 +444,16 @@ class MetalProductService
         return true;
     }
 
-    public function updateLocation($obj){
+    public function updateLocation($obj)
+    {
         $metal_product = $this->model_metal_product->getModel()::find($obj['id']);
         $metal_product->finish_product_location_id = $obj['finish_product_location_id'];
         $metal_product->update();
         return true;
     }
 
-    public function updatePicture($obj){
+    public function updatePicture($obj)
+    {
         $metal_product = $this->model_metal_product->getModel()::find($obj['id']);
         $metal_product->picture = $obj['picture'];
         $metal_product->update();
@@ -441,8 +463,8 @@ class MetalProductService
     public function getMetalProductByDate($obj)
     {
         return $this->model_metal_product->getModel()::where('is_deleted', 0)
-            ->whereDate('created_at','>=', $obj['start_date'])
-            ->whereDate('created_at','<=', $obj['end_date'])
+            ->whereDate('created_at', '>=', $obj['start_date'])
+            ->whereDate('created_at', '<=', $obj['end_date'])
             ->get();
     }
 }

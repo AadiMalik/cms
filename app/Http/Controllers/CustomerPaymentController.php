@@ -113,6 +113,9 @@ class CustomerPaymentController extends Controller
                 'sale_order_id' => $request->sale_order_id,
                 'currency' => 0,
                 'account_id' => $request->recieving_account_id ?? null,
+                'currency' => 0,
+                'convert_currency' => null,
+                'convert_amount' => 0,
                 'payment_date' => date('Y-m-d'),
                 'reference' => $request->reference ?? '',
                 'sub_total' => $request->amount ?? 0,
@@ -129,6 +132,41 @@ class CustomerPaymentController extends Controller
         } catch (Exception $e) {
             return $this->error(config('enum.error'));
         }
+    }
+    public function metalAdvance(Request $request)
+    {
+        abort_if(Gate::denies('customer_payment_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // dd($request->all());
+        $this->validate($request, [
+            'customer_id' => 'required',
+            'metal_sale_order_id' => 'required',
+            'amount' => 'required',
+            'recieving_account_id' => 'required'
+        ]);
+        // try {
+            $obj = [
+                'customer_id' => $request->customer_id,
+                'metal_sale_order_id' => $request->metal_sale_order_id,
+                'currency' => 0,
+                'convert_currency' => null,
+                'convert_amount' => 0,
+                'account_id' => $request->recieving_account_id ?? null,
+                'payment_date' => date('Y-m-d'),
+                'reference' => $request->reference ?? '',
+                'sub_total' => $request->amount ?? 0,
+                'total' => $request->amount ?? 0,
+                'tax' => 0,
+                'tax_amount' => 0,
+                'tax_account_id' => null
+            ];
+            $customer_payment = $this->customer_payment_service->saveCustomerPayment($obj, $request->id);
+            return $this->success(
+                config('enum.saved'),
+                $customer_payment
+            );
+        // } catch (Exception $e) {
+        //     return $this->error(config('enum.error'));
+        // }
     }
     public function edit($id)
     {

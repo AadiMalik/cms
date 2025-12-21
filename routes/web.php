@@ -24,6 +24,7 @@ use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\MetalProductController;
 use App\Http\Controllers\MetalPurchaseController;
+use App\Http\Controllers\MetalPurchaseOrderController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OtherMaterialCategoryController;
 use App\Http\Controllers\OtherProductController;
@@ -38,6 +39,7 @@ use App\Http\Controllers\RetainerController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\MetalSaleController;
+use App\Http\Controllers\MetalSaleOrderController;
 use App\Http\Controllers\SaleOrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockTakingController;
@@ -350,6 +352,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('destroy/{id}', [CustomerPaymentController::class, 'destroy']);
         Route::get('status/{id}', [CustomerPaymentController::class, 'status']);
         Route::post('advance', [CustomerPaymentController::class, 'advance']);
+        Route::post('metal-advance', [CustomerPaymentController::class, 'metalAdvance']);
         Route::get('/js/CustomerPaymentForm.js', function () {
             $path = resource_path('views/customer_payment/js/CustomerPaymentForm.js');
             if (file_exists($path)) {
@@ -978,6 +981,30 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
+    // Metal Sale Order
+    Route::group(['prefix' => 'metal-sale-order'], function () {
+        Route::get('/', [MetalSaleOrderController::class, 'index']);
+        Route::get('create', [MetalSaleOrderController::class, 'create']);
+        Route::post('data', [MetalSaleOrderController::class, 'getData'])->name('metal-sale-order.data');
+        Route::post('store', [MetalSaleOrderController::class, 'store']);
+        Route::get('print/{id}', [MetalSaleOrderController::class, 'print']);
+        Route::get('destroy/{id}', [MetalSaleOrderController::class, 'destroy']);
+        Route::get('by-warehouse/{warehouse_id}', [MetalSaleOrderController::class, 'byWarehouse']);
+        Route::get('by-customer/{customer_id}', [MetalSaleOrderController::class, 'byCustomer']);
+        Route::get('get-detail/{id}', [MetalSaleOrderController::class, 'getDetail']);
+        Route::get('get-product-mol/{id}', [MetalSaleOrderController::class, 'getProductMol']);
+
+        Route::get('/js/metal_sale_order.js', function () {
+            $path = resource_path('views/metal_sale_order/js/metal_sale_order.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
     // Purchase Order
     Route::group(['prefix' => 'purchase-order'], function () {
         Route::get('/', [PurchaseOrderController::class, 'index']);
@@ -991,6 +1018,28 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/js/purchase_order.js', function () {
             $path = resource_path('views/purchase_order/js/purchase_order.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Metal Purchase Order
+    Route::group(['prefix' => 'metal-purchase-order'], function () {
+        Route::get('/', [MetalPurchaseOrderController::class, 'index']);
+        Route::get('create', [MetalPurchaseOrderController::class, 'create']);
+        Route::post('data', [MetalPurchaseOrderController::class, 'getData'])->name('metal-purchase-order.data');
+        Route::post('store', [MetalPurchaseOrderController::class, 'store']);
+        Route::get('print/{id}', [MetalPurchaseOrderController::class, 'print']);
+        Route::get('destroy/{id}', [MetalPurchaseOrderController::class, 'destroy']);
+        Route::get('approve/{id}', [MetalPurchaseOrderController::class, 'approve']);
+        Route::get('reject/{id}', [MetalPurchaseOrderController::class, 'reject']);
+
+        Route::get('/js/metal_purchase_order.js', function () {
+            $path = resource_path('views/metal_purchase_order/js/metal_purchase_order.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

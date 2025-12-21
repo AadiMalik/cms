@@ -111,6 +111,11 @@
                             href="{{ url('sale-order') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Sale Order</span></a></li>
                     @endcan
+                    @can('metal_sale_order_access')
+                    <li class="item-name"><a class="{{ Request::is('metal-sale-order*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('metal-sale-order') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Metal Sale Order</span></a></li>
+                    @endcan
                     @can('diamond_sale_access')
                     <li class="item-name"><a class="{{ Request::is('diamond-sale*') ? 'sidebar_active' : '' }}"
                             href="{{ url('diamond-sale') }}"><i class="nav-icon fa fa-circle"></i><span
@@ -144,6 +149,11 @@
                     <li class="item-name"><a class="{{ Request::is('metal-purchase*') ? 'sidebar_active' : '' }}"
                             href="{{ url('metal-purchase') }}"><i class="nav-icon fa fa-circle"></i><span
                                 class="item-name">Metal Purchase</span></a></li>
+                    @endcan
+                    @can('metal_purchase_order_access')
+                    <li class="item-name"><a class="{{ Request::is('metal-purchase-order*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('metal-purchase-order') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Metal Purchase Order</span></a></li>
                     @endcan
                     @can('other_purchase_access')
                     <li class="item-name"><a class="{{ Request::is('other-purchase*') ? 'sidebar_active' : '' }}"

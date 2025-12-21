@@ -8,8 +8,11 @@ use App\Models\FinishProduct;
 use App\Models\GoldImpurityPurchase;
 use App\Models\JobPurchase;
 use App\Models\JobTask;
+use App\Models\MetalJobTask;
 use App\Models\MetalPurchase;
+use App\Models\MetalPurchaseOrder;
 use App\Models\MetalSale;
+use App\Models\MetalSaleOrder;
 use App\Models\OtherPurchase;
 use App\Models\OtherSale;
 use App\Models\PurchaseOrder;
@@ -300,6 +303,32 @@ class CommonService
             return "SO-" . date('dmY') . "-" . $mystring;
       }
 
+      //Metal Sale Order
+      public function generateMetalSaleOrderNo()
+      {
+            $metal_sale_order = MetalSaleOrder::orderby('id', 'desc')->first();
+
+            if (!$metal_sale_order) {
+                  return "MSO-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $metal_sale_order->metal_sale_order_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "MSO-" . date('dmY') . "-" . $mystring;
+      }
+
       //Purchase Order
       public function generatePurchaseOrderNo()
       {
@@ -326,6 +355,32 @@ class CommonService
             return "POO-" . date('dmY') . "-" . $mystring;
       }
 
+      //Metal Purchase Order
+      public function generateMetalPurchaseOrderNo()
+      {
+            $metal_purchase_order = MetalPurchaseOrder::orderby('id', 'desc')->first();
+
+            if (!$metal_purchase_order) {
+                  return "MPOO-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $metal_purchase_order->metal_purchase_order_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "MPOO-" . date('dmY') . "-" . $mystring;
+      }
+
       //Job Task
       public function generateJobTaskNo()
       {
@@ -350,6 +405,31 @@ class CommonService
             $mystring = $lenZero . $mystring;
 
             return "JT-" . date('dmY') . "-" . $mystring;
+      }
+      //Metal Job Task
+      public function generateMetalJobTaskNo()
+      {
+            $metal_job_task = MetalJobTask::orderby('id', 'desc')->first();
+
+            if (!$metal_job_task) {
+                  return "MJT-" . date('dmY') . "-0001";
+            }
+
+            $mystring = $metal_job_task->metal_job_task_no;
+
+            $mystring = substr($mystring, strrpos($mystring, "-") + 1);
+
+            $mystring += 1;
+
+            $lenZero = "";
+
+            for ($i = 1; $i <= 4  - strlen($mystring); $i += 1) {
+                  $lenZero = "0" . $lenZero;
+            }
+
+            $mystring = $lenZero . $mystring;
+
+            return "MJT-" . date('dmY') . "-" . $mystring;
       }
 
       // job purchase

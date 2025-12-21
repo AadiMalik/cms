@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Concrete\CustomerService;
 use App\Services\Concrete\JobTaskService;
+use App\Services\Concrete\MetalProductService;
 use App\Services\Concrete\NotificationService;
 use App\Services\Concrete\ProductService;
 use Carbon\Carbon;
@@ -21,12 +22,14 @@ class HomeController extends Controller
      */
     protected $job_task_service;
     protected $product_service;
+    protected $metal_product_service;
     protected $notification_service;
     protected $customer_service;
     public function __construct(
         JobTaskService $job_task_service,
         NotificationService $notification_service,
         ProductService $product_service,
+        MetalProductService $metal_product_service,
         CustomerService $customer_service
     ) {
         $this->middleware('auth');
@@ -63,10 +66,21 @@ class HomeController extends Controller
 
             if (getRoleName() == config('enum.superAdmin')) {
                 $mol_product = $this->product_service->getAllMolProduct();
+                $mol_metal_product = $this->metal_product_service->getAllMolProduct();
                 // dd($job_tasks);
                 foreach ($mol_product as $item) {
                     $obj = [
                         "title" => 'Product Low Stock',
+                        "user_id" => Auth::user()->id,
+                        "message" => $item->name . ' quantity is low. remening stock is ' . $item->total_quantity ?? 0,
+                        "play_sound" => 1
+                    ];
+                    $this->notification_service->save($obj);
+                }
+
+                foreach ($mol_metal_product as $item) {
+                    $obj = [
+                        "title" => 'Metal Product Low Stock',
                         "user_id" => Auth::user()->id,
                         "message" => $item->name . ' quantity is low. remening stock is ' . $item->total_quantity ?? 0,
                         "play_sound" => 1

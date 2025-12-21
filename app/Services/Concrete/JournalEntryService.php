@@ -4,6 +4,7 @@ namespace App\Services\Concrete;
 
 use App\Models\JournalEntry;
 use App\Models\JournalEntryDetail;
+use App\Models\MetalSaleOrder;
 use App\Models\SaleOrder;
 use App\Repository\Repository;
 use Carbon\Carbon;
@@ -328,12 +329,38 @@ class JournalEntryService
 
             return $balance;
       }
+      public function getMetalSaleOrderAdvanceById($metal_sale_order_id)
+      {
+            $metal_sale_order = MetalSaleOrder::find($metal_sale_order_id);
+            $balance = $this->model_journal_entry->getModel()::join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
+                  ->where('journal_entries.metal_sale_order_id', $metal_sale_order_id)
+                  ->where('journal_entry_details.account_id', $metal_sale_order->customer_name->account_id)
+                  ->where('journal_entry_details.currency', 0)
+                  ->where('journal_entries.is_deleted', 0)
+                  ->selectRaw('SUM(journal_entry_details.credit) - SUM(journal_entry_details.debit) AS balance')
+                  ->value('balance');
+
+            return $balance;
+      }
       public function getSaleOrderPayments($sale_order_id)
       {
             $sale_order = SaleOrder::find($sale_order_id);
             $payments = $this->model_journal_entry->getModel()::join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
                   ->where('journal_entries.sale_order_id', $sale_order_id)
                   ->where('journal_entry_details.account_id', $sale_order->customer_name->account_id)
+                  ->where('journal_entry_details.currency', 0)
+                  ->where('journal_entries.is_deleted', 0)
+                  ->select('journal_entry_details.credit', DB::raw("DATE_FORMAT(journal_entries.date_post, '%d %b %Y') AS date_post"))->get();
+
+            return $payments;
+      }
+      // Metal sale advance
+      public function getMetalSaleOrderPayments($metal_sale_order_id)
+      {
+            $metal_sale_order = MetalSaleOrder::find($metal_sale_order_id);
+            $payments = $this->model_journal_entry->getModel()::join('journal_entry_details', 'journal_entry_details.journal_entry_id', 'journal_entries.id')
+                  ->where('journal_entries.metal_sale_order_id', $metal_sale_order_id)
+                  ->where('journal_entry_details.account_id', $metal_sale_order->customer_name->account_id)
                   ->where('journal_entry_details.currency', 0)
                   ->where('journal_entries.is_deleted', 0)
                   ->select('journal_entry_details.credit', DB::raw("DATE_FORMAT(journal_entries.date_post, '%d %b %Y') AS date_post"))->get();

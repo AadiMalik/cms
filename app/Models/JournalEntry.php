@@ -25,7 +25,8 @@ class JournalEntry extends Model
         'updated_at',
         'sale_order_id',
         'sale_id',
-        'metal_sale_id'
+        'metal_sale_id',
+        'metal_sale_order_id'
     ];
     protected $dates = [
         'updated_at',

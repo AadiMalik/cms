@@ -10,8 +10,8 @@
                         <div class="modal-body">
                               <div class="row">
                                     <input type="hidden" id="id" name="id">
-                                    <input type="hidden" id="sale_order_id" name="sale_order_id">
-                                    <input type="hidden" id="sale_order_customer_id" name="sale_order_customer_id">
+                                    <input type="hidden" id="metal_sale_order_id" name="metal_sale_order_id">
+                                    <input type="hidden" id="metal_sale_order_customer_id" name="metal_sale_order_customer_id">
                                     <div class="col-md-6">
                                           <label for="amount">Amount(PKR):<span style="color:red;">*</span></label>
                                           <div class="form-group">
@@ -19,6 +19,7 @@
                                                       id="amount" placeholder="Enter Amount">
                                           </div>
                                     </div>
+                                    
                                     <div class="col-md-6">
                                           <label for="recieving_account_id">Recieving Account:<span style="color:red;">*</span></label>
                                           <div class="form-group">
