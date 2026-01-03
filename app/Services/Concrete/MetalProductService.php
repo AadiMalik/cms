@@ -467,7 +467,7 @@ class MetalProductService
     public function updateLocation($obj)
     {
         $metal_product = $this->model_metal_product->getModel()::find($obj['id']);
-        $metal_product->finish_product_location_id = $obj['finish_product_location_id'];
+        $metal_product->finish_product_location_id = $obj['metal_product_location_id'];
         $metal_product->update();
         return true;
     }
