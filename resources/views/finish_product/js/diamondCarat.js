@@ -183,25 +183,47 @@ function DiamondsByPurchaseDetail(ratti_kaat_detail_id) {
     });
 }
 $(document).off('input', '.carat-rate').on('input', '.carat-rate', function () {
+
     let rate = parseFloat($(this).val()) || 0;
     let carat = parseFloat($(this).data('carat')) || 0;
+    let rowId = $(this).data('rowid');
+
     let totalAmount = rate * carat;
 
-    // ✅ Find the same row and update the Total(PKR) cell
+    /* =========================
+       1️⃣ UPDATE TABLE UI
+    ==========================*/
     let $row = $(this).closest('tr');
     $row.find('.total-amount').text(totalAmount.toFixed(3));
 
-    // ✅ Recalculate overall total from all rows
-    let total = 0;
-    $(".carat-rate").each(function () {
-        let r = parseFloat($(this).val()) || 0;
-        let c = parseFloat($(this).data('carat')) || 0;
-        total += r * c;
+    /* =========================
+       2️⃣ UPDATE diamondsData ARRAY ✅
+    ==========================*/
+    $.each(diamondsData, function (index, val) {
+        let currentId = val.type.replace(/\s+/g, '')
+            + Math.floor(val.diamonds)
+            + Math.floor(val.carat);
+
+        if (currentId == rowId) {
+            diamondsData[index].carat_rate = rate;
+            diamondsData[index].total_amount = totalAmount.toFixed(3);
+            return false; // break loop
+        }
     });
 
-    $("#total_diamond_price").val(total.toFixed(3));
+    /* =========================
+       3️⃣ RECALCULATE GRAND TOTAL
+    ==========================*/
+    let grandTotal = 0;
+    $.each(diamondsData, function (i, val) {
+        grandTotal += parseFloat(val.total_amount) || 0;
+    });
+
+    $("#total_diamond_price").val(grandTotal.toFixed(3));
+
     TotalAmount();
 });
+
 
 
 
