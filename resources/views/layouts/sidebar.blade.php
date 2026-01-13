@@ -406,7 +406,7 @@
 
             @can('hrm_access')
                 <li
-                    class="Ul_li--hover {{ Request::is('employees*') || Request::is('department*') || Request::is('designation*') ? 'mm-active' : '' }}">
+                    class="Ul_li--hover {{ Request::is('employees*') || Request::is('department*') || Request::is('designation*') || Request::is('attendance*') ? 'mm-active' : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                             class="item-name text-15 text-muted">HRM</span></a>
                     <ul class="mm-collapse">
@@ -424,6 +424,11 @@
                             <li class="item-name"><a class="{{ Request::is('employees*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('employees') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Employee</span></a></li>
+                        @endcan
+                        @can('attendance_access')
+                            <li class="item-name"><a class="{{ Request::is('attendance*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('attendance') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Attendances</span></a></li>
                         @endcan
                     </ul>
                 </li>

@@ -36,6 +36,8 @@ class Employee extends Model
         'casual_leave',
         'annual_leave',
         'picture',
+        'department_id',
+        'designation_id',
         'account_id',
         'is_active',
         'is_deleted',
@@ -51,5 +53,13 @@ class Employee extends Model
     public function account_name()
     {
         return $this->belongsTo(Account::class, 'account_id');
+    }
+    public function department()
+    {
+        return $this->belongsTo(Department::class, 'department_id');
+    }
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class, 'designation_id');
     }
 }

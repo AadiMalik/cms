@@ -130,20 +130,23 @@
                                     @enderror
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
-                                    <label for="job_role">Job Role<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="job_role"
-                                        value="{{ isset($employee) ? $employee->job_role : old('job_role') }}" maxlength="191"
-                                        placeholder="Enter job role" required />
-                                    @error('job_role')
+                                    <label for="designation_id">Designation<span class="text-danger">*</span></label>
+                                    <select name="designation_id" id="designation_id" class="form-control" required>
+                                        <option value="" selected>--Select Designation--</option>
+                                        @foreach ($designations as $item)
+                                            <option value="{{$item->id}}" @if(isset($employee)) {{($employee->designation_id==$item->id)?'selected':''}} @endif>{{$item->name??''}}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('designation_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
-                                    <label for="department">Department<span class="text-danger">*</span> </label>
-                                    <select name="department" id="department" class="form-control" required>
+                                    <label for="department_id">Department<span class="text-danger">*</span> </label>
+                                    <select name="department_id" id="department_id" class="form-control" required>
                                         <option value="" selected>--Select Department--</option>
-                                        @foreach (config('enum.department') as $item)
-                                            <option value="{{$item}}" @if(isset($employee)) {{($employee->department==$item)?'selected':''}} @endif>{{$item??''}}</option>
+                                        @foreach ($departments as $item)
+                                            <option value="{{$item->id}}" @if(isset($employee)) {{($employee->department_id==$item->id)?'selected':''}} @endif>{{$item->name??''}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -222,19 +225,19 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="sick_leave">Sick Leave</label>
                                     <input class="form-control" type="text" name="sick_leave"
-                                        value="{{ isset($employee) ? $employee->sick_leave : old('sick_leave') }}" onkeypress="return isNumberKey(event)" maxlength="2"
+                                        value="{{ isset($employee) ? $employee->sick_leave : '0' }}" onkeypress="return isNumberKey(event)" maxlength="2" min="0"
                                         placeholder="Enter sick leave" />
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="casual_leave">Casual Leave</label>
                                     <input class="form-control" type="text" name="casual_leave"
-                                        value="{{ isset($employee) ? $employee->casual_leave : old('casual_leave') }}" onkeypress="return isNumberKey(event)" maxlength="2"
+                                        value="{{ isset($employee) ? $employee->casual_leave : '0' }}" onkeypress="return isNumberKey(event)" maxlength="2" min="0"
                                         placeholder="Enter casual leave" />
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="annual_leave">Annual Leave</label>
                                     <input class="form-control" type="text" name="annual_leave"
-                                        value="{{ isset($employee) ? $employee->annual_leave : old('annual_leave') }}" onkeypress="return isNumberKey(event)" maxlength="2"
+                                        value="{{ isset($employee) ? $employee->annual_leave : '0' }}" onkeypress="return isNumberKey(event)" maxlength="2" min="0"
                                         placeholder="Enter annual leave" />
                                 </div>
                                 <div class="col-md-3 form-group mb-3">

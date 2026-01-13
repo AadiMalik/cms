@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BeadTypeController;
 use App\Http\Controllers\CompanySettingController;
 use App\Http\Controllers\CustomerController;
@@ -1279,6 +1280,26 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('status/{id}', [DesignationController::class, 'status']);
         Route::get('/js/DesignationForm.js', function () {
             $path = resource_path('views/HRM/designation/js/DesignationForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Attendance
+    Route::group(['prefix' => 'attendance'], function () {
+        Route::get('/', [AttendanceController::class, 'index']);
+        Route::post('data', [AttendanceController::class, 'getData'])->name('attendance.data');
+        Route::get('create', [AttendanceController::class, 'create']);
+        Route::post('store', [AttendanceController::class, 'store']);
+        Route::get('edit/{id}', [AttendanceController::class, 'edit']);
+        Route::post('update', [AttendanceController::class, 'update']);
+        Route::get('destroy/{id}', [AttendanceController::class, 'destroy']);
+        Route::get('/js/AttendanceForm.js', function () {
+            $path = resource_path('views/HRM/attendance/js/AttendanceForm.js');
             if (file_exists($path)) {
                 return Response::file($path, [
                     'Content-Type' => 'application/javascript',

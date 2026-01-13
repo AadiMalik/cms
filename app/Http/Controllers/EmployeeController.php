@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\Concrete\AccountService;
 use App\Services\Concrete\EmployeeService;
+use App\Services\Concrete\HRM\DepartmentService;
+use App\Services\Concrete\HRM\DesignationService;
 use Illuminate\Http\Request;
 use App\Traits\JsonResponse;
 use Exception;
@@ -16,14 +18,20 @@ class EmployeeController extends Controller
     use JsonResponse;
     protected $employee_service;
     protected $account_service;
+    protected $department_service;
+    protected $designation_service;
 
 
     public function __construct(
         EmployeeService $employee_service,
-        AccountService $account_service
+        AccountService $account_service,
+        DepartmentService $department_service,
+        DesignationService $designation_service
     ) {
         $this->employee_service = $employee_service;
         $this->account_service = $account_service;
+        $this->department_service = $department_service;
+        $this->designation_service = $designation_service;
     }
 
     public function index()
@@ -44,7 +52,9 @@ class EmployeeController extends Controller
     {
         abort_if(Gate::denies('employees_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $accounts = $this->account_service->getAllActiveChild();
-        return view('employees.create', compact('accounts'));
+        $departments = $this->department_service->getAllActive();
+        $designations = $this->designation_service->getAllActive();
+        return view('employees.create', compact('accounts','departments','designations'));
     }
 
     public function store(Request $request)
@@ -64,8 +74,8 @@ class EmployeeController extends Controller
                     'emergency_name' => ['required', 'string', 'max:191'],
                     'emergency_contact' => ['required', 'string', 'max:191'],
                     'emergency_relation' => ['required', 'string', 'max:191'],
-                    'job_role' => ['required', 'string', 'max:191'],
-                    'department' => ['required'],
+                    'designation_id' => ['required','exists:designations,id'],
+                    'department_id' => ['required','exists:departments,id'],
                     'employee_type' => ['required'],
                     'shift' => ['required'],
                     'date_of_joining' => ['required'],
@@ -111,7 +121,9 @@ class EmployeeController extends Controller
         abort_if(Gate::denies('employees_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $employee = $this->employee_service->getById($id);
         $accounts = $this->account_service->getAllActiveChild();
-        return view('employees.create', compact('employee', 'accounts'));
+        $departments = $this->department_service->getAllActive();
+        $designations = $this->designation_service->getAllActive();
+        return view('employees.create', compact('employee', 'accounts','departments','designations'));
     }
 
 
