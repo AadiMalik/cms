@@ -5,6 +5,7 @@ use App\Http\Controllers\BeadTypeController;
 use App\Http\Controllers\CompanySettingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerPaymentController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\DiamondClarityController;
 use App\Http\Controllers\DiamondColorController;
 use App\Http\Controllers\DiamondCutController;
@@ -1240,7 +1241,29 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
 
+    ///////////// Start HRM ////////////////
+
+    // Bead Type
+    Route::group(['prefix' => 'department'], function () {
+        Route::get('/', [DepartmentController::class, 'index']);
+        Route::post('data', [DepartmentController::class, 'getData'])->name('department.data');
+        Route::get('create', [DepartmentController::class, 'create']);
+        Route::post('store', [DepartmentController::class, 'store']);
+        Route::get('edit/{id}', [DepartmentController::class, 'edit']);
+        Route::post('update', [DepartmentController::class, 'update']);
+        Route::get('destroy/{id}', [DepartmentController::class, 'destroy']);
+        Route::get('status/{id}', [DepartmentController::class, 'status']);
+        Route::get('/js/DepartmentForm.js', function () {
+            $path = resource_path('views/HRM/department/js/DepartmentForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
     });
 
     // Reports

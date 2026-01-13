@@ -305,84 +305,6 @@
                 </ul>
             </li>
             @endcan
-            <!-- @can('inventory_access')
-            <li class="Ul_li--hover {{ Request::is('warehouses*') ? 'mm-active' : '' }}">
-                <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
-                        class="item-name text-15 text-muted">Inventory</span></a>
-                <ul class="mm-collapse">
-                </ul>
-            </li>
-            @endcan -->
-            
-            <!-- @can('accounting_access')
-            <li class="Ul_li--hover {{ Request::is('accounts*') ? 'mm-active' : '' }}">
-                <a class="has-arrow" href="#"><i class="fa fa-line-chart text-20 mr-2 text-muted"></i><span
-                        class="item-name text-15 text-muted">Accounting</span></a>
-                <ul class="mm-collapse">
-                    @can('accounts_access')
-                    <li class="item-name"><a class="{{ Request::is('accounts*') ? 'sidebar_active' : '' }}"
-                            href="{{ url('accounts') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Chart of Accounts</span></a></li>
-                    @endcan
-                    @can('journals_access')
-                    <li class="item-name"><a class="{{ Request::is('journals*') ? 'sidebar_active' : '' }}"
-                            href="{{ url('journals') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Journals</span></a></li>
-                    @endcan
-                    @can('journal_entries_access')
-                    <li class="item-name"><a class="{{ Request::is('journal-entries*') ? 'sidebar_active' : '' }}"
-                            href="{{ url('journal-entries') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Journal Entries</span></a></li>
-                    @endcan
-
-                </ul>
-            </li>
-            @endcan -->
-
-            <!-- @can('sales_access')
-            <li class="Ul_li--hover {{ (Request::is('sale*') || Request::is('other-sale*') || Request::is('diamond-sale*') || Request::is('sale-order*') )? 'mm-active' : '' }}">
-                <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
-                        class="item-name text-15 text-muted">Sales</span></a>
-                <ul class="mm-collapse">
-                    @can('sale_access')
-                    <li class="item-name"><a class="{{ Request::is('sale*') ? 'sidebar_active' : '' }}"
-                            href="{{ url('sale') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Sales</span></a></li>
-                    @endcan
-                    @can('other_sale_access')
-                    <li class="item-name"><a class="{{ Request::is('other-sale*') ? 'sidebar_active' : '' }}"
-                            href="{{ url('other-sale') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Other Sales</span></a></li>
-                    @endcan
-                    @can('sale_order_access')
-                    <li class="item-name"><a class="{{ Request::is('sale-order*') ? 'sidebar_active' : '' }}"
-                            href="{{ url('sale-order') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Sale Order</span></a></li>
-                    @endcan
-                    @can('diamond_sale_access')
-                    <li class="item-name"><a class="{{ Request::is('diamond-sale*') ? 'sidebar_active' : '' }}"
-                            href="{{ url('diamond-sale') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Diamond Sale</span></a></li>
-                    @endcan
-                </ul>
-            </li>
-            @endcan -->
-            
-            <!-- @can('gold_rate_access')
-            <li class="Ul_li--hover {{ Request::is('gold-rate*') ? 'mm-active' : '' }}">
-                <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
-                        class="item-name text-15 text-muted">Gold Rate</span></a>
-                <ul class="mm-collapse">
-                    @can('gold_chart_access')
-                    <li class="item-name"><a class="{{ Request::is('gold-rate') ? 'sidebar_active' : '' }}"
-                            href="{{ url('gold-rate') }}"><i class="nav-icon fa fa-circle"></i><span
-                                class="item-name">Chart</span></a></li>
-                    @endcan
-
-
-                </ul>
-            </li>
-            @endcan -->
             @can('report_access')
             <li class="Ul_li--hover {{ Request::is('reports*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
@@ -467,21 +389,17 @@
                         class="item-name text-15 text-muted">Gold Chart</span></a>
             </li>
             @endcan
-            <!-- @can('dollar_rate_access')
-            <li class="Ul_li--hover {{ Request::is('dollar-rate*') ? 'mm-active' : '' }}">
-                <a class="has-arrow" href="#"><i class="fa fa-houzz text-20 mr-2 text-muted"></i><span
-                        class="item-name text-15 text-muted">Dollar Rate</span></a>
-                <ul class="mm-collapse">
-
-
-                </ul>
-            </li>
-            @endcan -->
+            
             @can('hrm_access')
-            <li class="Ul_li--hover {{ Request::is('employees*') ? 'mm-active' : '' }}">
+            <li class="Ul_li--hover {{ Request::is('employees*') || Request::is('department*') ? 'mm-active' : '' }}">
                 <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                         class="item-name text-15 text-muted">HRM</span></a>
                 <ul class="mm-collapse">
+                    @can('department_access')
+                    <li class="item-name"><a class="{{ Request::is('department*') ? 'sidebar_active' : '' }}"
+                            href="{{ url('department') }}"><i class="nav-icon fa fa-circle"></i><span
+                                class="item-name">Departments</span></a></li>
+                    @endcan
                     @can('employees_access')
                     <li class="item-name"><a class="{{ Request::is('employees*') ? 'sidebar_active' : '' }}"
                             href="{{ url('employees') }}"><i class="nav-icon fa fa-circle"></i><span
@@ -490,12 +408,7 @@
                 </ul>
             </li>
             @endcan
-            <!-- @can('setting_access')
-            <li class="Ul_li--hover"><a class="{{ Request::is('company-setting') ? 'sidebar_active' : '' }}"
-                    href="{{ url('company-setting') }}"><i class="fa fa-cogs mr-2 text-muted" style="font-size:20px;"></i><span
-                        class="item-name text-15 text-muted">Setting</span></a>
-            </li>
-            @endcan -->
+            
             {{-- @can('logout_access') --}}
             <li class="Ul_li--hover"><a href="{{ route('logout') }}"
                     onclick="event.preventDefault();
