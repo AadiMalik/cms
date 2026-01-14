@@ -86,7 +86,7 @@
             @endcan
             @can('sales_access')
                 <li
-                    class="Ul_li--hover {{ Request::is('customers*') | Request::is('sale*') || Request::is('other-sale*') || Request::is('diamond-sale*') || Request::is('sale-order*') ? 'mm-active' : '' }}">
+                    class="Ul_li--hover {{ Request::is('customers*') || Request::is('sale*') || Request::is('other-sale*') || Request::is('diamond-sale*') || Request::is('sale-order*') ? 'mm-active' : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                             class="item-name text-15 text-muted">Sales</span></a>
                     <ul class="mm-collapse">
@@ -406,7 +406,14 @@
 
             @can('hrm_access')
                 <li
-                    class="Ul_li--hover {{ Request::is('employees*') || Request::is('department*') || Request::is('designation*') || Request::is('attendance*') ? 'mm-active' : '' }}">
+                    class="Ul_li--hover {{ Request::is('employees*') ||
+                    Request::is('department*') ||
+                    Request::is('designation*') ||
+                    Request::is('attendance*') ||
+                    Request::is('leave-type*') ||
+                    Request::is('leave-requests*')
+                        ? 'mm-active'
+                        : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
                             class="item-name text-15 text-muted">HRM</span></a>
                     <ul class="mm-collapse">
@@ -431,9 +438,30 @@
                                         class="item-name">Attendances</span></a></li>
                         @endcan
                         @can('attendance_summary')
-                            <li class="item-name"><a class="{{ Request::is('attendance/summary*') ? 'sidebar_active' : '' }}"
+                            <li class="item-name"><a
+                                    class="{{ Request::is('attendance/summary*') ? 'sidebar_active' : '' }}"
                                     href="{{ url('attendance/summary') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Attendance Summary</span></a></li>
+                        @endcan
+                        @can('leave_system_access')
+                            <li class="Ul_li--hover {{ Request::is('leave-type*') || Request::is('leave-requests*')? 'mm-active' : '' }}">
+                                <a class="has-arrow" href="#"><i class="fa fa-calendar-alt text-20 mr-2 text-muted"></i><span
+                                        class="item-name text-15 text-muted">Leave Management</span></a>
+                                <ul class="mm-collapse">
+                                    @can('leave_type_access')
+                                        <li class="item-name"><a
+                                                class="{{ Request::is('leave-type*') ? 'sidebar_active' : '' }}"
+                                                href="{{ url('leave-type') }}"><i class="nav-icon fa fa-circle"></i><span
+                                                    class="item-name">Leave Type</span></a></li>
+                                    @endcan
+                                    @can('leave_request_access')
+                                        <li class="item-name"><a
+                                                class="{{ Request::is('leave-requests*') ? 'sidebar_active' : '' }}"
+                                                href="{{ url('leave-requests') }}"><i class="nav-icon fa fa-circle"></i><span
+                                                    class="item-name">Leave Requests</span></a></li>
+                                    @endcan
+                                </ul>
+                            </li>
                         @endcan
                     </ul>
                 </li>

@@ -4,6 +4,8 @@ namespace App\Services\Concrete;
 
 use App\Repository\Repository;
 use App\Models\Employee;
+use App\Models\LeaveBalance;
+use App\Models\LeaveType;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 
@@ -74,6 +76,17 @@ class EmployeeService
         } else {
             $obj['createdby_id'] = Auth::user()->id;
             $saved_obj = $this->model_employee->create($obj);
+
+            foreach (LeaveType::where('is_active', 1)->where('is_deleted', 0)->get() as $type) {
+                LeaveBalance::create([
+                    'employee_id'   => $saved_obj->id,
+                    'leave_type_id' => $type->id,
+                    'total'         => $type->leaves,
+                    'remaining'     => $type->leaves,
+                    'year'          => now()->year,
+                    'createdby_id'  => Auth::user()->id
+                ]);
+            }
         }
 
         if (!$saved_obj)

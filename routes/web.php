@@ -25,6 +25,8 @@ use App\Http\Controllers\JobTaskActivityController;
 use App\Http\Controllers\JobTaskController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\MetalProductController;
 use App\Http\Controllers\MetalPurchaseController;
 use App\Http\Controllers\MetalPurchaseOrderController;
@@ -1309,6 +1311,38 @@ Route::group(['middleware' => ['auth']], function () {
             }
             abort(404);
         });
+    });
+
+    // Leave Type
+    Route::group(['prefix' => 'leave-type'], function () {
+        Route::get('/', [LeaveTypeController::class, 'index']);
+        Route::post('data', [LeaveTypeController::class, 'getData'])->name('leave-type.data');
+        Route::get('create', [LeaveTypeController::class, 'create']);
+        Route::post('store', [LeaveTypeController::class, 'store']);
+        Route::get('edit/{id}', [LeaveTypeController::class, 'edit']);
+        Route::post('update', [LeaveTypeController::class, 'update']);
+        Route::get('status/{id}', [LeaveTypeController::class, 'status']);
+        Route::get('destroy/{id}', [LeaveTypeController::class, 'destroy']);
+        Route::get('/js/LeaveTypeForm.js', function () {
+            $path = resource_path('views/HRM/leave_type/js/LeaveTypeForm.js');
+            if (file_exists($path)) {
+                return Response::file($path, [
+                    'Content-Type' => 'application/javascript',
+                ]);
+            }
+            abort(404);
+        });
+    });
+
+    // Leave Request
+    Route::group(['prefix' => 'leave-requests'], function () {
+        Route::get('/', [LeaveRequestController::class, 'index']);
+        Route::post('data', [LeaveRequestController::class, 'getData'])->name('leave-requests.data');
+        Route::get('create', [LeaveRequestController::class, 'create']);
+        Route::post('store', [LeaveRequestController::class, 'store']);
+        Route::get('edit/{id}', [LeaveRequestController::class, 'edit']);
+        Route::post('update', [LeaveRequestController::class, 'update']);
+        Route::post('status', [LeaveRequestController::class, 'status']);
     });
 
     // Reports
