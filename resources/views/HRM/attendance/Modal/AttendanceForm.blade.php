@@ -12,9 +12,9 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Employee:<span
+                                <label for="name">Employee:<span
                                         style="color:red;">*</span></label>
-                                <select name="employee_id" class="form-control" id="employee_id" required>
+                                <select name="employee_id" class="form-control" id="employee_id" required style="width:100%;">
                                     <option value="" selected disabled>--Select Employee--</option>
                                     @foreach ($employees as $employee)
                                         <option value="{{ $employee->id }}">{{ $employee->name }}</option>
@@ -24,29 +24,29 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Date:<span
+                                <label for="name">Date:<span
                                         style="color:red;">*</span></label>
                                 <input type="date" name="attendance_date" id="attendance_date"
                                     value="{{ date('Y-m-d') }}" class="form-control" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Check In:<span
+                                <label for="name">Check In:<span
                                         style="color:red;">*</span></label>
                                 <input type="time" name="check_in" id="check_in" class="form-control" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Check Out:<span
+                                <label for="name">Check Out:<span
                                         style="color:red;">*</span></label>
                                 <input type="time" name="check_out" id="check_out" class="form-control" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">Status:<span
+                                <label for="name">Status:<span
                                         style="color:red;">*</span></label>
                                 <select name="status" class="form-control" id="status" required>
                                     <option value="Present">Present</option>
@@ -56,9 +56,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label for="name" class="col-sm-2 control-label">note:</label>
+                                <label for="name">Note:</label>
                                 <input type="text" name="note" id="note" class="form-control">
                             </div>
                         </div>

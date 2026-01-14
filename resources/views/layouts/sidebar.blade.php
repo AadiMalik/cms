@@ -430,6 +430,11 @@
                                     href="{{ url('attendance') }}"><i class="nav-icon fa fa-circle"></i><span
                                         class="item-name">Attendances</span></a></li>
                         @endcan
+                        @can('attendance_summary')
+                            <li class="item-name"><a class="{{ Request::is('attendance/summary*') ? 'sidebar_active' : '' }}"
+                                    href="{{ url('attendance/summary') }}"><i class="nav-icon fa fa-circle"></i><span
+                                        class="item-name">Attendance Summary</span></a></li>
+                        @endcan
                     </ul>
                 </li>
             @endcan

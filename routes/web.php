@@ -1298,6 +1298,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('edit/{id}', [AttendanceController::class, 'edit']);
         Route::post('update', [AttendanceController::class, 'update']);
         Route::get('destroy/{id}', [AttendanceController::class, 'destroy']);
+        Route::get('summary', [AttendanceController::class, 'summary']);
+        Route::post('summary-data', [AttendanceController::class, 'summaryData']);
         Route::get('/js/AttendanceForm.js', function () {
             $path = resource_path('views/HRM/attendance/js/AttendanceForm.js');
             if (file_exists($path)) {

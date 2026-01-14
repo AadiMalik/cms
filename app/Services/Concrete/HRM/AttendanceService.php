@@ -56,7 +56,7 @@ class AttendanceService
 
                 return $action_column;
             })
-            ->rawColumns(['duration','employee', 'action'])
+            ->rawColumns(['duration', 'employee', 'action'])
             ->make(true);
         return $data;
     }
@@ -127,5 +127,29 @@ class AttendanceService
             return false;
 
         return $attendance;
+    }
+
+    //summary
+    public function summary($obj)
+    {
+        $from = $obj['start_date'];
+        $to   = $obj['end_date'];
+
+        $query = Attendance::with('employee')
+            ->selectRaw("
+            employee_id,
+            COUNT(*) as total_days,
+            SUM(status = 'Present') as present,
+            SUM(status = 'Absent') as absent,
+            SUM(status = 'Late') as late,
+            SUM(status = 'Leave') as `leave`
+        ")
+            ->whereBetween('attendance_date', [$from, $to]);
+
+        if (!empty($obj['employee_id'])) {
+            $query->where('employee_id', $obj['employee_id']);
+        }
+
+        return $query->groupBy('employee_id')->get();
     }
 }

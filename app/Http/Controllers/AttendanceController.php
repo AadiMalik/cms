@@ -147,4 +147,20 @@ class AttendanceController extends Controller
             return $this->error(config('enum.error'));
         }
     }
+    public function summary()
+    {
+        abort_if(Gate::denies('attendance_summary'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $employees = $this->employee_service->getAllActiveEmployee();
+        return view('HRM.attendance.summary', compact('employees'));
+    }
+    public function summaryData(Request $request)
+    {
+        $data = $request->all();
+        $attendance = $this->attendance_service->summary($data);
+        return  $this->success(
+            config('enum.success'),
+            $attendance,
+            false
+        );
+    }
 }
