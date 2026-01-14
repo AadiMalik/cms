@@ -43,7 +43,7 @@ class AttendanceService
                 return sprintf('%02d:%02d', $hours, $mins);
             })
             ->addColumn('employee', function ($item) {
-                return $item->employee->name;
+                return $item->employee->name??'-';
             })
             ->addColumn('action', function ($item) {
                 $action_column = '';
@@ -56,7 +56,7 @@ class AttendanceService
 
                 return $action_column;
             })
-            ->rawColumns(['duration', 'employee', 'action'])
+            ->rawColumns(['duration','employee', 'action'])
             ->make(true);
         return $data;
     }
@@ -131,25 +131,26 @@ class AttendanceService
 
     //summary
     public function summary($obj)
-    {
-        $from = $obj['start_date'];
-        $to   = $obj['end_date'];
+{
+    $from = $obj['start_date'];
+    $to   = $obj['end_date'];
 
-        $query = Attendance::with('employee')
-            ->selectRaw("
+    $query = Attendance::with('employee')
+        ->selectRaw("
             employee_id,
             COUNT(*) as total_days,
-            SUM(status = 'Present') as present,
-            SUM(status = 'Absent') as absent,
-            SUM(status = 'Late') as late,
-            SUM(status = 'Leave') as `leave`
+            SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) as present,
+            SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) as absent,
+            SUM(CASE WHEN status = 'Late' THEN 1 ELSE 0 END) as late,
+            SUM(CASE WHEN status = 'Leave' THEN 1 ELSE 0 END) as `leave`
         ")
-            ->whereBetween('attendance_date', [$from, $to]);
+        ->whereBetween('attendance_date', [$from, $to]);
 
-        if (!empty($obj['employee_id'])) {
-            $query->where('employee_id', $obj['employee_id']);
-        }
-
-        return $query->groupBy('employee_id')->get();
+    if (!empty($obj['employee_id'])) {
+        $query->where('employee_id', $obj['employee_id']);
     }
+
+    return $query->groupBy('employee_id')->get();
+}
+
 }

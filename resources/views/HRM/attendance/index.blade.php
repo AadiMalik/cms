@@ -55,19 +55,16 @@
     <script src="{{ url('attendance/js/AttendanceForm.js') }}" type="module"></script>
     <script type="text/javascript">
         var url_local = "{{ url('/') }}";
-        $(document).ready(function() {
-            $('#employee_id').select2();
-        });
     </script>
     @include('includes.datatable', [
         'columns' => "
-            {data: 'attendance_date' , name: 'attendance_date'},
-            {data: 'employee' , name: 'employee' , 'sortable': false , searchable: false},
-            {data: 'check_in' , name: 'check_in'},
-            {data: 'check_out' , name: 'check_out'},
-            {data: 'duration' , name: 'duration' , 'sortable': false , searchable: false},
-            {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
-            {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
+        {data: 'attendance_date' , name: 'attendance_date'},
+        {data: 'employee' , name: 'employee' , 'sortable': false , searchable: false},
+        {data: 'check_in' , name: 'check_in'},
+        {data: 'check_out' , name: 'check_out'},
+        {data: 'duration' , name: 'duration'},
+        {data: 'status' , name: 'status' , 'sortable': false , searchable: false},
+        {data: 'action' , name: 'action' , 'sortable': false , searchable: false},",
         'route' => 'attendance/data',
         'buttons' => false,
         'pageLength' => 10,

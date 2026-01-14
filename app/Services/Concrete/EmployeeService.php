@@ -78,12 +78,15 @@ class EmployeeService
             $saved_obj = $this->model_employee->create($obj);
 
             foreach (LeaveType::where('is_active', 1)->where('is_deleted', 0)->get() as $type) {
-                LeaveBalance::create([
+                LeaveBalance::firstOrCreate([
                     'employee_id'   => $saved_obj->id,
                     'leave_type_id' => $type->id,
-                    'total'         => $type->leaves,
-                    'remaining'     => $type->leaves,
                     'year'          => now()->year,
+                ], [
+
+                    'total'         => $type->leaves,
+                    'used'          => 0,
+                    'remaining'     => $type->leaves,
                     'createdby_id'  => Auth::user()->id
                 ]);
             }

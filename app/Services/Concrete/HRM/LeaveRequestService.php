@@ -2,10 +2,12 @@
 
 namespace App\Services\Concrete\HRM;
 
+use App\Models\Attendance;
 use App\Models\LeaveBalance;
 use App\Models\LeaveRequest;
 use App\Repository\Repository;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -118,6 +120,7 @@ class LeaveRequestService
         $leave_request = $this->model_leave_request->getModel()::find($obj['id']);
         if ($obj['status'] == 'Approved') {
             $this->updateLeaveBalance($obj['id'], $leave_request->no_of_days);
+            $this->createAttendanceForLeave($leave_request);
         }
         $leave_request->status = $obj['status'];
         $leave_request->updatedby_id = Auth::user()->id;
@@ -143,6 +146,26 @@ class LeaveRequestService
             $balance->remaining -= $leave_request->no_of_days;
             $balance->updatedby_id = Auth::user()->id;
             $balance->save();
+        }
+    }
+    public function createAttendanceForLeave($leave_request)
+    {
+        $period = CarbonPeriod::create($leave_request->from_date, $leave_request->to_date);
+
+        foreach ($period as $date) {
+
+            Attendance::updateOrCreate(
+                [
+                    'employee_id'     => $leave_request->employee_id,
+                    'attendance_date' => $date->format('Y-m-d'),
+                ],
+                [
+                    'status'     => 'Leave',
+                    'leave_type_id' => $leave_request->leave_type_id,
+                    'entry_type' => 'auto',
+                    'createdby_id' => Auth::user()->id
+                ]
+            );
         }
     }
 }
