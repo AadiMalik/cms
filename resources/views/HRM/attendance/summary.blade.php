@@ -1,4 +1,8 @@
 @extends('layouts.master')
+@section('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+@endsection
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
@@ -34,7 +38,8 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="">Employee</label>
-                                        <select id="employee_id" name="employee_id" class="form-control" style="width:100%;">
+                                        <select id="employee_id" name="employee_id" class="form-control"
+                                            style="width:100%;">
                                             <option value="">--Select Employee--</option>
                                             @foreach ($employees as $item)
                                                 <option value="{{ $item->id }}">{{ $item->name ?? '' }}</option>
@@ -53,7 +58,8 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table display" style="width:100%">
+                                <table class="table table-hover table-bordered" id="attendance_summary_table"
+                                    style="width:100%">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -82,76 +88,116 @@
     </div>
 @endsection
 @section('js')
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
     <script>
+        let summaryTable;
+
         $(document).ready(function() {
+
             $('#employee_id').select2();
-        });
-        $('#search_button').on('click', function() {
 
-            let start_date = $('#start_date').val();
-            let end_date = $('#end_date').val();
-            let employee_id = $('#employee_id').val();
+            summaryTable = $('#attendance_summary_table').DataTable({
+                processing: true,
+                serverSide: false,
+                searching: false,
+                ordering: false,
+                paging: true,
+                lengthChange: true,
 
-            if (!start_date || !end_date) {
-                alert('Please select date range');
-                return;
-            }
-
-            $.ajax({
-                url: "{{ url('attendance/summary-data') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    start_date: start_date,
-                    end_date: end_date,
-                    employee_id: employee_id
-                },
-                beforeSend: function() {
-                    $('#summary_body').html(`
-                    <tr>
-                        <td colspan="7" class="text-center">Loading...</td>
-                    </tr>
-                `);
-                },
-                success: function(res) {
-
-                    if (!res.Success) {
-                        alert(res.Message);
-                        return;
+                dom: 'Bfrtip', // 👈 Buttons position
+                buttons: [{
+                        extend: 'excel',
+                        title: 'Attendance Summary'
+                    },
+                    {
+                        extend: 'csv',
+                        title: 'Attendance Summary'
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Attendance Summary'
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Attendance Summary'
                     }
+                ],
 
-                    let html = '';
+                ajax: {
+                    url: "{{ url('attendance/summary-data') }}",
+                    type: "POST",
+                    data: function(d) {
+                        d._token = "{{ csrf_token() }}";
+                        d.start_date = $('#start_date').val();
+                        d.end_date = $('#end_date').val();
+                        d.employee_id = $('#employee_id').val();
+                    },
+                    dataSrc: function(json) {
 
-                    if (res.Data.length === 0) {
-                        html = `
-                        <tr>
-                            <td colspan="7" class="text-center">No data found</td>
-                        </tr>`;
-                    } else {
-                        $.each(res.Data, function(index, item) {
-                            html += `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${item.employee?.name ?? '-'}</td>
-                                <td>${item.total_days}</td>
-                                <td>${item.present}</td>
-                                <td>${item.absent}</td>
-                                <td>${item.late}</td>
-                                <td>${item.leave}</td>
-                            </tr>`;
-                        });
+                        if (!json.Success) {
+                            alert(json.Message);
+                            return [];
+                        }
+
+                        return json.Data;
                     }
-
-                    $('#summary_body').html(html);
                 },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        alert(xhr.responseJSON.message);
-                    } else {
-                        alert('Something went wrong');
+
+                columns: [{
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    },
+                    {
+                        data: 'employee.name',
+                        defaultContent: '-'
+                    },
+                    {
+                        data: 'total_days',
+                        defaultContent: 0
+                    },
+                    {
+                        data: 'present',
+                        defaultContent: 0
+                    },
+                    {
+                        data: 'absent',
+                        defaultContent: 0
+                    },
+                    {
+                        data: 'late',
+                        defaultContent: 0
+                    },
+                    {
+                        data: 'leave',
+                        defaultContent: 0
                     }
-                }
+                ]
             });
+
+            // 🔍 Search button reloads table
+            $('#search_button').on('click', function() {
+
+                let start_date = $('#start_date').val();
+                let end_date = $('#end_date').val();
+
+                if (!start_date || !end_date) {
+                    alert('Please select date range');
+                    return;
+                }
+
+                summaryTable.ajax.reload();
+            });
+
         });
     </script>
 @endsection
