@@ -1,4 +1,58 @@
 @extends('layouts.master')
+@section('css')
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked+.slider {
+            background-color: #28a745;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+@endsection
 @section('content')
     <div class="main-content pt-4">
         <div class="breadcrumb">
@@ -32,8 +86,8 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="employee">Employee ID<span class="text-danger">*</span> </label>
                                     <input class="form-control" type="text" name="employee_id"
-                                        value="{{ isset($employee) ? $employee->employee_id : old('employee_id') }}" maxlength="191"
-                                        placeholder="Enter employee id" required />
+                                        value="{{ isset($employee) ? $employee->employee_id : old('employee_id') }}"
+                                        maxlength="191" placeholder="Enter employee id" required />
                                     @error('employee_id')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -70,7 +124,7 @@
                                     <input class="form-control" type="email" name="email"
                                         value="{{ isset($employee) ? $employee->email : old('email') }}" maxlength="191"
                                         placeholder="Enter email" required />
-                                        @error('email')
+                                    @error('email')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -88,43 +142,47 @@
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="date_of_birth">Date of Birth<span class="text-danger">*</span></label>
                                     <input class="form-control" type="date" name="date_of_birth"
-                                        value="{{ isset($employee) ? $employee->date_of_birth : old('date_of_birth') }}" required/>
-                                        @error('date_of_birth')
+                                        value="{{ isset($employee) ? $employee->date_of_birth : old('date_of_birth') }}"
+                                        required />
+                                    @error('date_of_birth')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="address">Address<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="address"
-                                        value="{{ isset($employee) ? $employee->address : old('address') }}" maxlength="191"
-                                        placeholder="Enter address" required />
-                                        @error('address')
+                                        value="{{ isset($employee) ? $employee->address : old('address') }}"
+                                        maxlength="191" placeholder="Enter address" required />
+                                    @error('address')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
-                                    <label for="emergency_name">Emergency Contact Name<span class="text-danger">*</span> </label>
+                                    <label for="emergency_name">Emergency Contact Name<span class="text-danger">*</span>
+                                    </label>
                                     <input class="form-control" type="text" name="emergency_name"
-                                        value="{{ isset($employee) ? $employee->emergency_name : old('emergency_name') }}" maxlength="191"
-                                        placeholder="Enter emergency contact name" required />
-                                        @error('emergency_name')
+                                        value="{{ isset($employee) ? $employee->emergency_name : old('emergency_name') }}"
+                                        maxlength="191" placeholder="Enter emergency contact name" required />
+                                    @error('emergency_name')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
-                                    <label for="emergency_contact">Emergency Contact<span class="text-danger">*</span></label>
+                                    <label for="emergency_contact">Emergency Contact<span
+                                            class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="emergency_contact"
-                                        value="{{ isset($employee) ? $employee->emergency_contact : old('emergency_contact') }}" maxlength="191"
-                                        placeholder="Enter emergency contact" required />
+                                        value="{{ isset($employee) ? $employee->emergency_contact : old('emergency_contact') }}"
+                                        maxlength="191" placeholder="Enter emergency contact" required />
                                     @error('emergency_contact')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
-                                    <label for="emergency_relation">Emergency Relation<span class="text-danger">*</span></label>
+                                    <label for="emergency_relation">Emergency Relation<span
+                                            class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="emergency_relation"
-                                        value="{{ isset($employee) ? $employee->emergency_relation : old('emergency_relation') }}" maxlength="191"
-                                        placeholder="Enter emergency relation" required />
+                                        value="{{ isset($employee) ? $employee->emergency_relation : old('emergency_relation') }}"
+                                        maxlength="191" placeholder="Enter emergency relation" required />
                                     @error('emergency_relation')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -134,7 +192,9 @@
                                     <select name="designation_id" id="designation_id" class="form-control" required>
                                         <option value="" selected>--Select Designation--</option>
                                         @foreach ($designations as $item)
-                                            <option value="{{$item->id}}" @if(isset($employee)) {{($employee->designation_id==$item->id)?'selected':''}} @endif>{{$item->name??''}}</option>
+                                            <option value="{{ $item->id }}"
+                                                @if (isset($employee)) {{ $employee->designation_id == $item->id ? 'selected' : '' }} @endif>
+                                                {{ $item->name ?? '' }}</option>
                                         @endforeach
                                     </select>
                                     @error('designation_id')
@@ -146,7 +206,9 @@
                                     <select name="department_id" id="department_id" class="form-control" required>
                                         <option value="" selected>--Select Department--</option>
                                         @foreach ($departments as $item)
-                                            <option value="{{$item->id}}" @if(isset($employee)) {{($employee->department_id==$item->id)?'selected':''}} @endif>{{$item->name??''}}</option>
+                                            <option value="{{ $item->id }}"
+                                                @if (isset($employee)) {{ $employee->department_id == $item->id ? 'selected' : '' }} @endif>
+                                                {{ $item->name ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -155,7 +217,9 @@
                                     <select name="employee_type" id="employee_type" class="form-control" required>
                                         <option value="" selected>--Select Employee Type--</option>
                                         @foreach (config('enum.employee_type') as $item)
-                                            <option value="{{$item}}" @if(isset($employee)) {{($employee->employee_type==$item)?'selected':''}} @endif>{{$item??''}}</option>
+                                            <option value="{{ $item }}"
+                                                @if (isset($employee)) {{ $employee->employee_type == $item ? 'selected' : '' }} @endif>
+                                                {{ $item ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -164,23 +228,27 @@
                                     <select name="shift" id="shift" class="form-control" required>
                                         <option value="" selected>--Select Shift--</option>
                                         @foreach (config('enum.shift') as $item)
-                                            <option value="{{$item}}" @if(isset($employee)) {{($employee->shift==$item)?'selected':''}} @endif>{{$item??''}}</option>
+                                            <option value="{{ $item }}"
+                                                @if (isset($employee)) {{ $employee->shift == $item ? 'selected' : '' }} @endif>
+                                                {{ $item ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="date_of_joining">Date of Joining<span class="text-danger">*</span></label>
                                     <input class="form-control" type="date" name="date_of_joining"
-                                        value="{{ isset($employee) ? $employee->date_of_joining : old('date_of_joining') }}" required/>
-                                        @error('date_of_joining')
+                                        value="{{ isset($employee) ? $employee->date_of_joining : old('date_of_joining') }}"
+                                        required />
+                                    @error('date_of_joining')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="salary">Salary<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="salary"
-                                        value="{{ isset($employee) ? $employee->salary : old('salary') }}" onkeypress="return isNumberKey(event)" maxlength="10"
-                                        placeholder="Enter salary" required />
+                                        value="{{ isset($employee) ? $employee->salary : old('salary') }}"
+                                        onkeypress="return isNumberKey(event)" maxlength="10" placeholder="Enter salary"
+                                        required />
                                     @error('salary')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -190,27 +258,29 @@
                                     <select name="payment_method" id="payment_method" class="form-control" required>
                                         <option value="" selected>--Select Payment Method--</option>
                                         @foreach (config('enum.payment_method') as $item)
-                                            <option value="{{$item}}" @if(isset($employee)) {{($employee->payment_method==$item)?'selected':''}} @endif>{{$item??''}}</option>
+                                            <option value="{{ $item }}"
+                                                @if (isset($employee)) {{ $employee->payment_method == $item ? 'selected' : '' }} @endif>
+                                                {{ $item ?? '' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="bank_name">Bank Name</label>
                                     <input class="form-control" type="text" name="bank_name"
-                                        value="{{ isset($employee) ? $employee->bank_name : old('bank_name') }}" maxlength="191"
-                                        placeholder="Enter bank name" />
+                                        value="{{ isset($employee) ? $employee->bank_name : old('bank_name') }}"
+                                        maxlength="191" placeholder="Enter bank name" />
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="account_title">Account Title</label>
                                     <input class="form-control" type="text" name="account_title"
-                                        value="{{ isset($employee) ? $employee->account_title : old('account_title') }}" maxlength="191"
-                                        placeholder="Enter account title" />
+                                        value="{{ isset($employee) ? $employee->account_title : old('account_title') }}"
+                                        maxlength="191" placeholder="Enter account title" />
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="account_no">Account No</label>
                                     <input class="form-control" type="text" name="account_no"
-                                        value="{{ isset($employee) ? $employee->account_no : old('account_no') }}" maxlength="16"
-                                        placeholder="Enter account no" />
+                                        value="{{ isset($employee) ? $employee->account_no : old('account_no') }}"
+                                        maxlength="16" placeholder="Enter account no" />
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="is_overtime">Over Time<span class="text-danger">*</span> </label>
@@ -221,24 +291,6 @@
                                     @error('is_overtime')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                </div>
-                                <div class="col-md-3 form-group mb-3">
-                                    <label for="sick_leave">Sick Leave</label>
-                                    <input class="form-control" type="text" name="sick_leave"
-                                        value="{{ isset($employee) ? $employee->sick_leave : '0' }}" onkeypress="return isNumberKey(event)" maxlength="2" min="0"
-                                        placeholder="Enter sick leave" />
-                                </div>
-                                <div class="col-md-3 form-group mb-3">
-                                    <label for="casual_leave">Casual Leave</label>
-                                    <input class="form-control" type="text" name="casual_leave"
-                                        value="{{ isset($employee) ? $employee->casual_leave : '0' }}" onkeypress="return isNumberKey(event)" maxlength="2" min="0"
-                                        placeholder="Enter casual leave" />
-                                </div>
-                                <div class="col-md-3 form-group mb-3">
-                                    <label for="annual_leave">Annual Leave</label>
-                                    <input class="form-control" type="text" name="annual_leave"
-                                        value="{{ isset($employee) ? $employee->annual_leave : '0' }}" onkeypress="return isNumberKey(event)" maxlength="2" min="0"
-                                        placeholder="Enter annual leave" />
                                 </div>
                                 <div class="col-md-3 form-group mb-3">
                                     <label for="account_id">Account (COA)</label>
@@ -254,18 +306,44 @@
                                 </div>
                                 <div class="col-md-4 form-group mb-3">
                                     <label for="picture">Picture<span class="text-danger">*</span> </label>
-                                    <input class="form-control" type="file" name="picture" accept=".jpg, .jpeg, .png" />
+                                    <input class="form-control" type="file" name="picture"
+                                        accept=".jpg, .jpeg, .png" />
                                     @error('picture')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                @if(isset($employee))
-                                <div class="col-md-12 form-group mb-3">
-                                    <b>Picture <small>(if add then change)</small></b><br>
-                                    <a href="{{ asset($employee->picture) }}" target="_blank"><img src="{{ asset($employee->picture) }}" style="width:100px; height: 100px;" alt="Image"></a>
+                                @if (isset($employee))
+                                    <div class="col-md-12 form-group mb-3">
+                                        <b>Picture <small>(if add then change)</small></b><br>
+                                        <a href="{{ asset($employee->picture) }}" target="_blank"><img
+                                                src="{{ asset($employee->picture) }}" style="width:100px; height: 100px;"
+                                                alt="Image"></a>
+                                    </div>
+                                @endif
+                                @if(!isset($employee))
+                                <div class="col-md-12 mt-3">
+                                    <h5 class="mb-2">Allowed Leaves</h5>
+
+                                    <div class="row">
+                                        @foreach ($leave_types as $type)
+                                            <div class="col-md-4 mb-2">
+                                                <div
+                                                    class="d-flex justify-content-between align-items-center border p-2 rounded">
+                                                    <span><b>{{ $type->name }}</b> ({{ $type->leaves }})</span>
+
+                                                    <label class="switch mb-0">
+                                                        <input type="checkbox" name="leave_types[]"
+                                                            value="{{ $type->id }}" checked>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                                 @endif
                             </div>
+
 
                         </div>
                         <div class="card-footer">

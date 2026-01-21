@@ -6,6 +6,7 @@ use App\Services\Concrete\AccountService;
 use App\Services\Concrete\EmployeeService;
 use App\Services\Concrete\HRM\DepartmentService;
 use App\Services\Concrete\HRM\DesignationService;
+use App\Services\Concrete\HRM\LeaveTypeService;
 use Illuminate\Http\Request;
 use App\Traits\JsonResponse;
 use Exception;
@@ -20,18 +21,21 @@ class EmployeeController extends Controller
     protected $account_service;
     protected $department_service;
     protected $designation_service;
+    protected $leave_type_service;
 
 
     public function __construct(
         EmployeeService $employee_service,
         AccountService $account_service,
         DepartmentService $department_service,
-        DesignationService $designation_service
+        DesignationService $designation_service,
+        LeaveTypeService $leave_type_service
     ) {
         $this->employee_service = $employee_service;
         $this->account_service = $account_service;
         $this->department_service = $department_service;
         $this->designation_service = $designation_service;
+        $this->leave_type_service = $leave_type_service;
     }
 
     public function index()
@@ -54,7 +58,8 @@ class EmployeeController extends Controller
         $accounts = $this->account_service->getAllActiveChild();
         $departments = $this->department_service->getAllActive();
         $designations = $this->designation_service->getAllActive();
-        return view('employees.create', compact('accounts','departments','designations'));
+        $leave_types = $this->leave_type_service->getAllActive();
+        return view('employees.create', compact('accounts','departments','designations','leave_types'));
     }
 
     public function store(Request $request)

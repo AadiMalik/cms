@@ -76,8 +76,11 @@ class EmployeeService
         } else {
             $obj['createdby_id'] = Auth::user()->id;
             $saved_obj = $this->model_employee->create($obj);
-
-            foreach (LeaveType::where('is_active', 1)->where('is_deleted', 0)->get() as $type) {
+            $leaveTypes = LeaveType::whereIn('id', $obj['leave_types'])
+                ->where('is_active', 1)
+                ->where('is_deleted', 0)
+                ->get();
+            foreach ($leaveTypes as $type) {
                 LeaveBalance::firstOrCreate([
                     'employee_id'   => $saved_obj->id,
                     'leave_type_id' => $type->id,
