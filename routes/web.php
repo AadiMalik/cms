@@ -25,6 +25,7 @@ use App\Http\Controllers\JobTaskActivityController;
 use App\Http\Controllers\JobTaskController;
 use App\Http\Controllers\JournalController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\LeaveBalanceController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\MetalProductController;
@@ -1343,6 +1344,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('edit/{id}', [LeaveRequestController::class, 'edit']);
         Route::post('update', [LeaveRequestController::class, 'update']);
         Route::post('status', [LeaveRequestController::class, 'status']);
+    });
+
+    // Leave Balance
+    Route::group(['prefix' => 'leave-balance'], function () {
+        Route::get('/', [LeaveBalanceController::class, 'index']);
+        Route::post('data', [LeaveBalanceController::class, 'getData'])->name('leave-balance.data');
     });
 
     // Reports

@@ -411,7 +411,8 @@
                     Request::is('designation*') ||
                     Request::is('attendance*') ||
                     Request::is('leave-type*') ||
-                    Request::is('leave-requests*')
+                    Request::is('leave-requests*') ||
+                    Request::is('leave-balance*')
                         ? 'mm-active'
                         : '' }}">
                     <a class="has-arrow" href="#"><i class="fa fa-empire text-20 mr-2 text-muted"></i><span
@@ -444,7 +445,7 @@
                                         class="item-name">Attendance Summary</span></a></li>
                         @endcan
                         @can('leave_system_access')
-                            <li class="Ul_li--hover {{ Request::is('leave-type*') || Request::is('leave-requests*')? 'mm-active' : '' }}">
+                            <li class="Ul_li--hover {{ Request::is('leave-type*') || Request::is('leave-requests*') || Request::is('leave-balance*')? 'mm-active' : '' }}">
                                 <a class="has-arrow" href="#"><i class="fa fa-calendar-alt text-20 mr-2 text-muted"></i><span
                                         class="item-name text-15 text-muted">Leave Management</span></a>
                                 <ul class="mm-collapse">
@@ -459,6 +460,12 @@
                                                 class="{{ Request::is('leave-requests*') ? 'sidebar_active' : '' }}"
                                                 href="{{ url('leave-requests') }}"><i class="nav-icon fa fa-circle"></i><span
                                                     class="item-name">Leave Requests</span></a></li>
+                                    @endcan
+                                    @can('leave_balance_access')
+                                        <li class="item-name"><a
+                                                class="{{ Request::is('leave-balance*') ? 'sidebar_active' : '' }}"
+                                                href="{{ url('leave-balance') }}"><i class="nav-icon fa fa-circle"></i><span
+                                                    class="item-name">Leave Balance</span></a></li>
                                     @endcan
                                 </ul>
                             </li>
