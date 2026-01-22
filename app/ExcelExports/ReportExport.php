@@ -48,6 +48,10 @@ class ReportExport implements FromView
                   case 'financial_report';
                         return view('reports/financial_report/partials.report', compact('parms'));
                         break;
+                  //leave reports
+                  case 'employee_leave_report';
+                        return view('hrm/reports/employee_leave/partials.report', compact('parms'));
+                        break;
             }
       }
 }

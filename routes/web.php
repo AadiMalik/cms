@@ -20,6 +20,7 @@ use App\Http\Controllers\FinishProductController;
 use App\Http\Controllers\FinishProductLocationController;
 use App\Http\Controllers\GoldImpurityPurchaseController;
 use App\Http\Controllers\GoldRateController;
+use App\Http\Controllers\HrmReportController;
 use App\Http\Controllers\JobPurchaseController;
 use App\Http\Controllers\JobTaskActivityController;
 use App\Http\Controllers\JobTaskController;
@@ -1350,6 +1351,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['prefix' => 'leave-balance'], function () {
         Route::get('/', [LeaveBalanceController::class, 'index']);
         Route::post('data', [LeaveBalanceController::class, 'getData'])->name('leave-balance.data');
+    });
+
+    //leave Reports
+    Route::group(['prefix' => 'hrm/reports'], function () {
+        Route::get('employee-leave-report', [HrmReportController::class, 'employeeLeaveReport']);
+        Route::get('get-preview-employee-leave-report', [HrmReportController::class, 'getPreviewEmployeeLeaveReport']);
+        Route::get('get-employee-leave-report', [HrmReportController::class, 'getEmployeeLeaveReport']);
     });
 
     // Reports

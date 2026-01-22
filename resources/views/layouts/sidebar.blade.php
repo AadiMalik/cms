@@ -445,8 +445,10 @@
                                         class="item-name">Attendance Summary</span></a></li>
                         @endcan
                         @can('leave_system_access')
-                            <li class="Ul_li--hover {{ Request::is('leave-type*') || Request::is('leave-requests*') || Request::is('leave-balance*')? 'mm-active' : '' }}">
-                                <a class="has-arrow" href="#"><i class="fa fa-calendar-alt text-20 mr-2 text-muted"></i><span
+                            <li
+                                class="Ul_li--hover {{ Request::is('leave-type*') || Request::is('leave-requests*') || Request::is('leave-balance*') ? 'mm-active' : '' }}">
+                                <a class="has-arrow" href="#"><i
+                                        class="fa fa-calendar-alt text-20 mr-2 text-muted"></i><span
                                         class="item-name text-15 text-muted">Leave Management</span></a>
                                 <ul class="mm-collapse">
                                     @can('leave_type_access')
@@ -466,6 +468,21 @@
                                                 class="{{ Request::is('leave-balance*') ? 'sidebar_active' : '' }}"
                                                 href="{{ url('leave-balance') }}"><i class="nav-icon fa fa-circle"></i><span
                                                     class="item-name">Leave Balance</span></a></li>
+                                    @endcan
+                                </ul>
+                            </li>
+                        @endcan
+                        @can('leave_report_access')
+                            <li class="Ul_li--hover {{ Request::is('hrm/reports*') ? 'mm-active' : '' }}">
+                                <a class="has-arrow" href="#"><i class="fa fa-file text-20 mr-2 text-muted"></i><span
+                                        class="item-name text-15 text-muted">Reports</span></a>
+                                <ul class="mm-collapse">
+                                    @can('employee_leave_report_access')
+                                        <li class="item-name"><a
+                                                class="{{ Request::is('hrm/reports/employee-leave-report*') ? 'sidebar_active' : '' }}"
+                                                href="{{ url('hrm/reports/employee-leave-report') }}"><i
+                                                    class="nav-icon fa fa-circle"></i><span class="item-name">Employee Leave
+                                                    Report</span></a></li>
                                     @endcan
                                 </ul>
                             </li>
